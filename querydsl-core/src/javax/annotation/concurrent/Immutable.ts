@@ -6,3 +6,6 @@
 export function Immutable() {
 	
 }
+
+export function ImmutableClass(constructor: Function) {
+}

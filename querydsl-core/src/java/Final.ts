@@ -7,3 +7,6 @@ import "reflect-metadata";
 export function Final() {
 	return null;
 }
+
+export function FinalClass(constructor: Function) {
+}

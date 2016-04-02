@@ -18,20 +18,30 @@
  * @author tiwe
  */
 import {Serializable} from "../../../../java/io/Serializable";
-import {Final} from "../../../../java/Final";
+import {Final, FinalClass} from "../../../../java/Final";
 import {Nullable} from "../../../../javax/annotation/Nullable";
-@Immutable
-public final class PathMetadata implements Serializable {
+import {ImmutableClass} from "../../../../javax/annotation/concurrent/Immutable";
+import {Path} from "./Path";
+
+@ImmutableClass
+@FinalClass
+export class PathMetadata implements Serializable {
 
 		@Final
     static serialVersionUID:number = -1055994185028970065;
 
-    private final Object element;
+    @Final
+    private element:Object;
 
-    private final int hashCode;
+    @Final
+    private hashCode:number;
 
     @Nullable
-    private final Path<?> parent, rootPath;
+    @Final
+    private  parent:Path<any>;
+    @Nullable
+    @Final
+    private rootPath:Path<any>;
 
     private final PathType pathType;
 
