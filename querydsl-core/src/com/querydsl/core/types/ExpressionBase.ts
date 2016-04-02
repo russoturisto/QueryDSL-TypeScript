@@ -18,6 +18,7 @@ import {Final} from "../../../../java/Final";
 import {Transient} from "../../../../java/Transient";
 import {Visitor} from "./Visitor";
 import {NullableMethod, Nullable} from "../../../../javax/annotation/Nullable";
+import {JObject} from "../../../../java/lang/Object";
 /**
  * {@code ExpressionBase} is the base class for immutable {@link Expression} implementations
  *
@@ -25,7 +26,7 @@ import {NullableMethod, Nullable} from "../../../../javax/annotation/Nullable";
  *
  * @param <T> expression type
  */
-export abstract class ExpressionBase<T> implements Expression<T> {
+export abstract class ExpressionBase<T> extends JObject implements Expression<T> {
 
 	static serialVersionUID:number = -8862014178653364345;
 
@@ -38,7 +39,7 @@ export abstract class ExpressionBase<T> implements Expression<T> {
 
 	@Transient
 	@Nullable
-	private hashCode:number;
+	private myHashCode:number;
 
 	constructor<A extends T>(
 		private type:Class<A>
@@ -58,10 +59,10 @@ export abstract class ExpressionBase<T> implements Expression<T> {
 	}
 
 	hashCode():number {
-		if (!this.hashCode) {
-			this.hashCode = this.accept(HashCodeVisitor.DEFAULT);
+		if (!this.myHashCode) {
+			this.myHashCode = this.accept(HashCodeVisitor.DEFAULT);
 		}
-		return this.hashCode;
+		return this.myHashCode;
 	}
 
 	toString():string {

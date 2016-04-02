@@ -22,59 +22,67 @@ import {Final, FinalClass} from "../../../../java/Final";
 import {Nullable} from "../../../../javax/annotation/Nullable";
 import {ImmutableClass} from "../../../../javax/annotation/concurrent/Immutable";
 import {Path} from "./Path";
+import {JObject} from "../../../../java/lang/Object";
+import {Objects} from "../../../google/common/base/Objects";
 
 @ImmutableClass
 @FinalClass
-export class PathMetadata implements Serializable {
+export class PathMetadata extends JObject implements Serializable {
 
 		@Final
     static serialVersionUID:number = -1055994185028970065;
 
     @Final
-    private element:Object;
+    private element:JObject | string;
 
     @Final
-    private hashCode:number;
+    private myHashCode:number;
 
     @Nullable
     @Final
     private  parent:Path<any>;
+
     @Nullable
     @Final
     private rootPath:Path<any>;
 
-    private final PathType pathType;
+		@Final
+    private pathType:PathType;
 
-    public PathMetadata(@Nullable Path<?> parent, Object element, PathType type) {
+    constructor(
+      @Nullable  parent:Path<any>,
+     element:JObject,
+     type:PathType
+) {
         this.parent = parent;
         this.element = element;
         this.pathType = type;
         this.rootPath = parent != null ? parent.getRoot() : null;
-        this.hashCode = 31 * element.hashCode() + pathType.name().hashCode();
+        this.hashCode = 31 * JObject.getHashCode(element) + JObject.getHashCode(pathType.name());
     }
 
-    @Override
-    public boolean equals(Object obj) {
+     equals(
+			 obj:JObject
+		 ):boolean {
         if (obj == this) {
             return true;
         } else if (obj instanceof PathMetadata) {
-            PathMetadata p = (PathMetadata) obj;
-            return element.equals(p.element) &&
-                    pathType == p.pathType &&
+             let p:PathMetadata = <PathMetadata> obj;
+            return Objects.equal(this.element, p.element) &&
+                    this.pathType == p.pathType &&
                     Objects.equal(parent, p.parent);
         } else {
             return false;
         }
-
     }
 
-    public Object getElement() {
-        return element;
+    public getElement():any {
+        return this.element;
     }
 
-    public String getName() {
-        if (pathType == PathType.VARIABLE || pathType == PathType.PROPERTY) {
-            return (String) element;
+    public getName():String {
+        if (this.pathType == PathType.VARIABLE || this.pathType == PathType.PROPERTY) {
+            return <String>this.element;
         } else {
             throw new IllegalStateException("name property not available for path of type " + pathType +
                     ". Use getElement() to access the generic path element.");
@@ -82,22 +90,21 @@ export class PathMetadata implements Serializable {
     }
 
     @Nullable
-    public Path<?> getParent() {
-        return parent;
+    public getParent():Path<any> {
+        return this.parent;
     }
 
-    public PathType getPathType() {
-        return pathType;
+    public getPathType():PathType {
+        return this.pathType;
     }
 
     @Nullable
-    public Path<?> getRootPath() {
-        return rootPath;
+    public getRootPath():Path<any> {
+        return this.rootPath;
     }
 
-    @Override
-    public int hashCode() {
-        return hashCode;
+    public hashCode():number {
+        return this.myHashCode;
     }
 
     public boolean isRoot() {
