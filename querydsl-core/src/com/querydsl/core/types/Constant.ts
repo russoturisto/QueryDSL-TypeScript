@@ -11,38 +11,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core.types;
 
-import java.util.List;
-
+import {Expression} from "./Expression";
 /**
- * {@code Operation} represents an operation with operator and arguments
+ * {@code Constant} represents a general constant expression.
  *
  * @author tiwe
- * @param <T> expression type
+ *
+ * @param <T> constant type
  */
-public interface Operation<T> extends Expression<T> {
+export interface Constant<T> extends Expression<T> {
 
     /**
-     * Get the argument with the given index
+     * Get the wrapped constant
      *
-     * @param index zero based index of expression
-     * @return expression at index
+     * @return wrapped constant
      */
-    Expression<?> getArg(int index);
-
-    /**
-     * Get the arguments of this operation
-     *
-     * @return arguments
-     */
-    List<Expression<?>> getArgs();
-
-    /**
-     * Get the operator symbol for this operation
-     *
-     * @return operator
-     */
-    Operator getOperator();
+    getConstant():T;
 
 }

@@ -11,12 +11,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core.types;
 
-import java.io.Serializable;
-
-import javax.annotation.Nullable;
-
+import {Serializable} from "../../../../java/io/Serializable";
+import {Class} from "../../../../java/lang/Class";
+import {Visitor} from "./Visitor";
 /**
  * {@code Expression} defines a general typed expression in a Query instance. The generic type parameter
  * is a reference to the type the expression is bound to.
@@ -37,25 +35,29 @@ import javax.annotation.Nullable;
  * @param <T> expression type
  *
  */
-public interface Expression<T> extends Serializable {
+export interface Expression<T> extends Serializable {
 
-    /**
-     * Accept the visitor with the given context
-     *
-     * @param <R> return type
-     * @param <C> context type
-     * @param v visitor
-     * @param context context of visit
-     * @return result of visit
-     */
-    @Nullable
-    <R,C> R accept(Visitor<R,C> v, @Nullable C context);
+	/**
+	 * Accept the visitor with the given context
+	 *
+	 * @param <R> return type
+	 * @param <C> context type
+	 * @param v visitor
+	 * @param context context of visit
+	 * @return result of visit
+	 */
+	// @NullableMethod() - annotation moved to abstract method in ExpressionBase
+	accept<R,C>(
+		v:Visitor<R,C>,
+		context?:C
+	):R;
 
-    /**
-     * Get the java type for this expression
-     *
-     * @return type of expression
-     */
-    Class<? extends T> getType();
+	/**
+	 * Get the java type for this expression
+	 *
+	 * @return type of expression
+	 */
+
+	getType<A extends T>():Class<A>;
 
 }

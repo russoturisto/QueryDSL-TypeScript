@@ -11,22 +11,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core.types;
 
+import {Serializable} from "../../../../java/io/Serializable";
+import {Class} from "../../../../java/lang/Class";
 /**
- * {@code Constant} represents a general constant expression.
+ * {@code Operator} represents operator symbols.
+ * <p>Implementations should be enums for automatic instance management.</p>
  *
  * @author tiwe
- *
- * @param <T> constant type
  */
-public interface Constant<T> extends Expression<T> {
+export interface Operator extends Serializable {
 
-    /**
-     * Get the wrapped constant
-     *
-     * @return wrapped constant
-     */
-    T getConstant();
+	/**
+	 * Get the unique id for this Operator
+	 *
+	 * @return name
+	 */
+	name():string;
+
+	/**
+	 * Get the result type of the operator
+	 *
+	 * @return type
+	 */
+	getType():Class<any>;
 
 }

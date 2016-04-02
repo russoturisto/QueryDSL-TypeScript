@@ -11,24 +11,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core.types;
-
-import java.io.Serializable;
-
-import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
-
-import com.google.common.base.Objects;
 
 /**
  * {@code PathMetadata} provides metadata for {@link Path} expressions.
  *
  * @author tiwe
  */
+import {Serializable} from "../../../../java/io/Serializable";
+import {Final} from "../../../../java/Final";
+import {Nullable} from "../../../../javax/annotation/Nullable";
 @Immutable
 public final class PathMetadata implements Serializable {
 
-    private static final long serialVersionUID = -1055994185028970065L;
+		@Final
+    static serialVersionUID:number = -1055994185028970065;
 
     private final Object element;
 
