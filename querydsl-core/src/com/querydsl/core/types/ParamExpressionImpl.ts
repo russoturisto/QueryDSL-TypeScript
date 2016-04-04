@@ -16,7 +16,7 @@ import {ImmutableClass} from "../../../../javax/annotation/concurrent/Immutable"
 import {ExpressionBase} from "./ExpressionBase";
 import {ParamExpression} from "./ParamExpression";
 import {Final, FinalClass, FinalMethod} from "../../../../java/Final";
-import {ExpressionType} from "./Expression";
+import {ExpressionType, getExpressionTypeName} from "./Expression";
 import {UUID} from "../../../../java/util/UUID";
 import {Visitor} from "./Visitor";
 /**
@@ -29,66 +29,67 @@ import {Visitor} from "./Visitor";
 @ImmutableClass
 export class ParamExpressionImpl<T> extends ExpressionBase<T> implements ParamExpression<T> {
 
-    @Final
-    private static serialVersionUID = -6872502615009012503;
+	@Final
+	private static serialVersionUID = -6872502615009012503;
 
-    @Final
-    private name:string;
+	@Final
+	private name:string;
 
-    @Final
-    private anon:boolean;
+	@Final
+	private anon:boolean;
 
-    constructor(
-      type:ExpressionType,
-    name?:string
-) {
-        super(type);
-			if(name) {
-        this.name = name;
-        this.anon = false;
-			} else {
-        this.name = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
-        this.anon = true;
-			}
-    }
+	constructor(
+		type:ExpressionType,
+		name?:string
+	) {
+		super(type);
+		if (name) {
+			this.name = name;
+			this.anon = false;
+		} else {
+			this.name = UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+			this.anon = true;
+		}
+	}
 
 	@FinalMethod
-    public accept<R,C>(
+	public accept<R,C>(
 		v:Visitor<R,C>,
 		context:C
 	):R {
-        return v.visit(this, context);
-    }
-	@FinalMethod
-    public equals(o:any):boolean {
-        if (o == this) {
-            return true;
-        } else if (o.getType && o.getType() === ExpressionType.PARAM_EXPRESSION) {
-            let other = <ParamExpression> o;
-            return other.constructor === this.constructor
-                && other.getName() === this.name
-                && other.isAnon() == this.anon;
-        } else {
-            return false;
-        }
-    }
+		return v.visit(this, context);
+	}
 
 	@FinalMethod
-    public getName():string {
-        return this.name;
-    }
+	public equals( o:any ):boolean {
+		if (o == this) {
+			return true;
+		} else if (o.getType && o.getType() === ExpressionType.PARAM_EXPRESSION) {
+			let other = <ParamExpression> o;
+			return other.constructor === this.constructor
+				&& other.getName() === this.name
+				&& other.isAnon() == this.anon;
+		} else {
+			return false;
+		}
+	}
 
 	@FinalMethod
-    public isAnon():boolean {
-        return this.anon;
-    }
+	public getName():string {
+		return this.name;
+	}
 
 	@FinalMethod
-    public getNotSetMessage():string {
-        if (!this.anon) {
-            return "The parameter " + name + " needs to be set";
-        } else {
-            return "A parameter of type " + this.getType().getName() + " was not set";
-        }
-    }
+	public isAnon():boolean {
+		return this.anon;
+	}
+
+	@FinalMethod
+	public getNotSetMessage():string {
+		if (!this.anon) {
+			return "The parameter " + name + " needs to be set";
+		} else {
+			return "A parameter of type " + getExpressionTypeName(this.getType()) + " was not set";
+		}
+	}
 }

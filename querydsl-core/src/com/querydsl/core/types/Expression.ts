@@ -29,17 +29,24 @@ export enum ExpressionType {
 }
 
 export function getExpressionTypeName(
-	xpressionType:ExpressionType
+	expressionType:ExpressionType
 ):string {
 
 	switch (expressionType) {
 		case ExpressionType.CONSTANT:
+			return 'CONSTANT';
 		case ExpressionType.FACTORY_EXPRESSION:
+			return 'FACTORY_EXPRESSION';
 		case ExpressionType.OPERAION:
+			return 'OPERAION';
 		case   ExpressionType.PARAM_EXPRESSION:
+			return 'PARAM_EXPRESSION';
 		case  ExpressionType.PATH:
+			return 'PATH';
 		case  ExpressionType.SUB_QUERY_EXPRESSION:
+			return 'SUB_QUERY_EXPRESSION';
 		case  ExpressionType.TEMPLATE_EXPRESSION:
+			return 'TEMPLATE_EXPRESSION';
 		default:
 			throw `Unknown expression type ${expressionType}`;
 	}
