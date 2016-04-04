@@ -14,6 +14,7 @@
 
 import {Expression} from "./Expression";
 import {AnnotatedElement} from "../../../../java/lang/reflect/AnnotatedElement";
+import {PathMetadata} from "./PathMetadata";
 /**
  * {@code Path} represents a path expression. Paths refer to variables, properties and collection members access.
  *

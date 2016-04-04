@@ -12,13 +12,13 @@
  * limitations under the License.
  */
 
-import {Expression} from "./Expression";
+import {Expression, ExpressionType} from "./Expression";
 import {Class} from "../../../../java/lang/Class";
 import {Final} from "../../../../java/Final";
 import {Transient} from "../../../../java/Transient";
 import {Visitor} from "./Visitor";
 import {NullableMethod, Nullable} from "../../../../javax/annotation/Nullable";
-import {JObject} from "../../../../java/lang/Object";
+import {HashCodeVisitor} from "./HashCodeVisitor";
 /**
  * {@code ExpressionBase} is the base class for immutable {@link Expression} implementations
  *
@@ -26,12 +26,12 @@ import {JObject} from "../../../../java/lang/Object";
  *
  * @param <T> expression type
  */
-export abstract class ExpressionBase<T> extends JObject implements Expression<T> {
+export abstract class ExpressionBase<T> implements Expression<T> {
 
 	static serialVersionUID:number = -8862014178653364345;
 
 	@Final
-	private type:Class<any>;
+	private type:ExpressionType;
 
 	@Transient
 	@Nullable
@@ -41,8 +41,8 @@ export abstract class ExpressionBase<T> extends JObject implements Expression<T>
 	@Nullable
 	private myHashCode:number;
 
-	constructor<A extends T>(
-		private type:Class<A>
+	constructor(
+		type:ExpressionType
 	) {
 		this.type = type;
 	}
@@ -54,7 +54,7 @@ export abstract class ExpressionBase<T> extends JObject implements Expression<T>
 		context?:C
 	):R;
 
-	getType<A extends T>():Class<A> {
+	getType<A extends T>():ExpressionType {
 		return this.type;
 	}
 

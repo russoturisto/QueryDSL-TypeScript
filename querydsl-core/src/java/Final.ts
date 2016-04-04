@@ -10,3 +10,8 @@ export function Final() {
 
 export function FinalClass(constructor: Function) {
 }
+
+export function FinalMethod() {
+	return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
+	};
+}

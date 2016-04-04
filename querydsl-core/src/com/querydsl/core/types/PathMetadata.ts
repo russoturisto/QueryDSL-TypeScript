@@ -22,21 +22,23 @@ import {Final, FinalClass} from "../../../../java/Final";
 import {Nullable} from "../../../../javax/annotation/Nullable";
 import {ImmutableClass} from "../../../../javax/annotation/concurrent/Immutable";
 import {Path} from "./Path";
-import {JObject} from "../../../../java/lang/Object";
 import {Objects} from "../../../google/common/base/Objects";
+import {hashCode} from "../../../../java/lang/Object";
+import {PathType} from "./PathType";
+import {IllegalStateException} from "../../../../java/lang/IllegalStateException";
 
 @ImmutableClass
 @FinalClass
-export class PathMetadata extends JObject implements Serializable {
+export class PathMetadata implements Serializable {
 
 		@Final
     static serialVersionUID:number = -1055994185028970065;
 
     @Final
-    private element:JObject | string;
+    private element:any;
 
     @Final
-    private myHashCode:number;
+    private hashCode:number;
 
     @Nullable
     @Final
@@ -51,18 +53,18 @@ export class PathMetadata extends JObject implements Serializable {
 
     constructor(
       @Nullable  parent:Path<any>,
-     element:JObject,
+     element:any,
      type:PathType
 ) {
         this.parent = parent;
         this.element = element;
         this.pathType = type;
         this.rootPath = parent != null ? parent.getRoot() : null;
-        this.hashCode = 31 * JObject.getHashCode(element) + JObject.getHashCode(pathType.name());
+        this.hashCode = 31 * hashCode(element) + hashCode(this.pathType.name());
     }
 
      equals(
-			 obj:JObject
+			 obj:any
 		 ):boolean {
         if (obj == this) {
             return true;
@@ -70,7 +72,7 @@ export class PathMetadata extends JObject implements Serializable {
              let p:PathMetadata = <PathMetadata> obj;
             return Objects.equal(this.element, p.element) &&
                     this.pathType == p.pathType &&
-                    Objects.equal(parent, p.parent);
+                    Objects.equal(this.parent, p.parent);
         } else {
             return false;
         }
@@ -80,11 +82,11 @@ export class PathMetadata extends JObject implements Serializable {
         return this.element;
     }
 
-    public getName():String {
-        if (this.pathType == PathType.VARIABLE || this.pathType == PathType.PROPERTY) {
-            return <String>this.element;
+    public getName():string {
+        if (this.pathType.pathType === PathType.VARIABLE || this.pathType.pathType === PathType.PROPERTY) {
+            return <string>this.element;
         } else {
-            throw new IllegalStateException("name property not available for path of type " + pathType +
+            throw new IllegalStateException("name property not available for path of type " + this.pathType +
                     ". Use getElement() to access the generic path element.");
         }
     }
@@ -104,11 +106,11 @@ export class PathMetadata extends JObject implements Serializable {
     }
 
     public hashCode():number {
-        return this.myHashCode;
+        return this.hashCode;
     }
 
-    public boolean isRoot() {
-        return parent == null || (pathType == PathType.DELEGATE && parent.getMetadata().isRoot());
+    public isRoot():boolean {
+        return this.parent == null || (this.pathType.pathType === PathType.DELEGATE && this.parent.getMetadata().isRoot());
     }
 
 }

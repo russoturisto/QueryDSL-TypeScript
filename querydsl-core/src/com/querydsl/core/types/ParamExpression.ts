@@ -11,7 +11,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core.types;
+import {Expression} from "./Expression";
 
 /**
  * {@code ParamExpression} defines named and unnamed parameters in queries
@@ -20,27 +20,27 @@ package com.querydsl.core.types;
  *
  * @param <T> expression type
  */
-public interface ParamExpression<T> extends Expression<T> {
+export interface ParamExpression<T> extends Expression<T> {
 
     /**
      * Get the name of the parameter
      *
      * @return name
      */
-    String getName();
+    getName():string;
 
     /**
      * Get whether the parameter is anonymous
      *
      * @return true, if anonymous
      */
-    boolean isAnon();
+    isAnon():boolean;
 
     /**
      * Get the message for the not set case
      *
      * @return not set message
      */
-    String getNotSetMessage();
+    getNotSetMessage():string;
 
 }

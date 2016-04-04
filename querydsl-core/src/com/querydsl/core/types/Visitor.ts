@@ -14,6 +14,10 @@
 
 import {Constant} from "./Constant";
 import {Operation} from "./Operation";
+import {Path} from "./Path";
+import {FactoryExpression} from "./FactoryExpression";
+import {ParamExpression} from "./ParamExpression";
+
 /**
  * {@code Visitor} defines a visitor signature for {@link Expression} instances.
  *
@@ -32,79 +36,13 @@ export interface Visitor<R, C> {
 	 * @return visit result
 	 */
 	visit(
-		expr:Constant<any>,
-		context:C
-	):R;
-
-	/**
-	 * Visit a FactoryExpression instance with the given context
-	 *
-	 * @param expr expression to visit
-	 * @param context context of the visit or null, if not used
-	 * @return visit result
-	 */
-	visit(
-		expr:FactoryExpression<any>,
-		context:C
-	):R;
-
-	/**
-	 * Visit an Operation instance with the given context
-	 *
-	 * @param expr expression to visit
-	 * @param context context of the visit or null, if not used
-	 * @return visit result
-	 */
-	visit(
-		expr:Operation<any>,
-		context:C
-	):R;
-
-	/**
-	 * Visit a ParamExpression instance with the given context
-	 *
-	 * @param expr expression to visit
-	 * @param context context of the visit or null, if not used
-	 * @return visit result
-	 */
-	visit(
-		expr:ParamExpression<any>,
-		context:C
-	):R;
-
-	/**
-	 * Visit a Path instance with the given context
-	 *
-	 * @param expr expression to visit
-	 * @param context context of the visit or null, if not used
-	 * @return visit result
-	 */
-	visit(
-		expr:Path<any>,
-		context:C
-	):R;
-
-	/**
-	 * Visit a SubQueryExpression instance with the given context
-	 *
-	 * @param expr expression to visit
-	 * @param context context of the visit or null, if not used
-	 * @return visit result
-	 */
-	visit(
-		expr:SubQueryExpression<any>,
-		context:C
-	):R;
-
-	/**
-	 * Visit a TemplateExpression instance with the given context
-	 *
-	 * @param expr expression to visit
-	 * @param context context of the visit or null, if not used
-	 * @return visit result
-	 */
-	visit(
-		expr:TemplateExpression<any>,
+		expr:Constant<any>
+			| FactoryExpression<any>
+			| Operation<any>
+			| ParamExpression<any>
+			| Path<any>
+			| SubQueryExpression<any>
+			| TemplateExpression<any>,
 		context:C
 	):R;
 

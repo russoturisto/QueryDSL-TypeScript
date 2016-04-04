@@ -15,6 +15,37 @@
 import {Serializable} from "../../../../java/io/Serializable";
 import {Class} from "../../../../java/lang/Class";
 import {Visitor} from "./Visitor";
+
+export enum ExpressionType {
+
+	CONSTANT,
+	FACTORY_EXPRESSION,
+	OPERAION,
+	PARAM_EXPRESSION,
+	PATH,
+	SUB_QUERY_EXPRESSION,
+	TEMPLATE_EXPRESSION
+
+}
+
+export function getExpressionTypeName(
+	xpressionType:ExpressionType
+):string {
+
+	switch (expressionType) {
+		case ExpressionType.CONSTANT:
+		case ExpressionType.FACTORY_EXPRESSION:
+		case ExpressionType.OPERAION:
+		case   ExpressionType.PARAM_EXPRESSION:
+		case  ExpressionType.PATH:
+		case  ExpressionType.SUB_QUERY_EXPRESSION:
+		case  ExpressionType.TEMPLATE_EXPRESSION:
+		default:
+			throw `Unknown expression type ${expressionType}`;
+	}
+
+}
+
 /**
  * {@code Expression} defines a general typed expression in a Query instance. The generic type parameter
  * is a reference to the type the expression is bound to.
@@ -58,6 +89,6 @@ export interface Expression<T> extends Serializable {
 	 * @return type of expression
 	 */
 
-	getType<A extends T>():Class<A>;
+	getType():ExpressionType;
 
 }

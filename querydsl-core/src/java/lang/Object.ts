@@ -2,139 +2,151 @@
  * Created by Papa on 4/2/2016.
  */
 
-
-export function getObjectHashCode(
+function objectHashCode(
 	object:any //
 ):number {
 	let hash:number = 0;
-	for (let propertyName in this) {
+	for (let propertyName in object) {
 		let property = this[propertyName];
-		hash += JObject.getHashCode(property);
+		hash += hashCode(property);
 		hash = 31 * hash;
 	}
 	return hash;
 }
 
-export function getHashCode(
-		object:any
-	):number {
-		switch (typeof object) {
-			case 'function':
-			case 'symbol':
+function stringHashCode(
+	s:string
+):number {
+	let hash:number = 0,
+		strlen:number = s.length,
+		i:number,
+		c:number;
+	if (strlen === 0) {
+		return hash;
+	}
+	for (i = 0; i < strlen; i++) {
+		c = s.charCodeAt(i);
+		hash = (hash << 5) - hash;
+		hash += c;
+		hash = hash & hash; // Convert to 32bit integer
+	}
+	return hash;
+}
+
+export function hashCode(
+	object:any
+):number {
+	if(object && object.hashCode && typeof object.hashCode === 'function') {
+		let hashCode = object.hashCode();
+		return hashCode;
+	}
+	switch (typeof object) {
+		case 'function':
+		case 'symbol':
+		case 'undefined':
+			// Nothing to add
+			return 0;
+		case 'number':
+			if (isNaN(object)) {
+				return 0;
+			} else {
+				return object;
+			}
+			break;
+		case 'boolean':
+			return (object) ? 1 : 0;
+			break;
+		case 'string':
+			return stringHashCode(object);
+			break;
+		case 'object':
+			if (!object) {
+				return 0;
+			}
+			return objectHashCode(object);
+	}
+}
+
+function objectEquals(
+	object1:any,
+	object2:any
+):boolean {
+	if(typeof object1 !== typeof object2) {
+		throw `'typeof object1' is '${typeof object1} but 'typeof object2' is '${typeof object2}'.`;
+	}
+	if(typeof object1 !== 'object') {
+		throw `Expecting 'typeof object1 & object2' to be 'object', got ${typeof object1}`;
+	}
+	if (this === object1) {
+		return true;
+	}
+	if (object1 === null || typeof object1 !== typeof object2) {
+		return false;
+	}
+	for (let propertyName in object1) {
+		let object1Property = object1[propertyName];
+		let object2Property = object2[propertyName];
+		if (!equals(object1Property, object2Property)) {
+			return false;
+		}
+	}
+	return true;
+}
+
+
+export function equals(
+	object1:any,
+	object2:any
+):boolean {
+	if(object1 && typeof object1 !== 'function' && object1.equals && typeof object1.equals === 'function') {
+		let doesEqual = object1.equals(object2);
+		return doesEqual;
+	}
+	if (object1 === object2) {
+		return true;
+	}
+	if (!object1) {
+		if (!object2) {
+			return true;
+		}
+		return false;
+	} else if (!object2) {
+		if (!object1) {
+			return true;
+		}
+		return false;
+	} else
+	// both Object1 and Object 2 exist
+	{
+		if (typeof object1 !== typeof object2) {
+			return false;
+		}
+		switch (typeof object1) {
 			case 'undefined':
 				// Nothing to add
-				return 0;
+				return true;
 			case 'number':
-				if (isNaN(object)) {
-					return 0;
+				if (isNaN(object1)) {
+					if (isNaN(object2)) {
+						return true;
+					}
+					return false;
 				} else {
-					return object;
+					return object1 === object2;
 				}
 				break;
 			case 'boolean':
-				return (object) ? 1 : 0;
-				break;
+			case 'function':
 			case 'string':
-				return JObject.stringHashCode(object);
+			case 'symbol':
+				return object1 == object2;
 				break;
 			case 'object':
-				if (!object) {
-					return 0;
-				}
-				return getObjectHashCode(object);
+				return objectEquals(object1, object2);
+			default:
+				throw `Unkown typeof objects ${typeof object1}`;
 		}
 	}
-
-export function stringHashCode(
-		s:string
-	):number {
-		let hash:number = 0,
-			strlen:number = s.length,
-			i:number,
-			c:number;
-		if (strlen === 0) {
-			return hash;
-		}
-		for (i = 0; i < strlen; i++) {
-			c = s.charCodeAt(i);
-			hash = (hash << 5) - hash;
-			hash += c;
-			hash = hash & hash; // Convert to 32bit integer
-		}
-		return hash;
-	}
-
-export function equals(
-	a:any,
-	b:any
-):boolean {
-	return false;
 }
 
-export function objectEquals(
-		object1:any,
-		object2:any
-	):boolean {
-		if (this === object1) {
-			return true;
-		}
-		if (object1 === null || typeof object1 !== typeof object2) {
-			return false;
-		}
-		for (let propertyName in object1) {
-			let object1Property = object1[propertyName];
-			let object2Property = object2[propertyName];
-			if (!equalsProperty(object1Property, object2Property)) {
-				return false;
-			}
-		}
-		return true;
-	}
 
-export function equalsProperty(
-		object1:any,
-		object2:any
-	):boolean {
-		if (object1 && !object2) {
-			return false;
-		}
-		if (object2 && !object1) {
-			return false;
-		}
-		if (object1) {
-					return false;
-				}
-				if (typeof propEqualsMethod !== 'function') {
-					if (propEqualsMethod !== otherPropEqualsMethod) {
-						return false;
-					}
-				} else {
-					if (!object1['equals'](object2)) {
-						return false;
-					}
-				}
-			} else {
-				if (object1 !== object2) {
-					return false;
-				}
-			}
-		} else {
-			return true;
-		}
-	}
-
-	equals(
-		object:JObject
-	):boolean {
-		if (this === object) {
-			return true;
-		}
-		if (object === null || typeof object !== typeof this) {
-			return false;
-		}
-		for (let propertyName in this) {
-			let property = this[propertyName];
-			let otherProperty = object[propertyName];
-
-		}
-	}

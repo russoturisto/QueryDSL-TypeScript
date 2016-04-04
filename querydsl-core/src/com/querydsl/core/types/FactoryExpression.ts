@@ -11,11 +11,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core.types;
 
-import java.util.List;
-
-import javax.annotation.Nullable;
+import {Expression} from "./Expression";
 
 /**
  * {@code FactoryExpression} represents factory expressions such as JavaBean or
@@ -25,14 +22,14 @@ import javax.annotation.Nullable;
  *
  * @param <T> type of projection
  */
-public interface FactoryExpression<T> extends Expression<T> {
+export interface FactoryExpression<T> extends Expression<T> {
 
     /**
      * Get the invocation arguments
      *
      * @return argument expressions
      */
-    List<Expression<?>> getArgs();
+     getArgs():Array<Expression<any>>;
 
     /**
      * Create a projection with the given arguments
@@ -40,7 +37,6 @@ public interface FactoryExpression<T> extends Expression<T> {
      * @param args row arguments
      * @return constructed value
      */
-    @Nullable
-    T newInstance(Object... args);
+    newInstance<T>(...args:any[]);
 
 }
