@@ -11,10 +11,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core.types;
 
-import com.querydsl.core.QueryMetadata;
-
+import {Expression} from "./Expression";
 /**
  * {@code SubQueryExpression} represents a sub query.
  *
@@ -22,13 +20,13 @@ import com.querydsl.core.QueryMetadata;
  *
  * @param <T> return type of subquery
  */
-public interface SubQueryExpression<T> extends Expression<T> {
+export interface SubQueryExpression<T> extends Expression<T> {
 
     /**
      * Get the query metadata for the subquery
      *
      * @return metadata
      */
-    QueryMetadata getMetadata();
+    getMetadata():QueryMetadata;
 
 }
