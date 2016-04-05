@@ -11,9 +11,46 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core.types;
+import {ImmutableClass} from "../../../../javax/annotation/concurrent/Immutable";
+import {FinalClass, Final} from "../../../../java/Final";
+import {ExpressionBase} from "./ExpressionBase";
+import {Constant} from "./Constant";
+import {Byte} from "../../../../java/lang/Byte";
+import {Short} from "../../../../java/lang/Short";
 
-import javax.annotation.concurrent.Immutable;
+class Constants {
+
+    @Final
+    static  Constant<Character>[] CHARACTERS = new Constant[CACHE_SIZE];
+
+    @Final
+    static  Constant<Byte>[] BYTES = new Constant[CACHE_SIZE];
+
+    @Final
+    static  Constant<Integer>[] INTEGERS = new Constant[CACHE_SIZE];
+
+    @Final
+    static  Constant<Long>[] LONGS = new Constant[CACHE_SIZE];
+
+    @Final
+    static  Constant<Short>[] SHORTS = new Constant[CACHE_SIZE];
+
+    @Final
+     static final Constant<Boolean> FALSE = new ConstantImpl<Boolean>(Boolean.FALSE);
+
+    @Final
+     static final Constant<Boolean> TRUE = new ConstantImpl<Boolean>(Boolean.TRUE);
+
+    static {
+    for (int i = 0; i < CACHE_SIZE; i++) {
+    INTEGERS[i] = new ConstantImpl<Integer>(Integer.class, i);
+    SHORTS[i] = new ConstantImpl<Short>(Short.class, (short) i);
+    BYTES[i] = new ConstantImpl<Byte>(Byte.class, (byte) i);
+    CHARACTERS[i] = new ConstantImpl<Character>(Character.class, (char) i);
+    LONGS[i] = new ConstantImpl<Long>(Long.class, (long) i);
+}
+}
+}
 
 /**
  * {@code ConstantImpl} is the default implementation of the {@link Constant} interface
@@ -21,70 +58,46 @@ import javax.annotation.concurrent.Immutable;
  * @author tiwe
  * @param <T> expression type
  */
-@Immutable
-public final class ConstantImpl<T> extends ExpressionBase<T> implements Constant<T> {
+@ImmutableClass
+@FinalClass
+export class ConstantImpl<T> extends ExpressionBase<T> implements Constant<T> {
 
+    @Final
     private static final long serialVersionUID = -3898138057967814118L;
 
+    @Final
     private static final int CACHE_SIZE = 256;
-
-    private static class Constants {
-
-        @SuppressWarnings({"rawtypes", "unchecked"}) //generic array creation not possible
-        private static final Constant<Character>[] CHARACTERS = new Constant[CACHE_SIZE];
-
-        @SuppressWarnings({"rawtypes", "unchecked"}) //generic array creation not possible
-        private static final Constant<Byte>[] BYTES = new Constant[CACHE_SIZE];
-
-        @SuppressWarnings({"rawtypes", "unchecked"}) //generic array creation not possible
-        private static final Constant<Integer>[] INTEGERS = new Constant[CACHE_SIZE];
-
-        @SuppressWarnings({"rawtypes", "unchecked"}) //generic array creation not possible
-        private static final Constant<Long>[] LONGS = new Constant[CACHE_SIZE];
-
-        @SuppressWarnings({"rawtypes", "unchecked"}) //generic array creation not possible
-        private static final Constant<Short>[] SHORTS = new Constant[CACHE_SIZE];
-
-        private static final Constant<Boolean> FALSE = new ConstantImpl<Boolean>(Boolean.FALSE);
-
-        private static final Constant<Boolean> TRUE = new ConstantImpl<Boolean>(Boolean.TRUE);
-
-        static {
-            for (int i = 0; i < CACHE_SIZE; i++) {
-                INTEGERS[i] = new ConstantImpl<Integer>(Integer.class, i);
-                SHORTS[i] = new ConstantImpl<Short>(Short.class, (short) i);
-                BYTES[i] = new ConstantImpl<Byte>(Byte.class, (byte) i);
-                CHARACTERS[i] = new ConstantImpl<Character>(Character.class, (char) i);
-                LONGS[i] = new ConstantImpl<Long>(Long.class, (long) i);
-            }
+    
+    static create<A>(
+        arg: A
+    ): A {
+        switch(typeof arg) {
+            case 'boolean':
+        return arg ? Constants.TRUE : Constants.FALSE;
+            case 'string':
+                if(arg.length === 1) {
+        if (i < CACHE_SIZE) {
+            return Constants.CHARACTERS[i];
+        } else {
+            return new ConstantImpl<Character>(Character.class, i);
         }
+                }
+        }
+        case 'number':
+        if (arg >= 0 && arg < CACHE_SIZE) {
+            return Constants.INTEGERS[arg];
+        } else {
+            return new ConstantImpl<number>(Integer.class, i);
+        }
+
     }
 
-    public static Constant<Boolean> create(boolean b) {
-        return b ? Constants.TRUE : Constants.FALSE;
-    }
 
     public static Constant<Byte> create(byte i) {
         if (i >= 0) {
             return Constants.BYTES[i];
         } else {
             return new ConstantImpl<Byte>(Byte.class, i);
-        }
-    }
-
-    public static Constant<Character> create(char i) {
-        if (i < CACHE_SIZE) {
-            return Constants.CHARACTERS[i];
-        } else {
-            return new ConstantImpl<Character>(Character.class, i);
-        }
-    }
-
-    public static Constant<Integer> create(int i) {
-        if (i >= 0 && i < CACHE_SIZE) {
-            return Constants.INTEGERS[i];
-        } else {
-            return new ConstantImpl<Integer>(Integer.class, i);
         }
     }
 

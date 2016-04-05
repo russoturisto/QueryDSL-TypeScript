@@ -396,30 +396,30 @@ export class Template implements Serializable {
         return template.hashCode();
     }
 
-    private static Number asNumber(Object arg) {
-        if (arg instanceof Number) {
-            return (Number) arg;
-        } else if (arg instanceof Constant) {
-            return (Number) ((Constant) arg).getConstant();
-        } else {
-            throw new IllegalArgumentException(arg.toString());
-        }
-    }
-
-    private static boolean isNumber(Object o) {
-        return o instanceof Number || o instanceof Constant
-                && ((Constant<?>) o).getConstant() instanceof Number;
-    }
-
-    private static Expression<?> asExpression(Object arg) {
-        if (arg instanceof Expression) {
-            return ExpressionUtils.extract((Expression<?>) arg);
-        } else {
-            return Expressions.constant(arg);
-        }
-    }
-
 }
 
+
+function asNumber(arg:number):number {
+    if (typeof arg === 'number') {
+        return <number> arg;
+    } else if (isInstanceOf(arg, ConstantImpl) arg instanceof Constant) {
+        return (Number) ((Constant) arg).getConstant();
+    } else {
+        throw new IllegalArgumentException(arg.toString());
+    }
+}
+
+private static boolean isNumber(Object o) {
+    return o instanceof Number || o instanceof Constant
+        && ((Constant<?>) o).getConstant() instanceof Number;
+}
+
+private static Expression<?> asExpression(Object arg) {
+    if (arg instanceof Expression) {
+        return ExpressionUtils.extract((Expression<?>) arg);
+    } else {
+        return Expressions.constant(arg);
+    }
+}
 
 }

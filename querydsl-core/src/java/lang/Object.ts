@@ -88,6 +88,9 @@ export function hashCode(
 			if (!object) {
 				return 0;
 			}
+			if(object instanceof Date) {
+				return object.getTime();
+			}
 			return objectHashCode(object);
 	}
 }
@@ -167,6 +170,14 @@ export function equals(
 				return object1 == object2;
 				break;
 			case 'object':
+				if(object1 instanceof Date) {
+					if(object2 instanceof Date) {
+						return object1.getTime() === object2.getTime();
+					}
+					return false;
+				} else if(object2 instanceof Date) {
+					return false;
+				}
 				return objectEquals(object1, object2);
 			default:
 				throw `Unkown typeof objects ${typeof object1}`;
