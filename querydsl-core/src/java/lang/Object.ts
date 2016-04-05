@@ -2,6 +2,31 @@
  * Created by Papa on 4/2/2016.
  */
 
+function prototypeDescendsFrom(
+	prototype:any,
+	ancestorPrototype:any
+):boolean {
+	if(!prototype) {
+		return false;
+	}
+	if(prototype === ancestorPrototype) {
+		return true;
+	}
+	return Object.getPrototypeOf(prototype);
+}
+
+export function isInstanceOf(
+	object:any,
+	Class:any
+):boolean {
+	if(!object || !Class || !Class.prototype) {
+		return false;
+	}
+	let prototype = Object.getPrototypeOf(object);
+	return prototypeDescendsFrom(prototype, Class.prototype);
+}
+
+
 function objectHashCode(
 	object:any //
 ):number {

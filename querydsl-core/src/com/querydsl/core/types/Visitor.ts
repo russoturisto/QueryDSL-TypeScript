@@ -17,6 +17,8 @@ import {Operation} from "./Operation";
 import {Path} from "./Path";
 import {FactoryExpression} from "./FactoryExpression";
 import {ParamExpression} from "./ParamExpression";
+import {SubQueryExpression} from "./SubQueryExpression";
+import {TemplateExpression} from "./TemplateExpression";
 
 /**
  * {@code Visitor} defines a visitor signature for {@link Expression} instances.

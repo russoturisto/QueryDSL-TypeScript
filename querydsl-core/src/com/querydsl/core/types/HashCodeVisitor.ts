@@ -20,6 +20,8 @@ import {ExpressionType, Expression} from "./Expression";
 import {hashCode} from "../../../../java/lang/Object";
 import {FactoryExpression} from "./FactoryExpression";
 import {ParamExpression} from "./ParamExpression";
+import {SubQueryExpression} from "./SubQueryExpression";
+import {TemplateExpression} from "./TemplateExpression";
 
 /**
  * {@code HashCodeVisitor} is used for hashCode generation in {@link Expression} implementations.
@@ -57,7 +59,7 @@ export class HashCodeVisitor implements Visitor<number,void> {
 				let result:number = hashCode(operation.getOperator().name());
 				return 31 * result + hashCode(operation.getArgs());
 			case   ExpressionType.PARAM_EXPRESSION:
-				let paramExpression = <ParamExpression>exrp;
+				let paramExpression = <ParamExpression>expr;
 				return hashCode(paramExpression.getName());
 			case  ExpressionType.PATH:
 				let path = <Path>expr;

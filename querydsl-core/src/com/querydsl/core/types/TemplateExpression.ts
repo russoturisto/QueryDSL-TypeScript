@@ -11,10 +11,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core.types;
 
-import java.util.List;
-
+import {Expression} from "./Expression";
 /**
  * {@code TemplateExpression} provides base types for custom expressions with integrated
  * serialization templates
@@ -22,28 +20,28 @@ import java.util.List;
  * @author tiwe
  * @param <T> expression type
  */
-public interface TemplateExpression<T> extends Expression<T> {
+export interface TemplateExpression<T> extends Expression<T> {
 
-    /**
-     * Get the argument with the given index
-     *
-     * @param index zero based index of element
-     * @return element at index
-     */
-    Object getArg(int index);
+	/**
+	 * Get the argument with the given index
+	 *
+	 * @param index zero based index of element
+	 * @return element at index
+	 */
+	getArg( index:number ):any;
 
-    /**
-     * Get the arguments of the custom expression
-     *
-     * @return expression argument
-     */
-    List<?> getArgs();
+	/**
+	 * Get the arguments of the custom expression
+	 *
+	 * @return expression argument
+	 */
+	getArgs():Array<any>;
 
-    /**
-     * Get the serialization template for this custom expression
-     *
-     * @return template
-     */
-    Template getTemplate();
+	/**
+	 * Get the serialization template for this custom expression
+	 *
+	 * @return template
+	 */
+	getTemplate():Template;
 
 }

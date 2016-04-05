@@ -13,6 +13,7 @@
  */
 
 import {Expression} from "./Expression";
+import {QueryMetadata} from "../QueryMetadata";
 /**
  * {@code SubQueryExpression} represents a sub query.
  *

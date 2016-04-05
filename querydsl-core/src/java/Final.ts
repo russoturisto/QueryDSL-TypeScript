@@ -8,6 +8,9 @@ export function Final() {
 	return null;
 }
 
+export function FinalParameter(target: Object, propertyKey: string | symbol, parameterIndex: number) {
+}
+
 export function FinalClass(constructor: Function) {
 }
 

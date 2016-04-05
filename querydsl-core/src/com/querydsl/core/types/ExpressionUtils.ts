@@ -11,15 +11,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core.types;
-
-import java.util.*;
-
-import javax.annotation.Nullable;
-
-import com.google.common.collect.ImmutableList;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.QueryException;
 
 /**
  * {@code ExpressionUtils} provides utilities for constructing common operation instances. This class is
@@ -29,7 +20,10 @@ import com.querydsl.core.QueryException;
  * @author tiwe
  *
  */
-public final class ExpressionUtils {
+import {FinalClass} from "../../../../java/Final";
+
+@FinalClass
+export class ExpressionUtils {
 
     private static final class UnderscoreTemplates extends Templates {
         private UnderscoreTemplates() {
