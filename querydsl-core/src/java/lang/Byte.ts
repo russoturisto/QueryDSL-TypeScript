@@ -3,5 +3,10 @@
  */
 
 export class Byte {
+	constructor(
+		public byte:number
+	){
+
+	}
     
 }

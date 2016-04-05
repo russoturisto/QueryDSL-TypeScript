@@ -1,0 +1,25 @@
+{
+  "name": "querydsl-typescript",
+  "version": "0.0.1",
+  "description": "QuerDSL port to TypeScript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/russoturisto/QueryDSL-TypeScript.git"
+  },
+  "keywords": [
+    "QueryDSL",
+    "JavaScript",
+    "JS",
+    "TypeScript"
+  ],
+  "author": "russoturisto",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/russoturisto/QueryDSL-TypeScript/issues"
+  },
+  "homepage": "https://github.com/russoturisto/QueryDSL-TypeScript#readme"
+}

@@ -3,5 +3,10 @@
  */
 
 export class Short {
-    
+
+	constructor(
+		public short:number
+	){
+
+	}
 }

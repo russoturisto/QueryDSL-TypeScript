@@ -21,18 +21,20 @@
  *
  */
 import {FinalClass} from "../../../../java/Final";
+import {PathType} from "./PathType";
+
+@FinalClass
+class UnderscoreTemplates extends Templates {
+    private UnderscoreTemplates() {
+        ExpressionUtils.add(PathType.PROPERTY, "{0}_{1}");
+        ExpressionUtils.add(PathType.COLLECTION_ANY, "{0}");
+        ExpressionUtils.add(PathType.LISTVALUE, "{0}_{1}");
+        ExpressionUtils.add(PathType.LISTVALUE_CONSTANT, "{0}_{1}");
+    }
+}
 
 @FinalClass
 export class ExpressionUtils {
-
-    private static final class UnderscoreTemplates extends Templates {
-        private UnderscoreTemplates() {
-            add(PathType.PROPERTY, "{0}_{1}");
-            add(PathType.COLLECTION_ANY, "{0}");
-            add(PathType.LISTVALUE, "{0}_{1}");
-            add(PathType.LISTVALUE_CONSTANT, "{0}_{1}");
-        }
-    }
 
     private static final Templates TEMPLATES = new UnderscoreTemplates();
 

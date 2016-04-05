@@ -17,39 +17,53 @@ import {ExpressionBase} from "./ExpressionBase";
 import {Constant} from "./Constant";
 import {Byte} from "../../../../java/lang/Byte";
 import {Short} from "../../../../java/lang/Short";
+import {Long} from "../../../../java/lang/Long";
+import {Character} from "../../../../java/lang/Character";
+import {Integer} from "../../../../java/lang/Integer";
+import {ExpressionType} from "./Expression";
+import {Long} from "../../../../java/lang/Long";
+import {Visitor} from "./Visitor";
+import {isInstanceOf, equals} from "../../../../java/lang/Object";
 
 class Constants {
 
-    @Final
-    static  Constant<Character>[] CHARACTERS = new Constant[CACHE_SIZE];
+	@Final
+	static CHARACTERS:Constant<Character>[] = [];
 
-    @Final
-    static  Constant<Byte>[] BYTES = new Constant[CACHE_SIZE];
+	@Final
+	static BYTES:Constant<Byte>[] = [];
 
-    @Final
-    static  Constant<Integer>[] INTEGERS = new Constant[CACHE_SIZE];
+	@Final
+	static INTEGERS:Constant<Integer>[] = [];
 
-    @Final
-    static  Constant<Long>[] LONGS = new Constant[CACHE_SIZE];
+	@Final
+	static LONGS:Constant<Long>[] = [];
 
-    @Final
-    static  Constant<Short>[] SHORTS = new Constant[CACHE_SIZE];
+	@Final
+	static SHORTS:Constant<Short>[] = [];
 
-    @Final
-     static final Constant<Boolean> FALSE = new ConstantImpl<Boolean>(Boolean.FALSE);
+	@Final
+	static NUMBERS:Constant<number>[] = [];
 
-    @Final
-     static final Constant<Boolean> TRUE = new ConstantImpl<Boolean>(Boolean.TRUE);
+	@Final
+	static FALSE:Constant<Boolean> = new ConstantImpl<boolean>(false);
 
-    static {
-    for (int i = 0; i < CACHE_SIZE; i++) {
-    INTEGERS[i] = new ConstantImpl<Integer>(Integer.class, i);
-    SHORTS[i] = new ConstantImpl<Short>(Short.class, (short) i);
-    BYTES[i] = new ConstantImpl<Byte>(Byte.class, (byte) i);
-    CHARACTERS[i] = new ConstantImpl<Character>(Character.class, (char) i);
-    LONGS[i] = new ConstantImpl<Long>(Long.class, (long) i);
-}
-}
+	@Final
+	static TRUE:Constant<Boolean> = new ConstantImpl<boolean>(true);
+
+	static init():boolean {
+		for (let i = 0; i < ConstantImpl.CACHE_SIZE; i++) {
+			Constants.INTEGERS[i] = new ConstantImpl<Integer>(new Integer(i));
+			Constants.SHORTS[i] = new ConstantImpl<Short>(new Short(i));
+			Constants.BYTES[i] = new ConstantImpl<Byte>(new Byte(i));
+			Constants.CHARACTERS[i] = new ConstantImpl<Character>(new Character(String.fromCharCode(i)));
+			Constants.LONGS[i] = new ConstantImpl<Long>(new Long(i));
+			Constants.NUMBERS[i] = new ConstantImpl<number>(i);
+		}
+		return true;
+	}
+
+	static initialized = Constants.init();
 }
 
 /**
@@ -62,111 +76,107 @@ class Constants {
 @FinalClass
 export class ConstantImpl<T> extends ExpressionBase<T> implements Constant<T> {
 
-    @Final
-    private static final long serialVersionUID = -3898138057967814118L;
+	@Final
+	private static serialVersionUID = -3898138057967814118;
 
-    @Final
-    private static final int CACHE_SIZE = 256;
-    
-    static create<A>(
-        arg: A
-    ): A {
-        switch(typeof arg) {
-            case 'boolean':
-        return arg ? Constants.TRUE : Constants.FALSE;
-            case 'string':
-                if(arg.length === 1) {
-        if (i < CACHE_SIZE) {
-            return Constants.CHARACTERS[i];
-        } else {
-            return new ConstantImpl<Character>(Character.class, i);
-        }
-                }
-        }
-        case 'number':
-        if (arg >= 0 && arg < CACHE_SIZE) {
-            return Constants.INTEGERS[arg];
-        } else {
-            return new ConstantImpl<number>(Integer.class, i);
-        }
+	@Final
+	static CACHE_SIZE = 256;
 
-    }
+	static create<T>(
+		arg:T
+	):Constant<T> {
+		switch (typeof arg) {
+			case 'boolean':
+				return arg ? Constants.TRUE : Constants.FALSE;
+			case 'string':
+				if (arg.length === 1) {
+					let charCode = arg.charCodeAt(0);
+					if (charCode < ConstantImpl.CACHE_SIZE) {
+						return Constants.CHARACTERS[charCode];
+					} else {
+						return new ConstantImpl<Character>(new Character(arg));
+					}
+				}
+				return new ConstantImpl(arg)
+			case 'number':
+				if (arg >= 0 && arg < ConstantImpl.CACHE_SIZE) {
+					return Constants.NUMBERS[arg];
+				} else {
+					return new ConstantImpl<number>(arg);
+				}
+			case 'object':
+				if (arg instanceof Byte) {
+					if (arg.byte < ConstantImpl.CACHE_SIZE) {
+						return Constants.BYTES[arg.byte];
+					} else {
+						return new ConstantImpl<Byte>(new Byte(arg));
+					}
+				} else if (arg instanceof Short) {
+					if (arg.short < ConstantImpl.CACHE_SIZE) {
+						return Constants.SHORTS[arg.short];
+					} else {
+						return new ConstantImpl<Short>(new Short(arg));
+					}
+				} else if (arg instanceof Integer) {
+					if (arg.integer < ConstantImpl.CACHE_SIZE) {
+						return Constants.INTEGERS[arg.integer];
+					} else {
+						return new ConstantImpl<Integer>(new Integer(arg));
+					}
+				} else if (arg instanceof Long) {
+					if (arg.long < ConstantImpl.CACHE_SIZE) {
+						return Constants.LONGS[arg.long];
+					} else {
+						return new ConstantImpl<Long>(new Long(arg));
+					}
+				} else if (arg instanceof Character) {
+					let charCode = arg.getCharCode();
+					if (arg.getCharCode() < ConstantImpl.CACHE_SIZE) {
+						return Constants.CHARACTERS[charCode];
+					} else {
+						return new ConstantImpl<Character>(new Character(arg));
+					}
+				}
+				return new ConstantImpl<T>(arg);
+		}
 
+	}
 
-    public static Constant<Byte> create(byte i) {
-        if (i >= 0) {
-            return Constants.BYTES[i];
-        } else {
-            return new ConstantImpl<Byte>(Byte.class, i);
-        }
-    }
+	@Final
+	private constant:T;
 
-    public static Constant<Long> create(long i) {
-        if (i >= 0 && i < CACHE_SIZE) {
-            return Constants.LONGS[(int) i];
-        } else {
-            return new ConstantImpl<Long>(Long.class, i);
-        }
-    }
+	/**
+	 * Create a new Constant of the given type for the given object
+	 *
+	 * @param type type of the expression
+	 * @param constant constant
+	 */
+	constructor(
+		constant:any
+	) {
+		super(ExpressionType.CONSTANT);
+		this.constant = constant;
+	}
 
-    public static Constant<Short> create(short i) {
-        if (i >= 0 && i < CACHE_SIZE) {
-            return Constants.SHORTS[i];
-        } else {
-            return new ConstantImpl<Short>(Short.class, i);
-        }
-    }
+	public accept<R, C>(
+		v:Visitor<R, C>,
+		context:C
+	):R {
+		return v.visit(this, context);
+	}
 
-    public static <T> Constant<T> create(T obj) {
-        return new ConstantImpl<T>(obj);
-    }
+	public equals( o:any ):boolean {
+		if (o == this) {
+			return true;
+		} else if (isInstanceOf(o, ConstantImpl)) {
+			return equals((<Constant<any>> o).getConstant(), this.constant);
+		} else {
+			return false;
+		}
+	}
 
-    public static <T> Constant<T> create(Class<T> type, T constant) {
-        return new ConstantImpl<T>(type, constant);
-    }
-
-    private final T constant;
-
-    /**
-     * Create a new Constant for the given object
-     *
-     * @param constant constant
-     */
-    @SuppressWarnings("unchecked") //The class of the constant will mandate the type
-    private ConstantImpl(T constant) {
-        this((Class) constant.getClass(), constant);
-    }
-
-    /**
-     * Create a new Constant of the given type for the given object
-     *
-     * @param type type of the expression
-     * @param constant constant
-     */
-    private ConstantImpl(Class<T> type, T constant) {
-        super(type);
-        this.constant = constant;
-    }
-
-    @Override
-    public <R, C> R accept(Visitor<R, C> v, C context) {
-        return v.visit(this, context);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == this) {
-            return true;
-        } else if (o instanceof Constant<?>) {
-            return ((Constant<?>) o).getConstant().equals(constant);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public T getConstant() {
-        return constant;
-    }
+	public getConstant():T {
+		return this.constant;
+	}
 
 }

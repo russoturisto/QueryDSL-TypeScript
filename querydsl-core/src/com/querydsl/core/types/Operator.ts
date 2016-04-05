@@ -34,6 +34,6 @@ export interface Operator extends Serializable {
 	 *
 	 * @return type
 	 */
-	getType():Class<any>;
+	getType():any;
 
 }
