@@ -11,6 +11,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/// <reference path='../../../../../../node_modules/immutable/dist/immutable.d.ts'/>
+
 import {Immutable} from "immutable/dist/immutable";
 import {Operator} from "./Operator";
 import {Integer} from "../../../../java/lang/Integer";
@@ -137,6 +139,8 @@ export class Ops extends OpsBase {
 
 	// subquery operations
 	static EXISTS = new Ops(Boolean);
+
+
 
 	@Final
 	public static equalsOps:Immutable.Set<Operator> = Immutable.Set<Operator>(Ops.EQ);

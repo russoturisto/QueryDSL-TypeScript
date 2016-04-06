@@ -13,6 +13,7 @@
  */
 
 import {Expression} from "./Expression";
+import {Template} from "./Template";
 /**
  * {@code TemplateExpression} provides base types for custom expressions with integrated
  * serialization templates

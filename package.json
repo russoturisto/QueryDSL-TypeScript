@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/russoturisto/QueryDSL-TypeScript/issues"
   },
-  "homepage": "https://github.com/russoturisto/QueryDSL-TypeScript#readme"
+  "homepage": "https://github.com/russoturisto/QueryDSL-TypeScript#readme",
+  "dependencies": {
+    "immutable": "^3.7.6"
+  }
 }
