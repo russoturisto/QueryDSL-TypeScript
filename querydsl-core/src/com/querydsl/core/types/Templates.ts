@@ -22,6 +22,8 @@
 
 import {Final} from "../../../../java/Final";
 import {Char} from "../../../../java/Char";
+import {Operator} from "./Operator";
+import {Template} from "./Template";
 /**
  * Precedence order based on Java language operator precedence
  */
@@ -61,14 +63,15 @@ export class Templates {
 
     @Final
     public static DEFAULT:Templates = new Templates();
+    // JavaScript Maps behave in the same way as IdentityHashMaps in Java
     @Final
-    private templates:Map<Operator, Template> = new IdentityHashMap<Operator, Template>(150);
+    private templates:Map<Operator, Template> = new Map<Operator, Template>(); // IdentityHashMap
 
     @Final
-    private precedence:Map<Operator, Integer> = new IdentityHashMap<Operator, Integer>(150);
+    private precedence:Map<Operator, number> = new Map<Operator, number>(); // IdentityHashMap
 
     @Final
-    private TemplateFactory templateFactory;
+    private  templateFactory:TemplateFactory;
 
     @Final
     @Char
