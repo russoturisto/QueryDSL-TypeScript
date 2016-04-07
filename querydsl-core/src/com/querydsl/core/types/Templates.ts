@@ -11,55 +11,72 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core.types;
-
-import java.util.Arrays;
-import java.util.IdentityHashMap;
-import java.util.Map;
-
-import javax.annotation.Nullable;
 
 /**
  * {@code Templates} provides operator patterns for query expression serialization
  *
  * @author tiwe
  */
-public class Templates {
 
-    /**
-     * Precedence order based on Java language operator precedence
-     */
-    protected static class Precedence {
-        public static final int HIGHEST = -1;
-        public static final int DOT = 5;
-        public static final int NOT_HIGH = 10;
-        public static final int NEGATE = 20;
-        public static final int ARITH_HIGH = 30;
-        public static final int ARITH_LOW = 40;
-        public static final int COMPARISON = 50;
-        public static final int EQUALITY = 60;
-        public static final int CASE = 70, LIST = 70;
-        public static final int NOT = 80;
-        public static final int AND = 90;
-        public static final int XOR = 100, XNOR = 100;
-        public static final int OR = 110;
-    }
 
-    public static final Templates DEFAULT = new Templates();
 
-    private final Map<Operator, Template> templates = new IdentityHashMap<Operator, Template>(150);
+import {Final} from "../../../../java/Final";
+import {Char} from "../../../../java/Char";
+/**
+ * Precedence order based on Java language operator precedence
+ */
+class Precedence {
+    @Final
+    public static HIGHEST = -1;
+    @Final
+    public static DOT = 5;
+    @Final
+    public static NOT_HIGH = 10;
+    @Final
+    public static NEGATE = 20;
+    @Final
+    public static ARITH_HIGH = 30;
+    @Final
+    public static ARITH_LOW = 40;
+    @Final
+    public static COMPARISON = 50;
+    @Final
+    public static EQUALITY = 60;
+    @Final
+    public static CASE = 70, LIST = 70;
+    @Final
+    public static NOT = 80;
+    @Final
+    public static AND = 90;
+    @Final
+    public static XOR = 100;
+    @Final
+    static XNOR = 100;
+    @Final
+    public static OR = 110;
+}
 
-    private final Map<Operator, Integer> precedence = new IdentityHashMap<Operator, Integer>(150);
 
-    private final TemplateFactory templateFactory;
+export class Templates {
 
-    private final char escape;
+    @Final
+    public static DEFAULT:Templates = new Templates();
+    @Final
+    private templates:Map<Operator, Template> = new IdentityHashMap<Operator, Template>(150);
 
-    protected Templates() {
-        this('\\');
-    }
+    @Final
+    private precedence:Map<Operator, Integer> = new IdentityHashMap<Operator, Integer>(150);
 
-    protected Templates(char escape) {
+    @Final
+    private TemplateFactory templateFactory;
+
+    @Final
+    @Char
+    private escape:string;
+
+    constructor(
+        @Char escape?:string = '\\'
+    ) {
         this.escape = escape;
         templateFactory = new TemplateFactory(escape) {
             @Override

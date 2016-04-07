@@ -22,6 +22,7 @@
  */
 import {FinalClass} from "../../../../java/Final";
 import {PathType} from "./PathType";
+import {Templates} from "./Templates";
 
 @FinalClass
 class UnderscoreTemplates extends Templates {

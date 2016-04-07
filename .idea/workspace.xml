@@ -5,11 +5,27 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8322ebc1-9272-4c63-9e9f-f1c51e544bcc" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/QueryDSL-TypeScript.iml" afterPath="$PROJECT_DIR$/.idea/QueryDSL-TypeScript.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/querydsl-core/src/Collections.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/querydsl-core/src/java/Char.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/querydsl-core/src/java/util/Arrays.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/querydsl-core/src/java/util/IdentityHashMap.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/querydsl-core/src/java/util/Map.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Templates.java" afterPath="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Templates.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/immutable/LICENSE" afterPath="$PROJECT_DIR$/node_modules/immutable/LICENSE" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/immutable/PATENTS" afterPath="$PROJECT_DIR$/node_modules/immutable/PATENTS" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/immutable/README.md" afterPath="$PROJECT_DIR$/node_modules/immutable/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/immutable/contrib/cursor/README.md" afterPath="$PROJECT_DIR$/node_modules/immutable/contrib/cursor/README.md" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/immutable/contrib/cursor/__tests__/Cursor.ts" afterPath="$PROJECT_DIR$/node_modules/immutable/contrib/cursor/__tests__/Cursor.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/immutable/contrib/cursor/index.d.ts" afterPath="$PROJECT_DIR$/node_modules/immutable/contrib/cursor/index.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/immutable/contrib/cursor/index.js" afterPath="$PROJECT_DIR$/node_modules/immutable/contrib/cursor/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/immutable/dist/immutable.d.ts" afterPath="$PROJECT_DIR$/node_modules/immutable/dist/immutable.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/immutable/dist/immutable.js" afterPath="$PROJECT_DIR$/node_modules/immutable/dist/immutable.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/immutable/dist/immutable.min.js" afterPath="$PROJECT_DIR$/node_modules/immutable/dist/immutable.min.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/node_modules/immutable/package.json" afterPath="$PROJECT_DIR$/node_modules/immutable/package.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Ops.ts" afterPath="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Ops.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/TemplateExpression.ts" afterPath="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/TemplateExpression.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ExpressionUtils.ts" afterPath="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ExpressionUtils.ts" />
     </list>
     <ignored path="QueryDSL-TypeScript.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,25 +48,60 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-          <file leaf-file-name="Template.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Template.ts">
+          <file leaf-file-name="Templates.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Templates.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2534">
-                  <caret line="194" column="13" selection-start-line="194" selection-start-column="13" selection-end-line="194" selection-end-column="13" />
+                <state relative-caret-position="224">
+                  <caret line="59" column="24" selection-start-line="59" selection-start-column="24" selection-end-line="59" selection-end-column="24" />
                   <folding>
-                    <element signature="n#!!doc" expanded="true" />
-                    <element signature="e#790#852#0" expanded="true" />
+                    <element signature="e#737#782#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Templates.java" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Templates.java">
+          <file leaf-file-name="Collections.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/querydsl-core/src/Collections.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+                <state relative-caret-position="-229">
+                  <caret line="108" column="38" selection-start-line="108" selection-start-column="38" selection-end-line="108" selection-end-column="38" />
+                  <folding>
+                    <element signature="n#!!doc;n#Symbol#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/.gitignore">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="68">
+                  <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
                   <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="IdentityHashMap.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/querydsl-core/src/java/util/IdentityHashMap.ts">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="51">
+                  <caret line="5" column="56" selection-start-line="5" selection-start-column="56" selection-end-line="5" selection-end-column="56" />
+                  <folding>
+                    <element signature="n#!!doc;n#IdentityHashMap#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Map.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/querydsl-core/src/java/util/Map.ts">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="34">
+                  <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
+                  <folding>
+                    <element signature="n#!!doc;n#Map#0" expanded="false" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -67,11 +118,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
+          <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/package.json">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="425">
-                  <caret line="25" column="25" selection-start-line="25" selection-start-column="25" selection-end-line="25" selection-end-column="25" />
+                  <caret line="27" column="3" selection-start-line="27" selection-start-column="3" selection-end-line="27" selection-end-column="3" />
                   <folding />
                 </state>
               </provider>
@@ -80,26 +131,9 @@
           <file leaf-file-name="lib.d.ts" pinned="false" current-in-tab="false">
             <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/typescriptCompiler/external/lib.d.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1888">
+                <state relative-caret-position="8568">
                   <caret line="517" column="12" selection-start-line="517" selection-start-column="12" selection-end-line="517" selection-end-column="12" />
                   <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/node_modules/immutable/package.json">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-714">
-                  <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-                  <folding>
-                    <element signature="n#!!block;n#devDependencies#0;n#!!top" expanded="false" />
-                    <element signature="n#!!block;n#dist#0;n#!!top" expanded="false" />
-                    <element signature="n#!!block;n#engines#0;n#!!top" expanded="false" />
-                    <element signature="e#1874#1952#0" expanded="false" />
-                    <element signature="n#!!block;n#jest#0;n#!!top" expanded="false" />
-                    <element signature="e#2263#2433#0" expanded="false" />
-                  </folding>
                 </state>
               </provider>
             </entry>
@@ -107,7 +141,7 @@
           <file leaf-file-name="ConstantImpl.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ConstantImpl.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="323">
+                <state relative-caret-position="-2065">
                   <caret line="19" column="46" selection-start-line="19" selection-start-column="46" selection-end-line="19" selection-end-column="46" />
                   <folding>
                     <element signature="n#!!doc" expanded="true" />
@@ -124,19 +158,6 @@
                   <folding>
                     <element signature="n#!!doc" expanded="true" />
                     <element signature="e#624#686#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="QueryMetadata.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/QueryMetadata.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="459">
-                  <caret line="27" column="34" selection-start-line="27" selection-start-column="34" selection-end-line="27" selection-end-column="34" />
-                  <folding>
-                    <element signature="n#!!doc" expanded="true" />
-                    <element signature="e#624#683#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -159,10 +180,10 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="ExpressionBase.ts" pinned="false" current-in-tab="true">
+          <file leaf-file-name="ExpressionBase.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ExpressionBase.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="255">
+                <state relative-caret-position="-500">
                   <caret line="15" column="45" selection-start-line="15" selection-start-column="45" selection-end-line="15" selection-end-column="45" />
                   <folding>
                     <element signature="n#!!doc" expanded="true" />
@@ -206,13 +227,14 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="ExpressionUtils.ts" pinned="false" current-in-tab="false">
+          <file leaf-file-name="ExpressionUtils.ts" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ExpressionUtils.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="374">
-                  <caret line="22" column="42" selection-start-line="22" selection-start-column="42" selection-end-line="22" selection-end-column="42" />
+                <state relative-caret-position="459">
+                  <caret line="27" column="43" selection-start-line="27" selection-start-column="43" selection-end-line="27" selection-end-column="43" />
                   <folding>
                     <element signature="n#!!doc" expanded="true" />
+                    <element signature="e#957#1007#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -270,13 +292,20 @@
         <option value="$PROJECT_DIR$/querydsl-core/src/java/lang/Byte.ts" />
         <option value="$PROJECT_DIR$/querydsl-core/src/java/lang/Short.ts" />
         <option value="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ConstantImpl.ts" />
-        <option value="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ExpressionUtils.ts" />
         <option value="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Operator.ts" />
         <option value="$PROJECT_DIR$/querydsl-core/src/java/lang/Comparable.ts" />
         <option value="$PROJECT_DIR$/node_modules/immutable/dist/immutable.d.ts" />
         <option value="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/TemplateExpression.ts" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Ops.ts" />
+        <option value="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ExpressionUtils.ts" />
+        <option value="$PROJECT_DIR$/querydsl-core/src/java/util/Arrays.ts" />
+        <option value="$PROJECT_DIR$/querydsl-core/src/java/Char.ts" />
+        <option value="$PROJECT_DIR$/querydsl-core/src/java/util/Map.ts" />
+        <option value="$PROJECT_DIR$/querydsl-core/src/java/util/IdentityHashMap.ts" />
+        <option value="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Templates.ts" />
+        <option value="$PROJECT_DIR$/querydsl-core/src/Collections.ts" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -288,8 +317,8 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1096" />
+    <option name="width" value="1932" />
+    <option name="height" value="1092" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -317,7 +346,6 @@
     </navigator>
     <panes>
       <pane id="Scope" />
-      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -384,6 +412,7 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -477,23 +506,24 @@
       <workItem from="1459827572666" duration="4684000" />
       <workItem from="1459864395366" duration="5168000" />
       <workItem from="1459911359256" duration="3589000" />
+      <workItem from="1460003093630" duration="1826000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="36607000" />
+    <option name="totallyTimeSpent" value="38433000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
+    <frame x="-8" y="-8" width="1932" height="1092" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12908325" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12935586" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33021808" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.33125" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -541,54 +571,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/javax/annotation/concurrent/Immutable.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="44">
-          <caret line="4" column="27" selection-start-line="4" selection-start-column="27" selection-end-line="4" selection-end-column="27" />
-          <folding>
-            <element signature="n#!!doc;n#Immutable#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/PathMetadata.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#723#785#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ExpressionException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/java/io/Serializable.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="5" column="2" selection-start-line="5" selection-start-column="2" selection-end-line="5" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/google/common/base/Objects.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/java/lang/IllegalStateException.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="11" column="2" selection-start-line="11" selection-start-column="2" selection-end-line="11" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/FactoryExpressionUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -660,7 +642,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="5" column="25" selection-start-line="5" selection-start-column="16" selection-end-line="5" selection-end-column="25" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -683,14 +664,6 @@
             <element signature="n#!!doc" expanded="false" />
             <element signature="e#624#664#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/java/Final.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="10" column="30" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -760,17 +733,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Expression.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="12" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-            <element signature="e#624#686#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/querydsl-core/src/java/lang/Short.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -820,16 +782,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ConstantImpl.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="46" selection-start-line="19" selection-start-column="46" selection-end-line="19" selection-end-column="46" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ParamExpressionImpl.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="518">
@@ -864,24 +816,6 @@
         <state relative-caret-position="102">
           <caret line="19" column="13" selection-start-line="19" selection-start-column="13" selection-end-line="19" selection-end-column="13" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Templates.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ExpressionUtils.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="22" column="42" selection-start-line="22" selection-start-column="42" selection-end-line="22" selection-end-column="42" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -927,25 +861,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/immutable/package.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-714">
+        <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="n#!!block;n#devDependencies#0;n#!!top" expanded="false" />
             <element signature="n#!!block;n#dist#0;n#!!top" expanded="false" />
             <element signature="n#!!block;n#engines#0;n#!!top" expanded="false" />
-            <element signature="e#1874#1952#0" expanded="false" />
+            <element signature="e#1883#1961#0" expanded="false" />
             <element signature="n#!!block;n#jest#0;n#!!top" expanded="false" />
-            <element signature="e#2263#2433#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ExpressionBase.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="15" column="45" selection-start-line="15" selection-start-column="45" selection-end-line="15" selection-end-column="45" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#2272#2442#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -963,7 +887,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Template.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2534">
+        <state relative-caret-position="0">
           <caret line="194" column="13" selection-start-line="194" selection-start-column="13" selection-end-line="194" selection-end-column="13" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
@@ -974,7 +898,7 @@
     </entry>
     <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/typescriptCompiler/external/lib.d.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1888">
+        <state relative-caret-position="8568">
           <caret line="517" column="12" selection-start-line="517" selection-start-column="12" selection-end-line="517" selection-end-column="12" />
           <folding />
         </state>
@@ -1011,7 +935,125 @@
     <entry file="file://$PROJECT_DIR$/package.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="425">
-          <caret line="25" column="25" selection-start-line="25" selection-start-column="25" selection-end-line="25" selection-end-column="25" />
+          <caret line="27" column="3" selection-start-line="27" selection-start-column="3" selection-end-line="27" selection-end-column="3" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ConstantImpl.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2065">
+          <caret line="19" column="46" selection-start-line="19" selection-start-column="46" selection-end-line="19" selection-end-column="46" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ExpressionBase.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-500">
+          <caret line="15" column="45" selection-start-line="15" selection-start-column="45" selection-end-line="15" selection-end-column="45" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Expression.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="12" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="12" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#624#686#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ExpressionUtils.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="27" column="43" selection-start-line="27" selection-start-column="43" selection-end-line="27" selection-end-column="43" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <element signature="e#957#1007#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/querydsl-core/src/java/util/Arrays.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="5" column="4" selection-start-line="5" selection-start-column="4" selection-end-line="5" selection-end-column="4" />
+          <folding>
+            <element signature="n#!!doc;n#Arrays#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/querydsl-core/src/java/Char.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="10" column="20" selection-start-line="10" selection-start-column="20" selection-end-line="10" selection-end-column="20" />
+          <folding>
+            <element signature="n#!!doc;n#Char#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/querydsl-core/src/java/Final.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="8" column="1" selection-start-line="8" selection-start-column="1" selection-end-line="11" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/querydsl-core/src/java/util/Map.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="4" column="32" selection-start-line="4" selection-start-column="32" selection-end-line="4" selection-end-column="32" />
+          <folding>
+            <element signature="n#!!doc;n#Map#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/querydsl-core/src/java/util/IdentityHashMap.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="5" column="56" selection-start-line="5" selection-start-column="56" selection-end-line="5" selection-end-column="56" />
+          <folding>
+            <element signature="n#!!doc;n#IdentityHashMap#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Templates.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="59" column="24" selection-start-line="59" selection-start-column="24" selection-end-line="59" selection-end-column="24" />
+          <folding>
+            <element signature="e#737#782#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/querydsl-core/src/Collections.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-229">
+          <caret line="108" column="38" selection-start-line="108" selection-start-column="38" selection-end-line="108" selection-end-column="38" />
+          <folding>
+            <element signature="n#!!doc;n#Symbol#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
           <folding />
         </state>
       </provider>
