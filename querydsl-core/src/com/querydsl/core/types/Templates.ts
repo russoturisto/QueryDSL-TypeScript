@@ -71,7 +71,7 @@ export class Templates {
     private precedence:Map<Operator, number> = new Map<Operator, number>(); // IdentityHashMap
 
     @Final
-    private  templateFactory:TemplateFactory;
+    private  templateFactory:TemplateFactory; 
 
     @Final
     @Char
