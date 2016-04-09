@@ -24,6 +24,7 @@ import {ExpressionType} from "./Expression";
 import {Long} from "../../../../java/lang/Long";
 import {Visitor} from "./Visitor";
 import {isInstanceOf, equals} from "../../../../java/lang/Object";
+import {instanceOfConstant} from "./TSUtils";
 
 class Constants {
 
@@ -168,7 +169,7 @@ export class ConstantImpl<T> extends ExpressionBase<T> implements Constant<T> {
 	public equals( o:any ):boolean {
 		if (o == this) {
 			return true;
-		} else if (isInstanceOf(o, ConstantImpl)) {
+		} else if (instanceOfConstant(o)) {
 			return equals((<Constant<any>> o).getConstant(), this.constant);
 		} else {
 			return false;

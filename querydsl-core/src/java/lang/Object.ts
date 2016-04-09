@@ -15,7 +15,7 @@ function prototypeDescendsFrom(
 	return Object.getPrototypeOf(prototype);
 }
 
-export function isInstanceOf(
+function isAnInstanceOf(
 	object:any,
 	Class:any
 ):boolean {
@@ -24,6 +24,21 @@ export function isInstanceOf(
 	}
 	let prototype = Object.getPrototypeOf(object);
 	return prototypeDescendsFrom(prototype, Class.prototype);
+}
+
+export function isInstanceOf(
+	object:any,
+	Class:any
+):boolean {
+	if(Class instanceof Array) {
+		return Class.some((AClass) => {
+			if(isAnInstanceOf(object, AClass)) {
+				return true;
+			}
+		});
+	} else {
+		return isAnInstanceOf(object, Class);
+	}
 }
 
 

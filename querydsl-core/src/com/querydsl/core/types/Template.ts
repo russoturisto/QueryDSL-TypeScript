@@ -24,9 +24,15 @@ import {FinalClass, Final, FinalParameter} from "../../../../java/Final";
 import {ExpressionType, Expression} from "./Expression";
 import {ExpressionBase} from "./ExpressionBase";
 import {Transient} from "../../../../java/Transient";
-import {isInstanceOf} from "../../../../java/lang/Object";
+import {isInstanceOf, hashCode} from "../../../../java/lang/Object";
 import {ExpressionUtils} from "./ExpressionUtils";
 import {Operator} from "./Operator";
+import {Operation as OperationInterface}  from "./Operation";
+import {ConstantImpl} from "./ConstantImpl";
+import {Constant} from "./Constant";
+import {IllegalArgumentException} from "../../../../java/lang/IllegalArgumentException";
+import {Ops} from "./Ops";
+import {instanceOfOperation, instanceOfConstant, instanceOfExpression, instanceOfTemplate} from "./TSUtils";
 
 
 export namespace Template {
@@ -194,7 +200,7 @@ public convert(@FinalParameter args:Array<any>):any {
 
     // Assume that getType only exists in Expression derivaties
     if(arg.getType && typeof arg.getType === 'getType') {
-    if (isInstanceOf(arg, ExpressionBase)) {
+    if (instanceOfExpression(arg)) {
         return ExpressionUtils.extract(<Expression<any>> arg);
     } else {
         return arg;
@@ -247,64 +253,69 @@ export class Operation extends Element {
 }
 
 public convert(args:Array<any>):any {
-    let arg1 = args[index1];
-    let arg2 = args[index2];
+    let arg1 = args[this.index1];
+    let arg2 = args[this.index2];
     if (isNumber(arg1) && isNumber(arg2)) {
-        return MathUtils.result(asNumber(arg1), asNumber(arg2), operator);
+        return MathUtils.result(asNumber(arg1), asNumber(arg2), this.operator);
     } else {
-        Expression<?> expr1 = asExpression(arg1);
-        Expression<?> expr2 = asExpression(arg2);
+         let expr1:Expression<any> = asExpression(arg1);
+         let expr2:Expression<any> = asExpression(arg2);
 
-        if (arg2 instanceof Number) {
-            if (CONVERTIBLES.contains(operator) && expr1 instanceof com.querydsl.core.types.Operation) {
-                com.querydsl.core.types.Operation operation = (com.querydsl.core.types.Operation) expr1;
-                if (CONVERTIBLES.contains(operation.getOperator()) && operation.getArg(1) instanceof Constant) {
-                    Number num1 = ((Constant<Number>) operation.getArg(1)).getConstant();
-                    Number num2;
-                    if (operator == operation.getOperator()) {
-                        num2 = MathUtils.result(num1, (Number) arg2, Ops.ADD);
+        if (typeof arg2 === "number") {
+            if (CONVERTIBLES.contains(this.operator) &&  instanceOfOperation(expr1)) {
+                let operation:OperationInterface = <OperationInterface> expr1;
+                if (CONVERTIBLES.contains(operation.getOperator()) && instanceOfConstant(operation.getArg(1))) {
+                    let num1:number = (<Constant<number>> operation.getArg(1)).getConstant();
+                    let num2:number;
+                    if (this.operator == operation.getOperator()) {
+                        num2 = MathUtils.result(num1, <number>arg2, Ops.ADD);
                     } else if (operator == Ops.ADD) {
-                        num2 = MathUtils.result((Number) arg2, num1, Ops.SUB);
+                        num2 = MathUtils.result(<number>arg2, num1, Ops.SUB);
                     } else {
-                        num2 = MathUtils.result(num1, (Number) arg2, Ops.SUB);
+                        num2 = MathUtils.result(num1, <number>arg2, Ops.SUB);
                     }
-                    return ExpressionUtils.operation(expr1.getType(), operator,
+                    return ExpressionUtils.operation(expr1.getType(), this.operator,
                       operation.getArg(0), Expressions.constant(num2));
                 }
             }
         }
 
-        return ExpressionUtils.operation(expr1.getType(), operator, expr1, expr2);
+        return ExpressionUtils.operation(expr1.getType(), this.operator, expr1, expr2);
     }
 }
 
-@Override
 public boolean isString() {
-    return asString;
+    return this.asString;
 }
 
-@Override
-public String toString() {
-    return index1 + " " + operator + " " + index2;
+public toString():string {
+    return this.index1 + " " + this.operator + " " + this.index2;
 }
 }
 
 /**
  * Math operation with constant
  */
-public static final class OperationConst extends Element {
+	@FinalClass
+export class OperationConst extends Element {
 
-    private static final long serialVersionUID = 1400801176778801584L;
+	@Final
+    private serialVersionUID = 1400801176778801584;
 
-    private final int index1;
+	@Final
+    private int index1;
 
-    private final BigDecimal arg2;
+	@Final
+    private  arg2:BigDecimal;
 
-    private final Expression<BigDecimal> expr2;
+	@Final
+    private  expr2:Expression<BigDecimal>;
 
-    private final Operator operator;
+	@Final
+    private Operator operator;
 
-    private final boolean asString;
+	@Final
+    private  asString:boolean;
 
     public OperationConst(int index1, BigDecimal arg2, Operator operator, boolean asString) {
     this.index1 = index1;
@@ -354,46 +365,50 @@ public String toString() {
 }
 }
 
+var CONVERTIBLES = Immutable.Set<Operator>([Ops.ADD, Ops.SUB]);
+
 @ImmutableClass
 @FinalClass
 export class Template implements Serializable {
 
-    private static final long serialVersionUID = -1697705745769542204L;
+	@Final
+    private static serialVersionUID = -1697705745769542204;
 
-    private static final Set<? extends Operator> CONVERTIBLES = Sets.immutableEnumSet(Ops.ADD, Ops.SUB);
+	@Final
 
-    private final ImmutableList<Element> elements;
+	@Final
+    private elements:Immutable.List<Element>;
 
-    private final String template;
+	@Final
+    private template:string;
 
-    Template(String template, ImmutableList<Element> elements) {
+    constructor(
+			template:string,
+			 elements:Immutable.List<Element>) {
         this.template = template;
         this.elements = elements;
     }
 
-    public List<Element> getElements() {
-        return elements;
+    public getElements():Immutable.List<Element> {
+        return this.elements;
     }
 
-    @Override
-    public String toString() {
-        return template;
+    public toString():string {
+        return this.template;
     }
 
-    @Override
-    public boolean equals(Object o) {
+    public equals(o:any):boolean {
         if (o == this) {
             return true;
-        } else if (o instanceof Template) {
-            return ((Template) o).template.equals(template);
+        } else if (instanceOfTemplate(o)) {
+            return (<Template> o).template === this.template;
         } else {
             return false;
         }
     }
 
-    @Override
-    public int hashCode() {
-        return template.hashCode();
+    public hashCode():number {
+        return hashCode(this.template);
     }
 
 }
@@ -402,24 +417,26 @@ export class Template implements Serializable {
 function asNumber(arg:number):number {
     if (typeof arg === 'number') {
         return <number> arg;
-    } else if (isInstanceOf(arg, ConstantImpl) arg instanceof Constant) {
-        return (Number) ((Constant) arg).getConstant();
+    } else if (instanceOfConstant(ConstantImpl)) {
+        return (<Constant<number>> arg).getConstant();
     } else {
         throw new IllegalArgumentException(arg.toString());
     }
 }
 
-private static boolean isNumber(Object o) {
-    return o instanceof Number || o instanceof Constant
-        && ((Constant<?>) o).getConstant() instanceof Number;
+function  isNumber(o:any):boolean {
+    return isANumber(o) || (instanceOfConstant(o)
+        && isANumber((<Constant<number>> o).getConstant()));
 }
 
-private static Expression<?> asExpression(Object arg) {
-    if (arg instanceof Expression) {
-        return ExpressionUtils.extract((Expression<?>) arg);
+function isANumber(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+function  asExpression(arg:any):Expression<any> {
+    if (instanceOfExpression(arg)) {
+        return ExpressionUtils.extract(<Expression<any>> arg);
     } else {
         return Expressions.constant(arg);
     }
-}
-
 }
