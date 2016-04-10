@@ -24,6 +24,8 @@ import {Final} from "../../../../java/Final";
 import {Char} from "../../../../java/Char";
 import {Operator} from "./Operator";
 import {Template} from "./Template";
+import {TemplateFactory} from "./TemplateFactory";
+import {Ops} from "./Ops";
 /**
  * Precedence order based on Java language operator precedence
  */

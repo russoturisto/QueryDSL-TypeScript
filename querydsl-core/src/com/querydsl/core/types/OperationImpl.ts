@@ -11,15 +11,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.querydsl.core.types;
-
-import java.util.List;
-
-import javax.annotation.concurrent.Immutable;
-
-import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
-import com.google.common.primitives.Primitives;
+import {ImmutableClass} from "../../../../javax/annotation/concurrent/Immutable";
+//import com.google.common.base.Preconditions;
+//import com.google.common.collect.ImmutableList;
+//import com.google.common.primitives.Primitives;
+import {ExpressionBase} from "./ExpressionBase";
+import {Operation} from "./Operation";
+import {Final} from "../../../../java/Final";
+import {Operator} from "./Operator";
+import {ExpressionType, Expression} from "./Expression";
+import {instanceOfOperation} from "./TSUtils";
 
 /**
  * {@code OperationImpl} is the default implementation of the {@link Operation} interface
@@ -28,23 +29,27 @@ import com.google.common.primitives.Primitives;
  *
  * @param <T> expression type
  */
-@Immutable
-public class OperationImpl<T> extends ExpressionBase<T> implements Operation<T> {
+@ImmutableClass
+export class OperationImpl<T> extends ExpressionBase<T> implements Operation<T> {
 
-    private static final long serialVersionUID = 4796432056083507588L;
+    @Final
+    private static serialVersionUID = 4796432056083507588;
 
-    private final ImmutableList<Expression<?>> args;
+    @Final
+    private args:Immutable.List<Expression<any>>;
 
-    private final Operator operator;
+    @Final
+    private operator:Operator;
 
-    protected OperationImpl(Class<? extends T> type, Operator operator, Expression<?>... args) {
-        this(type, operator, ImmutableList.copyOf(args));
-    }
-
-    protected OperationImpl(Class<? extends T> type, Operator operator, ImmutableList<Expression<?>> args) {
+    constructor(
+      type:ExpressionType,
+    	operator:Operator,
+    	...args:Expression<any>[]
+    ) {
         super(type);
+        let argsList = Immutable.List.of(args);
         Class<?> wrapped = Primitives.wrap(type);
-        Preconditions.checkArgument(operator.getType().isAssignableFrom(wrapped), operator.name());
+        Preconditions.checkArgument(this.operator.getType().isAssignableFrom(wrapped), operator.name());
         this.operator = operator;
         this.args = args;
     }

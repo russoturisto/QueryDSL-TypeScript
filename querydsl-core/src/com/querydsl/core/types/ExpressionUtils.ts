@@ -20,9 +20,13 @@
  * @author tiwe
  *
  */
-import {FinalClass} from "../../../../java/Final";
+import {FinalClass, Final} from "../../../../java/Final";
 import {PathType} from "./PathType";
 import {Templates} from "./Templates";
+import {Operator} from "./Operator";
+import {Expression} from "./Expression";
+import {Operation} from "./Operation";
+import {Class} from "../../../../java/lang/Class";
 
 @FinalClass
 class UnderscoreTemplates extends Templates {
@@ -37,7 +41,8 @@ class UnderscoreTemplates extends Templates {
 @FinalClass
 export class ExpressionUtils {
 
-    private static final Templates TEMPLATES = new UnderscoreTemplates();
+    @Final
+    private static TEMPLATES:Templates = new UnderscoreTemplates();
 
     /**
      * Create a new Operation expression
@@ -47,9 +52,12 @@ export class ExpressionUtils {
      * @param args operation arguments
      * @return operation expression
      */
-    public static <T> Operation<T> operation(Class<? extends T> type, Operator operator,
-                                             Expression<?>... args) {
-        return operation(type, operator, ImmutableList.copyOf(args));
+    public static operation:<T>(
+        type:Class<T>,
+        operator:Operator,
+        ...args:Expression<any>[]
+    ):Operation<T> {
+        return this.operation(type, operator, Immutable.List.copyOf(args));
     }
 
     /**
@@ -60,11 +68,13 @@ export class ExpressionUtils {
      * @param args operation arguments
      * @return operation expression
      */
-    @SuppressWarnings("unchecked")
-    public static <T> Operation<T> operation(Class<? extends T> type, Operator operator,
-                                             ImmutableList<Expression<?>> args) {
+    public static listOperation:<T>(
+         type:Class<T>,
+         operator:Operator,
+         args:Immutable.List<Expression<any>>
+    ):Operation<T> {
         if (type.equals(Boolean.class)) {
-            return (Operation<T>) new PredicateOperation(operator, args);
+            return <Operation<T>> new PredicateOperation(operator, args);
         } else {
             return new OperationImpl<T>(type, operator, args);
         }
@@ -77,8 +87,11 @@ export class ExpressionUtils {
      * @param args operation arguments
      * @return operation expression
      */
-    public static PredicateOperation predicate(Operator operator, Expression<?>... args) {
-        return predicate(operator, ImmutableList.copyOf(args));
+    public static  predicate(
+   operator:Operator,
+    ...args:Expression<?>
+):PredicateOperation {
+        return this.predicate(operator, Immutable.List.copyOf(args));
     }
 
     /**
@@ -88,7 +101,10 @@ export class ExpressionUtils {
      * @param args operation arguments
      * @return operation expression
      */
-    public static PredicateOperation predicate(Operator operator, ImmutableList<Expression<?>> args) {
+    public static predicate(
+   operator:Operator,
+   args:Immutable.List<Expression<any>>
+):PredicateOperation {
         return new PredicateOperation(operator, args);
     }
 

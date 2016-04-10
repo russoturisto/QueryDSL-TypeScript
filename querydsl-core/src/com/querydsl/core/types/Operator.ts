@@ -14,6 +14,7 @@
 
 import {Serializable} from "../../../../java/io/Serializable";
 import {Class} from "../../../../java/lang/Class";
+import {ExpressionType} from "./Expression";
 /**
  * {@code Operator} represents operator symbols.
  * <p>Implementations should be enums for automatic instance management.</p>
@@ -34,6 +35,6 @@ export interface Operator extends Serializable {
 	 *
 	 * @return type
 	 */
-	getType():any;
+	getType():ExpressionType;
 
 }

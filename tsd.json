@@ -1,0 +1,12 @@
+{
+  "version": "v4",
+  "repo": "borisyankov/DefinitelyTyped",
+  "ref": "master",
+  "path": "typings",
+  "bundle": "typings/tsd.d.ts",
+  "installed": {
+    "decimal.js/decimal.js.d.ts": {
+      "commit": "8d44da84eb10cdcd2f7ea133f289caef817cb2b9"
+    }
+  }
+}

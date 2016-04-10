@@ -28,6 +28,19 @@ export enum ExpressionType {
 
 }
 
+export function getExpressionType(
+	param:any
+):ExpressionType {
+	switch(typeof param) {
+		case 'boolean':
+		case 'number':
+		case 'string':
+			return ExpressionType.CONSTANT;
+		default:
+			throw `unsupported ExpressionType for param: ` + param;
+	}
+}
+
 export function getExpressionTypeName(
 	expressionType:ExpressionType
 ):string {

@@ -13,7 +13,6 @@
  */
 
 import {Expression, ExpressionType} from "./Expression";
-import {Class} from "../../../../java/lang/Class";
 import {Final} from "../../../../java/Final";
 import {Transient} from "../../../../java/Transient";
 import {Visitor} from "./Visitor";
