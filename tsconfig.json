@@ -2,16 +2,19 @@
   "version": "1.8.9",
   "compileOnSave": true,
   "compilerOptions": {
-    "target": "ES5",
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "sourceMap": true,
+    "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": false,
+    "outDir": "lib/",
+    "sourceMap": true,
     "removeComments": false,
-    "noImplicitAny": false
+    "target": "ES5"
   },
   "exclude": [
+    "lib",
     "node_modules",
     "QdTs-PH",
     "querydsl-core",

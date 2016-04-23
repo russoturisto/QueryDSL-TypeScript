@@ -3,6 +3,6 @@
  */
 import {IQEntity} from "../entity/Entity";
 
-export interface IField<Q extends IQEntity> {
+export interface IField<Q extends IQEntity<Q>> {
 
 }

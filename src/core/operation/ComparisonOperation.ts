@@ -5,19 +5,19 @@ import {IQEntity} from "../entity/Entity";
 import {IOperation, Operation} from "./Operation";
 import {OperationType} from "./OperationType";
 
-export interface IComparisonOperation<T, Q extends IQEntity>
+export interface IComparisonOperation<T, Q extends IQEntity<Q>>
 extends IOperation<Q> {
 
 	equals(
-		value:T | IComparisonOperation
-	):IComparisonOperation<Q>;
+		value:T | IComparisonOperation<T, Q>
+	):IComparisonOperation<T, Q>;
 
 }
 
-export class ComparisonOperation<T, Q extends IQEntity> extends Operation<Q> implements IComparisonOperation<T, Q> {
+export class ComparisonOperation<T, Q extends IQEntity<Q>> extends Operation<Q> implements IComparisonOperation<T, Q> {
 
 	value:T;
-	operationValue:ComparisonOperation;
+	operationValue:ComparisonOperation<T, Q>;
 
 	constructor(
 		q:Q,
@@ -28,19 +28,19 @@ export class ComparisonOperation<T, Q extends IQEntity> extends Operation<Q> imp
 	}
 
 	equals(
-		value:T | IComparisonOperation
+		value:T | IComparisonOperation<T, Q>
 	):ComparisonOperation<T, Q> {
 		this.type = OperationType.EQUALS;
 		if (value instanceof ComparisonOperation) {
 			this.operationValue = value;
 		} else {
-			this.value = value;
+			this.value = <T>value;
 		}
 
 		return this;
 	}
 
-	valueEquals<OP extends Operation<Q>>(
+	valueEquals<OQ extends IQEntity<OQ>, OP extends Operation<Q>>(
 		otherOp:OP,
 		checkValue?:boolean
 	):boolean {
@@ -48,7 +48,7 @@ export class ComparisonOperation<T, Q extends IQEntity> extends Operation<Q> imp
 			return false;
 		}
 
-		let otherCOp:ComparisonOperation = <ComparisonOperation>otherOp;
+		let otherCOp:ComparisonOperation<T, OQ> = <any>otherOp;
 		if (checkValue) {
 			return this.value === otherCOp.value;
 		}

@@ -5,7 +5,7 @@ import {IQEntity} from "../entity/Entity";
 import {IOperation, Operation} from "./Operation";
 import {OperationType} from "./OperationType";
 
-export interface ILogicalOperation<Q extends IQEntity>
+export interface ILogicalOperation<Q extends IQEntity<Q>>
 extends IOperation<Q> {
 
 	and(
@@ -22,7 +22,7 @@ extends IOperation<Q> {
 
 }
 
-export class LogicalOperation<Q extends IQEntity>
+export class LogicalOperation<Q extends IQEntity<Q>>
 extends Operation<Q> {
 
 	constructor(

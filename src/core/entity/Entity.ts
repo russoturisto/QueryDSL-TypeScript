@@ -6,19 +6,19 @@ import {IOperation} from "../operation/Operation";
 import {OperationType} from "../operation/OperationType";
 import {IComparisonOperation} from "../operation/ComparisonOperation";
 
-export interface IQEntity<Q extends IQEntity> extends ILogicalOperation<Q> {
+export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
 
 	fields(
 		fields:IOperation<Q>[]
 	):Q;
 
-	joinOn(
-		comparisonOp:IComparisonOperation
+	joinOn<T>(
+		comparisonOp:IComparisonOperation<T, Q>
 	);
 
 }
 
-export class QEntity<Q extends QEntity> implements IQEntity<Q> {
+export class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
 
 	relations = [];
 
@@ -52,8 +52,8 @@ export class QEntity<Q extends QEntity> implements IQEntity<Q> {
 		throw `Not implemented`;
 	}
 
-	joinOn(
-		comparisonOp:IComparisonOperation
+	joinOn<T>(
+		comparisonOp:IComparisonOperation<T, Q>
 	) {
 		if (<any>comparisonOp.getQ() !== this) {
 			throw `Must join on own field`;

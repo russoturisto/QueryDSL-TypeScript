@@ -5,7 +5,7 @@ import {IComparisonOperation, ComparisonOperation} from "../operation/Comparison
 import {IQEntity} from "../entity/Entity";
 import {IOperation} from "../operation/Operation";
 
-export class StringField<Q extends IQEntity>
+export class StringField<Q extends IQEntity<Q>>
 implements IComparisonOperation<string, Q>,
 					 IOperation<Q> {
 
@@ -24,7 +24,7 @@ implements IComparisonOperation<string, Q>,
 	setComparisonOperation( value:string ) {
 	}
 
-	equals( value:string ):IOperation<Q> {
+	equals( value:string ):IComparisonOperation<string, Q> {
 		let eqOp = new ComparisonOperation(this.qEntity, this.fieldName);
 		eqOp.equals(value);
 

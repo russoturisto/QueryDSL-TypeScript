@@ -4,7 +4,7 @@
 import {IQEntity} from "../entity/Entity";
 import {OperationType} from "./OperationType";
 
-export interface IOperation<Q extends IQEntity> {
+export interface IOperation<Q extends IQEntity<Q>> {
 
 	objectEquals<OP extends IOperation<Q>>(
 		otherOp:OP,
@@ -15,7 +15,7 @@ export interface IOperation<Q extends IQEntity> {
 
 }
 
-export abstract class Operation<Q extends IQEntity> implements IOperation<Q> {
+export abstract class Operation<Q extends IQEntity<Q>> implements IOperation<Q> {
 
 	constructor(
 		public q:Q,
