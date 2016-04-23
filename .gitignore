@@ -4,7 +4,6 @@
 bootstrap.json
 build/
 ext/
-lib/
 node_modules/
 QdTs-PH/
 typings/
