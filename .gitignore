@@ -3,3 +3,6 @@ bootstrap.json
 build/
 ext/
 node_modules/
+**/*.js
+**/*.js.map
+QdTs-PH/
