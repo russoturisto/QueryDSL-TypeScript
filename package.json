@@ -1,8 +1,16 @@
 {
   "name": "querydsl-typescript",
   "version": "0.0.1",
-  "description": "QuerDSL port to TypeScript",
+  "description": "QueryDSL for TypeScript",
   "main": "index.js",
+  "typings": "lib/index",
+  "dependencies": {
+    "es6-shim": "^0.35.0",
+    "immutable": "^3.7.6"
+  },
+  "devDependencies": {
+    "typescript": "^1.8.10"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -11,24 +19,13 @@
     "url": "git+https://github.com/russoturisto/QueryDSL-TypeScript.git"
   },
   "keywords": [
-    "QueryDSL",
-    "JavaScript",
-    "JS",
-    "TypeScript"
+    "TypeScript",
+    "QueryDSL"
   ],
-  "author": "russoturisto",
+  "author": "Russo Turisto <russoturisto@hotmail.com> (https://russoturistoo.wordpress.com/blog/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/russoturisto/QueryDSL-TypeScript/issues"
   },
-  "homepage": "https://github.com/russoturisto/QueryDSL-TypeScript#readme",
-  "dependencies": {
-    "es6-shim": "^0.35.0",
-    "immutable": "^3.7.6"
-  },
-  "devDependencies": {
-    "typescript": "^1.8.10"
-  },
-  "main": "lib/index.js",
-  "typings": "lib/index"
+  "homepage": "https://github.com/russoturisto/QueryDSL-TypeScript#readme"
 }
