@@ -141,8 +141,8 @@ export function equals(
 	object1:any,
 	object2:any
 ):boolean {
-	if(object1 && typeof object1 !== 'function' && object1.equals && typeof object1.equals === 'function') {
-		let doesEqual = object1.equals(object2);
+	if(object1 && typeof object1 !== 'function' && object1.objectEquals && typeof object1.objectEquals === 'function') {
+		let doesEqual = object1.objectEquals(object2);
 		return doesEqual;
 	}
 	if (object1 === object2) {

@@ -73,7 +73,7 @@ export class ExpressionUtils {
          operator:Operator,
          args:Immutable.List<Expression<any>>
     ):Operation<T> {
-        if (type.equals(Boolean.class)) {
+        if (type.objectEquals(Boolean.class)) {
             return <Operation<T>> new PredicateOperation(operator, args);
         } else {
             return new OperationImpl<T>(type, operator, args);
@@ -234,7 +234,7 @@ export class ExpressionUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> TemplateExpression<T> template(Class<? extends T> cl, Template template, ImmutableList<?> args) {
-        if (cl.equals(Boolean.class)) {
+        if (cl.objectEquals(Boolean.class)) {
             return (TemplateExpression<T>) new PredicateTemplate(template, args);
         } else {
             return new TemplateExpressionImpl<T>(cl, template, args);
@@ -551,7 +551,7 @@ export class ExpressionUtils {
             if (matchStartAndEnd && !like.endsWith("%")) {
                 rv.append('$');
             }
-            if (!like.equals(rv.toString())) {
+            if (!like.objectEquals(rv.toString())) {
                 return ConstantImpl.create(rv.toString());
             }
         } else if (expr instanceof Operation<?>) {
@@ -631,7 +631,7 @@ export class ExpressionUtils {
                 rv.append(ch);
                 escape = false;
             }
-            if (!rv.toString().equals(str)) {
+            if (!rv.toString().objectEquals(str)) {
                 return ConstantImpl.create(rv.toString());
             }
         } else if (expr instanceof Operation<?>) {
