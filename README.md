@@ -1,2 +1,2 @@
 # QueryDSL-TypeScript
-QueryDSL port to TypeScript
+QueryDSL for TypeScript

@@ -1,9 +1,5 @@
 **/*.js
 **/*.js.map
-.architect
-bootstrap.json
-build/
-ext/
 node_modules/
 QdTs-PH/
 typings/
