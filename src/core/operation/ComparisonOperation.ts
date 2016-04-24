@@ -5,7 +5,7 @@ import {IQEntity} from "../entity/Entity";
 import {IOperation, Operation} from "./Operation";
 import {OperationType} from "./OperationType";
 
-export interface IComparisonOperation<T, Q extends IQEntity<Q>, C extends ComparisonOperation<T, Q, C>>
+export interface IComparisonOperation<T, Q extends IQEntity<Q>, C extends IComparisonOperation<T, Q, C>>
 extends IOperation<Q> {
 
 	equals(
