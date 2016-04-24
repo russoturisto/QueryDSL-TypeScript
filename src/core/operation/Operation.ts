@@ -20,7 +20,8 @@ export abstract class Operation<Q extends IQEntity<Q>> implements IOperation<Q> 
 	constructor(
 		public q:Q,
 		public fieldName?:string,
-		public type?:OperationType
+		public type?:OperationType,
+		public nativeFieldName:string = fieldName
 	) {
 	}
 

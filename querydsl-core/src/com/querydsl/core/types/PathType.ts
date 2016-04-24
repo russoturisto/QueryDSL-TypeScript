@@ -49,12 +49,12 @@ export class PathType implements Operator {
 	static LISTVALUE_CONSTANT = 6;
 
 	/**
-	 * Map value access (map.get(key))
+	 * Map eq access (map.get(key))
 	 */
 	static MAPVALUE = 7;
 
 	/**
-	 * Map value access with constant (map.get(key))
+	 * Map eq access with constant (map.get(key))
 	 */
 	static MAPVALUE_CONSTANT = 8;
 

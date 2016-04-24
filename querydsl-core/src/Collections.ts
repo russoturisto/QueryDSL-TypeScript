@@ -6,7 +6,7 @@ interface Symbol {
     /** Returns a string representation of an object. */
     toString(): string;
 
-    /** Returns the primitive value of the specified object. */
+    /** Returns the primitive eq of the specified object. */
     valueOf(): Object;
 
     readonly [Symbol.toStringTag]: "Symbol";
@@ -19,7 +19,7 @@ interface SymbolConstructor {
     readonly prototype: Symbol;
 
     /**
-     * Returns a new unique Symbol value.
+     * Returns a new unique Symbol eq.
      * @param  description Description of the new Symbol object.
      */
     (description?: string|number): symbol;

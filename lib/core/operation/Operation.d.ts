@@ -11,7 +11,8 @@ export declare abstract class Operation<Q extends IQEntity<Q>> implements IOpera
     q: Q;
     fieldName: string;
     type: OperationType;
-    constructor(q: Q, fieldName?: string, type?: OperationType);
+    nativeFieldName: string;
+    constructor(q: Q, fieldName?: string, type?: OperationType, nativeFieldName?: string);
     getQ(): Q;
     objectEquals<OP extends Operation<Q>>(otherOp: OP, checkValue?: boolean): boolean;
     protected abstract valueEquals<OP extends Operation<Q>>(otherOp: OP, checkChildValues?: boolean): boolean;

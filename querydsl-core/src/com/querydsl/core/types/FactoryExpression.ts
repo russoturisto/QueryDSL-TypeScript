@@ -35,7 +35,7 @@ export interface FactoryExpression<T> extends Expression<T> {
      * Create a projection with the given arguments
      *
      * @param args row arguments
-     * @return constructed value
+     * @return constructed eq
      */
     newInstance<T>(...args:any[]);
 

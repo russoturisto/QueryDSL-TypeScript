@@ -207,7 +207,7 @@ export interface QueryMetadata extends Serializable {
 	setUnique( unique:boolean ):void;
 
 	/**
-	 * Bind the value for the given parameter expression
+	 * Bind the eq for the given parameter expression
 	 *
 	 * @param <T> binding type
 	 * @param param parameter
