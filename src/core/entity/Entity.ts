@@ -5,6 +5,7 @@ import {ILogicalOperation, LogicalOperation} from "../operation/LogicalOperation
 import {IOperation} from "../operation/Operation";
 import {OperationType} from "../operation/OperationType";
 import {IComparisonOperation} from "../operation/ComparisonOperation";
+import {IQRelation, QRelation} from "./Relation";
 
 export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
 
@@ -16,11 +17,20 @@ export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
 		comparisonOp:IComparisonOperation<T, Q>
 	);
 
+	addOneRelation<OQ extends IQEntity<OQ>>(
+		otherEntity:OQ,
+		foreignKeyProperty:string
+	);
+
+	addManyRelation<OQ extends IQEntity<OQ>>(
+		otherEntity:OQ
+	);
+
 }
 
 export class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
 
-	relations = [];
+	relations:IQRelation<any>[] = [];
 
 	rootOperation:LogicalOperation<Q> = new LogicalOperation<Q>(<any>this, OperationType.AND, []);
 
@@ -30,10 +40,19 @@ export class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
 		// TODO: convert class name to native name if it's not provided
 	}
 
-	addRelation(
-		otherQ:Q
+	addOneRelation<OQ extends IQEntity<OQ>>(
+		otherEntity:OQ,
+		foreignKeyProperty:string
 	) {
-		this.relations.push(otherQ);
+		let relation = new QRelation(otherEntity, foreignKeyProperty);
+		this.relations.push(relation);
+	}
+
+	addManyRelation<OQ extends IQEntity<OQ>>(
+		otherEntity:OQ
+	) {
+		let relation = new QRelation(otherEntity);
+		this.relations.push(relation);
 	}
 
 	addOperation<O extends IOperation<Q>>(
