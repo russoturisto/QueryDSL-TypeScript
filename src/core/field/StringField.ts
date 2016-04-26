@@ -6,9 +6,9 @@ import {IQEntity} from "../entity/Entity";
 import {IOperation} from "../operation/Operation";
 
 export abstract class StringField<Q extends IQEntity<Q>>
-extends ComparisonOperation<string, Q, StringField<Q>> {
+extends ComparisonOperation<string, Q> {
 
-	comparisonOperation:IComparisonOperation<string, Q, StringField<Q>>;
+	comparisonOperation:IComparisonOperation<string, Q>;
 
 	constructor(
 		fieldName:string,

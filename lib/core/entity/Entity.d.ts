@@ -6,7 +6,7 @@ import { IOperation } from "../operation/Operation";
 import { IComparisonOperation } from "../operation/ComparisonOperation";
 export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
     fields(fields: IOperation<Q>[]): Q;
-    joinOn<T, C extends IComparisonOperation<T, Q, C>>(comparisonOp: IComparisonOperation<T, Q, C>): any;
+    joinOn<T, C extends IComparisonOperation<T, Q>>(comparisonOp: IComparisonOperation<T, Q>): any;
 }
 export declare class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
     private nativeName;
@@ -17,7 +17,7 @@ export declare class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
     addOperation<O extends IOperation<Q>>(op: O): void;
     getQ(): Q;
     fields(fields: IOperation<Q>[]): Q;
-    joinOn<T, C extends IComparisonOperation<T, Q, C>>(comparisonOp: IComparisonOperation<T, Q, C>): void;
+    joinOn<T, C extends IComparisonOperation<T, Q>>(comparisonOp: IComparisonOperation<T, Q>): void;
     and(...ops: IOperation<Q>[]): IOperation<Q>;
     or(...ops: IOperation<Q>[]): IOperation<Q>;
     not(op: IOperation<Q>): IOperation<Q>;

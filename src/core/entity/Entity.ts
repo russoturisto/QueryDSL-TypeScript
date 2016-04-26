@@ -12,8 +12,8 @@ export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
 		fields:IOperation<Q>[]
 	):Q;
 
-	joinOn<T, C extends IComparisonOperation<T, Q, C>>(
-		comparisonOp:IComparisonOperation<T, Q, C>
+	joinOn<T, C extends IComparisonOperation<T, Q>>(
+		comparisonOp:IComparisonOperation<T, Q>
 	);
 
 }
@@ -52,8 +52,8 @@ export class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
 		throw `Not implemented`;
 	}
 
-	joinOn<T, C extends IComparisonOperation<T, Q, C>>(
-		comparisonOp:IComparisonOperation<T, Q, C>
+	joinOn<T, C extends IComparisonOperation<T, Q>>(
+		comparisonOp:IComparisonOperation<T, Q>
 	) {
 		if (<any>comparisonOp.getQ() !== this) {
 			throw `Must join on own field`;
