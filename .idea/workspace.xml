@@ -6,14 +6,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8322ebc1-9272-4c63-9e9f-f1c51e544bcc" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.d.ts" afterPath="$PROJECT_DIR$/lib/core/entity/Entity.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/StringField.d.ts" afterPath="$PROJECT_DIR$/lib/core/field/StringField.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/StringField.js.map" afterPath="$PROJECT_DIR$/lib/core/field/StringField.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/ComparisonOperation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/ComparisonOperation.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/ComparisonOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/ComparisonOperation.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/entity/Entity.ts" afterPath="$PROJECT_DIR$/src/core/entity/Entity.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/field/StringField.ts" afterPath="$PROJECT_DIR$/src/core/field/StringField.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/ComparisonOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/ComparisonOperation.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
     </list>
     <ignored path="QueryDSL-TypeScript.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -107,7 +100,7 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="StringField.ts" pinned="false" current-in-tab="true">
+          <file leaf-file-name="StringField.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/core/field/StringField.ts">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="102">
@@ -117,11 +110,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="package.json" pinned="false" current-in-tab="false">
+          <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/package.json">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="204">
-                  <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
+                <state relative-caret-position="34">
+                  <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
                   <folding />
                 </state>
               </provider>
@@ -201,10 +194,10 @@
         <option value="$PROJECT_DIR$/src/core/operation/Operation.ts" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/core/operation/ComparisonOperation.ts" />
         <option value="$PROJECT_DIR$/src/core/entity/Entity.ts" />
         <option value="$PROJECT_DIR$/src/core/field/StringField.ts" />
+        <option value="$PROJECT_DIR$/package.json" />
       </list>
     </option>
   </component>
@@ -450,12 +443,12 @@
       <workItem from="1460164222653" duration="11314000" />
       <workItem from="1461380788957" duration="20577000" />
       <workItem from="1461528566255" duration="2193000" />
-      <workItem from="1461532959197" duration="5072000" />
+      <workItem from="1461532959197" duration="5165000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="78408000" />
+    <option name="totallyTimeSpent" value="78501000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="1912" y="-8" width="1936" height="1096" extended-state="6" />
@@ -892,14 +885,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="4" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
@@ -912,6 +897,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="10" column="52" selection-start-line="10" selection-start-column="52" selection-end-line="10" selection-end-column="52" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="19" selection-start-line="2" selection-start-column="19" selection-end-line="2" selection-end-column="19" />
           <folding />
         </state>
       </provider>
