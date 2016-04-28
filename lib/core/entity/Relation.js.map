@@ -1,1 +1,1 @@
-{"version":3,"file":"Relation.js","sourceRoot":"","sources":["../../../src/core/entity/Relation.ts"],"names":[],"mappings":";AAYA;IAEC,mBACQ,YAAc,EACd,kBAA0B;QAD1B,iBAAY,GAAZ,YAAY,CAAE;QACd,uBAAkB,GAAlB,kBAAkB,CAAQ;IAGlC,CAAC;IAEF,gBAAC;AAAD,CAAC,AATD,IASC;AATY,iBAAS,YASrB,CAAA"}
+{"version":3,"file":"Relation.js","sourceRoot":"","sources":["../../../src/core/entity/Relation.ts"],"names":[],"mappings":";AAYA;IAEC,mBACQ,uBAAgC,EAChC,kBAA0B;QAD1B,4BAAuB,GAAvB,uBAAuB,CAAS;QAChC,uBAAkB,GAAlB,kBAAkB,CAAQ;IAGlC,CAAC;IAEF,gBAAC;AAAD,CAAC,AATD,IASC;AATY,iBAAS,YASrB,CAAA"}

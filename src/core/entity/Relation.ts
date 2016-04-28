@@ -3,17 +3,17 @@ import {IQEntity} from "./Entity";
  * Created by Papa on 4/26/2016.
  */
 
-export interface IQRelation<Q extends IQEntity<Q>> {
+export interface IQRelation {
 
-	targetEntity:Q;
+	targetEntityConstructor:Function;
 	foreignKeyProperty?:string;
 
 }
 
-export class QRelation<Q extends IQEntity<Q>> implements IQRelation<Q> {
+export class QRelation implements IQRelation {
 
 	constructor(
-		public targetEntity:Q,
+		public targetEntityConstructor:Function,
 		public foreignKeyProperty?:string
 	) {
 

@@ -17,20 +17,20 @@ export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
 		comparisonOp:IComparisonOperation<T, Q>
 	);
 
-	addOneRelation<OQ extends IQEntity<OQ>>(
-		otherEntity:OQ,
+	addOneRelation(
+		otherEntityConstructor:Function,
 		foreignKeyProperty:string
 	);
 
-	addManyRelation<OQ extends IQEntity<OQ>>(
-		otherEntity:OQ
+	addManyRelation(
+		otherEntityConstructor:Function
 	);
 
 }
 
 export class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
 
-	relations:IQRelation<any>[] = [];
+	relations:IQRelation[] = [];
 
 	rootOperation:LogicalOperation<Q> = new LogicalOperation<Q>(<any>this, OperationType.AND, []);
 
@@ -40,18 +40,18 @@ export class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
 		// TODO: convert class name to native name if it's not provided
 	}
 
-	addOneRelation<OQ extends IQEntity<OQ>>(
-		otherEntity:OQ,
+	addOneRelation(
+		otherEntityConstructor:Function,
 		foreignKeyProperty:string
 	) {
-		let relation = new QRelation(otherEntity, foreignKeyProperty);
+		let relation = new QRelation(otherEntityConstructor, foreignKeyProperty);
 		this.relations.push(relation);
 	}
 
-	addManyRelation<OQ extends IQEntity<OQ>>(
-		otherEntity:OQ
+	addManyRelation(
+		otherEntityConstructor:Function
 	) {
-		let relation = new QRelation(otherEntity);
+		let relation = new QRelation(otherEntityConstructor);
 		this.relations.push(relation);
 	}
 

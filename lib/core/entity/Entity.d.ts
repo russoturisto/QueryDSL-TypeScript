@@ -8,16 +8,16 @@ import { IQRelation } from "./Relation";
 export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
     fields(fields: IOperation<Q>[]): Q;
     joinOn<T, C extends IComparisonOperation<T, Q>>(comparisonOp: IComparisonOperation<T, Q>): any;
-    addOneRelation<OQ extends IQEntity<OQ>>(otherEntity: OQ, foreignKeyProperty: string): any;
-    addManyRelation<OQ extends IQEntity<OQ>>(otherEntity: OQ): any;
+    addOneRelation(otherEntityConstructor: Function, foreignKeyProperty: string): any;
+    addManyRelation(otherEntityConstructor: Function): any;
 }
 export declare class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
     private nativeName;
-    relations: IQRelation<any>[];
+    relations: IQRelation[];
     rootOperation: LogicalOperation<Q>;
     constructor(nativeName?: string);
-    addOneRelation<OQ extends IQEntity<OQ>>(otherEntity: OQ, foreignKeyProperty: string): void;
-    addManyRelation<OQ extends IQEntity<OQ>>(otherEntity: OQ): void;
+    addOneRelation(otherEntityConstructor: Function, foreignKeyProperty: string): void;
+    addManyRelation(otherEntityConstructor: Function): void;
     addOperation<O extends IOperation<Q>>(op: O): void;
     getQ(): Q;
     fields(fields: IOperation<Q>[]): Q;
