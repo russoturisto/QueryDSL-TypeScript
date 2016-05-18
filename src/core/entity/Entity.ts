@@ -5,7 +5,7 @@ import {ILogicalOperation, LogicalOperation} from "../operation/LogicalOperation
 import {IOperation} from "../operation/Operation";
 import {OperationType} from "../operation/OperationType";
 import {IComparisonOperation} from "../operation/ComparisonOperation";
-import {IQRelation, QRelation} from "./Relation";
+import {IQRelation, QRelation, QRelationType} from "./Relation";
 
 export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
 
@@ -23,7 +23,8 @@ export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
 	);
 
 	addManyRelation(
-		otherEntityConstructor:Function
+		otherEntityConstructor:Function,
+		manyCollectionProperty:string
 	);
 
 }
@@ -44,14 +45,15 @@ export class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
 		otherEntityConstructor:Function,
 		foreignKeyProperty:string
 	) {
-		let relation = new QRelation(otherEntityConstructor, foreignKeyProperty);
+		let relation = new QRelation(otherEntityConstructor, foreignKeyProperty, QRelationType.ONE_TO_MANY);
 		this.relations.push(relation);
 	}
 
 	addManyRelation(
-		otherEntityConstructor:Function
+		otherEntityConstructor:Function,
+		manyCollectionProperty:string
 	) {
-		let relation = new QRelation(otherEntityConstructor);
+		let relation = new QRelation(otherEntityConstructor, manyCollectionProperty, QRelationType.MANY_TO_ONE);
 		this.relations.push(relation);
 	}
 

@@ -9,7 +9,7 @@ export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
     fields(fields: IOperation<Q>[]): Q;
     joinOn<T, C extends IComparisonOperation<T, Q>>(comparisonOp: IComparisonOperation<T, Q>): any;
     addOneRelation(otherEntityConstructor: Function, foreignKeyProperty: string): any;
-    addManyRelation(otherEntityConstructor: Function): any;
+    addManyRelation(otherEntityConstructor: Function, manyCollectionProperty: string): any;
 }
 export declare class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
     private nativeName;
@@ -17,7 +17,7 @@ export declare class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
     rootOperation: LogicalOperation<Q>;
     constructor(nativeName?: string);
     addOneRelation(otherEntityConstructor: Function, foreignKeyProperty: string): void;
-    addManyRelation(otherEntityConstructor: Function): void;
+    addManyRelation(otherEntityConstructor: Function, manyCollectionProperty: string): void;
     addOperation<O extends IOperation<Q>>(op: O): void;
     getQ(): Q;
     fields(fields: IOperation<Q>[]): Q;
