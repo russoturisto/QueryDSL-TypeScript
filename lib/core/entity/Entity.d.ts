@@ -8,16 +8,17 @@ import { IQRelation } from "./Relation";
 export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
     fields(fields: IOperation<Q>[]): Q;
     joinOn<T, C extends IComparisonOperation<T, Q>>(comparisonOp: IComparisonOperation<T, Q>): any;
-    addOneRelation(otherEntityConstructor: Function, foreignKeyProperty: string): any;
-    addManyRelation(otherEntityConstructor: Function, manyCollectionProperty: string): any;
+    addOneRelation<IQR extends IQEntity<IQR>>(foreignKeyProperty: string, otherEntityConstructor: Function, otherQEntity: IQR): any;
+    addManyRelation<IQR extends IQEntity<IQR>>(manyCollectionProperty: string, otherEntityConstructor: Function, otherQEntity: IQR): any;
 }
 export declare class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
+    private entityConstructor;
     private nativeName;
-    relations: IQRelation[];
+    relations: IQRelation<any>[];
     rootOperation: LogicalOperation<Q>;
-    constructor(nativeName?: string);
-    addOneRelation(otherEntityConstructor: Function, foreignKeyProperty: string): void;
-    addManyRelation(otherEntityConstructor: Function, manyCollectionProperty: string): void;
+    constructor(entityConstructor: Function, nativeName?: string);
+    addOneRelation<IQR extends IQEntity<IQR>>(foreignKeyProperty: string, otherEntityConstructor: Function, otherQEnitity: IQR): void;
+    addManyRelation<IQR extends IQEntity<IQR>>(manyCollectionProperty: string, otherEntityConstructor: Function, otherQEnitity: IQR): void;
     addOperation<O extends IOperation<Q>>(op: O): void;
     getQ(): Q;
     fields(fields: IOperation<Q>[]): Q;

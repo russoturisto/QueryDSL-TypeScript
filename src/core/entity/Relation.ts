@@ -8,21 +8,22 @@ export enum QRelationType {
 	MANY_TO_ONE
 }
 
-export interface IQRelation {
+export interface IQRelation<IQR extends IQEntity<IQR>> {
 
-	targetEntityConstructor:Function;
 	relationPropertyName:string;
 	relationType:QRelationType;
+	targetEntityConstructor:Function;
+	targetQEntity:IQR;
 }
 
-export class QRelation implements IQRelation {
+export class QRelation<IQR extends IQEntity<IQR>> implements IQRelation<IQR> {
 
 	constructor(
-		public targetEntityConstructor:Function,
 		public relationPropertyName:string,
-	  public relationType:QRelationType
+	  public relationType:QRelationType,
+		public targetEntityConstructor:Function,
+		public targetQEntity:IQR
 	) {
-
 	}
 
 }

@@ -17,43 +17,48 @@ export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
 		comparisonOp:IComparisonOperation<T, Q>
 	);
 
-	addOneRelation(
+	addOneRelation<IQR extends IQEntity<IQR>>(
+		foreignKeyProperty:string,
 		otherEntityConstructor:Function,
-		foreignKeyProperty:string
+		otherQEntity:IQR
 	);
 
-	addManyRelation(
+	addManyRelation<IQR extends IQEntity<IQR>>(
+		manyCollectionProperty:string,
 		otherEntityConstructor:Function,
-		manyCollectionProperty:string
+		otherQEntity:IQR
 	);
 
 }
 
 export class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
 
-	relations:IQRelation[] = [];
+	relations:IQRelation<any>[] = [];
 
 	rootOperation:LogicalOperation<Q> = new LogicalOperation<Q>(<any>this, OperationType.AND, []);
 
 	constructor(
+		private entityConstructor:Function,
 		private nativeName?:string
 	) {
 		// TODO: convert class name to native name if it's not provided
 	}
 
-	addOneRelation(
+	addOneRelation<IQR extends IQEntity<IQR>>(
+		foreignKeyProperty:string,
 		otherEntityConstructor:Function,
-		foreignKeyProperty:string
+		otherQEnitity:IQR
 	) {
-		let relation = new QRelation(otherEntityConstructor, foreignKeyProperty, QRelationType.ONE_TO_MANY);
+		let relation = new QRelation(foreignKeyProperty, QRelationType.ONE_TO_MANY, otherEntityConstructor, otherQEnitity);
 		this.relations.push(relation);
 	}
 
-	addManyRelation(
+	addManyRelation<IQR extends IQEntity<IQR>>(
+		manyCollectionProperty:string,
 		otherEntityConstructor:Function,
-		manyCollectionProperty:string
+		otherQEnitity:IQR
 	) {
-		let relation = new QRelation(otherEntityConstructor, manyCollectionProperty, QRelationType.MANY_TO_ONE);
+		let relation = new QRelation(manyCollectionProperty, QRelationType.MANY_TO_ONE, otherEntityConstructor, otherQEnitity);
 		this.relations.push(relation);
 	}
 
