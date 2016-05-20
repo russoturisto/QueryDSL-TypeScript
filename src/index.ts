@@ -8,6 +8,7 @@ import {IComparisonOperation, ComparisonOperation} from "./core/operation/Compar
 import {ILogicalOperation, LogicalOperation} from "./core/operation/LogicalOperation";
 import {IOperation, Operation} from "./core/operation/Operation";
 import {OperationType} from "./core/operation/OperationType";
+import {IQueryFragment, QueryFragment} from "./core/QueryFragment";
 
 export {
 	IQEntity,
@@ -21,5 +22,7 @@ export {
 	LogicalOperation,
 	IOperation,
 	Operation,
-	OperationType
+	OperationType,
+	IQueryFragment,
+	QueryFragment
 };

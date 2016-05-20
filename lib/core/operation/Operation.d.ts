@@ -3,11 +3,12 @@
  */
 import { IQEntity } from "../entity/Entity";
 import { OperationType } from "./OperationType";
+import { QueryFragment } from "../QueryFragment";
 export interface IOperation<Q extends IQEntity<Q>> {
     objectEquals<OP extends IOperation<Q>>(otherOp: OP, checkValue?: boolean): boolean;
     getQ(): Q;
 }
-export declare abstract class Operation<Q extends IQEntity<Q>> implements IOperation<Q> {
+export declare abstract class Operation<Q extends IQEntity<Q>> extends QueryFragment implements IOperation<Q> {
     q: Q;
     fieldName: string;
     type: OperationType;

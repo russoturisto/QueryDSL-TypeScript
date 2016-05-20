@@ -3,6 +3,7 @@
  */
 import {IQEntity} from "../entity/Entity";
 import {OperationType} from "./OperationType";
+import {QueryFragment} from "../QueryFragment";
 
 export interface IOperation<Q extends IQEntity<Q>> {
 
@@ -15,7 +16,7 @@ export interface IOperation<Q extends IQEntity<Q>> {
 
 }
 
-export abstract class Operation<Q extends IQEntity<Q>> implements IOperation<Q> {
+export abstract class Operation<Q extends IQEntity<Q>> extends QueryFragment implements IOperation<Q> {
 
 	constructor(
 		public q:Q,
@@ -23,6 +24,7 @@ export abstract class Operation<Q extends IQEntity<Q>> implements IOperation<Q> 
 		public type?:OperationType,
 		public nativeFieldName:string = fieldName
 	) {
+		super();
 	}
 
 	getQ():Q {

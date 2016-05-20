@@ -7,4 +7,5 @@ import { IComparisonOperation, ComparisonOperation } from "./core/operation/Comp
 import { ILogicalOperation, LogicalOperation } from "./core/operation/LogicalOperation";
 import { IOperation, Operation } from "./core/operation/Operation";
 import { OperationType } from "./core/operation/OperationType";
-export { IQEntity, QEntity, IQRelation, QRelation, QRelationType, IComparisonOperation, ComparisonOperation, ILogicalOperation, LogicalOperation, IOperation, Operation, OperationType };
+import { IQueryFragment, QueryFragment } from "./core/QueryFragment";
+export { IQEntity, QEntity, IQRelation, QRelation, QRelationType, IComparisonOperation, ComparisonOperation, ILogicalOperation, LogicalOperation, IOperation, Operation, OperationType, IQueryFragment, QueryFragment };

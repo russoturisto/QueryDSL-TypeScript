@@ -1,4 +1,5 @@
 import {IQEntity} from "./Entity";
+import {QueryFragment} from "../QueryFragment";
 /**
  * Created by Papa on 4/26/2016.
  */
@@ -16,7 +17,7 @@ export interface IQRelation<IQR extends IQEntity<IQR>> {
 	targetQEntity:IQR;
 }
 
-export class QRelation<IQR extends IQEntity<IQR>> implements IQRelation<IQR> {
+export class QRelation<IQR extends IQEntity<IQR>> extends QueryFragment implements IQRelation<IQR> {
 
 	constructor(
 		public relationPropertyName:string,
@@ -24,6 +25,7 @@ export class QRelation<IQR extends IQEntity<IQR>> implements IQRelation<IQR> {
 		public targetEntityConstructor:Function,
 		public targetQEntity:IQR
 	) {
+		super();
 	}
 
 }
