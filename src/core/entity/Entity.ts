@@ -6,36 +6,34 @@ import {IOperation} from "../operation/Operation";
 import {OperationType} from "../operation/OperationType";
 import {IComparisonOperation} from "../operation/ComparisonOperation";
 import {IQRelation, QRelation, QRelationType} from "./Relation";
+import {IField} from "../field/Field";
 
-export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
+export interface IQEntity<IQ extends IQEntity<IQ>> extends ILogicalOperation<IQ> {
+
+	addEntityRelation<IQR extends IQEntity<IQR>, R>(
+		relation:IQRelation<IQR, R, IQ>
+	):void;
+
+	addEntityField<T, ICO extends IComparisonOperation<T, IQ>>(
+		field:ICO
+	):void;
 
 	fields(
-		fields:IOperation<Q>[]
-	):Q;
+		fields:IOperation<IQ>[]
+	):IQ;
 
-	joinOn<T, C extends IComparisonOperation<T, Q>>(
-		comparisonOp:IComparisonOperation<T, Q>
-	);
-
-	addOneRelation<IQR extends IQEntity<IQR>>(
-		foreignKeyProperty:string,
-		otherEntityConstructor:Function,
-		otherQEntity:IQR
-	);
-
-	addManyRelation<IQR extends IQEntity<IQR>>(
-		manyCollectionProperty:string,
-		otherEntityConstructor:Function,
-		otherQEntity:IQR
+	joinOn<T, C extends IComparisonOperation<T, IQ>>(
+		comparisonOp:IComparisonOperation<T, IQ>
 	);
 
 }
 
-export class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
+export class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
 
-	relations:IQRelation<any>[] = [];
+	entityFields:IField<any, IQ>[] = [];
+	entityRelations:IQRelation<any, any, IQ>[] = [];
 
-	rootOperation:LogicalOperation<Q> = new LogicalOperation<Q>(<any>this, OperationType.AND, []);
+	rootOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(<any>this, OperationType.AND, []);
 
 	constructor(
 		private entityConstructor:Function,
@@ -44,42 +42,36 @@ export class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
 		// TODO: convert class name to native name if it's not provided
 	}
 
-	addOneRelation<IQR extends IQEntity<IQR>>(
-		foreignKeyProperty:string,
-		otherEntityConstructor:Function,
-		otherQEnitity:IQR
-	) {
-		let relation = new QRelation(foreignKeyProperty, QRelationType.ONE_TO_MANY, otherEntityConstructor, otherQEnitity);
-		this.relations.push(relation);
+	addEntityRelation<IQR extends IQEntity<IQR>, R>(
+		relation:IQRelation<IQR, R, IQ>
+	):void {
+		this.entityRelations.push(relation);
 	}
 
-	addManyRelation<IQR extends IQEntity<IQR>>(
-		manyCollectionProperty:string,
-		otherEntityConstructor:Function,
-		otherQEnitity:IQR
-	) {
-		let relation = new QRelation(manyCollectionProperty, QRelationType.MANY_TO_ONE, otherEntityConstructor, otherQEnitity);
-		this.relations.push(relation);
+	addEntityField<T, ICO extends IField<T, IQ>>(
+		field:ICO
+	):void {
+		this.entityFields.push(field);
 	}
 
-	addOperation<O extends IOperation<Q>>(
+	addOperation<O extends IOperation<IQ>>(
 		op:O
 	):void {
 		this.rootOperation.getChildOps().push(op);
 	}
 
-	getQ():Q {
+	getQ():IQ {
 		return <any>this;
 	}
 
 	fields(
-		fields:IOperation<Q>[]
-	):Q {
+		fields:IOperation<IQ>[]
+	):IQ {
 		throw `Not implemented`;
 	}
 
-	joinOn<T, C extends IComparisonOperation<T, Q>>(
-		comparisonOp:IComparisonOperation<T, Q>
+	joinOn<T, C extends IComparisonOperation<T, IQ>>(
+		comparisonOp:IComparisonOperation<T, IQ>
 	) {
 		if (<any>comparisonOp.getQ() !== this) {
 			throw `Must join on own field`;
@@ -88,31 +80,31 @@ export class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
 	}
 
 	and(
-		...ops:IOperation<Q>[]
-	):IOperation<Q> {
+		...ops:IOperation<IQ>[]
+	):IOperation<IQ> {
 		return this.rootOperation.and.apply(this.rootOperation, ops);
 	}
 
 	or(
-		...ops:IOperation<Q>[]
-	):IOperation<Q> {
+		...ops:IOperation<IQ>[]
+	):IOperation<IQ> {
 		return this.rootOperation.or.apply(this.rootOperation, ops);
 	}
 
 	not(
-		op:IOperation<Q>
-	):IOperation<Q> {
+		op:IOperation<IQ>
+	):IOperation<IQ> {
 		return this.rootOperation.not(op);
 	}
 
-	objectEquals<OP extends IOperation<Q>>(
+	objectEquals<OP extends IOperation<IQ>>(
 		otherOp:OP,
 		checkValues?:boolean
 	):boolean {
 		if (this.constructor !== otherOp.constructor) {
 			return false;
 		}
-		let otherQ:Q = <Q><any>otherOp;
+		let otherQ:QEntity<IQ> = <QEntity<IQ>><any>otherOp;
 		return this.rootOperation.objectEquals(otherQ.rootOperation, checkValues);
 	}
 

@@ -4,6 +4,7 @@
 import {IQEntity} from "../entity/Entity";
 import {IOperation, Operation} from "./Operation";
 import {OperationType} from "./OperationType";
+import {FieldType} from "../field/Field";
 
 export interface IComparisonOperation<T, Q extends IQEntity<Q>>
 extends IOperation<Q> {
@@ -54,8 +55,8 @@ extends IOperation<Q> {
 
 }
 
-export class ComparisonOperation<T, Q extends IQEntity<Q>>
-extends Operation<Q> implements IComparisonOperation<T, Q> {
+export class ComparisonOperation<T, IQ extends IQEntity<IQ>>
+extends Operation<IQ> implements IComparisonOperation<T, IQ> {
 
 	isDefined:boolean;
 	isEqComparison:boolean;
@@ -66,26 +67,27 @@ extends Operation<Q> implements IComparisonOperation<T, Q> {
 	isRegExp:boolean;
 	anyValue:any;
 	existsValue:boolean;
-	eqValue:T | IComparisonOperation<T, Q>;
+	eqValue:T | IComparisonOperation<T, IQ>;
 	gtValue:number;
 	gteValue:number;
-	inValues:T[] | IComparisonOperation<T, Q>[];
+	inValues:T[] | IComparisonOperation<T, IQ>[];
 	likeValue:string|RegExp;
 	ltValue:number;
 	lteValue:number;
-	neValue:T | IComparisonOperation<T, Q>;
-	ninValues:T[] | IComparisonOperation<T, Q>[];
+	neValue:T | IComparisonOperation<T, IQ>;
+	ninValues:T[] | IComparisonOperation<T, IQ>[];
 
 	constructor(
-		q:Q,
+		owningEntity:IQ,
+		fieldType:FieldType,
 		fieldName:string,
-		type?:OperationType,
-		nativeFieldName:string = fieldName
+		nativeFieldName:string = fieldName,
+		type?:OperationType
 	) {
-		super(q, fieldName, type, nativeFieldName);
+		super(owningEntity, fieldType, fieldName, nativeFieldName, type);
 	}
 
-	valueEquals<OQ extends IQEntity<OQ>, OP extends Operation<Q>>(
+	valueEquals<OQ extends IQEntity<OQ>, OP extends Operation<IQ>>(
 		otherOp:OP,
 		checkValue?:boolean
 	):boolean {
@@ -93,7 +95,7 @@ extends Operation<Q> implements IComparisonOperation<T, Q> {
 			return false;
 		}
 
-		let otherCOp:ComparisonOperation<T, Q> = <any>otherOp;
+		let otherCOp:ComparisonOperation<T, IQ> = <any>otherOp;
 		if (this.isAnyComparison !== otherCOp.isAnyComparison) {
 			return false;
 		}
@@ -106,19 +108,19 @@ extends Operation<Q> implements IComparisonOperation<T, Q> {
 
 	getDefinedInstance(
 		type:OperationType
-	):ComparisonOperation<T, Q> {
+	):ComparisonOperation<T, IQ> {
 		if (this.isDefined) {
 			throw `This operation is already defined, cannot create another one from it`;
 		}
-		let definedOperation = new ComparisonOperation<T, Q>(this.q, this.fieldName, type, this.nativeFieldName);
+		let definedOperation = new ComparisonOperation<T, IQ>(this.q, this.fieldType, this.fieldName, this.nativeFieldName, type);
 		definedOperation.isDefined = true;
 
 		return definedOperation;
 	}
 
 	equals(
-		value:T | IComparisonOperation<T, Q>
-	):ComparisonOperation<T, Q> {
+		value:T | IComparisonOperation<T, IQ>
+	):ComparisonOperation<T, IQ> {
 		let instance = this.getDefinedInstance(OperationType.EQUALS);
 
 		instance.isEqComparison = instance.isAnyComparison = value instanceof ComparisonOperation;
@@ -129,7 +131,7 @@ extends Operation<Q> implements IComparisonOperation<T, Q> {
 
 	exists(
 		exists:boolean
-	):IComparisonOperation<T, Q> {
+	):IComparisonOperation<T, IQ> {
 		let instance = this.getDefinedInstance(OperationType.EXISTS);
 
 		instance.existsValue = instance.anyValue = exists;
@@ -139,7 +141,7 @@ extends Operation<Q> implements IComparisonOperation<T, Q> {
 
 	greaterThan(
 		greaterThan:number
-	):IComparisonOperation<T, Q> {
+	):IComparisonOperation<T, IQ> {
 		let instance = this.getDefinedInstance(OperationType.GREATER_THAN);
 
 		instance.gtValue = instance.anyValue = greaterThan;
@@ -149,7 +151,7 @@ extends Operation<Q> implements IComparisonOperation<T, Q> {
 
 	greaterThanOrEquals(
 		greaterThanOrEquals:number
-	):IComparisonOperation<T, Q> {
+	):IComparisonOperation<T, IQ> {
 		let instance = this.getDefinedInstance(OperationType.GREATER_THAN_OR_EQUALS);
 
 		instance.gteValue = instance.anyValue = greaterThanOrEquals;
@@ -158,8 +160,8 @@ extends Operation<Q> implements IComparisonOperation<T, Q> {
 	}
 
 	in(
-		values:T[] | IComparisonOperation<T, Q>[]
-	):IComparisonOperation<T, Q> {
+		values:T[] | IComparisonOperation<T, IQ>[]
+	):IComparisonOperation<T, IQ> {
 		let instance = this.getDefinedInstance(OperationType.IN);
 
 		instance.isInComparison = instance.isAnyComparison = values[0] instanceof ComparisonOperation;
@@ -170,7 +172,7 @@ extends Operation<Q> implements IComparisonOperation<T, Q> {
 
 	like(
 		like:string | RegExp
-	):IComparisonOperation<T, Q> {
+	):IComparisonOperation<T, IQ> {
 		let instance = this.getDefinedInstance(OperationType.LIKE);
 
 		instance.isRegExp = instance.isAnyComparison = like instanceof RegExp;
@@ -181,7 +183,7 @@ extends Operation<Q> implements IComparisonOperation<T, Q> {
 
 	lessThan(
 		lessThan:number
-	):IComparisonOperation<T, Q> {
+	):IComparisonOperation<T, IQ> {
 		let instance = this.getDefinedInstance(OperationType.LESS_THAN);
 
 		instance.ltValue = instance.anyValue = lessThan;
@@ -191,7 +193,7 @@ extends Operation<Q> implements IComparisonOperation<T, Q> {
 
 	lessThanOrEquals(
 		greaterThanOrEquals:number
-	):IComparisonOperation<T, Q> {
+	):IComparisonOperation<T, IQ> {
 		let instance = this.getDefinedInstance(OperationType.LESS_THAN_OR_EQUALS);
 
 		instance.lteValue = instance.anyValue = greaterThanOrEquals;
@@ -200,8 +202,8 @@ extends Operation<Q> implements IComparisonOperation<T, Q> {
 	}
 
 	notEquals(
-		value:T | IComparisonOperation<T, Q>
-	):IComparisonOperation<T, Q> {
+		value:T | IComparisonOperation<T, IQ>
+	):IComparisonOperation<T, IQ> {
 		let instance = this.getDefinedInstance(OperationType.NOT_EQUALS);
 
 		instance.isNeComparison = instance.isAnyComparison = value instanceof ComparisonOperation;
@@ -211,8 +213,8 @@ extends Operation<Q> implements IComparisonOperation<T, Q> {
 	}
 
 	notIn(
-		values:T[] | IComparisonOperation<T, Q>[]
-	):IComparisonOperation<T, Q> {
+		values:T[] | IComparisonOperation<T, IQ>[]
+	):IComparisonOperation<T, IQ> {
 		let instance = this.getDefinedInstance(OperationType.NOT_IN);
 
 		instance.isNinComparison = instance.isAnyComparison = values[0] instanceof ComparisonOperation;

@@ -5,26 +5,28 @@ import { ILogicalOperation, LogicalOperation } from "../operation/LogicalOperati
 import { IOperation } from "../operation/Operation";
 import { IComparisonOperation } from "../operation/ComparisonOperation";
 import { IQRelation } from "./Relation";
-export interface IQEntity<Q extends IQEntity<Q>> extends ILogicalOperation<Q> {
-    fields(fields: IOperation<Q>[]): Q;
-    joinOn<T, C extends IComparisonOperation<T, Q>>(comparisonOp: IComparisonOperation<T, Q>): any;
-    addOneRelation<IQR extends IQEntity<IQR>>(foreignKeyProperty: string, otherEntityConstructor: Function, otherQEntity: IQR): any;
-    addManyRelation<IQR extends IQEntity<IQR>>(manyCollectionProperty: string, otherEntityConstructor: Function, otherQEntity: IQR): any;
+import { IField } from "../field/Field";
+export interface IQEntity<IQ extends IQEntity<IQ>> extends ILogicalOperation<IQ> {
+    addEntityRelation<IQR extends IQEntity<IQR>, R>(relation: IQRelation<IQR, R, IQ>): void;
+    addEntityField<T, ICO extends IComparisonOperation<T, IQ>>(field: ICO): void;
+    fields(fields: IOperation<IQ>[]): IQ;
+    joinOn<T, C extends IComparisonOperation<T, IQ>>(comparisonOp: IComparisonOperation<T, IQ>): any;
 }
-export declare class QEntity<Q extends QEntity<Q>> implements IQEntity<Q> {
+export declare class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
     private entityConstructor;
     private nativeName;
-    relations: IQRelation<any>[];
-    rootOperation: LogicalOperation<Q>;
+    entityFields: IField<any, IQ>[];
+    entityRelations: IQRelation<any, any, IQ>[];
+    rootOperation: LogicalOperation<IQ>;
     constructor(entityConstructor: Function, nativeName?: string);
-    addOneRelation<IQR extends IQEntity<IQR>>(foreignKeyProperty: string, otherEntityConstructor: Function, otherQEnitity: IQR): void;
-    addManyRelation<IQR extends IQEntity<IQR>>(manyCollectionProperty: string, otherEntityConstructor: Function, otherQEnitity: IQR): void;
-    addOperation<O extends IOperation<Q>>(op: O): void;
-    getQ(): Q;
-    fields(fields: IOperation<Q>[]): Q;
-    joinOn<T, C extends IComparisonOperation<T, Q>>(comparisonOp: IComparisonOperation<T, Q>): void;
-    and(...ops: IOperation<Q>[]): IOperation<Q>;
-    or(...ops: IOperation<Q>[]): IOperation<Q>;
-    not(op: IOperation<Q>): IOperation<Q>;
-    objectEquals<OP extends IOperation<Q>>(otherOp: OP, checkValues?: boolean): boolean;
+    addEntityRelation<IQR extends IQEntity<IQR>, R>(relation: IQRelation<IQR, R, IQ>): void;
+    addEntityField<T, ICO extends IField<T, IQ>>(field: ICO): void;
+    addOperation<O extends IOperation<IQ>>(op: O): void;
+    getQ(): IQ;
+    fields(fields: IOperation<IQ>[]): IQ;
+    joinOn<T, C extends IComparisonOperation<T, IQ>>(comparisonOp: IComparisonOperation<T, IQ>): void;
+    and(...ops: IOperation<IQ>[]): IOperation<IQ>;
+    or(...ops: IOperation<IQ>[]): IOperation<IQ>;
+    not(op: IOperation<IQ>): IOperation<IQ>;
+    objectEquals<OP extends IOperation<IQ>>(otherOp: OP, checkValues?: boolean): boolean;
 }

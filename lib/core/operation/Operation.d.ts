@@ -4,17 +4,19 @@
 import { IQEntity } from "../entity/Entity";
 import { OperationType } from "./OperationType";
 import { QueryFragment } from "../QueryFragment";
-export interface IOperation<Q extends IQEntity<Q>> {
-    objectEquals<OP extends IOperation<Q>>(otherOp: OP, checkValue?: boolean): boolean;
-    getQ(): Q;
+import { FieldType } from "../field/Field";
+export interface IOperation<IQ extends IQEntity<IQ>> {
+    objectEquals<OP extends IOperation<IQ>>(otherOp: OP, checkValue?: boolean): boolean;
+    getQ(): IQ;
 }
-export declare abstract class Operation<Q extends IQEntity<Q>> extends QueryFragment implements IOperation<Q> {
-    q: Q;
+export declare abstract class Operation<IQ extends IQEntity<IQ>> extends QueryFragment implements IOperation<IQ> {
+    q: IQ;
+    fieldType: FieldType;
     fieldName: string;
-    type: OperationType;
     nativeFieldName: string;
-    constructor(q: Q, fieldName?: string, type?: OperationType, nativeFieldName?: string);
-    getQ(): Q;
-    objectEquals<OP extends Operation<Q>>(otherOp: OP, checkValue?: boolean): boolean;
-    protected abstract valueEquals<OP extends Operation<Q>>(otherOp: OP, checkChildValues?: boolean): boolean;
+    type: OperationType;
+    constructor(q: IQ, fieldType?: FieldType, fieldName?: string, nativeFieldName?: string, type?: OperationType);
+    getQ(): IQ;
+    objectEquals<OP extends Operation<IQ>>(otherOp: OP, checkValue?: boolean): boolean;
+    protected abstract valueEquals<OP extends Operation<IQ>>(otherOp: OP, checkChildValues?: boolean): boolean;
 }

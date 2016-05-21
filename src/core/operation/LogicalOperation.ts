@@ -5,42 +5,42 @@ import {IQEntity} from "../entity/Entity";
 import {IOperation, Operation} from "./Operation";
 import {OperationType} from "./OperationType";
 
-export interface ILogicalOperation<Q extends IQEntity<Q>>
-extends IOperation<Q> {
+export interface ILogicalOperation<IQ extends IQEntity<IQ>>
+extends IOperation<IQ> {
 
 	and(
-		...ops:IOperation<Q>[]
-	):IOperation<Q>;
+		...ops:IOperation<IQ>[]
+	):IOperation<IQ>;
 
 	or(
-		...ops:IOperation<Q>[]
-	):IOperation<Q>;
+		...ops:IOperation<IQ>[]
+	):IOperation<IQ>;
 
 	not(
-		op:IOperation<Q>
-	):IOperation<Q>;
+		op:IOperation<IQ>
+	):IOperation<IQ>;
 
 }
 
-export class LogicalOperation<Q extends IQEntity<Q>>
-extends Operation<Q> {
+export class LogicalOperation<IQ extends IQEntity<IQ>>
+extends Operation<IQ> {
 
 	constructor(
-		q:Q,
+		q:IQ,
 		type?:OperationType,
-		public childOps?:IOperation<Q>[]
+		public childOps?:IOperation<IQ>[]
 	) {
-		super(q, null, type);
+		super(q, null, null, null, type);
 	}
 
 	private verifyChildOps(
-		ops:IOperation<Q>[] = this.childOps
+		ops:IOperation<IQ>[] = this.childOps
 	):void {
 		if (!ops || !ops.length) {
 			throw `No child operations provided`;
 		}
 		ops.forEach((
-			operation:IOperation<Q>
+			operation:IOperation<IQ>
 		) => {
 			if (this.q !== operation.getQ()) {
 				throw `Query object does not match`;
@@ -50,11 +50,11 @@ extends Operation<Q> {
 
 	private addOperation(
 		operationType:OperationType,
-		ops:IOperation<Q>[]
-	):IOperation<Q> {
+		ops:IOperation<IQ>[]
+	):IOperation<IQ> {
 		this.verifyChildOps(ops);
 
-		let andOperation:LogicalOperation<Q> = new LogicalOperation<Q>(this.q, operationType, ops);
+		let andOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(this.q, operationType, ops);
 
 		this.childOps.push(andOperation);
 
@@ -62,29 +62,29 @@ extends Operation<Q> {
 	}
 
 	and(
-		...ops:IOperation<Q>[]
-	):IOperation<Q> {
+		...ops:IOperation<IQ>[]
+	):IOperation<IQ> {
 		return this.addOperation(OperationType.AND, ops);
 	}
 
 	or(
-		...ops:IOperation<Q>[]
-	):IOperation<Q> {
+		...ops:IOperation<IQ>[]
+	):IOperation<IQ> {
 		return this.addOperation(OperationType.OR, ops);
 	}
 
 	not(
-		op:IOperation<Q>
-	):IOperation<Q> {
+		op:IOperation<IQ>
+	):IOperation<IQ> {
 		return this.addOperation(OperationType.OR, [op]);
 	}
 
-	getChildOps():IOperation<Q>[] {
+	getChildOps():IOperation<IQ>[] {
 		return this.childOps;
 	}
 
 
-	objectEquals<OP extends Operation<Q>>(
+	objectEquals<OP extends Operation<IQ>>(
 		otherOp:OP,
 		checkValue?:boolean
 	):boolean {
@@ -106,11 +106,11 @@ extends Operation<Q> {
 		return true;
 	}
 
-	protected valueEquals<OP extends Operation<Q>>(
+	protected valueEquals<OP extends Operation<IQ>>(
 		otherOp:OP,
 		checkChildValues?:boolean
 	):boolean {
-		let otherLOp:LogicalOperation<Q> = <any> otherOp;
+		let otherLOp:LogicalOperation<IQ> = <any> otherOp;
 		this.verifyChildOps();
 		otherLOp.verifyChildOps();
 		if (this.childOps.length !== otherLOp.childOps.length) {
