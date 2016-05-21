@@ -6,7 +6,7 @@ import {IOperation} from "../operation/Operation";
 import {OperationType} from "../operation/OperationType";
 import {IComparisonOperation} from "../operation/ComparisonOperation";
 import {IQRelation, QRelation, QRelationType} from "./Relation";
-import {IField} from "../field/Field";
+import {IQField} from "../field/Field";
 
 export interface IQEntity<IQ extends IQEntity<IQ>> extends ILogicalOperation<IQ> {
 
@@ -14,8 +14,8 @@ export interface IQEntity<IQ extends IQEntity<IQ>> extends ILogicalOperation<IQ>
 		relation:IQRelation<IQR, R, IQ>
 	):void;
 
-	addEntityField<T, ICO extends IComparisonOperation<T, IQ>>(
-		field:ICO
+	addEntityField<T, IQF extends IComparisonOperation<T, IQ>>(
+		field:IQF
 	):void;
 
 	fields(
@@ -30,7 +30,7 @@ export interface IQEntity<IQ extends IQEntity<IQ>> extends ILogicalOperation<IQ>
 
 export class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
 
-	entityFields:IField<any, IQ>[] = [];
+	entityFields:IQField<any, IQ>[] = [];
 	entityRelations:IQRelation<any, any, IQ>[] = [];
 
 	rootOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(<any>this, OperationType.AND, []);
@@ -48,8 +48,8 @@ export class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
 		this.entityRelations.push(relation);
 	}
 
-	addEntityField<T, ICO extends IField<T, IQ>>(
-		field:ICO
+	addEntityField<T, IQF extends IQField<T, IQ>>(
+		field:IQF
 	):void {
 		this.entityFields.push(field);
 	}

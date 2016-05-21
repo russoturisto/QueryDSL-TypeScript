@@ -14,11 +14,11 @@ export enum FieldType {
 	STRING
 }
 
-export interface IField<T, IQ extends IQEntity<IQ>> extends IComparisonOperation<T, IQ> {
+export interface IQField<T, IQ extends IQEntity<IQ>> extends IComparisonOperation<T, IQ> {
 
 }
 
-export class Field<T, IQ extends IQEntity<IQ>> extends ComparisonOperation<T, IQ> {
+export class QField<T, IQ extends IQEntity<IQ>> extends ComparisonOperation<T, IQ> {
 
 	constructor(
 		owningEntity:IQ,

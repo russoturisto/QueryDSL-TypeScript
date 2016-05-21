@@ -4,7 +4,7 @@
 
 import {IComparisonOperation, ComparisonOperation} from "./core/operation/ComparisonOperation";
 import {IQEntity, QEntity} from "./core/entity/Entity";
-import {FieldType, IField, Field} from "./core/field/Field";
+import {FieldType, IQField, QField} from "./core/field/Field";
 import {ILogicalOperation, LogicalOperation} from "./core/operation/LogicalOperation";
 import {IOperation, Operation} from "./core/operation/Operation";
 import {OperationType} from "./core/operation/OperationType";
@@ -17,8 +17,8 @@ export {
 	IQEntity,
 	QEntity,
 	FieldType,
-	IField,
-	Field,
+	IQField,
+	QField,
 	ILogicalOperation,
 	LogicalOperation,
 	IOperation,
