@@ -9,7 +9,7 @@ import {ILogicalOperation, LogicalOperation} from "./core/operation/LogicalOpera
 import {IOperation, Operation} from "./core/operation/Operation";
 import {OperationType} from "./core/operation/OperationType";
 import {IQueryFragment, QueryFragment} from "./core/QueryFragment";
-import {IQRelation, QRelation, QRelationType} from "./core/entity/Relation";
+import {RelationType, IQRelation, QRelation} from "./core/entity/Relation";
 
 export {
 	IComparisonOperation,
@@ -26,7 +26,7 @@ export {
 	OperationType,
 	IQueryFragment,
 	QueryFragment,
+	RelationType,
 	IQRelation,
 	QRelation,
-	QRelationType
 };

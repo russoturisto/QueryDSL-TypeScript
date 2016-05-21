@@ -5,11 +5,13 @@ import { IQEntity } from "../entity/Entity";
 import { IComparisonOperation, ComparisonOperation } from "../operation/ComparisonOperation";
 export declare enum FieldType {
     BOOLEAN = 0,
-    DATE = 1,
-    ENTITY = 2,
-    ENTITY_ARRAY = 3,
+    BOOLEAN_ARRAY = 1,
+    DATE = 2,
+    DATE_ARRAY = 3,
     NUMBER = 4,
-    STRING = 5,
+    NUMBER_ARRAY = 5,
+    STRING = 6,
+    STRING_ARRAY = 7,
 }
 export interface IQField<T, IQ extends IQEntity<IQ>> extends IComparisonOperation<T, IQ> {
 }

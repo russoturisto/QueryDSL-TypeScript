@@ -7,11 +7,13 @@ import {OperationType} from "../operation/OperationType";
 
 export enum FieldType {
 	BOOLEAN,
+	BOOLEAN_ARRAY,
 	DATE,
-	ENTITY,
-	ENTITY_ARRAY,
+	DATE_ARRAY,
 	NUMBER,
-	STRING
+	NUMBER_ARRAY,
+	STRING,
+	STRING_ARRAY
 }
 
 export interface IQField<T, IQ extends IQEntity<IQ>> extends IComparisonOperation<T, IQ> {

@@ -8,5 +8,5 @@ import { ILogicalOperation, LogicalOperation } from "./core/operation/LogicalOpe
 import { IOperation, Operation } from "./core/operation/Operation";
 import { OperationType } from "./core/operation/OperationType";
 import { IQueryFragment, QueryFragment } from "./core/QueryFragment";
-import { IQRelation, QRelation, QRelationType } from "./core/entity/Relation";
-export { IComparisonOperation, ComparisonOperation, IQEntity, QEntity, FieldType, IQField, QField, ILogicalOperation, LogicalOperation, IOperation, Operation, OperationType, IQueryFragment, QueryFragment, IQRelation, QRelation, QRelationType };
+import { RelationType, IQRelation, QRelation } from "./core/entity/Relation";
+export { IComparisonOperation, ComparisonOperation, IQEntity, QEntity, FieldType, IQField, QField, ILogicalOperation, LogicalOperation, IOperation, Operation, OperationType, IQueryFragment, QueryFragment, RelationType, IQRelation, QRelation };

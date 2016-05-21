@@ -5,8 +5,8 @@ import {ILogicalOperation, LogicalOperation} from "../operation/LogicalOperation
 import {IOperation} from "../operation/Operation";
 import {OperationType} from "../operation/OperationType";
 import {IComparisonOperation} from "../operation/ComparisonOperation";
-import {IQRelation, QRelation, QRelationType} from "./Relation";
 import {IQField} from "../field/Field";
+import {IQRelation} from "./Relation";
 
 export interface IQEntity<IQ extends IQEntity<IQ>> extends ILogicalOperation<IQ> {
 

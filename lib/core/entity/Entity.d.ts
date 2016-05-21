@@ -4,8 +4,8 @@
 import { ILogicalOperation, LogicalOperation } from "../operation/LogicalOperation";
 import { IOperation } from "../operation/Operation";
 import { IComparisonOperation } from "../operation/ComparisonOperation";
-import { IQRelation } from "./Relation";
 import { IQField } from "../field/Field";
+import { IQRelation } from "./Relation";
 export interface IQEntity<IQ extends IQEntity<IQ>> extends ILogicalOperation<IQ> {
     addEntityRelation<IQR extends IQEntity<IQR>, R>(relation: IQRelation<IQR, R, IQ>): void;
     addEntityField<T, IQF extends IComparisonOperation<T, IQ>>(field: IQF): void;
