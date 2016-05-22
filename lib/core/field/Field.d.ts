@@ -16,5 +16,6 @@ export declare enum FieldType {
 export interface IQField<T, IQ extends IQEntity<IQ>> extends IComparisonOperation<T, IQ> {
 }
 export declare class QField<T, IQ extends IQEntity<IQ>> extends ComparisonOperation<T, IQ> {
-    constructor(owningEntity: IQ, fieldType: FieldType, fieldName: string, nativeFieldName?: string);
+    qConstructor: new () => IQ;
+    constructor(q: IQ, qConstructor: new () => IQ, fieldType: FieldType, fieldName: string, nativeFieldName?: string);
 }

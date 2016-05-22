@@ -11,25 +11,27 @@ export enum RelationType {
 
 export interface IQRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ>> {
 
-	owningQEntity:IQ;
+	q:IQ;
+	qConstructor:new () => IQ,
 	relationPropertyName:string;
 	relationType:RelationType;
-	relationEntityConstructor: new () => R;
-	relationQEntityConstructor: new () => IQR;
+	relationEntityConstructor:new () => R;
+	relationQEntityConstructor:new () => IQR;
 
 }
 
-export class QRelation<QR extends QEntity<QR>, R, Q extends QEntity<Q>> extends QueryFragment implements IQRelation<QR, R, Q> {
+export class QRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ>> extends QueryFragment implements IQRelation<IQR, R, IQ> {
 
 	constructor(
-		public owningQEntity:Q,
+		public q:IQ,
+		public qConstructor:new () => IQ,
+		public relationType:RelationType,
 		public relationPropertyName:string,
-	  public relationType:RelationType,
-		public relationEntityConstructor: new () => R,
-		public relationQEntityConstructor: new () => QR
+		public relationEntityConstructor:new () => R,
+		public relationQEntityConstructor:new () => IQR
 	) {
 		super();
-		owningQEntity.addEntityRelation(this);
+		this.q.addEntityRelation(this);
 	}
 
 }

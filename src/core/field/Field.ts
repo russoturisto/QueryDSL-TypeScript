@@ -23,13 +23,14 @@ export interface IQField<T, IQ extends IQEntity<IQ>> extends IComparisonOperatio
 export class QField<T, IQ extends IQEntity<IQ>> extends ComparisonOperation<T, IQ> {
 
 	constructor(
-		owningEntity:IQ,
+		q:IQ,
+		public qConstructor: new() => IQ,
 		fieldType:FieldType,
 		fieldName:string,
 		nativeFieldName:string = fieldName
 	) {
-		super(owningEntity, fieldType, fieldName, nativeFieldName);
-		owningEntity.addEntityField(this);
+		super(q, fieldType, fieldName, nativeFieldName);
+		q.addEntityField(this);
 	}
 
 }

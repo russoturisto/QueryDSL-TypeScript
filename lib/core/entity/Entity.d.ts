@@ -14,11 +14,12 @@ export interface IQEntity<IQ extends IQEntity<IQ>> extends ILogicalOperation<IQ>
 }
 export declare class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
     private entityConstructor;
+    private isTemplate;
     private nativeName;
     entityFields: IQField<any, IQ>[];
     entityRelations: IQRelation<any, any, IQ>[];
     rootOperation: LogicalOperation<IQ>;
-    constructor(entityConstructor: Function, nativeName?: string);
+    constructor(entityConstructor: Function, isTemplate?: boolean, nativeName?: string);
     addEntityRelation<IQR extends IQEntity<IQR>, R>(relation: IQRelation<IQR, R, IQ>): void;
     addEntityField<T, IQF extends IQField<T, IQ>>(field: IQF): void;
     addOperation<O extends IOperation<IQ>>(op: O): void;

@@ -37,6 +37,7 @@ export class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
 
 	constructor(
 		private entityConstructor:Function,
+		private isTemplate = false,
 		private nativeName?:string
 	) {
 		// TODO: convert class name to native name if it's not provided
