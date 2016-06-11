@@ -18,6 +18,8 @@ export interface IQEntity<IQ extends IQEntity<IQ>> extends ILogicalOperation<IQ>
 		field:IQF
 	):void;
 
+	entityConstructor:Function;
+
 	fields(
 		fields:IOperation<IQ>[]
 	):IQ;
@@ -36,7 +38,7 @@ export class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
 	rootOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(<any>this, OperationType.AND, []);
 
 	constructor(
-		private entityConstructor:Function,
+		public entityConstructor:Function,
 		private isTemplate = false,
 		private nativeName?:string
 	) {
