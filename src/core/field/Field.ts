@@ -29,7 +29,7 @@ export class QField<T, IQ extends IQEntity<IQ>> extends ComparisonOperation<T, I
 		fieldName:string,
 		nativeFieldName:string = fieldName
 	) {
-		super(q, fieldType, fieldName, nativeFieldName);
+		super(null, q, fieldType, fieldName, nativeFieldName);
 		q.addEntityField(this);
 	}
 

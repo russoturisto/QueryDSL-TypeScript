@@ -6,6 +6,111 @@ import {IOperation, Operation} from "./Operation";
 import {OperationType} from "./OperationType";
 import {FieldType} from "../field/Field";
 
+export function equals<T, IQ extends IQEntity<IQ>>(
+	value:T | IComparisonOperation<T, IQ>
+):ComparisonOperation<T, IQ> {
+	let instance = ComparisonOperation.getDefinedInstance(OperationType.EQUALS);
+
+	instance.isEqComparison = instance.isAnyComparison = value instanceof ComparisonOperation;
+	instance.eqValue = instance.anyValue = value;
+
+	return <ComparisonOperation<T, IQ>>instance;
+}
+
+export function exists<T, IQ extends IQEntity<IQ>>(
+	exists:boolean
+):IComparisonOperation<T, IQ> {
+	let instance = ComparisonOperation.getDefinedInstance(OperationType.EXISTS);
+
+	instance.existsValue = instance.anyValue = exists;
+
+	return <ComparisonOperation<T, IQ>>instance;
+}
+
+export function greaterThan<T, IQ extends IQEntity<IQ>>(
+	greaterThan:number
+):IComparisonOperation<T, IQ> {
+	let instance = ComparisonOperation.getDefinedInstance(OperationType.GREATER_THAN);
+
+	instance.gtValue = instance.anyValue = greaterThan;
+
+	return <ComparisonOperation<T, IQ>>instance;
+}
+
+export function greaterThanOrEquals<T, IQ extends IQEntity<IQ>>(
+	greaterThanOrEquals:number
+):IComparisonOperation<T, IQ> {
+	let instance = ComparisonOperation.getDefinedInstance(OperationType.GREATER_THAN_OR_EQUALS);
+
+	instance.gteValue = instance.anyValue = greaterThanOrEquals;
+
+	return <ComparisonOperation<T, IQ>>instance;
+}
+
+export function isIn<T, IQ extends IQEntity<IQ>>(
+	values:T[] | IComparisonOperation<T, IQ>[]
+):IComparisonOperation<T, IQ> {
+	let instance = ComparisonOperation.getDefinedInstance(OperationType.IN);
+
+	instance.isInComparison = instance.isAnyComparison = values[0] instanceof ComparisonOperation;
+	instance.inValues = instance.anyValue = values;
+
+	return <ComparisonOperation<T, IQ>>instance;
+}
+
+export function like<T, IQ extends IQEntity<IQ>>(
+	like:string | RegExp
+):IComparisonOperation<T, IQ> {
+	let instance = ComparisonOperation.getDefinedInstance(OperationType.LIKE);
+
+	instance.isRegExp = instance.isAnyComparison = like instanceof RegExp;
+	instance.likeValue = instance.anyValue = like;
+
+	return <ComparisonOperation<T, IQ>>instance;
+}
+
+export function lessThan<T, IQ extends IQEntity<IQ>>(
+	lessThan:number
+):IComparisonOperation<T, IQ> {
+	let instance = ComparisonOperation.getDefinedInstance(OperationType.LESS_THAN);
+
+	instance.ltValue = instance.anyValue = lessThan;
+
+	return <ComparisonOperation<T, IQ>>instance;
+}
+
+export function lessThanOrEquals<T, IQ extends IQEntity<IQ>>(
+	greaterThanOrEquals:number
+):IComparisonOperation<T, IQ> {
+	let instance = ComparisonOperation.getDefinedInstance(OperationType.LESS_THAN_OR_EQUALS);
+
+	instance.lteValue = instance.anyValue = greaterThanOrEquals;
+
+	return <ComparisonOperation<T, IQ>>instance;
+}
+
+export function notEquals<T, IQ extends IQEntity<IQ>>(
+	value:T | IComparisonOperation<T, IQ>
+):IComparisonOperation<T, IQ> {
+	let instance = ComparisonOperation.getDefinedInstance(OperationType.NOT_EQUALS);
+
+	instance.isNeComparison = instance.isAnyComparison = value instanceof ComparisonOperation;
+	instance.neValue = instance.anyValue = value;
+
+	return <ComparisonOperation<T, IQ>>instance;
+}
+
+export function notIn<T, IQ extends IQEntity<IQ>>(
+	values:T[] | IComparisonOperation<T, IQ>[]
+):IComparisonOperation<T, IQ> {
+	let instance = ComparisonOperation.getDefinedInstance(OperationType.NOT_IN);
+
+	instance.isNinComparison = instance.isAnyComparison = values[0] instanceof ComparisonOperation;
+	instance.ninValues = instance.anyValue = values;
+
+	return <ComparisonOperation<T, IQ>>instance;
+}
+
 export interface IComparisonOperation<T, Q extends IQEntity<Q>>
 extends IOperation<Q> {
 
@@ -25,7 +130,7 @@ extends IOperation<Q> {
 		greaterThanOrEquals:number
 	):IComparisonOperation<T, Q>;
 
-	in(
+	isIn(
 		values:T[] | IComparisonOperation<T, Q>[]
 	):IComparisonOperation<T, Q>;
 
@@ -58,6 +163,19 @@ extends IOperation<Q> {
 export class ComparisonOperation<T, IQ extends IQEntity<IQ>>
 extends Operation<IQ> implements IComparisonOperation<T, IQ> {
 
+	static getDefinedInstance<T, IQ extends IQEntity<IQ>>(
+		type:OperationType,
+		q?:IQ,
+		fieldType?:FieldType,
+		fieldName?:string,
+		nativeFieldName?:string
+	):ComparisonOperation<T, IQ> {
+		let definedOperation = new ComparisonOperation<T, IQ>(type, q, fieldType, fieldName, nativeFieldName);
+		definedOperation.isDefined = true;
+
+		return definedOperation;
+	}
+
 	isDefined:boolean;
 	isEqComparison:boolean;
 	isInComparison:boolean;
@@ -78,11 +196,11 @@ extends Operation<IQ> implements IComparisonOperation<T, IQ> {
 	ninValues:T[] | IComparisonOperation<T, IQ>[];
 
 	constructor(
+		type:OperationType,
 		owningEntity:IQ,
 		fieldType:FieldType,
 		fieldName:string,
-		nativeFieldName:string = fieldName,
-		type?:OperationType
+		nativeFieldName:string = fieldName
 	) {
 		super(owningEntity, fieldType, fieldName, nativeFieldName, type);
 	}
@@ -112,7 +230,7 @@ extends Operation<IQ> implements IComparisonOperation<T, IQ> {
 		if (this.isDefined) {
 			throw `This operation is already defined, cannot create another one from it`;
 		}
-		let definedOperation = new ComparisonOperation<T, IQ>(this.q, this.fieldType, this.fieldName, this.nativeFieldName, type);
+		let definedOperation = <ComparisonOperation<T, IQ>>ComparisonOperation.getDefinedInstance(type, this.q, this.fieldType, this.fieldName, this.nativeFieldName);
 		definedOperation.isDefined = true;
 
 		return definedOperation;
@@ -159,7 +277,7 @@ extends Operation<IQ> implements IComparisonOperation<T, IQ> {
 		return instance;
 	}
 
-	in(
+	isIn(
 		values:T[] | IComparisonOperation<T, IQ>[]
 	):IComparisonOperation<T, IQ> {
 		let instance = this.getDefinedInstance(OperationType.IN);

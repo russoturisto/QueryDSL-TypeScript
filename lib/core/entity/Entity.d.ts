@@ -16,7 +16,7 @@ export interface IQEntity<IQ extends IQEntity<IQ>> extends ILogicalOperation<IQ>
 export declare class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
     entityConstructor: Function;
     private isTemplate;
-    private nativeName;
+    private nativeName?;
     entityFields: IQField<any, IQ>[];
     entityRelations: IQRelation<any, any, IQ>[];
     rootOperation: LogicalOperation<IQ>;

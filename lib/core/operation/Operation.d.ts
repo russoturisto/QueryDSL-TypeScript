@@ -11,10 +11,10 @@ export interface IOperation<IQ extends IQEntity<IQ>> {
 }
 export declare abstract class Operation<IQ extends IQEntity<IQ>> extends QueryFragment implements IOperation<IQ> {
     q: IQ;
-    fieldType: FieldType;
-    fieldName: string;
+    fieldType?: FieldType;
+    fieldName?: string;
     nativeFieldName: string;
-    type: OperationType;
+    type?: OperationType;
     constructor(q: IQ, fieldType?: FieldType, fieldName?: string, nativeFieldName?: string, type?: OperationType);
     getQ(): IQ;
     objectEquals<OP extends Operation<IQ>>(otherOp: OP, checkValue?: boolean): boolean;

@@ -5,6 +5,24 @@ import {IQEntity} from "../entity/Entity";
 import {IOperation, Operation} from "./Operation";
 import {OperationType} from "./OperationType";
 
+export function and<IQ extends IQEntity<IQ>>(
+	...ops:IOperation<IQ>[]
+):IOperation<IQ> {
+	return LogicalOperation.addOperation(OperationType.AND, ops);
+}
+
+export function or<IQ extends IQEntity<IQ>>(
+	...ops:IOperation<IQ>[]
+):IOperation<IQ> {
+	return LogicalOperation.addOperation(OperationType.OR, ops);
+}
+
+export function not<IQ extends IQEntity<IQ>>(
+	op:IOperation<IQ>
+):IOperation<IQ> {
+	return LogicalOperation.addOperation(OperationType.NOT, [op]);
+}
+
 export interface ILogicalOperation<IQ extends IQEntity<IQ>>
 extends IOperation<IQ> {
 
@@ -25,6 +43,25 @@ extends IOperation<IQ> {
 export class LogicalOperation<IQ extends IQEntity<IQ>>
 extends Operation<IQ> {
 
+	static verifyChildOps<IQ extends IQEntity<IQ>>(
+		ops:IOperation<IQ>[]
+	):void {
+		if (!ops || !ops.length) {
+			throw `No child operations provided`;
+		}
+	}
+
+	static addOperation<IQ extends IQEntity<IQ>>(
+		operationType:OperationType,
+		ops:IOperation<IQ>[]
+	):IOperation<IQ> {
+		LogicalOperation.verifyChildOps(ops);
+
+		let logicalOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(null, operationType, ops);
+
+		return logicalOperation;
+	}
+
 	constructor(
 		q:IQ,
 		type?:OperationType,
@@ -36,9 +73,7 @@ extends Operation<IQ> {
 	private verifyChildOps(
 		ops:IOperation<IQ>[] = this.childOps
 	):void {
-		if (!ops || !ops.length) {
-			throw `No child operations provided`;
-		}
+		LogicalOperation.verifyChildOps(ops);
 		ops.forEach((
 			operation:IOperation<IQ>
 		) => {
@@ -54,9 +89,9 @@ extends Operation<IQ> {
 	):IOperation<IQ> {
 		this.verifyChildOps(ops);
 
-		let andOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(this.q, operationType, ops);
+		let logicalOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(this.q, operationType, ops);
 
-		this.childOps.push(andOperation);
+		this.childOps.push(logicalOperation);
 
 		return this;
 	}
@@ -76,7 +111,7 @@ extends Operation<IQ> {
 	not(
 		op:IOperation<IQ>
 	):IOperation<IQ> {
-		return this.addOperation(OperationType.OR, [op]);
+		return this.addOperation(OperationType.NOT, [op]);
 	}
 
 	getChildOps():IOperation<IQ>[] {
