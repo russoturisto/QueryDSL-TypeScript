@@ -7,21 +7,21 @@ export interface IEntity<IQ extends IQEntity<IQ>> {
     __operator__?: '$and' | '$or';
 }
 export interface IQEntity<IQ extends IQEntity<IQ>> {
-    entityConstructor: Function;
-    entityFields: IQField<IQ>[];
-    entityRelations: IQRelation<any, any, IQ>[];
+    __entityConstructor__: Function;
+    __entityFields__: IQField<IQ>[];
+    __entityRelations__: IQRelation<any, any, IQ>[];
     addEntityRelation<IQR extends IQEntity<IQR>, R>(relation: IQRelation<IQR, R, IQ>): void;
     addEntityField<IQF extends IQField<IQ>>(field: IQF): void;
     fields(fields: IQField<IQ>[]): IQ;
 }
 export declare abstract class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
-    entityConstructor: Function;
-    name: string;
-    private isTemplate;
-    private nativeName;
-    entityFields: IQField<IQ>[];
-    entityRelations: IQRelation<any, any, IQ>[];
-    constructor(entityConstructor: Function, name: string, isTemplate?: boolean, nativeName?: string);
+    __entityConstructor__: Function;
+    __entityName__: string;
+    private __isTemplateEntity__;
+    private __nativeEntityName__?;
+    __entityFields__: IQField<IQ>[];
+    __entityRelations__: IQRelation<any, any, IQ>[];
+    constructor(__entityConstructor__: Function, __entityName__: string, __isTemplateEntity__?: boolean, __nativeEntityName__?: string);
     addEntityRelation<IQR extends IQEntity<IQR>, R>(relation: IQRelation<IQR, R, IQ>): void;
     addEntityField<T, IQF extends IQField<IQ>>(field: IQF): void;
     getQ(): IQ;

@@ -23,7 +23,7 @@ export class PHQuery {
 	toJSON():any {
 		let jsonFragment = {};
 
-		let entityName = this.qEntity.name;
+		let entityName = this.qEntity.__entityName__;
 		let entityRelationPropertyMap = this.entitiesRelationPropertyMap[entityName];
 		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
 

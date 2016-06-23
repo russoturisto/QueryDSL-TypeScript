@@ -17,9 +17,9 @@ export interface IEntity<IQ extends IQEntity<IQ>> {
 
 export interface IQEntity<IQ extends IQEntity<IQ>> {
 
-	entityConstructor:Function;
-	entityFields:IQField<IQ>[];
-	entityRelations:IQRelation<any, any, IQ>[];
+	__entityConstructor__:Function;
+	__entityFields__:IQField<IQ>[];
+	__entityRelations__:IQRelation<any, any, IQ>[];
 
 	addEntityRelation<IQR extends IQEntity<IQR>, R>(
 		relation:IQRelation<IQR, R, IQ>
@@ -43,16 +43,16 @@ export interface IQEntity<IQ extends IQEntity<IQ>> {
 
 export abstract class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
 
-	entityFields:IQField<IQ>[] = [];
-	entityRelations:IQRelation<any, any, IQ>[] = [];
+	__entityFields__:IQField<IQ>[] = [];
+	__entityRelations__:IQRelation<any, any, IQ>[] = [];
 
 	// rootOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(<any>this, OperationType.AND, []);
 
 	constructor(
-		public entityConstructor:Function,
-		public name:string,
-		private isTemplate = false,
-		private nativeName?:string
+		public __entityConstructor__:Function,
+		public __entityName__:string,
+		private __isTemplateEntity__ = false,
+		private __nativeEntityName__?:string
 	) {
 		// TODO: convert class name to native name if it's not provided
 	}
@@ -60,13 +60,13 @@ export abstract class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
 	addEntityRelation<IQR extends IQEntity<IQR>, R>(
 		relation:IQRelation<IQR, R, IQ>
 	):void {
-		this.entityRelations.push(relation);
+		this.__entityRelations__.push(relation);
 	}
 
 	addEntityField<T, IQF extends IQField<IQ>>(
 		field:IQF
 	):void {
-		this.entityFields.push(field);
+		this.__entityFields__.push(field);
 	}
 
 /*
