@@ -18,7 +18,7 @@ export declare abstract class QEntity<IQ extends IQEntity<IQ>> implements IQEnti
     entityConstructor: Function;
     name: string;
     private isTemplate;
-    private nativeName?;
+    private nativeName;
     entityFields: IQField<IQ>[];
     entityRelations: IQRelation<any, any, IQ>[];
     constructor(entityConstructor: Function, name: string, isTemplate?: boolean, nativeName?: string);

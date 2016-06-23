@@ -55,7 +55,7 @@ export class PouchDbQuery {
 
 	childQueries:PouchDbQuery[] = [];
 	joinFields:JoinField[] = [];
-	fields:string[];
+	fields:string[] = ['_id', '_rev'];
 	queryJson:any;
 	selector:any;
 	sort:string[];
