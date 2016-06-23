@@ -1,5 +1,4 @@
 import {IQEntity, QEntity} from "./Entity";
-import {QueryFragment} from "../QueryFragment";
 /**
  * Created by Papa on 4/26/2016.
  */
@@ -20,7 +19,7 @@ export interface IQRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ
 
 }
 
-export class QRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ>> extends QueryFragment implements IQRelation<IQR, R, IQ> {
+export class QRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ>> implements IQRelation<IQR, R, IQ> {
 
 	constructor(
 		public q:IQ,
@@ -30,7 +29,6 @@ export class QRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ>> ex
 		public relationEntityConstructor:new () => R,
 		public relationQEntityConstructor:new () => IQR
 	) {
-		super();
 		this.q.addEntityRelation(this);
 	}
 

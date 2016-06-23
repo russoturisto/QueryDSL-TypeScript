@@ -3,51 +3,61 @@
  */
 import {IQEntity} from "../entity/Entity";
 import {OperationType} from "./OperationType";
-import {QueryFragment} from "../QueryFragment";
 import {FieldType} from "../field/Field";
+import {JSONFieldReference} from "./FieldOperation";
 
-export interface IOperation<IQ extends IQEntity<IQ>> {
 
-	objectEquals<OP extends IOperation<IQ>>(
+export interface JSONBaseOperation {
+	__include__?:boolean;
+}
+
+export interface JSONOperation {
+	"$and"?:JSONOperation[];
+	"$eq"?:boolean | Date | JSONFieldReference | number | string;
+	"$exists"?:boolean;
+	"$gt"?:Date | JSONFieldReference | number;
+	"$gte"?:Date | JSONFieldReference | number;
+	"$in"?:Date[] | number[] | string[];
+	"$lt"?:Date | JSONFieldReference | number;
+	"$lte"?:Date | JSONFieldReference | number;
+	"$like"?:string | RegExp;
+	"$ne"?:boolean | Date | JSONFieldReference | number | string;
+	"$nin"?:Date[] | number[] | string[];
+	"$not"?:JSONOperation;
+	"$or"?:JSONOperation[];
+}
+
+export interface IOperation {
+
+	type:OperationType;
+
+	objectEquals<OP extends IOperation>(
 		otherOp:OP,
 		checkValue?:boolean
 	):boolean;
 
-	getQ():IQ;
+	toJSON():JSONOperation;
 
 }
 
-export abstract class Operation<IQ extends IQEntity<IQ>> extends QueryFragment implements IOperation<IQ> {
+export abstract class Operation implements IOperation {
 
 	constructor(
-		public q:IQ,
-		public fieldType?:FieldType,
-		public fieldName?:string,
-		public nativeFieldName:string = fieldName,
-		public type?:OperationType
+		public type:OperationType
 	) {
-		super();
 	}
 
-	getQ():IQ {
-		return this.q;
-	}
+	abstract toJSON():JSONOperation;
 
-	objectEquals<OP extends Operation<IQ>>(
+	objectEquals<OP extends Operation>(
 		otherOp:OP,
 		checkValue?:boolean
 	):boolean {
 
-		if (this.q.constructor !== otherOp.q.constructor) {
-			return false;
-		}
 		if (this.constructor !== otherOp.constructor) {
 			return false;
 		}
 		if (this.type !== otherOp.type) {
-			return false;
-		}
-		if (this.fieldName !== otherOp.fieldName) {
 			return false;
 		}
 
@@ -58,7 +68,7 @@ export abstract class Operation<IQ extends IQEntity<IQ>> extends QueryFragment i
 		return true;
 	}
 
-	protected abstract valueEquals<OP extends Operation<IQ>>(
+	protected abstract valueEquals<OP extends Operation>(
 		otherOp:OP,
 		checkChildValues?:boolean
 	):boolean;

@@ -1,5 +1,4 @@
 import { IQEntity } from "./Entity";
-import { QueryFragment } from "../QueryFragment";
 /**
  * Created by Papa on 4/26/2016.
  */
@@ -15,7 +14,7 @@ export interface IQRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ
     relationEntityConstructor: new () => R;
     relationQEntityConstructor: new () => IQR;
 }
-export declare class QRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ>> extends QueryFragment implements IQRelation<IQR, R, IQ> {
+export declare class QRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ>> implements IQRelation<IQR, R, IQ> {
     q: IQ;
     qConstructor: new () => IQ;
     relationType: RelationType;

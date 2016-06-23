@@ -1,34 +1,30 @@
-/**
- * Created by Papa on 4/21/2016.
- */
-import { ILogicalOperation, LogicalOperation } from "../operation/LogicalOperation";
-import { IOperation } from "../operation/Operation";
-import { IComparisonOperation } from "../operation/ComparisonOperation";
 import { IQField } from "../field/Field";
 import { IQRelation } from "./Relation";
-export interface IQEntity<IQ extends IQEntity<IQ>> extends ILogicalOperation<IQ> {
-    addEntityRelation<IQR extends IQEntity<IQR>, R>(relation: IQRelation<IQR, R, IQ>): void;
-    addEntityField<T, IQF extends IComparisonOperation<T, IQ>>(field: IQF): void;
-    entityConstructor: Function;
-    fields(fields: IOperation<IQ>[]): IQ;
-    joinOn<T, C extends IComparisonOperation<T, IQ>>(comparisonOp: IComparisonOperation<T, IQ>): any;
+/**
+ * Marker interface for all query interfaces
+ */
+export interface IEntity<IQ extends IQEntity<IQ>> {
+    __operator__?: '$and' | '$or';
 }
-export declare class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
+export interface IQEntity<IQ extends IQEntity<IQ>> {
     entityConstructor: Function;
+    entityFields: IQField<IQ>[];
+    entityRelations: IQRelation<any, any, IQ>[];
+    addEntityRelation<IQR extends IQEntity<IQR>, R>(relation: IQRelation<IQR, R, IQ>): void;
+    addEntityField<IQF extends IQField<IQ>>(field: IQF): void;
+    fields(fields: IQField<IQ>[]): IQ;
+}
+export declare abstract class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
+    entityConstructor: Function;
+    name: string;
     private isTemplate;
     private nativeName?;
-    entityFields: IQField<any, IQ>[];
+    entityFields: IQField<IQ>[];
     entityRelations: IQRelation<any, any, IQ>[];
-    rootOperation: LogicalOperation<IQ>;
-    constructor(entityConstructor: Function, isTemplate?: boolean, nativeName?: string);
+    constructor(entityConstructor: Function, name: string, isTemplate?: boolean, nativeName?: string);
     addEntityRelation<IQR extends IQEntity<IQR>, R>(relation: IQRelation<IQR, R, IQ>): void;
-    addEntityField<T, IQF extends IQField<T, IQ>>(field: IQF): void;
-    addOperation<O extends IOperation<IQ>>(op: O): void;
+    addEntityField<T, IQF extends IQField<IQ>>(field: IQF): void;
     getQ(): IQ;
-    fields(fields: IOperation<IQ>[]): IQ;
-    joinOn<T, C extends IComparisonOperation<T, IQ>>(comparisonOp: IComparisonOperation<T, IQ>): void;
-    and(...ops: IOperation<IQ>[]): IOperation<IQ>;
-    or(...ops: IOperation<IQ>[]): IOperation<IQ>;
-    not(op: IOperation<IQ>): IOperation<IQ>;
-    objectEquals<OP extends IOperation<IQ>>(otherOp: OP, checkValues?: boolean): boolean;
+    fields(fields: IQField<IQ>[]): IQ;
+    abstract toJSON(): any;
 }

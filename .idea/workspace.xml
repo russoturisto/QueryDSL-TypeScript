@@ -1,19 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/OperationImpl.ts" line="51" mnemonic="2" />
-    <bookmark url="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Expression.ts" line="20" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/src/core/operation/Operation.ts" line="15" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts" line="43" mnemonic="9" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8322ebc1-9272-4c63-9e9f-f1c51e544bcc" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/QueryEngine.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/pouchdb/PouchDbQueryEngine.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/operation/BooleanOperation.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/operation/DateOperation.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/operation/FieldOperation.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/operation/LogicalFieldOperation.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/operation/NumberOperation.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/operation/QueryOperation.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/operation/StringOperation.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/utils/EntityUtils.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/PHQuery.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/QueryEngine.d.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/QueryEngine.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/QueryEngine.js.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/QueryFragment.d.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/QueryFragment.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/QueryFragment.js.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.d.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.js.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.d.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.js.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/field/Field.d.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/field/Field.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/field/Field.js.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/field/StringField.d.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/field/StringField.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/field/StringField.js.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/operation/ComparisonOperation.d.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/operation/ComparisonOperation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/operation/ComparisonOperation.js.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.d.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/operation/Operation.d.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/operation/Operation.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/operation/Operation.js.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/operation/OperationType.d.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/operation/OperationType.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/core/operation/OperationType.js.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/index.d.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/index.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/index.js.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/pouchdb/PouchDbQueryEngine.d.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/pouchdb/PouchDbQueryEngine.js" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/pouchdb/PouchDbQueryEngine.js.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/core/QueryEngine.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/core/QueryFragment.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/core/operation/ComparisonOperation.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/pouchdb/PouchDbQueryEngine.ts" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/entity/Entity.ts" afterPath="$PROJECT_DIR$/src/core/entity/Entity.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/entity/Relation.ts" afterPath="$PROJECT_DIR$/src/core/entity/Relation.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/field/Field.ts" afterPath="$PROJECT_DIR$/src/core/field/Field.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/ComparisonOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/ComparisonOperation.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/typings.json" afterPath="$PROJECT_DIR$/typings.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/Operation.ts" afterPath="$PROJECT_DIR$/src/core/operation/Operation.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/index.ts" afterPath="$PROJECT_DIR$/src/index.ts" />
     </list>
     <ignored path="QueryDSL-TypeScript.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -36,47 +85,50 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-          <file leaf-file-name="Relation.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/entity/Relation.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="340">
-                  <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-                  <folding>
-                    <element signature="e#0#43#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="LogicalOperation.ts" pinned="false" current-in-tab="true">
+          <file leaf-file-name="LogicalOperation.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalOperation.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="306">
-                  <caret line="55" column="24" selection-start-line="55" selection-start-column="24" selection-end-line="55" selection-end-column="24" />
+                <state relative-caret-position="356">
+                  <caret line="66" column="14" selection-start-line="66" selection-start-column="14" selection-end-line="66" selection-end-column="14" />
                   <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="PouchDbQueryEngine.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/pouchdb/PouchDbQueryEngine.ts">
+          <file leaf-file-name="FieldOperation.ts" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/core/operation/FieldOperation.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="289">
-                  <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
+                <state relative-caret-position="401">
+                  <caret line="31" column="14" selection-start-line="31" selection-start-column="14" selection-end-line="31" selection-end-column="14" />
                   <folding>
-                    <element signature="e#0#48#0" expanded="true" />
-                    <element signature="n#!!doc;n#require#0" expanded="false" />
+                    <element signature="e#0#42#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="SisCurriculumTemplatesVwRepository.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/QdTs-PH/repository/SisCurriculumTemplatesVwRepository.ts">
+          <file leaf-file-name="StringOperation.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/core/operation/StringOperation.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="17">
-                  <caret line="54" column="9" selection-start-line="54" selection-start-column="9" selection-end-line="54" selection-end-column="9" />
-                  <folding />
+                <state relative-caret-position="425">
+                  <caret line="63" column="23" selection-start-line="63" selection-start-column="23" selection-end-line="63" selection-end-column="23" />
+                  <folding>
+                    <element signature="e#0#85#0" expanded="true" />
+                    <element signature="n#!!doc;n#JSONStringOperation#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="LogicalFieldOperation.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalFieldOperation.ts">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="425">
+                  <caret line="27" column="14" selection-start-line="27" selection-start-column="14" selection-end-line="27" selection-end-column="14" />
+                  <folding>
+                    <element signature="e#0#39#0" expanded="true" />
+                    <element signature="n#!!doc;n#ILogicalFieldOperation#0" expanded="false" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -85,43 +137,11 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="OperationType.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/operation/OperationType.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="34">
-                  <caret line="4" column="12" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/package.json">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="34">
-                  <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="20" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="QueryEngine.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/QueryEngine.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="136">
-                  <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-                  <folding>
-                    <element signature="n#!!doc;n#IQueryEngine#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="Operation.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/core/operation/Operation.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="209">
-                  <caret line="21" column="2" selection-start-line="21" selection-start-column="2" selection-end-line="21" selection-end-column="2" />
+                <state relative-caret-position="281">
+                  <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
                   <folding>
                     <element signature="e#41#83#0" expanded="true" />
                   </folding>
@@ -129,23 +149,35 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Entity.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
+          <file leaf-file-name="PouchDbQuery.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="561">
-                  <caret line="40" column="10" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="10" />
+                <state relative-caret-position="0">
+                  <caret line="0" column="79" selection-start-line="0" selection-start-column="79" selection-end-line="0" selection-end-column="79" />
                   <folding>
-                    <element signature="e#41#123#0" expanded="true" />
+                    <element signature="n#!!doc;n#require#0" expanded="false" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="ComparisonOperation.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/operation/ComparisonOperation.ts">
+          <file leaf-file-name="PHQuery.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/query/PHQuery.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="191">
-                  <caret line="172" column="104" selection-start-line="172" selection-start-column="104" selection-end-line="172" selection-end-column="104" />
+                <state relative-caret-position="17">
+                  <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+                  <folding>
+                    <element signature="e#112#152#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="QueryOperation.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/core/operation/QueryOperation.ts">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="102">
+                  <caret line="65" column="22" selection-start-line="65" selection-start-column="22" selection-end-line="65" selection-end-column="22" />
                   <folding>
                     <element signature="e#41#83#0" expanded="true" />
                   </folding>
@@ -153,25 +185,36 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="QueryFragment.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/QueryFragment.ts">
+          <file leaf-file-name="Relation.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/core/entity/Relation.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="119">
-                  <caret line="9" column="2" selection-start-line="9" selection-start-column="2" selection-end-line="9" selection-end-column="2" />
+                <state relative-caret-position="527">
+                  <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="index.ts" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/index.ts">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="583">
+                  <caret line="68" column="14" selection-start-line="68" selection-start-column="14" selection-end-line="68" selection-end-column="14" />
                   <folding>
-                    <element signature="n#!!doc;n#IQueryFragment#0" expanded="false" />
+                    <element signature="e#42#179#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Field.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
+          <file leaf-file-name="BooleanOperation.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/core/operation/BooleanOperation.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="444">
-                  <caret line="31" column="16" selection-start-line="31" selection-start-column="16" selection-end-line="31" selection-end-column="16" />
+                <state relative-caret-position="323">
+                  <caret line="42" column="10" selection-start-line="42" selection-start-column="10" selection-end-line="42" selection-end-column="10" />
                   <folding>
-                    <element signature="e#41#83#0" expanded="true" />
+                    <element signature="e#0#85#0" expanded="true" />
+                    <element signature="n#!!doc;n#JSONBooleanOperation#0" expanded="false" />
                   </folding>
                 </state>
               </provider>
@@ -194,19 +237,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/querydsl-core/src/java/lang/Character.ts" />
-        <option value="$PROJECT_DIR$/querydsl-core/src/java/lang/Byte.ts" />
-        <option value="$PROJECT_DIR$/querydsl-core/src/java/lang/Short.ts" />
-        <option value="$PROJECT_DIR$/querydsl-core/src/java/lang/Comparable.ts" />
-        <option value="$PROJECT_DIR$/node_modules/immutable/dist/immutable.d.ts" />
-        <option value="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/TemplateExpression.ts" />
-        <option value="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Ops.ts" />
-        <option value="$PROJECT_DIR$/querydsl-core/src/java/util/Arrays.ts" />
-        <option value="$PROJECT_DIR$/querydsl-core/src/java/Char.ts" />
-        <option value="$PROJECT_DIR$/querydsl-core/src/java/util/Map.ts" />
-        <option value="$PROJECT_DIR$/querydsl-core/src/java/util/IdentityHashMap.ts" />
-        <option value="$PROJECT_DIR$/querydsl-core/src/Collections.ts" />
-        <option value="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/TemplateFactory.ts" />
         <option value="$PROJECT_DIR$/querydsl-core/src/java/lang/IllegalArgumentException.ts" />
         <option value="$PROJECT_DIR$/querydsl-core/src/java/lang/Object.ts" />
         <option value="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Operation.ts" />
@@ -234,17 +264,30 @@
         <option value="$PROJECT_DIR$/tsconfig.json" />
         <option value="$PROJECT_DIR$/src/core/QueryFragment.ts" />
         <option value="$PROJECT_DIR$/QdTs-PH/repository/SisCurriculumTemplatesVwRepository.ts" />
-        <option value="$PROJECT_DIR$/src/index.ts" />
-        <option value="$PROJECT_DIR$/src/core/entity/Relation.ts" />
-        <option value="$PROJECT_DIR$/src/core/entity/Entity.ts" />
         <option value="$PROJECT_DIR$/src/core/QueryEngine.ts" />
         <option value="$PROJECT_DIR$/typings.json" />
-        <option value="$PROJECT_DIR$/src/pouchdb/PouchDbQueryEngine.ts" />
-        <option value="$PROJECT_DIR$/src/core/operation/Operation.ts" />
-        <option value="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" />
-        <option value="$PROJECT_DIR$/src/core/field/Field.ts" />
-        <option value="$PROJECT_DIR$/src/core/operation/ComparisonOperation.ts" />
         <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/src/core/utils/EntityUtils.ts" />
+        <option value="$PROJECT_DIR$/src/pouchdb/QueryFragment.ts" />
+        <option value="$PROJECT_DIR$/src/pouchdb/PouchDbQueryEngine.ts" />
+        <option value="$PROJECT_DIR$/src/pouchdb/PHQuery.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/ComparisonOperation.ts" />
+        <option value="$PROJECT_DIR$/src/core/field/Field.ts" />
+        <option value="$PROJECT_DIR$/src/core/entity/Entity.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/FieldOperation.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/BooleanOperation.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/DateOperation.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/NumberOperation.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/StringOperation.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/LogicalFieldOperation.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/QueryOperation.ts" />
+        <option value="$PROJECT_DIR$/src/core/entity/Relation.ts" />
+        <option value="$PROJECT_DIR$/src/pouchdb/PouchDbQuery.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/Operation.ts" />
+        <option value="$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts" />
+        <option value="$PROJECT_DIR$/src/query/PHQuery.ts" />
+        <option value="$PROJECT_DIR$/src/index.ts" />
       </list>
     </option>
   </component>
@@ -255,10 +298,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1912" />
-    <option name="y" value="-8" />
-    <option name="width" value="1936" />
-    <option name="height" value="1096" />
+    <option name="x" value="1908" />
+    <option name="width" value="1918" />
+    <option name="height" value="1087" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -286,16 +328,6 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -396,6 +428,28 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="query" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QueryDSL-TypeScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QueryDSL-TypeScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="query" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="pouchdb" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -428,8 +482,26 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="lib" />
+              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="operation" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -445,14 +517,15 @@
     <property name="settings.editor.splitter.proportion" value="0.2" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\src" />
-      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\core" />
-      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\querydsl-core\src\javax\annotation\concurrent" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript" />
       <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\querydsl-core\src\com\querydsl\core\types" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\src\query" />
+      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\src" />
+      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\core" />
+      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\querydsl-core\src\javax\annotation\concurrent" />
     </key>
   </component>
   <component name="RunManager">
@@ -545,26 +618,27 @@
       <workItem from="1464752535283" duration="1192000" />
       <workItem from="1465165366074" duration="970000" />
       <workItem from="1465683531932" duration="363000" />
-      <workItem from="1465763708829" duration="7929000" />
+      <workItem from="1465763708829" duration="19473000" />
+      <workItem from="1465989956466" duration="54450000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="124886000" />
+    <option name="totallyTimeSpent" value="190880000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1912" y="-8" width="1936" height="1096" extended-state="6" />
-    <editor active="true" />
+    <frame x="1908" y="0" width="1918" height="1087" extended-state="0" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13382508" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13510638" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="TypeScript Compiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3280757" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31568018" sideWeight="0.357745" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.317757" sideWeight="0.4915701" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="TypeScript Compiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3271028" sideWeight="0.49789253" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32389936" sideWeight="0.3882979" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3144654" sideWeight="0.48297873" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31568018" sideWeight="0.642255" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32389936" sideWeight="0.61170214" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -611,64 +685,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/java/lang/IllegalArgumentException.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="51">
-          <caret line="5" column="21" selection-start-line="5" selection-start-column="21" selection-end-line="5" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/immutable/dist/immutable.d.ts" />
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Ops.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="22" column="6" selection-start-line="22" selection-start-column="6" selection-end-line="22" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/java/lang/Object.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="539">
-          <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/javax/annotation/concurrent/Immutable.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Constant.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="14" column="40" selection-start-line="14" selection-start-column="40" selection-end-line="14" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ConstantImpl.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="171" column="34" selection-start-line="171" selection-start-column="34" selection-end-line="171" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/TSUtils.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="28" column="34" selection-start-line="28" selection-start-column="16" selection-end-line="28" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/Operation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="33" selection-start-line="11" selection-start-column="33" selection-end-line="11" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/util/MathUtils.java" />
     <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/dsl/Expressions.java" />
     <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/FactoryExpressionBase.ts">
       <provider selected="true" editor-type-id="text-editor">
@@ -770,39 +786,11 @@
     <entry file="file://$PROJECT_DIR$/README.md" />
     <entry file="file://$PROJECT_DIR$/node_modules/immutable/package.json" />
     <entry file="file://$PROJECT_DIR$/tsd.json" />
-    <entry file="file://$PROJECT_DIR$/src/core/QueryFragment.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="9" column="2" selection-start-line="9" selection-start-column="2" selection-end-line="9" selection-end-column="2" />
-          <folding>
-            <element signature="n#!!doc;n#IQueryFragment#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/field/StringField.ts" />
-    <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="40" column="10" selection-start-line="40" selection-start-column="10" selection-end-line="40" selection-end-column="10" />
-          <folding>
-            <element signature="e#41#123#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
           <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operation/OperationType.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="4" column="12" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
           <folding />
         </state>
       </provider>
@@ -819,9 +807,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-42694">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -838,16 +823,8 @@
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="10" column="55" selection-start-line="10" selection-start-column="55" selection-end-line="10" selection-end-column="55" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -856,84 +833,7 @@
         <state relative-caret-position="200">
           <caret line="110" column="35" selection-start-line="110" selection-start-column="30" selection-end-line="110" selection-end-column="35" />
           <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/entity/Relation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/QdTs-PH/repository/SisCurriculumTemplatesVwRepository.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="54" column="9" selection-start-line="54" selection-start-column="9" selection-end-line="54" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/QueryEngine.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc;n#IQueryEngine#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operation/Operation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="21" column="2" selection-start-line="21" selection-start-column="2" selection-end-line="21" selection-end-column="2" />
-          <folding>
-            <element signature="e#41#83#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pouchdb/PouchDbQueryEngine.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="19" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#48#0" expanded="true" />
-            <element signature="n#!!doc;n#require#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalOperation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="55" column="24" selection-start-line="55" selection-start-column="24" selection-end-line="55" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="444">
-          <caret line="31" column="16" selection-start-line="31" selection-start-column="16" selection-end-line="31" selection-end-column="16" />
-          <folding>
-            <element signature="e#41#83#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operation/ComparisonOperation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="191">
-          <caret line="172" column="104" selection-start-line="172" selection-start-column="104" selection-end-line="172" selection-end-column="104" />
-          <folding>
-            <element signature="e#41#83#0" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -943,6 +843,215 @@
         <state relative-caret-position="34">
           <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="20" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/OperationType.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="4" column="12" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/utils/EntityUtils.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="27" column="1" selection-start-line="27" selection-start-column="1" selection-end-line="27" selection-end-column="1" />
+          <folding>
+            <element signature="n#!!doc;n#EntityUtils#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/QdTs-PH/repository/SisCurriculumTemplatesVwRepository.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="867">
+          <caret line="63" column="0" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="582">
+          <caret line="126" column="10" selection-start-line="126" selection-start-column="10" selection-end-line="126" selection-end-column="10" />
+          <folding>
+            <element signature="e#41#83#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1473">
+          <caret line="118" column="42" selection-start-line="118" selection-start-column="42" selection-end-line="118" selection-end-column="42" />
+          <folding>
+            <element signature="e#41#123#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/DateOperation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="78" column="0" selection-start-line="78" selection-start-column="0" selection-end-line="80" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#85#0" expanded="true" />
+            <element signature="n#!!doc;n#JSONDateOperation#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/NumberOperation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="78" column="30" selection-start-line="78" selection-start-column="30" selection-end-line="78" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#85#0" expanded="true" />
+            <element signature="n#!!doc;n#JSONNumberOperation#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/StringOperation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="63" column="23" selection-start-line="63" selection-start-column="23" selection-end-line="63" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#85#0" expanded="true" />
+            <element signature="n#!!doc;n#JSONStringOperation#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalFieldOperation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="27" column="14" selection-start-line="27" selection-start-column="14" selection-end-line="27" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+            <element signature="n#!!doc;n#ILogicalFieldOperation#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalOperation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="356">
+          <caret line="66" column="14" selection-start-line="66" selection-start-column="14" selection-end-line="66" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/QueryOperation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="65" column="22" selection-start-line="65" selection-start-column="22" selection-end-line="65" selection-end-column="22" />
+          <folding>
+            <element signature="e#41#83#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/typescriptCompiler/external/lib.d.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-509">
+          <caret line="814" column="12" selection-start-line="814" selection-start-column="12" selection-end-line="814" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/QueryEngine.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="10" column="0" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/QueryFragment.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="8" column="13" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/Relation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="527">
+          <caret line="31" column="0" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/Operation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="281">
+          <caret line="47" column="0" selection-start-line="47" selection-start-column="0" selection-end-line="47" selection-end-column="0" />
+          <folding>
+            <element signature="e#41#83#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/pouchdb/QueryFragment.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="13" selection-end-line="10" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/FieldOperation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="401">
+          <caret line="31" column="14" selection-start-line="31" selection-start-column="14" selection-end-line="31" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/BooleanOperation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="42" column="10" selection-start-line="42" selection-start-column="10" selection-end-line="42" selection-end-column="10" />
+          <folding>
+            <element signature="e#0#85#0" expanded="true" />
+            <element signature="n#!!doc;n#JSONBooleanOperation#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/PHQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding>
+            <element signature="e#112#152#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="79" selection-start-line="0" selection-start-column="79" selection-end-line="0" selection-end-column="79" />
+          <folding>
+            <element signature="n#!!doc;n#require#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="583">
+          <caret line="68" column="14" selection-start-line="68" selection-start-column="14" selection-end-line="68" selection-end-column="14" />
+          <folding>
+            <element signature="e#42#179#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
