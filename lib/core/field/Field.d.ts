@@ -13,27 +13,27 @@ export declare enum FieldType {
     STRING = 6,
     STRING_ARRAY = 7,
 }
-export interface IQBooleanField<IQ extends IQEntity<IQ>> extends IQField<IQ> {
+export interface IQBooleanField<IQ extends IQEntity> extends IQField<IQ> {
 }
-export declare class QBooleanField<IQ extends IQEntity<IQ>> extends QField<IQ> implements IQBooleanField<IQ> {
+export declare class QBooleanField<IQ extends IQEntity> extends QField<IQ> implements IQBooleanField<IQ> {
     constructor(q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string, nativeFieldName?: string);
 }
-export interface IQDateField<IQ extends IQEntity<IQ>> extends IQField<IQ> {
+export interface IQDateField<IQ extends IQEntity> extends IQField<IQ> {
 }
-export declare class QDateField<IQ extends IQEntity<IQ>> extends QField<IQ> implements IQDateField<IQ> {
+export declare class QDateField<IQ extends IQEntity> extends QField<IQ> implements IQDateField<IQ> {
     constructor(q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string, nativeFieldName?: string);
 }
-export interface IQNumberField<IQ extends IQEntity<IQ>> extends IQField<IQ> {
+export interface IQNumberField<IQ extends IQEntity> extends IQField<IQ> {
 }
-export declare class QNumberField<IQ extends IQEntity<IQ>> extends QField<IQ> implements IQNumberField<IQ> {
+export declare class QNumberField<IQ extends IQEntity> extends QField<IQ> implements IQNumberField<IQ> {
     constructor(q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string, nativeFieldName?: string);
 }
-export interface IQStringField<IQ extends IQEntity<IQ>> extends IQField<IQ> {
+export interface IQStringField<IQ extends IQEntity> extends IQField<IQ> {
 }
-export declare class QStringField<IQ extends IQEntity<IQ>> extends QField<IQ> implements IQStringField<IQ> {
+export declare class QStringField<IQ extends IQEntity> extends QField<IQ> implements IQStringField<IQ> {
     constructor(q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string, nativeFieldName?: string);
 }
-export interface IQField<IQ extends IQEntity<IQ>> {
+export interface IQField<IQ extends IQEntity> {
     entityName: string;
     fieldName: string;
     fieldType: FieldType;
@@ -44,7 +44,7 @@ export interface IQField<IQ extends IQEntity<IQ>> {
     getQ(): IQ;
     toJSON(): JSONOperation;
 }
-export declare abstract class QField<IQ extends IQEntity<IQ>> implements IQField<IQ> {
+export declare abstract class QField<IQ extends IQEntity> implements IQField<IQ> {
     q: IQ;
     qConstructor: new () => IQ;
     entityName: string;

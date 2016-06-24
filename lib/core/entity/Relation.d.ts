@@ -6,7 +6,7 @@ export declare enum RelationType {
     ONE_TO_MANY = 0,
     MANY_TO_ONE = 1,
 }
-export interface IQRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ>> {
+export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
     q: IQ;
     qConstructor: new () => IQ;
     relationPropertyName: string;
@@ -14,7 +14,7 @@ export interface IQRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ
     relationEntityConstructor: new () => R;
     relationQEntityConstructor: new () => IQR;
 }
-export declare class QRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ>> implements IQRelation<IQR, R, IQ> {
+export declare class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> implements IQRelation<IQR, R, IQ> {
     q: IQ;
     qConstructor: new () => IQ;
     relationType: RelationType;

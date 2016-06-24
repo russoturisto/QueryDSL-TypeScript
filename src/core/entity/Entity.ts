@@ -1,47 +1,43 @@
 /**
  * Created by Papa on 4/21/2016.
  */
-import {ILogicalOperation, LogicalOperation} from "../operation/LogicalOperation";
-import {IOperation} from "../operation/Operation";
-import {OperationType} from "../operation/OperationType";
-import {IQueryOperation} from "../operation/QueryOperation";
 import {IQField} from "../field/Field";
 import {IQRelation} from "./Relation";
 
 /**
  * Marker interface for all query interfaces
  */
-export interface IEntity<IQ extends IQEntity<IQ>> {
+export interface IEntity {
 	__operator__?:'$and' | '$or';
 }
 
-export interface IQEntity<IQ extends IQEntity<IQ>> {
+export interface IQEntity {
 
 	__entityConstructor__:Function;
-	__entityFields__:IQField<IQ>[];
-	__entityRelations__:IQRelation<any, any, IQ>[];
+	__entityFields__:IQField<IQEntity>[];
+	__entityRelations__:IQRelation<IQEntity, any, IQEntity>[];
 
-	addEntityRelation<IQR extends IQEntity<IQR>, R>(
-		relation:IQRelation<IQR, R, IQ>
+	addEntityRelation<IQR extends IQEntity, R>(
+		relation:IQRelation<IQR, R, IQEntity>
 	):void;
 
-	addEntityField<IQF extends IQField<IQ>>(
+	addEntityField<IQF extends IQField<IQEntity>>(
 		field:IQF
 	):void;
 
 	fields(
-		fields:IQField<IQ>[]
-	):IQ;
+		fields:IQField<IQEntity>[]
+	):IQEntity;
 
 	/*
-	joinOn<T, C extends IQField<IQ>>(
-		comparisonOp:IQField<IQ>
-	);
-*/
+	 joinOn<T, C extends IQField<IQ>>(
+	 comparisonOp:IQField<IQ>
+	 );
+	 */
 
 }
 
-export abstract class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
+export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 
 	__entityFields__:IQField<IQ>[] = [];
 	__entityRelations__:IQRelation<any, any, IQ>[] = [];
@@ -57,7 +53,7 @@ export abstract class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
 		// TODO: convert class name to native name if it's not provided
 	}
 
-	addEntityRelation<IQR extends IQEntity<IQR>, R>(
+	addEntityRelation<IQR extends IQEntity, R>(
 		relation:IQRelation<IQR, R, IQ>
 	):void {
 		this.__entityRelations__.push(relation);
@@ -69,13 +65,13 @@ export abstract class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
 		this.__entityFields__.push(field);
 	}
 
-/*
-	addOperation<O extends IOperation<IQ>>(
-		op:O
-	):void {
-		this.rootOperation.getChildOps().push(op);
-	}
-*/
+	/*
+	 addOperation<O extends IOperation<IQ>>(
+	 op:O
+	 ):void {
+	 this.rootOperation.getChildOps().push(op);
+	 }
+	 */
 
 	getQ():IQ {
 		return <any>this;
@@ -87,13 +83,13 @@ export abstract class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
 		throw `Not implemented`;
 	}
 
-/*
-	joinOn<T, C extends IQField<IQ>>(
-		comparisonOp:IQField<IQ>
-	) {
-		throw `Not Implemented`;
-	}
-*/
+	/*
+	 joinOn<T, C extends IQField<IQ>>(
+	 comparisonOp:IQField<IQ>
+	 ) {
+	 throw `Not Implemented`;
+	 }
+	 */
 
 	/*
 	 and(
@@ -115,18 +111,18 @@ export abstract class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
 	 }
 	 */
 
-/*
-	objectEquals<OP extends IOperation<IQ>>(
-		otherOp:OP,
-		checkValues?:boolean
-	):boolean {
-		if (this.constructor !== otherOp.constructor) {
-			return false;
-		}
-		let otherQ:QEntity<IQ> = <QEntity<IQ>><any>otherOp;
-		return this.rootOperation.objectEquals(otherQ.rootOperation, checkValues);
-	}
-*/
+	/*
+	 objectEquals<OP extends IOperation<IQ>>(
+	 otherOp:OP,
+	 checkValues?:boolean
+	 ):boolean {
+	 if (this.constructor !== otherOp.constructor) {
+	 return false;
+	 }
+	 let otherQ:QEntity<IQ> = <QEntity<IQ>><any>otherOp;
+	 return this.rootOperation.objectEquals(otherQ.rootOperation, checkValues);
+	 }
+	 */
 
 	abstract toJSON();
 

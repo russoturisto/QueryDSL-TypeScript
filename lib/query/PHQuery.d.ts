@@ -12,7 +12,7 @@ export declare class PHQuery {
     private qEntityMap;
     private entitiesRelationPropertyMap;
     private entitiesPropertyTypeMap;
-    constructor(iQEntity: IQEntity<any>, qEntity: QEntity<any>, qEntityMap: {
+    constructor(iQEntity: IQEntity, qEntity: QEntity<any>, qEntityMap: {
         [entityName: string]: QEntity<any>;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {

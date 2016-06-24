@@ -8,7 +8,7 @@ export enum RelationType {
 	MANY_TO_ONE
 }
 
-export interface IQRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ>> {
+export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
 
 	q:IQ;
 	qConstructor:new () => IQ,
@@ -19,7 +19,7 @@ export interface IQRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ
 
 }
 
-export class QRelation<IQR extends IQEntity<IQR>, R, IQ extends IQEntity<IQ>> implements IQRelation<IQR, R, IQ> {
+export class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> implements IQRelation<IQR, R, IQ> {
 
 	constructor(
 		public q:IQ,

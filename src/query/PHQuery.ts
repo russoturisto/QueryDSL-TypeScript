@@ -12,7 +12,7 @@ export const PH_INCLUDE = '__include__';
 export class PHQuery {
 
 	constructor(
-		private iQEntity:IQEntity<any>,
+		private iQEntity:IQEntity,
 		private qEntity:QEntity<any>,
 		private qEntityMap:{[entityName:string]:QEntity<any>},
 		private entitiesRelationPropertyMap:{[entityName:string]:{[propertyName:string]:string}},

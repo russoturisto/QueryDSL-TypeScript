@@ -1,9 +1,7 @@
 /**
  * Created by Papa on 4/21/2016.
  */
-import {IQEntity} from "../entity/Entity";
 import {OperationType} from "./OperationType";
-import {FieldType} from "../field/Field";
 import {JSONFieldReference} from "./FieldOperation";
 
 

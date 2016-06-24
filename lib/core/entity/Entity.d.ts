@@ -1,20 +1,23 @@
+/**
+ * Created by Papa on 4/21/2016.
+ */
 import { IQField } from "../field/Field";
 import { IQRelation } from "./Relation";
 /**
  * Marker interface for all query interfaces
  */
-export interface IEntity<IQ extends IQEntity<IQ>> {
+export interface IEntity {
     __operator__?: '$and' | '$or';
 }
-export interface IQEntity<IQ extends IQEntity<IQ>> {
+export interface IQEntity {
     __entityConstructor__: Function;
-    __entityFields__: IQField<IQ>[];
-    __entityRelations__: IQRelation<any, any, IQ>[];
-    addEntityRelation<IQR extends IQEntity<IQR>, R>(relation: IQRelation<IQR, R, IQ>): void;
-    addEntityField<IQF extends IQField<IQ>>(field: IQF): void;
-    fields(fields: IQField<IQ>[]): IQ;
+    __entityFields__: IQField<IQEntity>[];
+    __entityRelations__: IQRelation<IQEntity, any, IQEntity>[];
+    addEntityRelation<IQR extends IQEntity, R>(relation: IQRelation<IQR, R, IQEntity>): void;
+    addEntityField<IQF extends IQField<IQEntity>>(field: IQF): void;
+    fields(fields: IQField<IQEntity>[]): IQEntity;
 }
-export declare abstract class QEntity<IQ extends IQEntity<IQ>> implements IQEntity<IQ> {
+export declare abstract class QEntity<IQ extends IQEntity> implements IQEntity {
     __entityConstructor__: Function;
     __entityName__: string;
     private __isTemplateEntity__;
@@ -22,7 +25,7 @@ export declare abstract class QEntity<IQ extends IQEntity<IQ>> implements IQEnti
     __entityFields__: IQField<IQ>[];
     __entityRelations__: IQRelation<any, any, IQ>[];
     constructor(__entityConstructor__: Function, __entityName__: string, __isTemplateEntity__?: boolean, __nativeEntityName__?: string);
-    addEntityRelation<IQR extends IQEntity<IQR>, R>(relation: IQRelation<IQR, R, IQ>): void;
+    addEntityRelation<IQR extends IQEntity, R>(relation: IQRelation<IQR, R, IQ>): void;
     addEntityField<T, IQF extends IQField<IQ>>(field: IQF): void;
     getQ(): IQ;
     fields(fields: IQField<IQ>[]): IQ;

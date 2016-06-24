@@ -16,11 +16,11 @@ export enum FieldType {
 	STRING_ARRAY
 }
 
-export interface IQBooleanField<IQ extends IQEntity<IQ>> extends IQField<IQ> {
+export interface IQBooleanField<IQ extends IQEntity> extends IQField<IQ> {
 
 }
 
-export class QBooleanField<IQ extends IQEntity<IQ>> extends QField<IQ> implements IQBooleanField<IQ> {
+export class QBooleanField<IQ extends IQEntity> extends QField<IQ> implements IQBooleanField<IQ> {
 
 	constructor(
 		q:IQ,
@@ -36,11 +36,11 @@ export class QBooleanField<IQ extends IQEntity<IQ>> extends QField<IQ> implement
 
 }
 
-export interface IQDateField<IQ extends IQEntity<IQ>> extends IQField<IQ> {
+export interface IQDateField<IQ extends IQEntity> extends IQField<IQ> {
 
 }
 
-export class QDateField<IQ extends IQEntity<IQ>> extends QField<IQ> implements IQDateField<IQ> {
+export class QDateField<IQ extends IQEntity> extends QField<IQ> implements IQDateField<IQ> {
 
 	constructor(
 		q:IQ,
@@ -56,11 +56,11 @@ export class QDateField<IQ extends IQEntity<IQ>> extends QField<IQ> implements I
 
 }
 
-export interface IQNumberField<IQ extends IQEntity<IQ>> extends IQField<IQ> {
+export interface IQNumberField<IQ extends IQEntity> extends IQField<IQ> {
 
 }
 
-export class QNumberField<IQ extends IQEntity<IQ>> extends QField<IQ> implements IQNumberField<IQ> {
+export class QNumberField<IQ extends IQEntity> extends QField<IQ> implements IQNumberField<IQ> {
 
 	constructor(
 		q:IQ,
@@ -75,11 +75,11 @@ export class QNumberField<IQ extends IQEntity<IQ>> extends QField<IQ> implements
 	}
 }
 
-export interface IQStringField<IQ extends IQEntity<IQ>> extends IQField<IQ> {
+export interface IQStringField<IQ extends IQEntity> extends IQField<IQ> {
 
 }
 
-export class QStringField<IQ extends IQEntity<IQ>> extends QField<IQ> implements IQStringField<IQ> {
+export class QStringField<IQ extends IQEntity> extends QField<IQ> implements IQStringField<IQ> {
 
 	constructor(
 		q:IQ,
@@ -95,7 +95,7 @@ export class QStringField<IQ extends IQEntity<IQ>> extends QField<IQ> implements
 
 }
 
-export interface IQField<IQ extends IQEntity<IQ>> {
+export interface IQField<IQ extends IQEntity> {
 
 	entityName:string;
 	fieldName:string;
@@ -115,7 +115,7 @@ export interface IQField<IQ extends IQEntity<IQ>> {
 
 }
 
-export abstract class QField<IQ extends IQEntity<IQ>> implements IQField<IQ> {
+export abstract class QField<IQ extends IQEntity> implements IQField<IQ> {
 
 	fieldType:FieldType;
 

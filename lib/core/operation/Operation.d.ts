@@ -1,3 +1,6 @@
+/**
+ * Created by Papa on 4/21/2016.
+ */
 import { OperationType } from "./OperationType";
 import { JSONFieldReference } from "./FieldOperation";
 export interface JSONBaseOperation {
