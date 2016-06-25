@@ -1,4 +1,4 @@
-import {IQEntity, QEntity} from "../core/entity/Entity";
+import {QEntity, IEntity} from "../core/entity/Entity";
 import {Operation} from "../core/operation/Operation";
 /**
  * Created by Papa on 6/22/2016.
@@ -12,7 +12,7 @@ export const PH_INCLUDE = '__include__';
 export class PHQuery {
 
 	constructor(
-		private iQEntity:IQEntity,
+		private iEntity:IEntity,
 		private qEntity:QEntity<any>,
 		private qEntityMap:{[entityName:string]:QEntity<any>},
 		private entitiesRelationPropertyMap:{[entityName:string]:{[propertyName:string]:string}},
@@ -27,8 +27,8 @@ export class PHQuery {
 		let entityRelationPropertyMap = this.entitiesRelationPropertyMap[entityName];
 		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
 
-		for (let propertyName in this.iQEntity) {
-			let queryFragment = this.iQEntity[propertyName];
+		for (let propertyName in this.iEntity) {
+			let queryFragment = this.iEntity[propertyName];
 			if (entityPropertyTypeMap[propertyName]) {
 				let typeOfFragment = typeof queryFragment;
 				switch (typeOfFragment) {
