@@ -1,5 +1,5 @@
 import { JSONFieldReference, IFieldOperation, FieldOperation } from "./FieldOperation";
-import { IQDateField, FieldType } from "../field/Field";
+import { IQDateField } from "../field/Field";
 import { OperationType } from "./OperationType";
 import { JSONBaseOperation } from "./Operation";
 /**
@@ -34,7 +34,7 @@ export interface IDateOperation extends IFieldOperation<Date> {
     not(op: IDateOperation): IDateOperation;
 }
 export declare class DateOperation extends FieldOperation<Date> implements IDateOperation {
-    fieldType: FieldType;
+    constructor(type: OperationType);
     getDefinedInstance(type: OperationType, value: any): IDateOperation;
     equals(value: Date | IQDateField<any>): IDateOperation;
     exists(exists: boolean): IDateOperation;

@@ -1,5 +1,5 @@
 import { JSONFieldReference, IFieldOperation, FieldOperation } from "./FieldOperation";
-import { IQNumberField, FieldType } from "../field/Field";
+import { IQNumberField } from "../field/Field";
 import { OperationType } from "./OperationType";
 import { JSONBaseOperation } from "./Operation";
 /**
@@ -34,7 +34,7 @@ export interface INumberOperation extends IFieldOperation<number> {
     not(op: INumberOperation): INumberOperation;
 }
 export declare class NumberOperation extends FieldOperation<number> implements INumberOperation {
-    fieldType: FieldType;
+    constructor(type: OperationType);
     getDefinedInstance(type: OperationType, value: any): INumberOperation;
     equals(value: number | IQNumberField<any>): INumberOperation;
     exists(exists: boolean): INumberOperation;

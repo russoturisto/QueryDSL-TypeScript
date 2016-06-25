@@ -1,5 +1,5 @@
 import { IFieldOperation, JSONFieldReference, FieldOperation } from "./FieldOperation";
-import { IQBooleanField, FieldType } from "../field/Field";
+import { IQBooleanField } from "../field/Field";
 import { OperationType } from "./OperationType";
 import { JSONBaseOperation } from "./Operation";
 /**
@@ -22,7 +22,7 @@ export interface IBooleanOperation extends IFieldOperation<Date> {
     not(op: IBooleanOperation): IBooleanOperation;
 }
 export declare class BooleanOperation extends FieldOperation<boolean> implements IBooleanOperation {
-    fieldType: FieldType;
+    constructor(type: OperationType);
     getDefinedInstance(type: OperationType, value: any): IBooleanOperation;
     equals(value: boolean | IQBooleanField<any>): IBooleanOperation;
     exists(exists: boolean): IBooleanOperation;

@@ -21,8 +21,7 @@ export interface JSONNumberOperation extends JSONBaseOperation {
 	"$or"?:JSONNumberOperation[];
 }
 
-export interface INumberOperation
-extends IFieldOperation<number> {
+export interface INumberOperation extends IFieldOperation<number> {
 
 	equals(
 		value:number | IQNumberField<any>
@@ -73,16 +72,19 @@ extends IFieldOperation<number> {
 	):INumberOperation;
 }
 
-export class NumberOperation
-extends FieldOperation<number> implements INumberOperation {
+export class NumberOperation extends FieldOperation<number> implements INumberOperation {
 
-	fieldType = FieldType.NUMBER;
+	constructor(
+		type:OperationType
+	) {
+		super(type, FieldType.NUMBER);
+	}
 
 	getDefinedInstance(
 		type:OperationType,
 		value:any
 	):INumberOperation {
-		let definedOperation = new NumberOperation( type, this.fieldType);
+		let definedOperation = new NumberOperation(type);
 		definedOperation.isDefined = true;
 		definedOperation.value = value;
 

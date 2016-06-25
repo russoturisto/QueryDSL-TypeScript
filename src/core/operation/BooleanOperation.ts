@@ -46,13 +46,17 @@ extends IFieldOperation<Date> {
 export class BooleanOperation
 extends FieldOperation<boolean> implements IBooleanOperation {
 
-	fieldType = FieldType.BOOLEAN;
+	constructor(
+		type:OperationType
+	) {
+		super(type, FieldType.BOOLEAN);
+	}
 
 	getDefinedInstance(
 		type:OperationType,
 		value:any
 	):IBooleanOperation {
-		let definedOperation = new BooleanOperation(type, this.fieldType);
+		let definedOperation = new BooleanOperation(type);
 		definedOperation.isDefined = true;
 		definedOperation.value = value;
 

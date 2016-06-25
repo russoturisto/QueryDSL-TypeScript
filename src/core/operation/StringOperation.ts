@@ -61,13 +61,17 @@ extends IFieldOperation<string> {
 export class StringOperation
 extends FieldOperation<string> implements IStringOperation {
 
-	fieldType = FieldType.STRING;
+	constructor(
+		type:OperationType
+	) {
+		super(type, FieldType.NUMBER);
+	}
 
 	getDefinedInstance(
 		type:OperationType,
 		value:any
 	):IStringOperation {
-		let definedOperation = new StringOperation(type, this.fieldType);
+		let definedOperation = new StringOperation(type);
 		definedOperation.isDefined = true;
 		definedOperation.value = value;
 

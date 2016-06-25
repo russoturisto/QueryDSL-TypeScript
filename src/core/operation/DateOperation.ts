@@ -77,13 +77,17 @@ extends IFieldOperation<Date> {
 export class DateOperation
 extends FieldOperation<Date> implements IDateOperation {
 
-	fieldType = FieldType.DATE;
+	constructor(
+		type:OperationType
+	) {
+		super(type, FieldType.DATE);
+	}
 
 	getDefinedInstance(
 		type:OperationType,
 		value:any
 	):IDateOperation {
-		let definedOperation = new DateOperation(type, this.fieldType);
+		let definedOperation = new DateOperation(type);
 		definedOperation.isDefined = true;
 		definedOperation.value = value;
 
