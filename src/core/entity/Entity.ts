@@ -13,8 +13,10 @@ export interface IEntity {
 
 export interface IQEntity {
 
+
 	__entityConstructor__:Function;
 	__entityFields__:IQField<IQEntity>[];
+	__entityName__:string;
 	__entityRelations__:IQRelation<IQEntity, any, IQEntity>[];
 
 	addEntityRelation<IQR extends IQEntity, R>(
