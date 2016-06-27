@@ -12,11 +12,11 @@ export const PH_INCLUDE = '__include__';
 export class PHQuery {
 
 	constructor(
-		private iEntity:IEntity,
-		private qEntity:QEntity<any>,
-		private qEntityMap:{[entityName:string]:QEntity<any>},
-		private entitiesRelationPropertyMap:{[entityName:string]:{[propertyName:string]:string}},
-		private entitiesPropertyTypeMap:{[entityName:string]:{[propertyName:string]:boolean}}
+		public iEntity:IEntity,
+		public qEntity:QEntity<any>,
+		public qEntityMap:{[entityName:string]:QEntity<any>},
+		public entitiesRelationPropertyMap:{[entityName:string]:{[propertyName:string]:string}},
+		public entitiesPropertyTypeMap:{[entityName:string]:{[propertyName:string]:boolean}}
 	) {
 	}
 

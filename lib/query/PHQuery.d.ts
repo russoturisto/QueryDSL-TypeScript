@@ -7,11 +7,21 @@ export declare const PH_JOIN_TO_FIELD: string;
 export declare const PH_OPERATOR: string;
 export declare const PH_INCLUDE: string;
 export declare class PHQuery {
-    private iEntity;
-    private qEntity;
-    private qEntityMap;
-    private entitiesRelationPropertyMap;
-    private entitiesPropertyTypeMap;
+    iEntity: IEntity;
+    qEntity: QEntity<any>;
+    qEntityMap: {
+        [entityName: string]: QEntity<any>;
+    };
+    entitiesRelationPropertyMap: {
+        [entityName: string]: {
+            [propertyName: string]: string;
+        };
+    };
+    entitiesPropertyTypeMap: {
+        [entityName: string]: {
+            [propertyName: string]: boolean;
+        };
+    };
     constructor(iEntity: IEntity, qEntity: QEntity<any>, qEntityMap: {
         [entityName: string]: QEntity<any>;
     }, entitiesRelationPropertyMap: {
