@@ -1,4 +1,5 @@
 import {PH_OPERATOR, PH_JOIN_TO_ENTITY, PH_JOIN_TO_FIELD, PH_INCLUDE} from "../PHQuery";
+import {RelationRecord} from "../../core/entity/Relation";
 
 /**
  * Created by Papa on 6/12/2016.
@@ -64,7 +65,7 @@ export class PouchDbQuery {
 
 	constructor(
 		private entityName:string,
-		private entitiesRelationPropertyMap:{[entityName:string]:{[propertyName:string]:string}},
+		private entitiesRelationPropertyMap:{[entityName:string]:{[propertyName:string]:RelationRecord}},
 		private entitiesPropertyTypeMap:{[entityName:string]:{[propertyName:string]:boolean}},
 		queryJson:any
 	) {
@@ -107,10 +108,10 @@ export class PouchDbQuery {
 		let entityRelationPropertyMap = this.entitiesRelationPropertyMap[this.entityName];
 
 		for (let propertyName in this.queryJson) {
-			let childEntityName = entityRelationPropertyMap[propertyName];
-			if (childEntityName) {
+			let relationRecord = entityRelationPropertyMap[propertyName];
+			if (relationRecord) {
 				let fragmentJson = this.queryJson[propertyName];
-				let childQuery = new PouchDbQuery(childEntityName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, fragmentJson);
+				let childQuery = new PouchDbQuery(relationRecord.entityName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, fragmentJson);
 				this.childQueries[propertyName] = childQuery;
 				delete this.queryJson[propertyName];
 			}

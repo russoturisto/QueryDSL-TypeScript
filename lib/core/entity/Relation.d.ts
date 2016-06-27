@@ -2,6 +2,13 @@ import { IQEntity } from "./Entity";
 /**
  * Created by Papa on 4/26/2016.
  */
+export interface RelationRecord {
+    entityName: string;
+    foreignKey: string;
+    mappedBy: string;
+    propertyName: string;
+    relationType: RelationType;
+}
 export declare enum RelationType {
     ONE_TO_MANY = 0,
     MANY_TO_ONE = 1,

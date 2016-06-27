@@ -1,3 +1,4 @@
+import { RelationRecord } from "../../core/entity/Relation";
 export declare const CLOUDANT_ENTITY: string;
 export interface JoinField {
     getJoinCount(): number;
@@ -31,7 +32,7 @@ export declare class PouchDbQuery {
     topLevelOperator: string;
     constructor(entityName: string, entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: string;
+            [propertyName: string]: RelationRecord;
         };
     }, entitiesPropertyTypeMap: {
         [entityName: string]: {
