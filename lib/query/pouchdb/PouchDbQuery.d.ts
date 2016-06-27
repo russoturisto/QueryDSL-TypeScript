@@ -19,7 +19,9 @@ export declare class PouchDbQuery {
     private entityName;
     private entitiesRelationPropertyMap;
     private entitiesPropertyTypeMap;
-    childQueries: PouchDbQuery[];
+    childQueries: {
+        [propertyName: string]: PouchDbQuery;
+    };
     joinFields: JoinField[];
     fields: string[];
     queryJson: any;

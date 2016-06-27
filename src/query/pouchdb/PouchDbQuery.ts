@@ -53,7 +53,7 @@ export class JoinFieldJunction implements JoinField {
 
 export class PouchDbQuery {
 
-	childQueries:PouchDbQuery[] = [];
+	childQueries:{[propertyName:string]:PouchDbQuery} = {};
 	joinFields:JoinField[] = [];
 	fields:string[] = ['_id', '_rev'];
 	queryJson:any;
@@ -111,7 +111,7 @@ export class PouchDbQuery {
 			if (childEntityName) {
 				let fragmentJson = this.queryJson[propertyName];
 				let childQuery = new PouchDbQuery(childEntityName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, fragmentJson);
-				this.childQueries.push(childQuery);
+				this.childQueries[propertyName] = childQuery;
 				delete this.queryJson[propertyName];
 			}
 		}
