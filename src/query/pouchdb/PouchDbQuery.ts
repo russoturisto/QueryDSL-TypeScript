@@ -146,7 +146,10 @@ export class PouchDbQuery {
 			let joinToEntity = subFragment[PH_JOIN_TO_ENTITY];
 			let joinToField = subFragment[PH_JOIN_TO_FIELD];
 			if (joinToEntity && joinToField) {
-				switch (operator) {
+				// FIXME: add support for Join Fields
+				throw `Join fields are not yet supported`;
+				/**
+				 switch (operator) {
 					case '&eq':
 					case '&gt':
 					case '&gte':
@@ -157,8 +160,9 @@ export class PouchDbQuery {
 					default:
 						throw `Invalid operator '${operator}' for join of ${fieldName} to ${joinToEntity}.${joinToField}`;
 				}
-				joinField = new JoinFieldNode(subFragment[PH_JOIN_TO_ENTITY], subFragment[PH_JOIN_TO_FIELD], operator);
-				delete fragment[operator];
+				 joinField = new JoinFieldNode(subFragment[PH_JOIN_TO_ENTITY], subFragment[PH_JOIN_TO_FIELD], operator);
+				 delete fragment[operator];
+				 **/
 			} else if (joinToEntity || joinToField) {
 				throw `Both '${PH_JOIN_TO_ENTITY}'  && '${PH_JOIN_TO_FIELD}' must be specified for join: operator '${operator}' of ${fieldName} to ${joinToEntity}.${joinToField}`;
 			} else {

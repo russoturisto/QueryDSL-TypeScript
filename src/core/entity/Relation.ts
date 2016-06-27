@@ -25,6 +25,7 @@ export class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> implements 
 		public q:IQ,
 		public qConstructor:new () => IQ,
 		public relationType:RelationType,
+		public propertyName:string,
 		public relationPropertyName:string,
 		public relationEntityConstructor:new () => R,
 		public relationQEntityConstructor:new () => IQR
