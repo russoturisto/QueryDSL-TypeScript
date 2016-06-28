@@ -13,8 +13,7 @@ export interface IEntity {
 
 export interface IQEntity {
 
-
-	__entityConstructor__:Function;
+	__entityConstructor__:{new ():any};
 	__entityFields__:IQField<IQEntity>[];
 	__entityName__:string;
 	__entityRelations__:IQRelation<IQEntity, any, IQEntity>[];
@@ -47,7 +46,7 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 	// rootOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(<any>this, OperationType.AND, []);
 
 	constructor(
-		public __entityConstructor__:Function,
+		public __entityConstructor__:{new():any},
 		public __entityName__:string,
 		private __isTemplateEntity__ = false,
 		private __nativeEntityName__?:string
