@@ -1,5 +1,6 @@
 import {QEntity, IEntity} from "../core/entity/Entity";
 import {Operation} from "../core/operation/Operation";
+import {RelationRecord} from "../core/entity/Relation";
 /**
  * Created by Papa on 6/22/2016.
  */
@@ -15,7 +16,7 @@ export class PHQuery {
 		public iEntity:IEntity,
 		public qEntity:QEntity<any>,
 		public qEntityMap:{[entityName:string]:QEntity<any>},
-		public entitiesRelationPropertyMap:{[entityName:string]:{[propertyName:string]:string}},
+		public entitiesRelationPropertyMap:{[entityName:string]:{[propertyName:string]:RelationRecord}},
 		public entitiesPropertyTypeMap:{[entityName:string]:{[propertyName:string]:boolean}}
 	) {
 	}
@@ -50,7 +51,7 @@ export class PHQuery {
 						throw `Unsupported typeof '${propertyName}': ${typeOfFragment}`;
 				}
 			} else if (entityRelationPropertyMap[propertyName]) {
-				let entityName = entityRelationPropertyMap[propertyName];
+				let entityName = entityRelationPropertyMap[propertyName].entityName;
 				let qEntity = this.qEntityMap[entityName];
 				if (!qEntity) {
 					throw `Unknown entity ${entityName}`;

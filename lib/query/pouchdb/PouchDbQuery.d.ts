@@ -41,6 +41,7 @@ export declare class PouchDbQuery {
     }, queryJson: any);
     parse(): void;
     extractSubQueries(): void;
+    addField(fieldName: string): void;
     extractJoinFields(): void;
     extractJoinField(fieldName: string, fragment: any): JoinField;
     extractSelectFields(): void;

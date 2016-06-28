@@ -1,4 +1,5 @@
 import { QEntity, IEntity } from "../core/entity/Entity";
+import { RelationRecord } from "../core/entity/Relation";
 /**
  * Created by Papa on 6/22/2016.
  */
@@ -14,7 +15,7 @@ export declare class PHQuery {
     };
     entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: string;
+            [propertyName: string]: RelationRecord;
         };
     };
     entitiesPropertyTypeMap: {
@@ -26,7 +27,7 @@ export declare class PHQuery {
         [entityName: string]: QEntity<any>;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: string;
+            [propertyName: string]: RelationRecord;
         };
     }, entitiesPropertyTypeMap: {
         [entityName: string]: {

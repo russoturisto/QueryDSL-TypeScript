@@ -1,5 +1,5 @@
 import {PH_OPERATOR, PH_JOIN_TO_ENTITY, PH_JOIN_TO_FIELD, PH_INCLUDE} from "../PHQuery";
-import {RelationRecord} from "../../core/entity/Relation";
+import {RelationRecord, RelationType} from "../../core/entity/Relation";
 
 /**
  * Created by Papa on 6/12/2016.
@@ -110,12 +110,33 @@ export class PouchDbQuery {
 		for (let propertyName in this.queryJson) {
 			let relationRecord = entityRelationPropertyMap[propertyName];
 			if (relationRecord) {
+				switch(relationRecord.relationType) {
+					case RelationType.MANY_TO_ONE:
+						this.addField(relationRecord.foreignKey);
+						break;
+					case RelationType.ONE_TO_MANY:
+						break;
+				}
 				let fragmentJson = this.queryJson[propertyName];
 				let childQuery = new PouchDbQuery(relationRecord.entityName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, fragmentJson);
 				this.childQueries[propertyName] = childQuery;
 				delete this.queryJson[propertyName];
 			}
 		}
+	}
+
+	addField(
+		fieldName:string
+	):void {
+		let existingFields = this.fields.filter((
+			aFieldName:string
+		) => {
+			return aFieldName === fieldName;
+		});
+		if(existingFields.length > 0) {
+			return;
+		}
+		this.fields.push(fieldName);
 	}
 
 	extractJoinFields():void {
