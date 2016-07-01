@@ -112,7 +112,7 @@ export class PouchDbQuery {
 			if (relationRecord) {
 				switch(relationRecord.relationType) {
 					case RelationType.MANY_TO_ONE:
-						this.addField(relationRecord.foreignKey);
+						this.addField(propertyName);
 						break;
 					case RelationType.ONE_TO_MANY:
 						break;

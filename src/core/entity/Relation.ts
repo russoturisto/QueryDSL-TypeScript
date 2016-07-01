@@ -6,8 +6,7 @@ import {IQEntity, QEntity} from "./Entity";
 export interface RelationRecord {
 
 	entityName:string;
-	foreignKey:string;
-	mappedBy:string;
+	decoratorElements:{[key:string]:any};
 	propertyName:string;
 	relationType:RelationType;
 
