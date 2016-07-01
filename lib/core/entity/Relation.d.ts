@@ -17,7 +17,6 @@ export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
     q: IQ;
     qConstructor: new () => IQ;
     propertyName: string;
-    relationPropertyName: string;
     relationType: RelationType;
     relationEntityConstructor: new () => R;
     relationQEntityConstructor: new () => IQR;
@@ -27,8 +26,7 @@ export declare class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> imp
     qConstructor: new () => IQ;
     relationType: RelationType;
     propertyName: string;
-    relationPropertyName: string;
     relationEntityConstructor: new () => R;
     relationQEntityConstructor: new () => IQR;
-    constructor(q: IQ, qConstructor: new () => IQ, relationType: RelationType, propertyName: string, relationPropertyName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new () => IQR);
+    constructor(q: IQ, qConstructor: new () => IQ, relationType: RelationType, propertyName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new () => IQR);
 }

@@ -23,7 +23,6 @@ export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
 	q:IQ;
 	qConstructor:new () => IQ,
 	propertyName:string;
-	relationPropertyName:string;
 	relationType:RelationType;
 	relationEntityConstructor:new () => R;
 	relationQEntityConstructor:new () => IQR;
@@ -37,7 +36,6 @@ export class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> implements 
 		public qConstructor:new () => IQ,
 		public relationType:RelationType,
 		public propertyName:string,
-		public relationPropertyName:string,
 		public relationEntityConstructor:new () => R,
 		public relationQEntityConstructor:new () => IQR
 	) {
