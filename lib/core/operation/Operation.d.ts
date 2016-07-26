@@ -4,6 +4,7 @@
 import { OperationType } from "./OperationType";
 import { JSONFieldReference } from "./FieldOperation";
 export interface JSONBaseOperation {
+    order: number;
     __include__?: boolean;
 }
 export interface JSONOperation {
