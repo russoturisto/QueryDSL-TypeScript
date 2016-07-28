@@ -29,7 +29,7 @@ import {
 import {ILogicalOperation, LogicalOperation} from "./core/operation/LogicalOperation";
 import {IOperation, Operation} from "./core/operation/Operation";
 import {OperationType} from "./core/operation/OperationType";
-import {RelationType, IQRelation, QRelation} from "./core/entity/Relation";
+import {RelationRecord, RelationType, IQRelation, QRelation} from "./core/entity/Relation";
 import {PHQuery} from "./query/PHQuery";
 import {PouchDbQuery} from "./query/pouchdb/PouchDbQuery";
 
@@ -69,6 +69,7 @@ export {
 	RelationType,
 	IQRelation,
 	QRelation,
+	RelationRecord,
 	PHQuery,
 	PouchDbQuery
 };
