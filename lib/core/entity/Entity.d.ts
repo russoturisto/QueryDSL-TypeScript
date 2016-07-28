@@ -26,7 +26,7 @@ export declare abstract class QEntity<IQ extends IQEntity> implements IQEntity {
     };
     __entityName__: string;
     private __isTemplateEntity__;
-    private __nativeEntityName__?;
+    private __nativeEntityName__;
     __entityFields__: IQField<IQ>[];
     __entityRelations__: IQRelation<any, any, IQ>[];
     constructor(__entityConstructor__: {

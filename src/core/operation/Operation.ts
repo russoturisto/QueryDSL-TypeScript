@@ -6,6 +6,7 @@ import {JSONFieldReference} from "./FieldOperation";
 
 
 export interface JSONBaseOperation {
+	index:number;
 	__include__?:boolean;
 }
 
