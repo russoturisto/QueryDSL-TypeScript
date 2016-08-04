@@ -5,10 +5,14 @@ import {RelationRecord, RelationType} from "../../core/entity/Relation";
  * Created by Papa on 6/12/2016.
  */
 
+
 declare function require( moduleName:string ):any;
 
-const PouchDB = require('pouchdb');
-PouchDB.plugin(require('pouchdb-find'));
+var SERVER_ENV = false;
+if(SERVER_ENV) {
+	var PouchDB = require('pouchdb');
+	PouchDB.plugin(require('pouchdb-find'));
+}
 
 export const CLOUDANT_ENTITY = '__entity__';
 
