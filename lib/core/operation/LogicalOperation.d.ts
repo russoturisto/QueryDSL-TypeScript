@@ -9,7 +9,7 @@ export interface ILogicalOperation extends IOperation {
     not(op: IOperation): IOperation;
 }
 export declare class LogicalOperation extends Operation implements ILogicalOperation {
-    childOps?: IOperation[];
+    childOps: IOperation[];
     static verifyChildOps(ops: IOperation[]): void;
     static addOperation(operationType: OperationType, ops: IOperation[]): ILogicalOperation;
     constructor(type?: OperationType, childOps?: IOperation[]);

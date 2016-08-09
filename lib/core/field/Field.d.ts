@@ -15,6 +15,18 @@ export declare enum FieldType {
 }
 export interface IQBooleanField<IQ extends IQEntity> extends IQField<IQ> {
 }
+export declare abstract class QField<IQ extends IQEntity> implements IQField<IQ> {
+    q: IQ;
+    qConstructor: new () => IQ;
+    entityName: string;
+    fieldName: string;
+    nativeFieldName: string;
+    fieldType: FieldType;
+    constructor(q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string, nativeFieldName?: string);
+    toJSON(): JSONOperation;
+    getQ(): IQ;
+    objectEquals<IQF extends IQField<any>>(otherField: IQF, checkValue?: boolean): boolean;
+}
 export declare class QBooleanField<IQ extends IQEntity> extends QField<IQ> implements IQBooleanField<IQ> {
     constructor(q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string, nativeFieldName?: string);
 }
@@ -43,16 +55,4 @@ export interface IQField<IQ extends IQEntity> {
     objectEquals<OP extends IOperation>(otherOp: OP, checkValue?: boolean): boolean;
     getQ(): IQ;
     toJSON(): JSONOperation;
-}
-export declare abstract class QField<IQ extends IQEntity> implements IQField<IQ> {
-    q: IQ;
-    qConstructor: new () => IQ;
-    entityName: string;
-    fieldName: string;
-    nativeFieldName: string;
-    fieldType: FieldType;
-    constructor(q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string, nativeFieldName?: string);
-    toJSON(): JSONOperation;
-    getQ(): IQ;
-    objectEquals<IQF extends IQField<any>>(otherField: IQF, checkValue?: boolean): boolean;
 }

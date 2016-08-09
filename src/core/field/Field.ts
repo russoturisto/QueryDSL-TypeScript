@@ -20,6 +20,55 @@ export interface IQBooleanField<IQ extends IQEntity> extends IQField<IQ> {
 
 }
 
+export abstract class QField<IQ extends IQEntity> implements IQField<IQ> {
+
+	fieldType:FieldType;
+
+	constructor(
+		public q:IQ,
+		public qConstructor:new() => IQ,
+		public entityName:string,
+		public fieldName:string,
+		public nativeFieldName:string = fieldName
+	) {
+		q.addEntityField(this);
+	}
+
+	toJSON():JSONOperation {
+		let jsonOperation = {};
+		jsonOperation[PH_JOIN_TO_ENTITY] = this.entityName;
+		jsonOperation[PH_JOIN_TO_FIELD] = this.fieldName;
+
+		return jsonOperation;
+	}
+
+	getQ():IQ {
+		return this.q;
+	}
+
+	objectEquals<IQF extends IQField<any>>(
+		otherField:IQF,
+		checkValue?:boolean
+	):boolean {
+
+		if (this.q.constructor !== otherField.q.constructor) {
+			return false;
+		}
+		if (this.constructor !== otherField.constructor) {
+			return false;
+		}
+		if (this.fieldType !== otherField.fieldType) {
+			return false;
+		}
+		if (this.fieldName !== otherField.fieldName) {
+			return false;
+		}
+
+		return true;
+	}
+
+}
+
 export class QBooleanField<IQ extends IQEntity> extends QField<IQ> implements IQBooleanField<IQ> {
 
 	constructor(
@@ -112,54 +161,5 @@ export interface IQField<IQ extends IQEntity> {
 	getQ():IQ;
 
 	toJSON():JSONOperation;
-
-}
-
-export abstract class QField<IQ extends IQEntity> implements IQField<IQ> {
-
-	fieldType:FieldType;
-
-	constructor(
-		public q:IQ,
-		public qConstructor:new() => IQ,
-		public entityName:string,
-		public fieldName:string,
-		public nativeFieldName:string = fieldName
-	) {
-		q.addEntityField(this);
-	}
-
-	toJSON():JSONOperation {
-		let jsonOperation = {};
-		jsonOperation[PH_JOIN_TO_ENTITY] = this.entityName;
-		jsonOperation[PH_JOIN_TO_FIELD] = this.fieldName;
-
-		return jsonOperation;
-	}
-
-	getQ():IQ {
-		return this.q;
-	}
-
-	objectEquals<IQF extends IQField<any>>(
-		otherField:IQF,
-		checkValue?:boolean
-	):boolean {
-
-		if (this.q.constructor !== otherField.q.constructor) {
-			return false;
-		}
-		if (this.constructor !== otherField.constructor) {
-			return false;
-		}
-		if (this.fieldType !== otherField.fieldType) {
-			return false;
-		}
-		if (this.fieldName !== otherField.fieldName) {
-			return false;
-		}
-
-		return true;
-	}
 
 }

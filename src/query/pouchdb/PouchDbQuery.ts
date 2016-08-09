@@ -10,8 +10,8 @@ declare function require( moduleName:string ):any;
 
 var SERVER_ENV = false;
 if(SERVER_ENV) {
-	var PouchDB = require('pouchdb');
-	PouchDB.plugin(require('pouchdb-find'));
+	// var PouchDB = require('pouchdb');
+	// PouchDB.plugin(require('pouchdb-find'));
 }
 
 export const CLOUDANT_ENTITY = '__entity__';
