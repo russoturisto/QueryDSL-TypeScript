@@ -1,5 +1,7 @@
-import {PH_OPERATOR, PH_JOIN_TO_ENTITY, PH_JOIN_TO_FIELD, PH_INCLUDE} from "../PHQuery";
 import {RelationRecord, RelationType} from "../../core/entity/Relation";
+import {PHJsonGraphQuery} from "../PHGraphQuery";
+import {IEntity} from "../../core/entity/Entity";
+import {JSONBaseOperation} from "../../core/operation/Operation";
 
 /**
  * Created by Papa on 6/12/2016.
@@ -8,99 +10,72 @@ import {RelationRecord, RelationType} from "../../core/entity/Relation";
 
 declare function require( moduleName:string ):any;
 
+export const CLOUDANT_ENTITY = '__entity__';
+
 var SERVER_ENV = false;
 if(SERVER_ENV) {
 	// var PouchDB = require('pouchdb');
 	// PouchDB.plugin(require('pouchdb-find'));
 }
 
-export const CLOUDANT_ENTITY = '__entity__';
-
-export interface JoinField {
-	getJoinCount():number;
+export interface PouchDbFindQuery {
+	selector:JSONBaseOperation;
+	fields:string[];
+	sort:string[];
 }
 
-export class JoinFieldNode implements JoinField {
-
-	constructor(
-		private entityName:string,
-		private fieldName:string,
-		private operator:string
-	) {
-	}
-
-	getJoinCount():number {
-		return 1;
-	}
-}
-
-export class JoinFieldJunction implements JoinField {
-
-	constructor(
-		private children:JoinField[],
-		private operator:string
-	) {
-	}
-
-	getJoinCount():number {
-		return this.children.map((
-			joinField:JoinField
-		) => {
-			return joinField.getJoinCount();
-		}).reduce((
-			previousValue,
-			currentValue
-		) => {
-			return previousValue + currentValue;
-		});
-	}
-}
-
-export class PouchDbQuery {
+export class PouchDbGraphQuery<IE extends IEntity> {
 
 	childSelectJson:{[propertyName:string]:any} = {};
-	childQueries:{[propertyName:string]:PouchDbQuery} = {};
-	joinFields:JoinField[] = [];
+	childQueries:{[propertyName:string]:PouchDbGraphQuery<any>} = {};
 	fields:string[] = ['_id', '_rev'];
-	queryJson:any;
+	queryJson:PHJsonGraphQuery<IE>;
 	selector:any;
 	sort:string[];
-	topLevelArray:any[];
-	topLevelOperator:string;
+	queryMap:{[entityAndRelationName:string]:PouchDbFindQuery} = {};
+	queriesInOrder: PouchDbFindQuery[] = [];
 
 	constructor(
 		private entityName:string,
 		private entitiesRelationPropertyMap:{[entityName:string]:{[propertyName:string]:RelationRecord}},
 		private entitiesPropertyTypeMap:{[entityName:string]:{[propertyName:string]:boolean}},
-		queryJson:any
+		queryJson:PHJsonGraphQuery<IE>
 	) {
 		this.queryJson = JSON.parse(JSON.stringify(queryJson));
 	}
 
 	parse():void {
-		this.topLevelOperator = this.queryJson[PH_OPERATOR];
-		switch (this.topLevelOperator) {
-			case '&and':
-			case '&or':
-				break;
-			default:
-				throw `Unexpected top level operator ${this.topLevelOperator}`;
+		let originalQuerySelector = this.queryJson.selector;
+		let querySelector = {};
+
+		for(let property in originalQuerySelector) {
+			let selectorKey = property;
+			let fieldFragments = property.split('.');
+			switch(fieldFragments.length) {
+				case 1:
+					// nothing to do, field is not qualified
+					break;
+				case 2:
+				default:
+					if(this.entitiesRelationPropertyMap[fieldFragments[0]]) {
+						let value = querySelector[property];
+						fieldFragments.shift();
+						selectorKey = fieldFragments.join('.');
+					}
+			}
+			querySelector[selectorKey] = originalQuerySelector[property];
 		}
-		delete this.queryJson[PH_OPERATOR];
-		this.topLevelArray = [];
-		this.selector = {};
 
 		let objectSelector = [];
 		this.selector['$and'] = objectSelector;
 		objectSelector[CLOUDANT_ENTITY] = {
 			'$eq': this.entityName
 		};
-		objectSelector[this.topLevelOperator] = this.topLevelArray;
+		objectSelector.push(querySelector);
 
-		this.extractSelectFields(this.queryJson.select);
+		this.extractSelectFields(this.queryJson.fields);
 		this.extractSubQueries();
 		this.extractJoinFields();
-		this.extractFieldOperators();
 
 		for (let propertyName in this.queryJson) {
 			throw `Unexpected property '${propertyName} in entity '${this.entityName}'`;
@@ -123,7 +98,7 @@ export class PouchDbQuery {
 						break;
 				}
 				let fragmentJson = this.queryJson[propertyName];
-				let childQuery = new PouchDbQuery(relationRecord.entityName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, fragmentJson);
+				let childQuery = new PouchDbGraphQuery(relationRecord.entityName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, fragmentJson);
 				this.childQueries[propertyName] = childQuery;
 				delete this.queryJson[propertyName];
 			}
@@ -248,76 +223,4 @@ export class PouchDbQuery {
 
 	}
 
-	extractFieldOperators():void {
-		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[this.entityName];
-
-		for (let propertyName in this.queryJson) {
-			if (entityPropertyTypeMap[propertyName]) {
-				let fragment = this.queryJson[propertyName];
-				let fieldOperator = this.flipFieldOperators(propertyName, fragment);
-				this.topLevelArray.push(fieldOperator);
-				delete this.queryJson[propertyName];
-			}
-		}
-	}
-
-	/**
-	 *
-	 * @param fieldName
-	 * @param fragment
-	 *
-	 * Convert:
-	 *
-	 * field: {
-	 *   $or: [
-	 *     { $eq: 1 },
-	 *     { $and: [
-	 *       { $not: { $lt: 20 } },
-	 *       { $ne: 2 }
-	 *     ] }
-	 *   ]
-	 * }
-	 *
-	 * To:
-	 *
-	 * $or: [
-	 *   { field: { $eq: 1 },
-	 *   { $and: [
-	 *     { field: { $not: { $lt: 20 } },
-	 *     { field: { $ne: 2 }
-	 *     ]
-	 *   ]}
-	 * }
-	 *
-	 * Scan for Logical Operators and if present move field reference to just ouside the non-logical operators.
-	 */
-	private flipFieldOperators(
-		fieldName:string,
-		fragment:any
-	):any {
-		let operators = [];
-		for (let operator in fragment) {
-			operators.push(operator);
-		}
-		if (operators.length !== 1) {
-			throw `Unexpected number of operators [${operators.length}] in ${fragment}.  Expecting 1.`;
-		}
-		let operator = operators[0];
-		let flippedFragment = {};
-		switch (operator) {
-			case '&and':
-			case '&or':
-				let subFragmentArray = fragment[operator];
-				flippedFragment[operator] = subFragmentArray.map((
-					subFragment
-				) => {
-					return this.flipFieldOperators(fieldName, subFragment);
-				});
-
-			default:
-				flippedFragment[fieldName] = fragment;
-		}
-
-		return flippedFragment;
-	}
 }

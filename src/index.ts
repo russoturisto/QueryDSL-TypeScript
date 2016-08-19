@@ -37,7 +37,7 @@ import {OperationType} from "./core/operation/OperationType";
 import {RelationRecord, RelationType, IQRelation, QRelation} from "./core/entity/Relation";
 import {PHQuery} from "./query/PHQuery";
 import {IEntityQuery} from "./query/IEntityQuery";
-import {PouchDbQuery} from "./query/pouchdb/PouchDbQuery";
+import {PouchDbGraphQuery} from "./query/pouchdb/PouchDbGraphQuery";
 
 export {
 	IEntity,
@@ -76,5 +76,5 @@ export {
 	QRelation,
 	RelationRecord,
 	PHQuery,
-	PouchDbQuery
+	PouchDbGraphQuery
 };

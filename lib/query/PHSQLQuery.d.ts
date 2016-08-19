@@ -1,21 +1,18 @@
 import { IEntity, QEntity } from "../core/entity/Entity";
+import { PHJsonQuery } from "./PHQuery";
 import { RelationRecord } from "../core/entity/Relation";
+import { JSONLogicalOperation } from "../core/operation/LogicalOperation";
 import { JSONBaseOperation } from "../core/operation/Operation";
 /**
- * Created by Papa on 8/15/2016.
+ * Created by Papa on 8/12/2016.
  */
-export declare enum GraphFilter {
-    ALL = 0,
-    CHILDREN = 1,
+export interface PHJsonSQLQuery<EQ extends IEntity> {
+    select: EQ;
+    join?: any;
+    where?: JSONBaseOperation;
 }
-export interface PHJsonGraphQuery<EQ extends IEntity> {
-    filter: GraphFilter;
-    fields: EQ;
-    selector: JSONBaseOperation;
-    execOrder: number;
-}
-export declare class PHGraphQuery<EQ extends IEntity> {
-    phJsonQuery: PHJsonGraphQuery<EQ>;
+export declare class PHSQLQuery<IE extends IEntity> {
+    phJsonQuery: PHJsonQuery;
     qEntity: QEntity<any>;
     qEntityMap: {
         [entityName: string]: QEntity<any>;
@@ -30,10 +27,7 @@ export declare class PHGraphQuery<EQ extends IEntity> {
             [propertyName: string]: boolean;
         };
     };
-    childMap: {
-        [entity: string]: PHGraphQuery<any>;
-    };
-    constructor(phJsonQuery: PHJsonGraphQuery<EQ>, qEntity: QEntity<any>, qEntityMap: {
+    constructor(phJsonQuery: PHJsonQuery, qEntity: QEntity<any>, qEntityMap: {
         [entityName: string]: QEntity<any>;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
@@ -44,10 +38,9 @@ export declare class PHGraphQuery<EQ extends IEntity> {
             [propertyName: string]: boolean;
         };
     });
-    toJSON(): any;
-    setExecOrders(): void;
-    assignMissingExecOrders(execOrders: number[]): void;
-    gatherExecOrders(execOrders: number[]): void;
-    validateQuery(query: JSONBaseOperation, entityName: string): void;
-    validateFieldsAndChildren(fields: EQ): void;
+    toSQL(): string;
+    toWhereFragment(operation: JSONBaseOperation): string;
+    toLogicalWhereFragment(logicalOperation: JSONLogicalOperation): string;
+    toAndOrWhereFragment(operations: JSONBaseOperation[], sqlLogicalOperator: any): string;
+    getLogicalOperator(logicalOperation: JSONLogicalOperation): string;
 }

@@ -2,66 +2,31 @@
 <project version="4">
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/src/core/operation/Operation.ts" line="0" mnemonic="1" />
-    <bookmark url="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts" line="48" mnemonic="9" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8322ebc1-9272-4c63-9e9f-f1c51e544bcc" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/field/BooleanField.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/field/DateField.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/field/NumberField.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/field/StringField.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/operation/example.txt" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/PHGraphQuery.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/SQLQuery.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/core/operation/FieldOperation.ts" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/core/operation/LogicalFieldOperation.ts" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/core/operation/QueryOperation.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/QueryDSL_TypeScript_node_modules.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/query/PHQuery.ts" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/SQLQuery.ts" afterPath="$PROJECT_DIR$/src/query/PHSQLQuery.ts" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts" afterPath="$PROJECT_DIR$/src/query/pouchdb/PouchDbGraphQuery.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/QueryDSL-TypeScript.iml" afterPath="$PROJECT_DIR$/.idea/QueryDSL-TypeScript.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.d.ts" afterPath="$PROJECT_DIR$/lib/core/entity/Entity.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/Field.d.ts" afterPath="$PROJECT_DIR$/lib/core/field/Field.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/Field.js" afterPath="$PROJECT_DIR$/lib/core/field/Field.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/Field.js.map" afterPath="$PROJECT_DIR$/lib/core/field/Field.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/DateOperation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/DateOperation.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/DateOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/DateOperation.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/DateOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/DateOperation.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/FieldOperation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/FieldOperation.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/FieldOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/FieldOperation.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/FieldOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/FieldOperation.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/NumberOperation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/NumberOperation.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/NumberOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/NumberOperation.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/NumberOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/NumberOperation.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/Operation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/Operation.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/Operation.js" afterPath="$PROJECT_DIR$/lib/core/operation/Operation.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/Operation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/Operation.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/StringOperation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/StringOperation.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/StringOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/StringOperation.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/StringOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/StringOperation.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.d.ts" afterPath="$PROJECT_DIR$/lib/index.d.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.js" afterPath="$PROJECT_DIR$/lib/index.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.js.map" afterPath="$PROJECT_DIR$/lib/index.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/PHQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/PHQuery.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/PHQuery.js" afterPath="$PROJECT_DIR$/lib/query/PHQuery.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/PHQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/PHQuery.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQuery.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQuery.js" afterPath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQuery.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQuery.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/field/Field.ts" afterPath="$PROJECT_DIR$/src/core/field/Field.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/BooleanOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/BooleanOperation.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/DateOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/DateOperation.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/NumberOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/NumberOperation.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/Operation.ts" afterPath="$PROJECT_DIR$/src/core/operation/Operation.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/StringOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/StringOperation.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/PHGraphQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/PHGraphQuery.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/PHGraphQuery.js" afterPath="$PROJECT_DIR$/lib/query/PHGraphQuery.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/PHGraphQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/PHGraphQuery.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/SQLQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/SQLQuery.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/SQLQuery.js" afterPath="$PROJECT_DIR$/lib/query/SQLQuery.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/SQLQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/SQLQuery.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQueryAllInOne.js" afterPath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQueryAllInOne.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQueryAllInOne.js.map" afterPath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQueryAllInOne.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/index.ts" afterPath="$PROJECT_DIR$/src/index.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/PHQuery.ts" afterPath="$PROJECT_DIR$/src/query/PHQuery.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts" afterPath="$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/PHGraphQuery.ts" afterPath="$PROJECT_DIR$/src/query/PHGraphQuery.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts" afterPath="$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts" />
     </list>
     <ignored path="QueryDSL-TypeScript.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -75,6 +40,63 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
+  <component name="DockManager">
+    <window id="1">
+      <content type="file-editors">
+        <state>
+          <splitter split-orientation="horizontal" split-proportion="0.5">
+            <split-first>
+              <leaf>
+                <file leaf-file-name="PHSQLQuery.ts" pinned="false" current-in-tab="true">
+                  <entry file="file://$PROJECT_DIR$/src/query/PHSQLQuery.ts">
+                    <provider selected="true" editor-type-id="text-editor">
+                      <state relative-caret-position="102">
+                        <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+                        <folding>
+                          <element signature="e#0#55#0" expanded="true" />
+                          <element signature="n#!!doc;n#PHJsonSQLQuery#0" expanded="false" />
+                        </folding>
+                      </state>
+                    </provider>
+                  </entry>
+                </file>
+                <file leaf-file-name="Field.ts" pinned="false" current-in-tab="false">
+                  <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
+                    <provider selected="true" editor-type-id="text-editor">
+                      <state relative-caret-position="170">
+                        <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+                        <folding>
+                          <element signature="e#41#83#0" expanded="true" />
+                          <marker date="1471604434459" expanded="true" signature="1014:1018" ph="{...}" />
+                        </folding>
+                      </state>
+                    </provider>
+                  </entry>
+                </file>
+              </leaf>
+            </split-first>
+            <split-second>
+              <leaf>
+                <file leaf-file-name="Field.ts" pinned="false" current-in-tab="true">
+                  <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
+                    <provider selected="true" editor-type-id="text-editor">
+                      <state relative-caret-position="170">
+                        <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+                        <folding>
+                          <element signature="e#41#83#0" expanded="true" />
+                          <marker date="1471604434459" expanded="true" signature="1014:1018" ph="{...}" />
+                        </folding>
+                      </state>
+                    </provider>
+                  </entry>
+                </file>
+              </leaf>
+            </split-second>
+          </splitter>
+        </state>
+      </content>
+    </window>
+  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="QueryDSL-TypeScript" />
@@ -86,8 +108,8 @@
           <file leaf-file-name="PHGraphQuery.ts" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/query/PHGraphQuery.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="204">
-                  <caret line="88" column="42" selection-start-line="88" selection-start-column="42" selection-end-line="88" selection-end-column="42" />
+                <state relative-caret-position="179">
+                  <caret line="16" column="19" selection-start-line="16" selection-start-column="19" selection-end-line="16" selection-end-column="19" />
                   <folding>
                     <element signature="e#0#55#0" expanded="true" />
                     <element signature="e#175#215#0" expanded="false" />
@@ -96,10 +118,22 @@
               </provider>
             </entry>
           </file>
+          <file leaf-file-name="index.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/index.ts">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1292">
+                  <caret line="78" column="14" selection-start-line="78" selection-start-column="14" selection-end-line="78" selection-end-column="14" />
+                  <folding>
+                    <element signature="e#42#150#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
           <file leaf-file-name="Entity.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="207">
+                <state relative-caret-position="629">
                   <caret line="40" column="22" selection-start-line="40" selection-start-column="22" selection-end-line="40" selection-end-column="22" />
                   <folding />
                 </state>
@@ -109,8 +143,8 @@
           <file leaf-file-name="LogicalOperation.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalOperation.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="680">
-                  <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+                <state relative-caret-position="442">
+                  <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
                   <folding />
                 </state>
               </provider>
@@ -123,18 +157,6 @@
                   <caret line="16" column="31" selection-start-line="16" selection-start-column="31" selection-end-line="16" selection-end-column="31" />
                   <folding>
                     <element signature="n#!!doc;n#JSONStringFieldOperation#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Field.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1020">
-                  <caret line="63" column="48" selection-start-line="63" selection-start-column="48" selection-end-line="63" selection-end-column="48" />
-                  <folding>
-                    <element signature="e#41#83#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -157,27 +179,14 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="PouchDbQuery.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts">
+          <file leaf-file-name="PouchDbGraphQuery.ts" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbGraphQuery.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1173">
-                  <caret line="71" column="12" selection-start-line="71" selection-start-column="12" selection-end-line="71" selection-end-column="12" />
+                <state relative-caret-position="234">
+                  <caret line="77" column="29" selection-start-line="77" selection-start-column="29" selection-end-line="77" selection-end-column="29" />
                   <folding>
-                    <element signature="e#0#88#0" expanded="true" />
+                    <element signature="e#0#72#0" expanded="true" />
                     <element signature="n#!!doc;n#require#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="SQLQuery.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/query/SQLQuery.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="17">
-                  <caret line="24" column="20" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
-                  <folding>
-                    <element signature="e#0#55#0" expanded="true" />
-                    <element signature="n#!!doc;n#SQLQuery#0" expanded="false" />
                   </folding>
                 </state>
               </provider>
@@ -186,22 +195,9 @@
           <file leaf-file-name="PouchDbQueryAllInOne.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="996">
-                  <caret line="60" column="18" selection-start-line="60" selection-start-column="18" selection-end-line="60" selection-end-column="18" />
+                <state relative-caret-position="-1683">
+                  <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
                   <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="PHQuery.ts" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/query/PHQuery.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="289">
-                  <caret line="79" column="25" selection-start-line="79" selection-start-column="25" selection-end-line="79" selection-end-column="25" />
-                  <folding>
-                    <element signature="e#0#55#0" expanded="true" />
-                    <element signature="e#212#252#0" expanded="false" />
-                  </folding>
                 </state>
               </provider>
             </entry>
@@ -223,8 +219,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/querydsl-core/src/com/google/common/base/Preconditions.ts" />
-        <option value="$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/OperationImpl.ts" />
         <option value="$PROJECT_DIR$/core/operation/OperationType.ts" />
         <option value="$PROJECT_DIR$/core/entity/Entity.ts" />
         <option value="$PROJECT_DIR$/core/field/Field.ts" />
@@ -252,7 +246,6 @@
         <option value="$PROJECT_DIR$/src/query/IEntityQuery.ts" />
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts" />
-        <option value="$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts" />
         <option value="$PROJECT_DIR$/src/core/operation/FieldOperation.ts" />
         <option value="$PROJECT_DIR$/src/core/field/NumberOperation.ts" />
         <option value="$PROJECT_DIR$/src/core/field/BooleanField.ts" />
@@ -265,15 +258,18 @@
         <option value="$PROJECT_DIR$/src/core/operation/StringOperation.ts" />
         <option value="$PROJECT_DIR$/src/core/field/Field.ts" />
         <option value="$PROJECT_DIR$/src/core/operation/Operation.ts" />
-        <option value="$PROJECT_DIR$/src/index.ts" />
         <option value="$PROJECT_DIR$/src/core/operation/example.txt" />
         <option value="$PROJECT_DIR$/src/query/pouchdb/SQLQuery.ts" />
-        <option value="$PROJECT_DIR$/src/query/PHQuery.ts" />
         <option value="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" />
         <option value="$PROJECT_DIR$/src/query/PHQueryDslQuery.ts" />
         <option value="$PROJECT_DIR$/src/query/PHQueryDsl.ts" />
+        <option value="$PROJECT_DIR$/src/query/PHQuery.ts" />
+        <option value="$PROJECT_DIR$/src/index.ts" />
         <option value="$PROJECT_DIR$/src/query/SQLQuery.ts" />
+        <option value="$PROJECT_DIR$/src/query/PHSQLQuery.ts" />
+        <option value="$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts" />
         <option value="$PROJECT_DIR$/src/query/PHGraphQuery.ts" />
+        <option value="$PROJECT_DIR$/src/query/pouchdb/PouchDbGraphQuery.ts" />
       </list>
     </option>
   </component>
@@ -282,6 +278,9 @@
   <component name="JsGulpfileManager">
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
@@ -314,6 +313,17 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -446,17 +456,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="field" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="Scratches" />
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -596,24 +595,28 @@
       <workItem from="1470794149490" duration="25787000" />
       <workItem from="1471198635363" duration="10137000" />
       <workItem from="1471532837000" duration="1793000" />
+      <workItem from="1471604775371" duration="144000" />
+      <workItem from="1471605137855" duration="38000" />
+      <workItem from="1471605185102" duration="8260000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="268913000" />
+    <option name="totallyTimeSpent" value="277355000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32502595" sideWeight="0.49367756" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32502595" sideWeight="0.4873551" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13645943" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32502595" sideWeight="0.50632244" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3219107" sideWeight="0.42781875" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30737278" sideWeight="0.4520548" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3219107" sideWeight="0.5748156" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3219107" sideWeight="0.5721812" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -622,7 +625,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2497309" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30737278" sideWeight="0.45626977" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -844,9 +846,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="8" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-          <folding>
-            <element signature="n#!!doc;n#JSONStringOperation#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -862,37 +861,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalFieldOperation.ts" />
-    <entry file="file://$PROJECT_DIR$/src/index.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-137">
-          <caret line="41" column="8" selection-start-line="41" selection-start-column="8" selection-end-line="41" selection-end-column="8" />
-          <folding>
-            <element signature="e#42#150#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1020">
-          <caret line="63" column="48" selection-start-line="63" selection-start-column="48" selection-end-line="63" selection-end-column="48" />
-          <folding>
-            <element signature="e#41#83#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1173">
-          <caret line="71" column="12" selection-start-line="71" selection-start-column="12" selection-end-line="71" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#88#0" expanded="true" />
-            <element signature="n#!!doc;n#require#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/field/BooleanField.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
@@ -921,8 +889,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalOperation.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="680">
-          <caret line="42" column="0" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+        <state relative-caret-position="442">
+          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -937,51 +905,80 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts">
+    <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="996">
-          <caret line="60" column="18" selection-start-line="60" selection-start-column="18" selection-end-line="60" selection-end-column="18" />
+        <state relative-caret-position="629">
+          <caret line="40" column="22" selection-start-line="40" selection-start-column="22" selection-end-line="40" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/SQLQuery.ts">
+    <entry file="file://$PROJECT_DIR$/src/index.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="24" column="20" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="20" />
+        <state relative-caret-position="1292">
+          <caret line="78" column="14" selection-start-line="78" selection-start-column="14" selection-end-line="78" selection-end-column="14" />
+          <folding>
+            <element signature="e#42#150#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding>
+            <element signature="e#41#83#0" expanded="true" />
+            <marker date="1471604434459" expanded="true" signature="1014:1018" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/PHSQLQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
           <folding>
             <element signature="e#0#55#0" expanded="true" />
-            <element signature="n#!!doc;n#SQLQuery#0" expanded="false" />
+            <element signature="n#!!doc;n#PHJsonSQLQuery#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/query/PHQuery.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="79" column="25" selection-start-line="79" selection-start-column="25" selection-end-line="79" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#55#0" expanded="true" />
-            <element signature="e#212#252#0" expanded="false" />
-          </folding>
+        <state relative-caret-position="221">
+          <caret line="16" column="15" selection-start-line="16" selection-start-column="15" selection-end-line="16" selection-end-column="15" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
+    <entry file="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="40" column="22" selection-start-line="40" selection-start-column="22" selection-end-line="40" selection-end-column="22" />
+        <state relative-caret-position="-1683">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/query/PHGraphQuery.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="88" column="42" selection-start-line="88" selection-start-column="42" selection-end-line="88" selection-end-column="42" />
+        <state relative-caret-position="179">
+          <caret line="16" column="19" selection-start-line="16" selection-start-column="19" selection-end-line="16" selection-end-column="19" />
           <folding>
             <element signature="e#0#55#0" expanded="true" />
             <element signature="e#175#215#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbGraphQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="77" column="29" selection-start-line="77" selection-start-column="29" selection-end-line="77" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#72#0" expanded="true" />
+            <element signature="n#!!doc;n#require#0" expanded="false" />
           </folding>
         </state>
       </provider>

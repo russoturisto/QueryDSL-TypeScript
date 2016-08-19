@@ -6,123 +6,189 @@ import {JSONBaseOperation} from "../core/operation/Operation";
  */
 
 export enum GraphFilter {
-    ALL,
-    CHILDREN
+	ALL,
+	CHILDREN
 }
 
 export interface PHJsonGraphQuery<EQ extends IEntity> {
-    filter:GraphFilter;
-    fields:any;
-    query:JSONBaseOperation;
-    executionOrder:number;
+	filter: GraphFilter;
+	fields: EQ;
+	selector: JSONBaseOperation;
+	execOrder: number;
 }
 
-export class PHQueryDsl<EQ extends IEntity> {
+export class PHGraphQuery<EQ extends IEntity> {
 
-    constructor( //
-        public phJsonQuery:PHJsonGraphQuery<EQ>,
-        public qEntity:QEntity<any>,
-        public qEntityMap:{[entityName:string]:QEntity<any>},
-        public entitiesRelationPropertyMap:{[entityName:string]:{[propertyName:string]:RelationRecord}},
-        public entitiesPropertyTypeMap:{[entityName:string]:{[propertyName:string]:boolean}}) {
-        //
-    }
+	childMap: {[entity: string]: PHGraphQuery<any>} = {};
 
-    toJSON():any {
-        let fields:EQ;
-        if (this.phJsonQuery.fields && typeof fields === 'object' && !(fields instanceof Date)) {
-            fields = this.phJsonQuery.fields;
-            this.validateQuery(this.phJsonQuery.query, this.qEntity.__entityName__);
-        } else {
-            fields = <any>this.phJsonQuery;
-        }
-        this.validateFieldsAndChildren(fields);
-    }
+	constructor( //
+		public phJsonQuery: PHJsonGraphQuery<EQ>,
+		public qEntity: QEntity<any>,
+		public qEntityMap: {[entityName: string]: QEntity<any>},
+		public entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
+		public entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}}
+	) {
+		//
+	}
 
-    validateQuery( //
-        query:JSONBaseOperation,
-        entityName:string) {
-        if (!query) {
-            return;
-        }
-        let entityRelations = this.entitiesRelationPropertyMap[entityName];
-        let entityProperties = this.entitiesPropertyTypeMap[entityName];
-        let foundKey = false;
-        for (let propertyName in query) {
-            switch (propertyName) {
-                case '$and':
-                case '$or':
-                    let logicalFragments = query[propertyName];
-                    for (let logicalFragment in logicalFragments) {
-                        this.validateQuery(logicalFragment, entityName);
-                    }
-                case '$not':
-                    let logicalFragment = query[propertyName];
-                    this.validateQuery(logicalFragment, entityName);
-                default:
-                    let queryFieldFragments = propertyName.split('.');
-                    let fieldName;
-                    switch (queryFieldFragments.length) {
-                        case 1:
-                            fieldName = propertyName;
-                            break;
-                        case 2:
-                            let queryEntityName = queryFieldFragments[0];
-                            if(queryEntityName !== entityName) {
-                                throw `Invalid entity name in query: '${queryEntityName}', expecting ${entityName}`;
-                            }
-                            fieldName = queryFieldFragments[1];
-                            break;
-                        default:
-                            throw `Invalid number of query fragments in ${propertyName}`;
-                    }
-                    let fieldProperty = entityProperties[fieldName];
-                    if(!fieldProperty) {
-                        throw `Could not find property '${fieldName}' for entity '${entityName}', NOTE: relations are not supported`;
-                    }
-                    break;
-            }
-        }
+	toJSON(): any {
+		let fields: EQ;
+		if (this.phJsonQuery.fields && typeof fields === 'object' && !(fields instanceof Date)) {
+			fields = this.phJsonQuery.fields;
+			if (!this.phJsonQuery.filter) {
+				this.phJsonQuery.filter = GraphFilter.CHILDREN;
+			}
+			this.validateQuery(this.phJsonQuery.selector, this.qEntity.__entityName__);
+		} else {
+			fields = <any>this.phJsonQuery;
+			this.phJsonQuery = {
+				filter: GraphFilter.CHILDREN,
+				fields: fields,
+				selector: undefined,
+				execOrder: undefined
+			};
+		}
+		this.validateFieldsAndChildren(fields);
+		this.setExecOrders();
+	}
 
-    }
+	setExecOrders() {
+		let execOrders: number[];
+		this.gatherExecOrders(execOrders);
+		this.assignMissingExecOrders(execOrders);
+	}
 
-    validateFieldsAndChildren(fields:EQ) {
+	assignMissingExecOrders(
+		execOrders: number[]
+	) {
+		if (!this.phJsonQuery.execOrder) {
+			let currentExecOrder: number;
+			for (let i = 1; i < execOrders.length; i++) {
+				let execOrder = execOrders[i];
+				if (!execOrder) {
+					currentExecOrder = i;
+					break;
+				}
+			}
+			if (!currentExecOrder) {
+				currentExecOrder = execOrders.length;
+			}
+			this.phJsonQuery.execOrder = currentExecOrder;
+			execOrders[currentExecOrder] = currentExecOrder;
+		}
 
-        let selectJsonFragment = {};
-        let entityName = this.qEntity.__entityName__;
-        let entityRelationPropertyMap = this.entitiesRelationPropertyMap[entityName];
-        let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
+		for (let entityName in this.childMap) {
+			let childQuery = this.childMap[entityName];
+			childQuery.assignMissingExecOrders(execOrders);
+		}
+	}
 
-        for (let propertyName in fields) {
-            let queryFragment = fields[propertyName];
-            if (entityPropertyTypeMap[propertyName]) {
-                let typeOfFragment = typeof queryFragment;
-                switch (typeOfFragment) {
-                    case 'boolean':
-                    case 'number':
-                    case 'string':
-                        // No additional processing is needed
-                        selectJsonFragment[propertyName] = queryFragment;
-                        break;
-                    case 'object':
-                        if (queryFragment instanceof Date) {
-                            selectJsonFragment[propertyName] = queryFragment.toJSON();
-                        } else {
-                            throw `Unsupported instanceof '${propertyName}' in select clause: ${queryFragment}`;
-                        }
-                    default:
-                        throw `Unsupported typeof '${propertyName}' in select clause: ${typeOfFragment}`;
-                }
-            } else if (entityRelationPropertyMap[propertyName]) {
-                let entityName = entityRelationPropertyMap[propertyName].entityName;
-                let qEntity = this.qEntityMap[entityName];
-                if (!qEntity) {
-                    throw `Unknown entity '${entityName}' in select clause`;
-                }
-                let phQuery = new PHQuerySelect(queryFragment, qEntity, this.qEntityMap, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap);
-                selectJsonFragment[propertyName] = phQuery.toJSON();
-            }
-        }
-    }
+	gatherExecOrders(
+		execOrders: number[]
+	) {
+		if (this.phJsonQuery.execOrder < 1) {
+			throw `Graph Query execution orders must be >= 1`;
+		}
+		if (this.phJsonQuery.execOrder) {
+			if (execOrders[this.phJsonQuery.execOrder]) {
+				throw `execOrder ${this.phJsonQuery.execOrder} defined more than once.`;
+			}
+			execOrders[this.phJsonQuery.execOrder] = this.phJsonQuery.execOrder;
+		}
+		for (let entityName in this.childMap) {
+			let childQuery = this.childMap[entityName];
+			childQuery.gatherExecOrders(execOrders);
+		}
+	}
+
+	validateQuery( //
+		query: JSONBaseOperation,
+		entityName: string
+	) {
+		if (!query) {
+			return;
+		}
+		let entityRelations = this.entitiesRelationPropertyMap[entityName];
+		let entityProperties = this.entitiesPropertyTypeMap[entityName];
+		let foundKey = false;
+		for (let propertyName in query) {
+			switch (propertyName) {
+				case '$and':
+				case '$or':
+					let logicalFragments = query[propertyName];
+					for (let logicalFragment in logicalFragments) {
+						this.validateQuery(logicalFragment, entityName);
+					}
+				case '$not':
+					let logicalFragment = query[propertyName];
+					this.validateQuery(logicalFragment, entityName);
+				default:
+					let queryFieldFragments = propertyName.split('.');
+					let fieldName;
+					switch (queryFieldFragments.length) {
+						case 1:
+							fieldName = propertyName;
+							break;
+						case 2:
+							let queryEntityName = queryFieldFragments[0];
+							if (queryEntityName !== entityName) {
+								throw `Invalid entity name in query: '${queryEntityName}', expecting ${entityName}`;
+							}
+							fieldName = queryFieldFragments[1];
+							break;
+						default:
+							throw `Invalid number of query fragments in ${propertyName}`;
+					}
+					let fieldProperty = entityProperties[fieldName];
+					if (!fieldProperty) {
+						throw `Could not find property '${fieldName}' for entity '${entityName}', NOTE: relations are not supported`;
+					}
+					break;
+			}
+		}
+
+	}
+
+	validateFieldsAndChildren( fields: EQ ) {
+
+		let fieldsJsonFragment = {};
+		let entityName = this.qEntity.__entityName__;
+		let entityRelationPropertyMap = this.entitiesRelationPropertyMap[entityName];
+		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
+
+		for (let propertyName in fields) {
+			let queryFragment = fields[propertyName];
+			if (entityPropertyTypeMap[propertyName]) {
+				let typeOfFragment = typeof queryFragment;
+				switch (typeOfFragment) {
+					case 'boolean':
+					case 'number':
+					case 'string':
+						// No additional processing is needed
+						fieldsJsonFragment[propertyName] = queryFragment;
+						break;
+					case 'object':
+						if (queryFragment instanceof Date) {
+							fieldsJsonFragment[propertyName] = queryFragment.toJSON();
+						} else {
+							throw `Unsupported instanceof '${propertyName}' in fields clause: ${queryFragment}`;
+						}
+					default:
+						throw `Unsupported typeof '${propertyName}' in fields clause: ${typeOfFragment}`;
+				}
+			} else if (entityRelationPropertyMap[propertyName]) {
+				let entityName = entityRelationPropertyMap[propertyName].entityName;
+				let qEntity = this.qEntityMap[entityName];
+				if (!qEntity) {
+					throw `Unknown entity '${entityName}' in fields clause`;
+				}
+				let phGraphQuery = new PHGraphQuery(queryFragment, qEntity, this.qEntityMap, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap);
+				this.childMap[entityName] = phGraphQuery;
+				fieldsJsonFragment[propertyName] = phGraphQuery.toJSON();
+			} else {
+				throw `Unexpected IEntity propertyName: '${propertyName}' in fields clause - not a field or a relation.`;
+			}
+		}
+	}
 
 }

@@ -6,7 +6,13 @@ import { JSONBaseOperation } from "../core/operation/Operation";
 /**
  * Created by Papa on 8/12/2016.
  */
-export declare class SQLQuery<IE extends IEntity> {
+export interface PHJsonSQLQuery<EQ extends IEntity> {
+    select: EQ;
+    fields: EQ;
+    where: JSONBaseOperation;
+    execOrder: number;
+}
+export declare class PHSQLQuery<IE extends IEntity> {
     phJsonQuery: PHJsonQuery;
     qEntity: QEntity<any>;
     qEntityMap: {

@@ -17,5 +17,5 @@ import { OperationType } from "./core/operation/OperationType";
 import { RelationRecord, RelationType, IQRelation, QRelation } from "./core/entity/Relation";
 import { PHQuery } from "./query/PHQuery";
 import { IEntityQuery } from "./query/IEntityQuery";
-import { PouchDbQuery } from "./query/pouchdb/PouchDbQuery";
-export { IEntity, IQEntity, IEntityQuery, QEntity, FieldType, IQBooleanField, QBooleanField, JSONBooleanOperation, IBooleanOperation, BooleanOperation, IQDateField, QDateField, JSONDateOperation, IDateOperation, DateOperation, IQField, IQNumberField, QNumberField, JSONNumberOperation, INumberOperation, NumberOperation, IQStringField, QStringField, JSONStringOperation, IStringOperation, StringOperation, ILogicalOperation, LogicalOperation, IOperation, Operation, OperationType, RelationType, IQRelation, QRelation, RelationRecord, PHQuery, PouchDbQuery };
+import { PouchDbGraphQuery } from "./query/pouchdb/PouchDbGraphQuery";
+export { IEntity, IQEntity, IEntityQuery, QEntity, FieldType, IQBooleanField, QBooleanField, JSONBooleanOperation, IBooleanOperation, BooleanOperation, IQDateField, QDateField, JSONDateOperation, IDateOperation, DateOperation, IQField, IQNumberField, QNumberField, JSONNumberOperation, INumberOperation, NumberOperation, IQStringField, QStringField, JSONStringOperation, IStringOperation, StringOperation, ILogicalOperation, LogicalOperation, IOperation, Operation, OperationType, RelationType, IQRelation, QRelation, RelationRecord, PHQuery, PouchDbGraphQuery };

@@ -1,4 +1,3 @@
-import {PH_OPERATOR, PH_JOIN_TO_ENTITY, PH_JOIN_TO_FIELD, PH_INCLUDE} from "../PHQuery";
 import {RelationRecord, RelationType} from "../../core/entity/Relation";
 
 /**
