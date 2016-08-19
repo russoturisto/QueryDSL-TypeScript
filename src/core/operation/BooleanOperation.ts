@@ -1,102 +1,59 @@
-import {IFieldOperation, JSONFieldReference, FieldOperation} from "./FieldOperation";
-import {IQBooleanField, FieldType} from "../field/Field";
-import {OperationType} from "./OperationType";
-import {JSONBaseOperation} from "./Operation";
+import {FieldType} from "../field/Field";
+import {JSONBaseOperation, Operation, IOperation} from "./Operation";
 /**
  * Created by Papa on 6/20/2016.
  */
 
 export interface JSONBooleanOperation extends JSONBaseOperation {
-	"$and"?:JSONBooleanOperation[];
-	"$eq"?:boolean | JSONFieldReference;
-	"$exists"?:boolean;
-	"$ne"?:boolean | JSONFieldReference;
-	"$not"?:JSONBooleanOperation;
-	"$or"?:JSONBooleanOperation[];
+	"$eq"?: boolean;
+	"$exists"?: boolean;
+	"$ne"?: boolean;
 }
 
-export interface IBooleanOperation
-extends IFieldOperation<Date> {
+export interface IBooleanOperation extends IOperation {
 
 	equals(
-		value:boolean | IQBooleanField<any>
-	):IBooleanOperation;
+		value:boolean
+	):JSONBooleanOperation;
 
 	exists(
 		exists:boolean
-	):IBooleanOperation;
+	):JSONBooleanOperation;
 
 	notEquals(
-		value:boolean | IQBooleanField<any>
-	):IBooleanOperation;
+		value:boolean
+	):JSONBooleanOperation;
 
-	and(
-		...ops:IBooleanOperation[]
-	):IBooleanOperation;
-
-	or(
-		...ops:IBooleanOperation[]
-	):IBooleanOperation;
-
-	not(
-		op:IBooleanOperation
-	):IBooleanOperation;
 }
 
-export class BooleanOperation
-extends FieldOperation<boolean> implements IBooleanOperation {
+export class BooleanOperation extends Operation implements IBooleanOperation {
 
-	constructor(
-		type:OperationType
-	) {
-		super(type, FieldType.BOOLEAN);
-	}
-
-	getDefinedInstance(
-		type:OperationType,
-		value:any
-	):IBooleanOperation {
-		let definedOperation = new BooleanOperation(type);
-		definedOperation.isDefined = true;
-		definedOperation.value = value;
-
-		return definedOperation;
+	constructor() {
+		super(FieldType.BOOLEAN);
 	}
 
 	equals(
-		value:boolean | IQBooleanField<any>
-	):IBooleanOperation {
-		return this.getDefinedInstance(OperationType.EQUALS, value);
+		value:boolean
+	):JSONBooleanOperation {
+		return {
+		    $eq: value
+        };
 	}
 
 	exists(
 		exists:boolean
-	):IBooleanOperation {
-		return this.getDefinedInstance(OperationType.EXISTS, exists);
+	):JSONBooleanOperation {
+        return {
+            $exists: exists
+        };
 	}
 
 	notEquals(
-		value:boolean | IQBooleanField<any>
-	):IBooleanOperation {
-		return this.getDefinedInstance(OperationType.NOT_EQUALS, value);
-	}
-
-	and(
-		...ops:IBooleanOperation[]
-	):IBooleanOperation {
-		return this.getDefinedInstance(OperationType.AND, ops);
-	}
-
-	or(
-		...ops:IBooleanOperation[]
-	):IBooleanOperation {
-		return this.getDefinedInstance(OperationType.OR, ops);
-	}
-
-	not(
-		op:IBooleanOperation
-	):IBooleanOperation {
-		return this.getDefinedInstance(OperationType.NOT, op);
+		value:boolean
+	):JSONBooleanOperation {
+        return {
+            $ne: value
+        };
 	}
 
 }

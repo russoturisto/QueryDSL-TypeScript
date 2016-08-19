@@ -1,169 +1,138 @@
-import {JSONFieldReference, IFieldOperation, FieldOperation} from "./FieldOperation";
-import {IQDateField, FieldType} from "../field/Field";
-import {OperationType} from "./OperationType";
-import {JSONBaseOperation} from "./Operation";
+import {FieldType} from "../field/Field";
+import {JSONBaseOperation, IOperation, Operation} from "./Operation";
 /**
  * Created by Papa on 6/20/2016.
  */
 
 
 export interface JSONDateOperation extends JSONBaseOperation {
-	"$and"?:JSONDateOperation[];
-	"$eq"?:Date | JSONFieldReference;
+	"$eq"?:Date;
 	"$exists"?:boolean;
-	"$gt"?:Date | JSONFieldReference ;
-	"$gte"?:Date | JSONFieldReference;
+	"$gt"?:Date;
+	"$gte"?:Date;
 	"$in"?:Date[];
-	"$lt"?:Date | JSONFieldReference;
-	"$lte"?:Date | JSONFieldReference;
-	"$ne"?:Date | JSONFieldReference;
+	"$lt"?:Date;
+	"$lte"?:Date;
+	"$ne"?:Date;
 	"$nin"?:Date[];
-	"$not"?:JSONDateOperation;
-	"$or"?:JSONDateOperation[];
 }
 
-export interface IDateOperation
-extends IFieldOperation<Date> {
+export interface IDateOperation extends IOperation {
 
 	equals(
-		value:Date | IQDateField<any>
-	):IDateOperation;
+		value:Date
+	):JSONDateOperation;
 
 	exists(
 		exists:boolean
-	):IDateOperation;
+	):JSONDateOperation;
 
 	greaterThan(
-		greaterThan:Date | IQDateField<any>
-	):IDateOperation;
+		greaterThan:Date
+	):JSONDateOperation;
 
 	greaterThanOrEquals(
-		greaterThanOrEquals:Date | IQDateField<any>
-	):IDateOperation;
+		greaterThanOrEquals:Date
+	):JSONDateOperation;
 
 	isIn(
 		values:Date[]
-	):IDateOperation;
+	):JSONDateOperation;
 
 	lessThan(
-		lessThan:Date | IQDateField<any>
-	):IDateOperation;
+		lessThan:Date
+	):JSONDateOperation;
 
 	lessThanOrEquals(
-		lessThanOrEquals:Date | IQDateField<any>
-	):IDateOperation;
+		lessThanOrEquals:Date
+	):JSONDateOperation;
 
 	notEquals(
-		value:Date | IQDateField<any>
-	):IDateOperation;
+		value:Date
+	):JSONDateOperation;
 
 	notIn(
 		values:Date[]
-	):IDateOperation;
+	):JSONDateOperation;
 
-	and(
-		...ops:IDateOperation[]
-	):IDateOperation;
-
-	or(
-		...ops:IDateOperation[]
-	):IDateOperation;
-
-	not(
-		op:IDateOperation
-	):IDateOperation;
 }
 
-export class DateOperation
-extends FieldOperation<Date> implements IDateOperation {
+export class DateOperation extends Operation implements IDateOperation {
 
-	constructor(
-		type:OperationType
-	) {
-		super(type, FieldType.DATE);
-	}
-
-	getDefinedInstance(
-		type:OperationType,
-		value:any
-	):IDateOperation {
-		let definedOperation = new DateOperation(type);
-		definedOperation.isDefined = true;
-		definedOperation.value = value;
-
-		return definedOperation;
+	constructor() {
+		super(FieldType.DATE);
 	}
 
 	equals(
-		value:Date | IQDateField<any>
-	):IDateOperation {
-		return this.getDefinedInstance(OperationType.EQUALS, value);
+		value:Date
+	):JSONDateOperation {
+		return {
+			$eq: value
+		};
 	}
 
 	exists(
 		exists:boolean
-	):IDateOperation {
-		return this.getDefinedInstance(OperationType.EXISTS, exists);
+	):JSONDateOperation {
+		return {
+			$exists: exists
+		};
 	}
 
 	greaterThan(
-		greaterThan:Date | IQDateField<any>
-	):IDateOperation {
-		return this.getDefinedInstance(OperationType.GREATER_THAN, greaterThan);
+		greaterThan:Date
+	):JSONDateOperation {
+		return {
+			$gt: greaterThan
+		};
 	}
 
 	greaterThanOrEquals(
-		greaterThanOrEquals:Date | IQDateField<any>
-	):IDateOperation {
-		return this.getDefinedInstance(OperationType.GREATER_THAN_OR_EQUALS, greaterThanOrEquals);
+		greaterThanOrEquals:Date
+	):JSONDateOperation {
+		return {
+			$gte: greaterThanOrEquals
+		};
 	}
 
 	isIn(
 		values:Date[]
-	):IDateOperation {
-		return this.getDefinedInstance(OperationType.IN, values);
+	):JSONDateOperation {
+		return {
+			$in: values
+		};
 	}
 
 	lessThan(
-		lessThan:Date | IQDateField<any>
-	):IDateOperation {
-		return this.getDefinedInstance(OperationType.LESS_THAN, lessThan);
+		lessThan:Date
+	):JSONDateOperation {
+		return {
+			$lt: lessThan
+		};
 	}
 
 	lessThanOrEquals(
-		lessThanOrEquals:Date | IQDateField<any>
-	):IDateOperation {
-		return this.getDefinedInstance(OperationType.LESS_THAN_OR_EQUALS, lessThanOrEquals);
+		lessThanOrEquals:Date
+	):JSONDateOperation {
+		return {
+			$lte: lessThanOrEquals
+		};
 	}
 
 	notEquals(
-		value:Date | IQDateField<any>
-	):IDateOperation {
-		return this.getDefinedInstance(OperationType.NOT_EQUALS, value);
+		value:Date
+	):JSONDateOperation {
+		return {
+			$ne: value
+		};
 	}
 
 	notIn(
 		values:Date[]
-	):IDateOperation {
-		return this.getDefinedInstance(OperationType.NOT_IN, values);
-	}
-
-	and(
-		...ops:IDateOperation[]
-	):IDateOperation {
-		return this.getDefinedInstance(OperationType.AND, ops);
-	}
-
-	or(
-		...ops:IDateOperation[]
-	):IDateOperation {
-		return this.getDefinedInstance(OperationType.OR, ops);
-	}
-
-	not(
-		op:IDateOperation
-	):IDateOperation {
-		return this.getDefinedInstance(OperationType.NOT, op);
+	):JSONDateOperation {
+		return {
+			$nin: values
+		};
 	}
 
 }

@@ -2,30 +2,35 @@
  * Created by Papa on 4/23/2016.
  */
 
-import {
-	equals,
-	exists,
-	greaterThan,
-	greaterThanOrEquals,
-	IQueryOperation, QueryOperation
-} from "./core/operation/QueryOperation";
 import {JSONBooleanOperation, IBooleanOperation, BooleanOperation} from "./core/operation/BooleanOperation";
 import {JSONDateOperation, IDateOperation, DateOperation} from "./core/operation/DateOperation";
 import {JSONNumberOperation, INumberOperation, NumberOperation} from "./core/operation/NumberOperation";
 import {JSONStringOperation, IStringOperation, StringOperation} from "./core/operation/StringOperation";
 import {IEntity, IQEntity, QEntity} from "./core/entity/Entity";
 import {
-	FieldType,
+	JSONBooleanFieldOperation,
 	IQBooleanField,
-	QBooleanField,
+	QBooleanField
+} from "./core/field/BooleanField";
+import {
+	JSONDateFieldOperation,
 	IQDateField,
-	QDateField,
+	QDateField
+} from "./core/field/DateField";
+import {
+	FieldType,
 	IQField,
+} from "./core/field/Field";
+import {
+	JSONNumberFieldOperation,
 	IQNumberField,
-	QNumberField,
+	QNumberField
+} from "./core/field/NumberField";
+import {
+	JSONStringFieldOperation,
 	IQStringField,
 	QStringField
-} from "./core/field/Field";
+} from "./core/field/StringField";
 import {ILogicalOperation, LogicalOperation} from "./core/operation/LogicalOperation";
 import {IOperation, Operation} from "./core/operation/Operation";
 import {OperationType} from "./core/operation/OperationType";
@@ -35,8 +40,6 @@ import {IEntityQuery} from "./query/IEntityQuery";
 import {PouchDbQuery} from "./query/pouchdb/PouchDbQuery";
 
 export {
-	IQueryOperation,
-	QueryOperation,
 	IEntity,
 	IQEntity,
 	IEntityQuery,

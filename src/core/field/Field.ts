@@ -2,8 +2,7 @@
  * Created by Papa on 4/21/2016.
  */
 import {IQEntity} from "../entity/Entity";
-import {JSONOperation, IOperation} from "../operation/Operation";
-import {PH_JOIN_TO_ENTITY, PH_JOIN_TO_FIELD} from "../../query/PHQuery";
+import {JSONBaseOperation} from "../operation/Operation";
 
 export enum FieldType {
 	BOOLEAN,
@@ -16,34 +15,45 @@ export enum FieldType {
 	STRING_ARRAY
 }
 
-export interface IQBooleanField<IQ extends IQEntity> extends IQField<IQ> {
+export interface IQField<IQ extends IQEntity> {
+
+	entityName:string;
+	fieldName:string;
+	fieldType:FieldType;
+	nativeFieldName:string;
+	q:IQ;
+	qConstructor:new() => IQ;
+
+	getFieldKey():string;
 
 }
 
 export abstract class QField<IQ extends IQEntity> implements IQField<IQ> {
-
-	fieldType:FieldType;
 
 	constructor(
 		public q:IQ,
 		public qConstructor:new() => IQ,
 		public entityName:string,
 		public fieldName:string,
+		public fieldType:FieldType,
 		public nativeFieldName:string = fieldName
 	) {
 		q.addEntityField(this);
 	}
 
-	toJSON():JSONOperation {
-		let jsonOperation = {};
-		jsonOperation[PH_JOIN_TO_ENTITY] = this.entityName;
-		jsonOperation[PH_JOIN_TO_FIELD] = this.fieldName;
+	getFieldKey() {
+		let key = `${this.entityName}.${this.fieldName}`;
 
-		return jsonOperation;
+		return key;
 	}
 
-	getQ():IQ {
-		return this.q;
+	setOperation(
+		jsonOperation:JSONBaseOperation
+	):JSONBaseOperation {
+		let operation = {};
+		operation[this.getFieldKey()] = jsonOperation;
+
+		return operation;
 	}
 
 	objectEquals<IQF extends IQField<any>>(
@@ -66,100 +76,5 @@ export abstract class QField<IQ extends IQEntity> implements IQField<IQ> {
 
 		return true;
 	}
-
-}
-
-export class QBooleanField<IQ extends IQEntity> extends QField<IQ> implements IQBooleanField<IQ> {
-
-	constructor(
-		q:IQ,
-		qConstructor:new() => IQ,
-		entityName:string,
-		fieldName:string,
-		nativeFieldName:string = fieldName
-	) {
-		super(q, qConstructor, entityName, fieldName, nativeFieldName);
-		this.fieldType = FieldType.BOOLEAN;
-		q.addEntityField(this);
-	}
-
-}
-
-export interface IQDateField<IQ extends IQEntity> extends IQField<IQ> {
-
-}
-
-export class QDateField<IQ extends IQEntity> extends QField<IQ> implements IQDateField<IQ> {
-
-	constructor(
-		q:IQ,
-		qConstructor:new() => IQ,
-		entityName:string,
-		fieldName:string,
-		nativeFieldName:string = fieldName
-	) {
-		super(q, qConstructor, entityName, fieldName, nativeFieldName);
-		this.fieldType = FieldType.DATE;
-		q.addEntityField(this);
-	}
-
-}
-
-export interface IQNumberField<IQ extends IQEntity> extends IQField<IQ> {
-
-}
-
-export class QNumberField<IQ extends IQEntity> extends QField<IQ> implements IQNumberField<IQ> {
-
-	constructor(
-		q:IQ,
-		qConstructor:new() => IQ,
-		entityName:string,
-		fieldName:string,
-		nativeFieldName:string = fieldName
-	) {
-		super(q, qConstructor, entityName, fieldName, nativeFieldName);
-		this.fieldType = FieldType.NUMBER;
-		q.addEntityField(this);
-	}
-}
-
-export interface IQStringField<IQ extends IQEntity> extends IQField<IQ> {
-
-}
-
-export class QStringField<IQ extends IQEntity> extends QField<IQ> implements IQStringField<IQ> {
-
-	constructor(
-		q:IQ,
-		qConstructor:new() => IQ,
-		entityName:string,
-		fieldName:string,
-		nativeFieldName:string = fieldName
-	) {
-		super(q, qConstructor, entityName, fieldName, nativeFieldName);
-		this.fieldType = FieldType.STRING;
-		q.addEntityField(this);
-	}
-
-}
-
-export interface IQField<IQ extends IQEntity> {
-
-	entityName:string;
-	fieldName:string;
-	fieldType:FieldType;
-	nativeFieldName:string;
-	q:IQ;
-	qConstructor:new() => IQ;
-
-	objectEquals<OP extends IOperation>(
-		otherOp:OP,
-		checkValue?:boolean
-	):boolean;
-
-	getQ():IQ;
-
-	toJSON():JSONOperation;
 
 }

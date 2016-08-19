@@ -1,51 +1,38 @@
-import { JSONFieldReference, IFieldOperation, FieldOperation } from "./FieldOperation";
-import { IQNumberField } from "../field/Field";
-import { OperationType } from "./OperationType";
-import { JSONBaseOperation } from "./Operation";
+import { JSONBaseOperation, Operation, IOperation } from "./Operation";
 /**
  * Created by Papa on 6/20/2016.
  */
 export interface JSONNumberOperation extends JSONBaseOperation {
-    "$and"?: JSONNumberOperation[];
-    "$eq"?: number | JSONFieldReference;
+    "$eq"?: number;
     "$exists"?: boolean;
-    "$gt"?: number | JSONFieldReference;
-    "$gte"?: number | JSONFieldReference;
+    "$gt"?: number;
+    "$gte"?: number;
     "$in"?: number[];
-    "$lt"?: number | JSONFieldReference;
-    "$lte"?: number | JSONFieldReference;
-    "$ne"?: number | JSONFieldReference;
+    "$lt"?: number;
+    "$lte"?: number;
+    "$ne"?: number;
     "$nin"?: number[];
-    "$not"?: JSONNumberOperation;
-    "$or"?: JSONNumberOperation[];
 }
-export interface INumberOperation extends IFieldOperation<number> {
-    equals(value: number | IQNumberField<any>): INumberOperation;
-    exists(exists: boolean): INumberOperation;
-    greaterThan(greaterThan: number | IQNumberField<any>): INumberOperation;
-    greaterThanOrEquals(greaterThanOrEquals: number | IQNumberField<any>): INumberOperation;
-    isIn(values: number[]): INumberOperation;
-    lessThan(lessThan: number | IQNumberField<any>): INumberOperation;
-    lessThanOrEquals(lessThanOrEquals: number | IQNumberField<any>): INumberOperation;
-    notEquals(value: number | IQNumberField<any>): INumberOperation;
-    notIn(values: number[]): INumberOperation;
-    and(...ops: INumberOperation[]): INumberOperation;
-    or(...ops: INumberOperation[]): INumberOperation;
-    not(op: INumberOperation): INumberOperation;
+export interface INumberOperation extends IOperation {
+    equals(value: number): JSONNumberOperation;
+    exists(exists: boolean): JSONNumberOperation;
+    greaterThan(greaterThan: number): JSONNumberOperation;
+    greaterThanOrEquals(greaterThanOrEquals: number): JSONNumberOperation;
+    isIn(values: number[]): JSONNumberOperation;
+    lessThan(lessThan: number): JSONNumberOperation;
+    lessThanOrEquals(lessThanOrEquals: number): JSONNumberOperation;
+    notEquals(value: number): JSONNumberOperation;
+    notIn(values: number[]): JSONNumberOperation;
 }
-export declare class NumberOperation extends FieldOperation<number> implements INumberOperation {
-    constructor(type: OperationType);
-    getDefinedInstance(type: OperationType, value: any): INumberOperation;
-    equals(value: number | IQNumberField<any>): INumberOperation;
-    exists(exists: boolean): INumberOperation;
-    greaterThan(greaterThan: number | IQNumberField<any>): INumberOperation;
-    greaterThanOrEquals(greaterThanOrEquals: number | IQNumberField<any>): INumberOperation;
-    isIn(values: number[]): INumberOperation;
-    lessThan(lessThan: number | IQNumberField<any>): INumberOperation;
-    lessThanOrEquals(lessThanOrEquals: number | IQNumberField<any>): INumberOperation;
-    notEquals(value: number | IQNumberField<any>): INumberOperation;
-    notIn(values: number[]): INumberOperation;
-    and(...ops: INumberOperation[]): INumberOperation;
-    or(...ops: INumberOperation[]): INumberOperation;
-    not(op: INumberOperation): INumberOperation;
+export declare class NumberOperation extends Operation implements INumberOperation {
+    constructor();
+    equals(value: number): JSONNumberOperation;
+    exists(exists: boolean): JSONNumberOperation;
+    greaterThan(greaterThan: number): JSONNumberOperation;
+    greaterThanOrEquals(greaterThanOrEquals: number): JSONNumberOperation;
+    isIn(values: number[]): JSONNumberOperation;
+    lessThan(lessThan: number): JSONNumberOperation;
+    lessThanOrEquals(lessThanOrEquals: number): JSONNumberOperation;
+    notEquals(value: number): JSONNumberOperation;
+    notIn(values: number[]): JSONNumberOperation;
 }

@@ -20,6 +20,9 @@ export declare class PouchDbQuery {
     private entityName;
     private entitiesRelationPropertyMap;
     private entitiesPropertyTypeMap;
+    childSelectJson: {
+        [propertyName: string]: any;
+    };
     childQueries: {
         [propertyName: string]: PouchDbQuery;
     };
@@ -44,7 +47,7 @@ export declare class PouchDbQuery {
     addField(fieldName: string): void;
     extractJoinFields(): void;
     extractJoinField(fieldName: string, fragment: any): JoinField;
-    extractSelectFields(): void;
+    extractSelectFields(queryJson: any): void;
     extractFieldOperators(): void;
     /**
      *

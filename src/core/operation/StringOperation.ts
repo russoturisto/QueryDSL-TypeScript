@@ -1,135 +1,99 @@
-import {JSONFieldReference, IFieldOperation, FieldOperation} from "./FieldOperation";
-import {IQStringField, FieldType} from "../field/Field";
-import {OperationType} from "./OperationType";
-import {JSONBaseOperation} from "./Operation";
+import {FieldType} from "../field/Field";
+import {JSONBaseOperation, Operation, IOperation} from "./Operation";
+import {JSONStringFieldOperation} from "../field/StringField";
 /**
  * Created by Papa on 6/20/2016.
  */
 
 export interface JSONStringOperation extends JSONBaseOperation {
-	"$and"?:JSONStringOperation[];
-	"$eq"?:JSONFieldReference | string;
+	"$eq"?:string;
 	"$exists"?:boolean;
 	"$in"?:Date[] | string[];
 	"$like"?:string | RegExp;
-	"$ne"?:JSONFieldReference | string;
+	"$ne"?:string;
 	"$nin"?:string[];
-	"$not"?:JSONStringOperation;
-	"$or"?:JSONStringOperation[];
 }
 
-export interface IStringOperation
-extends IFieldOperation<string> {
+export interface IStringOperation extends IOperation {
 
 	equals(
-		value:string | IQStringField<any>
-	):IStringOperation;
+		value:string
+	):JSONStringFieldOperation;
 
 	exists(
 		exists:boolean
-	):IStringOperation;
+	):JSONStringFieldOperation;
 
 	isIn(
 		values:string[]
-	):IStringOperation;
+	):JSONStringFieldOperation;
 
 	like(
 		like:string | RegExp
-	):IStringOperation;
+	):JSONStringFieldOperation;
 
 	notEquals(
-		value:string | IQStringField<any>
-	):IStringOperation;
+		value:string
+	):JSONStringFieldOperation;
 
 	notIn(
 		values:string[]
-	):IStringOperation;
+	):JSONStringFieldOperation;
 
-	and(
-		...ops:IStringOperation[]
-	):IStringOperation;
-
-	or(
-		...ops:IStringOperation[]
-	):IStringOperation;
-
-	not(
-		op:IStringOperation
-	):IStringOperation;
 }
 
-export class StringOperation
-extends FieldOperation<string> implements IStringOperation {
+export class StringOperation extends Operation implements IStringOperation {
 
-	constructor(
-		type:OperationType
-	) {
-		super(type, FieldType.NUMBER);
-	}
-
-	getDefinedInstance(
-		type:OperationType,
-		value:any
-	):IStringOperation {
-		let definedOperation = new StringOperation(type);
-		definedOperation.isDefined = true;
-		definedOperation.value = value;
-
-		return definedOperation;
+	constructor() {
+		super(FieldType.NUMBER);
 	}
 
 	equals(
-		value:string | IQStringField<any>
-	):IStringOperation {
-		return this.getDefinedInstance(OperationType.EQUALS, value);
+		value:string
+	):JSONStringFieldOperation{
+		return {
+			$eq: value
+		};
 	}
 
 	exists(
 		exists:boolean
-	):IStringOperation {
-		return this.getDefinedInstance(OperationType.EXISTS, exists);
+	):JSONStringFieldOperation{
+		return {
+			$exists: exists
+		};
 	}
 
 	isIn(
 		values:string[]
-	):IStringOperation {
-		return this.getDefinedInstance(OperationType.IN, values);
+	):JSONStringFieldOperation{
+		return {
+			$in: values
+		};
 	}
 
 	like(
 		like:string | RegExp
-	):IStringOperation {
-		return this.getDefinedInstance(OperationType.LIKE, like);
+	):JSONStringFieldOperation{
+		return {
+			$like: like
+		};
 	}
 
 	notEquals(
-		value:string | IQStringField<any>
-	):IStringOperation {
-		return this.getDefinedInstance(OperationType.NOT_EQUALS, value);
+		value:string
+	):JSONStringFieldOperation{
+		return {
+			$ne: value
+		};
 	}
 
 	notIn(
 		values:string[]
-	):IStringOperation {
-		return this.getDefinedInstance(OperationType.NOT_IN, values);
-	}
-
-	and(
-		...ops:IStringOperation[]
-	):IStringOperation {
-		return this.getDefinedInstance(OperationType.AND, ops);
-	}
-
-	or(
-		...ops:IStringOperation[]
-	):IStringOperation {
-		return this.getDefinedInstance(OperationType.OR, ops);
-	}
-
-	not(
-		op:IStringOperation
-	):IStringOperation {
-		return this.getDefinedInstance(OperationType.NOT, op);
+	):JSONStringFieldOperation{
+		return {
+			$nin: values
+		};
 	}
 
 }

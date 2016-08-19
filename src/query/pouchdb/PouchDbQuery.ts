@@ -58,6 +58,7 @@ export class JoinFieldJunction implements JoinField {
 
 export class PouchDbQuery {
 
+	childSelectJson:{[propertyName:string]:any} = {};
 	childQueries:{[propertyName:string]:PouchDbQuery} = {};
 	joinFields:JoinField[] = [];
 	fields:string[] = ['_id', '_rev'];
@@ -96,7 +97,7 @@ export class PouchDbQuery {
 		};
 		objectSelector[this.topLevelOperator] = this.topLevelArray;
 
-		this.extractSelectFields();
+		this.extractSelectFields(this.queryJson.select);
 		this.extractSubQueries();
 		this.extractJoinFields();
 		this.extractFieldOperators();
@@ -216,19 +217,19 @@ export class PouchDbQuery {
 		return joinField;
 	}
 
-	extractSelectFields():void {
+	extractSelectFields(queryJson:any):void {
 		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[this.entityName];
 
-		for (let propertyName in this.queryJson) {
+		for (let propertyName in queryJson) {
 			if (entityPropertyTypeMap[propertyName]) {
-				let fragment = this.queryJson[propertyName];
+				let fragment = queryJson[propertyName];
 				let typeOfFragment = typeof fragment;
 				switch (typeOfFragment) {
 					case 'boolean':
 					case 'number':
 					case 'string':
 						this.fields.push(propertyName);
-						delete this.queryJson[propertyName];
+						delete queryJson[propertyName];
 						break;
 					case 'object':
 						if (fragment instanceof Date) {

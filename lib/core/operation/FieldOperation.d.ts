@@ -15,7 +15,7 @@ export declare abstract class FieldOperation<T> extends QueryOperation {
     fieldType: FieldType;
     type: OperationType;
     includeField: boolean;
-    constructor(type: OperationType, fieldType: FieldType);
+    constructor(fieldType: FieldType);
     include(): FieldOperation<T>;
     toJSON(): JSONOperation;
 }

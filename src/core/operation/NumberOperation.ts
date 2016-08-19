@@ -1,166 +1,138 @@
-import {JSONFieldReference, IFieldOperation, FieldOperation} from "./FieldOperation";
-import {IQNumberField, FieldType} from "../field/Field";
+import {FieldType} from "../field/Field";
 import {OperationType} from "./OperationType";
-import {JSONOperation, JSONBaseOperation} from "./Operation";
+import {JSONBaseOperation, Operation, IOperation} from "./Operation";
 /**
  * Created by Papa on 6/20/2016.
  */
 
 export interface JSONNumberOperation extends JSONBaseOperation {
-	"$and"?:JSONNumberOperation[];
-	"$eq"?:number | JSONFieldReference;
+	"$eq"?:number;
 	"$exists"?:boolean;
-	"$gt"?:number | JSONFieldReference ;
-	"$gte"?:number | JSONFieldReference;
+	"$gt"?:number;
+	"$gte"?:number;
 	"$in"?:number[];
-	"$lt"?:number | JSONFieldReference;
-	"$lte"?:number | JSONFieldReference;
-	"$ne"?:number | JSONFieldReference;
+	"$lt"?:number;
+	"$lte"?:number;
+	"$ne"?:number;
 	"$nin"?:number[];
-	"$not"?:JSONNumberOperation;
-	"$or"?:JSONNumberOperation[];
 }
 
-export interface INumberOperation extends IFieldOperation<number> {
+export interface INumberOperation extends IOperation {
 
 	equals(
-		value:number | IQNumberField<any>
-	):INumberOperation;
+		value:number
+	):JSONNumberOperation;
 
 	exists(
 		exists:boolean
-	):INumberOperation;
+	):JSONNumberOperation;
 
 	greaterThan(
-		greaterThan:number | IQNumberField<any>
-	):INumberOperation;
+		greaterThan:number
+	):JSONNumberOperation;
 
 	greaterThanOrEquals(
-		greaterThanOrEquals:number | IQNumberField<any>
-	):INumberOperation;
+		greaterThanOrEquals:number
+	):JSONNumberOperation;
 
 	isIn(
 		values:number[]
-	):INumberOperation;
+	):JSONNumberOperation;
 
 	lessThan(
-		lessThan:number | IQNumberField<any>
-	):INumberOperation;
+		lessThan:number
+	):JSONNumberOperation;
 
 	lessThanOrEquals(
-		lessThanOrEquals:number | IQNumberField<any>
-	):INumberOperation;
+		lessThanOrEquals:number
+	):JSONNumberOperation;
 
 	notEquals(
-		value:number | IQNumberField<any>
-	):INumberOperation;
+		value:number
+	):JSONNumberOperation;
 
 	notIn(
 		values:number[]
-	):INumberOperation;
+	):JSONNumberOperation;
 
-	and(
-		...ops:INumberOperation[]
-	):INumberOperation;
-
-	or(
-		...ops:INumberOperation[]
-	):INumberOperation;
-
-	not(
-		op:INumberOperation
-	):INumberOperation;
 }
 
-export class NumberOperation extends FieldOperation<number> implements INumberOperation {
+export class NumberOperation extends Operation implements INumberOperation {
 
-	constructor(
-		type:OperationType
-	) {
-		super(type, FieldType.NUMBER);
-	}
-
-	getDefinedInstance(
-		type:OperationType,
-		value:any
-	):INumberOperation {
-		let definedOperation = new NumberOperation(type);
-		definedOperation.isDefined = true;
-		definedOperation.value = value;
-
-		return definedOperation;
+	constructor() {
+		super(FieldType.NUMBER);
 	}
 
 	equals(
-		value:number | IQNumberField<any>
-	):INumberOperation {
-		return this.getDefinedInstance(OperationType.EQUALS, value);
+		value:number
+	):JSONNumberOperation {
+		return {
+			$eq: value
+		};
 	}
 
 	exists(
 		exists:boolean
-	):INumberOperation {
-		return this.getDefinedInstance(OperationType.EXISTS, exists);
+	):JSONNumberOperation {
+		return {
+			$exists: exists
+		};
 	}
 
 	greaterThan(
-		greaterThan:number | IQNumberField<any>
-	):INumberOperation {
-		return this.getDefinedInstance(OperationType.GREATER_THAN, greaterThan);
+		greaterThan:number
+	):JSONNumberOperation {
+		return {
+			$gt: greaterThan
+		};
 	}
 
 	greaterThanOrEquals(
-		greaterThanOrEquals:number | IQNumberField<any>
-	):INumberOperation {
-		return this.getDefinedInstance(OperationType.GREATER_THAN_OR_EQUALS, greaterThanOrEquals);
+		greaterThanOrEquals:number
+	):JSONNumberOperation {
+		return {
+			$gte: greaterThanOrEquals
+		};
 	}
 
 	isIn(
 		values:number[]
-	):INumberOperation {
-		return this.getDefinedInstance(OperationType.IN, values);
+	):JSONNumberOperation {
+		return {
+			$in: values
+		};
 	}
 
 	lessThan(
-		lessThan:number | IQNumberField<any>
-	):INumberOperation {
-		return this.getDefinedInstance(OperationType.LESS_THAN, lessThan);
+		lessThan:number
+	):JSONNumberOperation {
+		return {
+			$lt: lessThan
+		};
 	}
 
 	lessThanOrEquals(
-		lessThanOrEquals:number | IQNumberField<any>
-	):INumberOperation {
-		return this.getDefinedInstance(OperationType.LESS_THAN_OR_EQUALS, lessThanOrEquals);
+		lessThanOrEquals:number
+	):JSONNumberOperation {
+		return {
+			$lte: lessThanOrEquals
+		};
 	}
 
 	notEquals(
-		value:number | IQNumberField<any>
-	):INumberOperation {
-		return this.getDefinedInstance(OperationType.NOT_EQUALS, value);
+		value:number
+	):JSONNumberOperation {
+		return {
+			$ne: value
+		};
 	}
 
 	notIn(
 		values:number[]
-	):INumberOperation {
-		return this.getDefinedInstance(OperationType.NOT_IN, values);
-	}
-
-	and(
-		...ops:INumberOperation[]
-	):INumberOperation {
-		return this.getDefinedInstance(OperationType.AND, ops);
-	}
-
-	or(
-		...ops:INumberOperation[]
-	):INumberOperation {
-		return this.getDefinedInstance(OperationType.OR, ops);
-	}
-
-	not(
-		op:INumberOperation
-	):INumberOperation {
-		return this.getDefinedInstance(OperationType.NOT, op);
+	):JSONNumberOperation {
+		return {
+			$nin: values
+		};
 	}
 
 }

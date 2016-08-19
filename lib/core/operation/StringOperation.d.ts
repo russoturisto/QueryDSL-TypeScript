@@ -1,42 +1,30 @@
-import { JSONFieldReference, IFieldOperation, FieldOperation } from "./FieldOperation";
-import { IQStringField } from "../field/Field";
-import { OperationType } from "./OperationType";
-import { JSONBaseOperation } from "./Operation";
+import { JSONBaseOperation, Operation, IOperation } from "./Operation";
+import { JSONStringFieldOperation } from "../field/StringField";
 /**
  * Created by Papa on 6/20/2016.
  */
 export interface JSONStringOperation extends JSONBaseOperation {
-    "$and"?: JSONStringOperation[];
-    "$eq"?: JSONFieldReference | string;
+    "$eq"?: string;
     "$exists"?: boolean;
     "$in"?: Date[] | string[];
     "$like"?: string | RegExp;
-    "$ne"?: JSONFieldReference | string;
+    "$ne"?: string;
     "$nin"?: string[];
-    "$not"?: JSONStringOperation;
-    "$or"?: JSONStringOperation[];
 }
-export interface IStringOperation extends IFieldOperation<string> {
-    equals(value: string | IQStringField<any>): IStringOperation;
-    exists(exists: boolean): IStringOperation;
-    isIn(values: string[]): IStringOperation;
-    like(like: string | RegExp): IStringOperation;
-    notEquals(value: string | IQStringField<any>): IStringOperation;
-    notIn(values: string[]): IStringOperation;
-    and(...ops: IStringOperation[]): IStringOperation;
-    or(...ops: IStringOperation[]): IStringOperation;
-    not(op: IStringOperation): IStringOperation;
+export interface IStringOperation extends IOperation {
+    equals(value: string): JSONStringFieldOperation;
+    exists(exists: boolean): JSONStringFieldOperation;
+    isIn(values: string[]): JSONStringFieldOperation;
+    like(like: string | RegExp): JSONStringFieldOperation;
+    notEquals(value: string): JSONStringFieldOperation;
+    notIn(values: string[]): JSONStringFieldOperation;
 }
-export declare class StringOperation extends FieldOperation<string> implements IStringOperation {
-    constructor(type: OperationType);
-    getDefinedInstance(type: OperationType, value: any): IStringOperation;
-    equals(value: string | IQStringField<any>): IStringOperation;
-    exists(exists: boolean): IStringOperation;
-    isIn(values: string[]): IStringOperation;
-    like(like: string | RegExp): IStringOperation;
-    notEquals(value: string | IQStringField<any>): IStringOperation;
-    notIn(values: string[]): IStringOperation;
-    and(...ops: IStringOperation[]): IStringOperation;
-    or(...ops: IStringOperation[]): IStringOperation;
-    not(op: IStringOperation): IStringOperation;
+export declare class StringOperation extends Operation implements IStringOperation {
+    constructor();
+    equals(value: string): JSONStringFieldOperation;
+    exists(exists: boolean): JSONStringFieldOperation;
+    isIn(values: string[]): JSONStringFieldOperation;
+    like(like: string | RegExp): JSONStringFieldOperation;
+    notEquals(value: string): JSONStringFieldOperation;
+    notIn(values: string[]): JSONStringFieldOperation;
 }
