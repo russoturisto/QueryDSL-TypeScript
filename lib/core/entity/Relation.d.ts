@@ -2,9 +2,6 @@ import { IQEntity } from "./Entity";
 import { JoinType } from "../../query/sql/PHSQLQuery";
 export interface RelationRecord {
     entityName: string;
-    decoratorElements: {
-        [key: string]: any;
-    };
     propertyName: string;
     relationType: RelationType;
 }

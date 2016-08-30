@@ -1,6 +1,7 @@
 import {IEntity, QEntity} from "../../core/entity/Entity";
 import {RelationRecord} from "../../core/entity/Relation";
 import {JSONBaseOperation} from "../../core/operation/Operation";
+import {PHQuery, PHRawQuery} from "../PHQuery";
 /**
  * Created by Papa on 8/15/2016.
  */
@@ -10,19 +11,19 @@ export enum GraphFilter {
 	CHILDREN
 }
 
-export interface PHJsonGraphQuery<EQ extends IEntity> {
+export interface PHJsonGraphQuery<IE extends IEntity> extends PHRawQuery<IE> {
 	filter: GraphFilter;
-	fields: EQ;
+	fields: IE;
 	selector: JSONBaseOperation;
 	execOrder: number;
 }
 
-export class PHGraphQuery<EQ extends IEntity> {
+export class PHGraphQuery<IE extends IEntity> implements PHQuery<IE> {
 
 	childMap: {[entity: string]: PHGraphQuery<any>} = {};
 
 	constructor( //
-		public phJsonQuery: PHJsonGraphQuery<EQ>,
+		public phJsonQuery: PHJsonGraphQuery<IE>,
 		public qEntity: QEntity<any>,
 		public qEntityMap: {[entityName: string]: QEntity<any>},
 		public entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
@@ -32,7 +33,7 @@ export class PHGraphQuery<EQ extends IEntity> {
 	}
 
 	toJSON(): any {
-		let fields: EQ;
+		let fields: IE;
 		if (this.phJsonQuery.fields && typeof fields === 'object' && !(fields instanceof Date)) {
 			fields = this.phJsonQuery.fields;
 			if (!this.phJsonQuery.filter) {
@@ -149,7 +150,7 @@ export class PHGraphQuery<EQ extends IEntity> {
 
 	}
 
-	validateFieldsAndChildren( fields: EQ ) {
+	validateFieldsAndChildren( fields: IE ) {
 
 		let fieldsJsonFragment = {};
 		let entityName = this.qEntity.__entityName__;

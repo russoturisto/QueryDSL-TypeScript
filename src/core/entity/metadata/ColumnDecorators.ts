@@ -4,10 +4,6 @@ import {CascadeType, FetchType} from "./Types";
  * Created by Papa on 8/20/2016.
  */
 
-export const PH_MANY_TO_ONE = '__ph_many_to_one__';
-export const PH_ONE_TO_MANY = '__ph_one_to_many__';
-export const PH_PRIMARY_KEY = '__primaryKey__';
-
 /**
  * Annotates Id fields of Entities.
  *
@@ -131,7 +127,7 @@ export function ManyToOne( elements?: ManyToOneElements ) {
 export interface OneToManyElements {
 	cascade?:CascadeType;
 	fetch?:FetchType;
-	mappedBy?:string;
+	mappedBy:string;
 	orphanRemoval?:boolean;
 }
 

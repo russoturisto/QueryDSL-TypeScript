@@ -2,11 +2,12 @@ import {IEntity, QEntity, IQEntity} from "../../core/entity/Entity";
 import {RelationRecord, JSONRelation} from "../../core/entity/Relation";
 import {JSONLogicalOperation} from "../../core/operation/LogicalOperation";
 import {JSONBaseOperation} from "../../core/operation/Operation";
+import {PHQuery, PHRawQuery} from "../PHQuery";
 /**
  * Created by Papa on 8/12/2016.
  */
 
-export interface PHRawSQLQuery<IE extends IEntity> {
+export interface PHRawSQLQuery<IE extends IEntity> extends PHRawQuery<IE> {
 	select: IE;
 	from?: IQEntity[];
 	where?: JSONBaseOperation;
@@ -23,7 +24,7 @@ export enum JoinType {
 	LEFT_JOIN
 }
 
-export class PHSQLQuery<IE extends IEntity> {
+export class PHSQLQuery<IE extends IEntity> implements PHQuery<IE> {
 
 	constructor(
 		public phRawQuery: PHRawSQLQuery<IE>,

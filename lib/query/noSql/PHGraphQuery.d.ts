@@ -1,6 +1,7 @@
 import { IEntity, QEntity } from "../../core/entity/Entity";
 import { RelationRecord } from "../../core/entity/Relation";
 import { JSONBaseOperation } from "../../core/operation/Operation";
+import { PHQuery, PHRawQuery } from "../PHQuery";
 /**
  * Created by Papa on 8/15/2016.
  */
@@ -8,14 +9,14 @@ export declare enum GraphFilter {
     ALL = 0,
     CHILDREN = 1,
 }
-export interface PHJsonGraphQuery<EQ extends IEntity> {
+export interface PHJsonGraphQuery<IE extends IEntity> extends PHRawQuery<IE> {
     filter: GraphFilter;
-    fields: EQ;
+    fields: IE;
     selector: JSONBaseOperation;
     execOrder: number;
 }
-export declare class PHGraphQuery<EQ extends IEntity> {
-    phJsonQuery: PHJsonGraphQuery<EQ>;
+export declare class PHGraphQuery<IE extends IEntity> implements PHQuery<IE> {
+    phJsonQuery: PHJsonGraphQuery<IE>;
     qEntity: QEntity<any>;
     qEntityMap: {
         [entityName: string]: QEntity<any>;
@@ -33,7 +34,7 @@ export declare class PHGraphQuery<EQ extends IEntity> {
     childMap: {
         [entity: string]: PHGraphQuery<any>;
     };
-    constructor(phJsonQuery: PHJsonGraphQuery<EQ>, qEntity: QEntity<any>, qEntityMap: {
+    constructor(phJsonQuery: PHJsonGraphQuery<IE>, qEntity: QEntity<any>, qEntityMap: {
         [entityName: string]: QEntity<any>;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
@@ -49,5 +50,5 @@ export declare class PHGraphQuery<EQ extends IEntity> {
     assignMissingExecOrders(execOrders: number[]): void;
     gatherExecOrders(execOrders: number[]): void;
     validateQuery(query: JSONBaseOperation, entityName: string): void;
-    validateFieldsAndChildren(fields: EQ): void;
+    validateFieldsAndChildren(fields: IE): void;
 }

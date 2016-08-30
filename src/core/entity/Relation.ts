@@ -32,7 +32,6 @@ function getNextAlias(): string {
 export interface RelationRecord {
 
 	entityName: string;
-	decoratorElements: {[key: string]: any};
 	propertyName: string;
 	relationType: RelationType;
 

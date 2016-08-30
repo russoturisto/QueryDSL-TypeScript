@@ -1,6 +1,6 @@
 {
   "name": "querydsl-typescript",
-  "version": "0.0.45",
+  "version": "0.0.46",
   "description": "QueryDSL for TypeScript",
   "main": "lib/index.js",
   "typings": "lib/index",

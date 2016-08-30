@@ -32,7 +32,9 @@ import {
 	IQStringField,
 	QStringField
 } from "./core/field/StringField";
-import {ILogicalOperation, LogicalOperation} from "./core/operation/LogicalOperation";
+import {
+	ILogicalOperation, LogicalOperation, JSONLogicalOperation, and, or, not
+} from "./core/operation/LogicalOperation";
 import {IOperation, Operation, JSONBaseOperation} from "./core/operation/Operation";
 import {OperationType} from "./core/operation/OperationType";
 import {RelationRecord, RelationType, IQRelation, QRelation, JSONRelation} from "./core/entity/Relation";
@@ -55,8 +57,11 @@ import {SqLiteAdaptor} from "./query/sql/adaptor/SqLiteAdaptor";
 import {ISQLAdaptor, getSQLAdaptor} from "./query/sql/adaptor/SQLAdaptor";
 import {SQLDialect, SQLDataType, SQLStringQuery} from "./query/sql/SQLStringQuery";
 import {PHRawSQLQuery, PHJsonSQLQuery, JoinType, PHSQLQuery} from "./query/sql/PHSQLQuery";
+import {PHQuery, PHRawQuery} from "./query/PHQuery";
 
 export {
+	PHQuery,
+	PHRawQuery,
 	PHSQLQuery,
 	PHJsonSQLQuery,
 	PHRawSQLQuery,
@@ -125,6 +130,10 @@ export {
 	JSONStringOperation,
 	IStringOperation,
 	StringOperation,
+	and,
+	or,
+	not,
+	JSONLogicalOperation,
 	ILogicalOperation,
 	LogicalOperation,
 	JSONBaseOperation,

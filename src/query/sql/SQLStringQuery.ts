@@ -613,7 +613,7 @@ ${whereFragment}`;
 
 		let entityAlias = this.joinAliasMap[entityName];
 
-		let resultObject = {};
+		let resultObject = new qEntity.__entityConstructor__();
 
 		for (let propertyName in selectClauseFragment) {
 			if (selectClauseFragment[propertyName] === undefined) {

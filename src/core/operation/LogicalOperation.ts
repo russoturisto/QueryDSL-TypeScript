@@ -3,6 +3,24 @@
  */
 import {IOperation, Operation, JSONBaseOperation} from "./Operation";
 
+export function and(
+	...ops:JSONBaseOperation[]
+):JSONLogicalOperation {
+	return new LogicalOperation().and(ops);
+}
+
+export function or(
+	...ops:JSONBaseOperation[]
+):JSONLogicalOperation {
+	return new LogicalOperation().or(ops);
+}
+
+export function not(
+	op:JSONBaseOperation
+):JSONLogicalOperation {
+	return new LogicalOperation().not([op]);
+}
+
 export interface JSONLogicalOperation extends JSONBaseOperation {
 	"$and"?:JSONBaseOperation[];
 	"$not"?:JSONBaseOperation;
