@@ -1,7 +1,5 @@
 import { IQEntity } from "./Entity";
-/**
- * Created by Papa on 4/26/2016.
- */
+import { JoinType } from "../../query/sql/PHSQLQuery";
 export interface RelationRecord {
     entityName: string;
     decoratorElements: {
@@ -14,6 +12,15 @@ export declare enum RelationType {
     ONE_TO_MANY = 0,
     MANY_TO_ONE = 1,
 }
+export interface JSONRelation {
+    alias: string;
+    entityName: string;
+    joinType: JoinType;
+    parentEntityAlias: string;
+    relationPropertyName: string;
+}
+export declare const INNER_JOIN: string;
+export declare const LEFT_JOIN: string;
 export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
     q: IQ;
     qConstructor: new () => IQ;
@@ -21,13 +28,19 @@ export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
     relationType: RelationType;
     relationEntityConstructor: new () => R;
     relationQEntityConstructor: new () => IQR;
+    innerJoin(): any;
+    leftJoin(): any;
 }
 export declare class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> implements IQRelation<IQR, R, IQ> {
     q: IQ;
     qConstructor: new () => IQ;
     relationType: RelationType;
+    entityName: string;
     propertyName: string;
     relationEntityConstructor: new () => R;
-    relationQEntityConstructor: new () => IQR;
-    constructor(q: IQ, qConstructor: new () => IQ, relationType: RelationType, propertyName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new () => IQR);
+    relationQEntityConstructor: new (...args: any[]) => IQR;
+    constructor(q: IQ, qConstructor: new () => IQ, relationType: RelationType, entityName: string, propertyName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR);
+    innerJoin(): IQR;
+    leftJoin(): IQR;
+    private getNewQEntity(joinType);
 }

@@ -5,55 +5,15 @@ import {JSONBaseOperation, Operation, IOperation} from "./Operation";
  */
 
 export interface JSONBooleanOperation extends JSONBaseOperation {
-	"$eq"?: boolean;
-	"$exists"?: boolean;
-	"$ne"?: boolean;
 }
 
-export interface IBooleanOperation extends IOperation {
-
-	equals(
-		value:boolean
-	):JSONBooleanOperation;
-
-	exists(
-		exists:boolean
-	):JSONBooleanOperation;
-
-	notEquals(
-		value:boolean
-	):JSONBooleanOperation;
-
+export interface IBooleanOperation extends IOperation<boolean, JSONBooleanOperation> {
 }
 
-export class BooleanOperation extends Operation implements IBooleanOperation {
+export class BooleanOperation extends Operation<boolean, JSONBooleanOperation> implements IBooleanOperation {
 
 	constructor() {
 		super(FieldType.BOOLEAN);
-	}
-
-	equals(
-		value:boolean
-	):JSONBooleanOperation {
-		return {
-		    $eq: value
-        };
-	}
-
-	exists(
-		exists:boolean
-	):JSONBooleanOperation {
-        return {
-            $exists: exists
-        };
-	}
-
-	notEquals(
-		value:boolean
-	):JSONBooleanOperation {
-        return {
-            $ne: value
-        };
 	}
 
 }

@@ -1,24 +1,15 @@
-import {JSONBaseOperation} from "../operation/Operation";
 import {IQEntity} from "../entity/Entity";
 import {IQField, QField, FieldType} from "./Field";
-import {DateOperation} from "../operation/DateOperation";
+import {DateOperation, JSONDateOperation, IDateOperation} from "../operation/DateOperation";
 /**
  * Created by Papa on 8/11/2016.
  */
 
 
-export interface JSONDateFieldOperation extends JSONBaseOperation {
+export interface JSONDateFieldOperation extends JSONDateOperation {
 }
 
-export interface IQDateField<IQ extends IQEntity> extends IQField<IQ> {
-
-    equals(
-        value:Date
-    ):JSONDateFieldOperation;
-
-    exists(
-        exists:boolean
-    ):JSONDateFieldOperation;
+export interface IQDateField<IQ extends IQEntity> extends IQField<IQ, Date, JSONDateFieldOperation, IDateOperation> {
 
     greaterThan(
         greaterThan:Date
@@ -26,10 +17,6 @@ export interface IQDateField<IQ extends IQEntity> extends IQField<IQ> {
 
     greaterThanOrEquals(
         greaterThanOrEquals:Date
-    ):JSONDateFieldOperation;
-
-    isIn(
-        values:Date[]
     ):JSONDateFieldOperation;
 
     lessThan(
@@ -40,19 +27,9 @@ export interface IQDateField<IQ extends IQEntity> extends IQField<IQ> {
         lessThanOrEquals:Date
     ):JSONDateFieldOperation;
 
-    notEquals(
-        value:Date
-    ):JSONDateFieldOperation;
-
-    notIn(
-        values:Date[]
-    ):JSONDateFieldOperation;
-
 }
 
-export class QDateField<IQ extends IQEntity> extends QField<IQ> implements IQDateField<IQ> {
-
-    dateOperation:DateOperation = new DateOperation();
+export class QDateField<IQ extends IQEntity> extends QField<IQ, Date, JSONDateFieldOperation, IDateOperation> implements IQDateField<IQ> {
 
     constructor(
         q:IQ,
@@ -60,61 +37,31 @@ export class QDateField<IQ extends IQEntity> extends QField<IQ> implements IQDat
         entityName:string,
         fieldName:string
     ) {
-        super(q, qConstructor, entityName, fieldName, FieldType.DATE);
-    }
-
-    equals(
-        value:Date
-    ):JSONDateFieldOperation {
-        return this.setOperation(this.dateOperation.equals(value));
-    }
-
-    exists(
-        exists:boolean
-    ):JSONDateFieldOperation {
-        return this.setOperation(this.dateOperation.exists(exists));
+        super(q, qConstructor, entityName, fieldName, FieldType.DATE, new DateOperation());
     }
 
     greaterThan(
         greaterThan:Date
     ):JSONDateFieldOperation {
-        return this.setOperation(this.dateOperation.greaterThan(greaterThan));
+        return this.setOperation(this.operation.greaterThan(greaterThan));
     }
 
     greaterThanOrEquals(
         greaterThanOrEquals:Date
     ):JSONDateFieldOperation {
-        return this.setOperation(this.dateOperation.greaterThanOrEquals(greaterThanOrEquals));
-    }
-
-    isIn(
-        values:Date[]
-    ):JSONDateFieldOperation {
-        return this.setOperation(this.dateOperation.isIn(values));
+        return this.setOperation(this.operation.greaterThanOrEquals(greaterThanOrEquals));
     }
 
     lessThan(
         lessThan:Date
     ):JSONDateFieldOperation {
-        return this.setOperation(this.dateOperation.lessThan(lessThan));
+        return this.setOperation(this.operation.lessThan(lessThan));
     }
 
     lessThanOrEquals(
         lessThanOrEquals:Date
     ):JSONDateFieldOperation {
-        return this.setOperation(this.dateOperation.lessThanOrEquals(lessThanOrEquals));
-    }
-
-    notEquals(
-        value:Date
-    ):JSONDateFieldOperation {
-        return this.setOperation(this.dateOperation.notEquals(value));
-    }
-
-    notIn(
-        values:Date[]
-    ):JSONDateFieldOperation {
-        return this.setOperation(this.dateOperation.notIn(values));
+        return this.setOperation(this.operation.lessThanOrEquals(lessThanOrEquals));
     }
 
 }

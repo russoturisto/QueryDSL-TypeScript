@@ -1,19 +1,9 @@
-import { IEntity, QEntity } from "../core/entity/Entity";
-import { PHJsonQuery } from "./PHQuery";
+import { PHJsonSQLQuery } from "./PHSQLQuery";
 import { RelationRecord } from "../core/entity/Relation";
-import { JSONLogicalOperation } from "../core/operation/LogicalOperation";
-import { JSONBaseOperation } from "../core/operation/Operation";
-/**
- * Created by Papa on 8/12/2016.
- */
-export interface PHJsonSQLQuery<EQ extends IEntity> {
-    select: EQ;
-    fields: EQ;
-    where: JSONBaseOperation;
-    execOrder: number;
-}
-export declare class PHSQLQuery<IE extends IEntity> {
-    phJsonQuery: PHJsonQuery;
+import { IEntity, QEntity } from "../core/entity/Entity";
+import { QueryTreeNode } from "./QueryTreeNode";
+export declare class SQLQuery<IE extends IEntity> {
+    phJsonQuery: PHJsonSQLQuery<IE>;
     qEntity: QEntity<any>;
     qEntityMap: {
         [entityName: string]: QEntity<any>;
@@ -28,7 +18,11 @@ export declare class PHSQLQuery<IE extends IEntity> {
             [propertyName: string]: boolean;
         };
     };
-    constructor(phJsonQuery: PHJsonQuery, qEntity: QEntity<any>, qEntityMap: {
+    aliasMap: {
+        [key: string]: string;
+    };
+    currentAliasIndex: number;
+    constructor(phJsonQuery: PHJsonSQLQuery<IE>, qEntity: QEntity<any>, qEntityMap: {
         [entityName: string]: QEntity<any>;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
@@ -40,8 +34,8 @@ export declare class PHSQLQuery<IE extends IEntity> {
         };
     });
     toSQL(): string;
-    toWhereFragment(operation: JSONBaseOperation): string;
-    toLogicalWhereFragment(logicalOperation: JSONLogicalOperation): string;
-    toAndOrWhereFragment(operations: JSONBaseOperation[], sqlLogicalOperator: any): string;
-    getLogicalOperator(logicalOperation: JSONLogicalOperation): string;
+    getSelectFragment(entityMapping: string, existingSelectFragment: string, selectClauseFragment: any): string;
+    getFromFragment(): string;
+    getQueryTree(): QueryTreeNode;
+    parseSQL(): any;
 }

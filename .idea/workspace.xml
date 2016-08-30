@@ -1,32 +1,92 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/core/operation/Operation.ts" line="0" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/src/core/field/Field.ts" line="57" mnemonic="1" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8322ebc1-9272-4c63-9e9f-f1c51e544bcc" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/QueryDSL_TypeScript_node_modules.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/query/PHQuery.ts" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/SQLQuery.ts" afterPath="$PROJECT_DIR$/src/query/PHSQLQuery.ts" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts" afterPath="$PROJECT_DIR$/src/query/pouchdb/PouchDbGraphQuery.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/QueryDSL-TypeScript.iml" afterPath="$PROJECT_DIR$/.idea/QueryDSL-TypeScript.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/entity/EntityMetadata.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/entity/metadata/ColumnDecorators.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/entity/metadata/EntityDecorators.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/entity/metadata/Types.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/noSql/QueryTreeNode.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/noSql/pouchdb/PouchDbGraphQuery.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/sql/adaptor/OracleAdaptor.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/sql/adaptor/SQLAdaptor.ts" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/sql/adaptor/SqLiteAdaptor.ts" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/core/operation/example.txt" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/query/PHSQLQuery.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/query/pouchdb/PouchDbGraphQuery.ts" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/PHGraphQuery.ts" afterPath="$PROJECT_DIR$/src/query/noSql/PHGraphQuery.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.d.ts" afterPath="$PROJECT_DIR$/lib/core/entity/Entity.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.js" afterPath="$PROJECT_DIR$/lib/core/entity/Entity.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/Entity.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.d.ts" afterPath="$PROJECT_DIR$/lib/core/entity/Relation.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.js" afterPath="$PROJECT_DIR$/lib/core/entity/Relation.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/Relation.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/BooleanField.d.ts" afterPath="$PROJECT_DIR$/lib/core/field/BooleanField.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/BooleanField.js" afterPath="$PROJECT_DIR$/lib/core/field/BooleanField.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/BooleanField.js.map" afterPath="$PROJECT_DIR$/lib/core/field/BooleanField.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/DateField.d.ts" afterPath="$PROJECT_DIR$/lib/core/field/DateField.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/DateField.js" afterPath="$PROJECT_DIR$/lib/core/field/DateField.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/DateField.js.map" afterPath="$PROJECT_DIR$/lib/core/field/DateField.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/Field.d.ts" afterPath="$PROJECT_DIR$/lib/core/field/Field.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/Field.js" afterPath="$PROJECT_DIR$/lib/core/field/Field.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/Field.js.map" afterPath="$PROJECT_DIR$/lib/core/field/Field.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/NumberField.d.ts" afterPath="$PROJECT_DIR$/lib/core/field/NumberField.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/NumberField.js" afterPath="$PROJECT_DIR$/lib/core/field/NumberField.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/NumberField.js.map" afterPath="$PROJECT_DIR$/lib/core/field/NumberField.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/StringField.d.ts" afterPath="$PROJECT_DIR$/lib/core/field/StringField.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/StringField.js" afterPath="$PROJECT_DIR$/lib/core/field/StringField.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/StringField.js.map" afterPath="$PROJECT_DIR$/lib/core/field/StringField.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/DateOperation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/DateOperation.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/DateOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/DateOperation.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/DateOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/DateOperation.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/NumberOperation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/NumberOperation.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/NumberOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/NumberOperation.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/NumberOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/NumberOperation.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/Operation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/Operation.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/Operation.js" afterPath="$PROJECT_DIR$/lib/core/operation/Operation.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/Operation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/Operation.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/StringOperation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/StringOperation.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/StringOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/StringOperation.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/StringOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/StringOperation.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.d.ts" afterPath="$PROJECT_DIR$/lib/index.d.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.js" afterPath="$PROJECT_DIR$/lib/index.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.js.map" afterPath="$PROJECT_DIR$/lib/index.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/PHGraphQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/PHGraphQuery.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/PHGraphQuery.js" afterPath="$PROJECT_DIR$/lib/query/PHGraphQuery.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/PHGraphQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/PHGraphQuery.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/PHSQLQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/PHSQLQuery.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/PHSQLQuery.js" afterPath="$PROJECT_DIR$/lib/query/PHSQLQuery.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/PHSQLQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/PHSQLQuery.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/SQLQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/SQLQuery.d.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/SQLQuery.js" afterPath="$PROJECT_DIR$/lib/query/SQLQuery.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/SQLQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/SQLQuery.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQueryAllInOne.js" afterPath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQueryAllInOne.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQueryAllInOne.js.map" afterPath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbQueryAllInOne.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbGraphQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbGraphQuery.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbGraphQuery.js" afterPath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbGraphQuery.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbGraphQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/pouchdb/PouchDbGraphQuery.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/entity/Entity.ts" afterPath="$PROJECT_DIR$/src/core/entity/Entity.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/entity/Relation.ts" afterPath="$PROJECT_DIR$/src/core/entity/Relation.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/field/BooleanField.ts" afterPath="$PROJECT_DIR$/src/core/field/BooleanField.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/field/DateField.ts" afterPath="$PROJECT_DIR$/src/core/field/DateField.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/field/Field.ts" afterPath="$PROJECT_DIR$/src/core/field/Field.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/field/NumberField.ts" afterPath="$PROJECT_DIR$/src/core/field/NumberField.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/field/StringField.ts" afterPath="$PROJECT_DIR$/src/core/field/StringField.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/BooleanOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/BooleanOperation.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/DateOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/DateOperation.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/NumberOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/NumberOperation.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/Operation.ts" afterPath="$PROJECT_DIR$/src/core/operation/Operation.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/StringOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/StringOperation.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/index.ts" afterPath="$PROJECT_DIR$/src/index.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/PHGraphQuery.ts" afterPath="$PROJECT_DIR$/src/query/PHGraphQuery.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts" afterPath="$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts" />
     </list>
     <ignored path="QueryDSL-TypeScript.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -48,26 +108,26 @@
             <split-first>
               <leaf>
                 <file leaf-file-name="PHSQLQuery.ts" pinned="false" current-in-tab="true">
-                  <entry file="file://$PROJECT_DIR$/src/query/PHSQLQuery.ts">
+                  <entry file="file://$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts">
                     <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="102">
-                        <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+                      <state relative-caret-position="255">
+                        <caret line="17" column="24" selection-start-line="17" selection-start-column="24" selection-end-line="17" selection-end-column="24" />
                         <folding>
-                          <element signature="e#0#55#0" expanded="true" />
-                          <element signature="n#!!doc;n#PHJsonSQLQuery#0" expanded="false" />
+                          <element signature="e#0#68#0" expanded="true" />
+                          <element signature="n#!!doc;n#PHRawSQLQuery#0" expanded="false" />
                         </folding>
                       </state>
                     </provider>
                   </entry>
                 </file>
-                <file leaf-file-name="Field.ts" pinned="false" current-in-tab="false">
-                  <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
+                <file leaf-file-name="SQLAdaptor.ts" pinned="false" current-in-tab="false">
+                  <entry file="file://$PROJECT_DIR$/src/query/sql/adaptor/SQLAdaptor.ts">
                     <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="170">
-                        <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+                      <state relative-caret-position="323">
+                        <caret line="21" column="12" selection-start-line="21" selection-start-column="12" selection-end-line="21" selection-end-column="12" />
                         <folding>
-                          <element signature="e#41#83#0" expanded="true" />
-                          <marker date="1471604434459" expanded="true" signature="1014:1018" ph="{...}" />
+                          <element signature="e#0#58#0" expanded="true" />
+                          <element signature="n#!!doc;n#ISQLAdaptor#0" expanded="false" />
                         </folding>
                       </state>
                     </provider>
@@ -77,14 +137,26 @@
             </split-first>
             <split-second>
               <leaf>
-                <file leaf-file-name="Field.ts" pinned="false" current-in-tab="true">
-                  <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
+                <file leaf-file-name="Relation.ts" pinned="false" current-in-tab="false">
+                  <entry file="file://$PROJECT_DIR$/src/core/entity/Relation.ts">
                     <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="170">
-                        <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+                      <state relative-caret-position="623">
+                        <caret line="80" column="43" selection-start-line="80" selection-start-column="43" selection-end-line="80" selection-end-column="43" />
                         <folding>
-                          <element signature="e#41#83#0" expanded="true" />
-                          <marker date="1471604434459" expanded="true" signature="1014:1018" ph="{...}" />
+                          <element signature="e#0#43#0" expanded="true" />
+                        </folding>
+                      </state>
+                    </provider>
+                  </entry>
+                </file>
+                <file leaf-file-name="OracleAdaptor.ts" pinned="false" current-in-tab="true">
+                  <entry file="file://$PROJECT_DIR$/src/query/sql/adaptor/OracleAdaptor.ts">
+                    <provider selected="true" editor-type-id="text-editor">
+                      <state relative-caret-position="357">
+                        <caret line="23" column="20" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
+                        <folding>
+                          <element signature="e#0#58#0" expanded="true" />
+                          <element signature="n#!!doc;n#OracleAdaptor#0" expanded="false" />
                         </folding>
                       </state>
                     </provider>
@@ -105,72 +177,25 @@
     <splitter split-orientation="horizontal" split-proportion="0.48602673">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-          <file leaf-file-name="PHGraphQuery.ts" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/query/PHGraphQuery.ts">
+          <file leaf-file-name="PHSQLQuery.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="179">
-                  <caret line="16" column="19" selection-start-line="16" selection-start-column="19" selection-end-line="16" selection-end-column="19" />
+                <state relative-caret-position="85">
+                  <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
                   <folding>
-                    <element signature="e#0#55#0" expanded="true" />
-                    <element signature="e#175#215#0" expanded="false" />
+                    <element signature="e#0#68#0" expanded="true" />
+                    <element signature="n#!!doc;n#PHRawSQLQuery#0" expanded="false" />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="index.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/index.ts">
+          <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/package.json">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1292">
-                  <caret line="78" column="14" selection-start-line="78" selection-start-column="14" selection-end-line="78" selection-end-column="14" />
-                  <folding>
-                    <element signature="e#42#150#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Entity.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="629">
-                  <caret line="40" column="22" selection-start-line="40" selection-start-column="22" selection-end-line="40" selection-end-column="22" />
+                <state relative-caret-position="34">
+                  <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="20" />
                   <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="LogicalOperation.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalOperation.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="442">
-                  <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="StringField.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/field/StringField.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="187">
-                  <caret line="16" column="31" selection-start-line="16" selection-start-column="31" selection-end-line="16" selection-end-column="31" />
-                  <folding>
-                    <element signature="n#!!doc;n#JSONStringFieldOperation#0" expanded="false" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="BooleanField.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/core/field/BooleanField.ts">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="102">
-                  <caret line="9" column="42" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="42" />
-                  <folding>
-                    <element signature="e#0#57#0" expanded="true" />
-                    <element signature="n#!!doc;n#JSONBooleanFieldOperation#0" expanded="false" />
-                  </folding>
                 </state>
               </provider>
             </entry>
@@ -179,25 +204,24 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="PouchDbGraphQuery.ts" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbGraphQuery.ts">
+          <file leaf-file-name="LogicalOperation.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalOperation.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="234">
-                  <caret line="77" column="29" selection-start-line="77" selection-start-column="29" selection-end-line="77" selection-end-column="29" />
-                  <folding>
-                    <element signature="e#0#72#0" expanded="true" />
-                    <element signature="n#!!doc;n#require#0" expanded="false" />
-                  </folding>
+                <state relative-caret-position="113">
+                  <caret line="41" column="6" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="6" />
+                  <folding />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="PouchDbQueryAllInOne.ts" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts">
+          <file leaf-file-name="index.ts" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/index.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1683">
-                  <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-                  <folding />
+                <state relative-caret-position="203">
+                  <caret line="98" column="14" selection-start-line="98" selection-start-column="2" selection-end-line="98" selection-end-column="14" />
+                  <folding>
+                    <element signature="e#42#150#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
@@ -219,21 +243,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/core/operation/OperationType.ts" />
-        <option value="$PROJECT_DIR$/core/entity/Entity.ts" />
-        <option value="$PROJECT_DIR$/core/field/Field.ts" />
-        <option value="$PROJECT_DIR$/core/operation/ComparisonOperation.ts" />
-        <option value="$PROJECT_DIR$/core/operation/LogicalOperation.ts" />
-        <option value="$PROJECT_DIR$/core/operation/Operation.ts" />
-        <option value="$PROJECT_DIR$/core/field/StringField.ts" />
-        <option value="$PROJECT_DIR$/README.md" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/tsconfig.json" />
-        <option value="$PROJECT_DIR$/src/core/QueryFragment.ts" />
-        <option value="$PROJECT_DIR$/QdTs-PH/repository/SisCurriculumTemplatesVwRepository.ts" />
-        <option value="$PROJECT_DIR$/src/core/QueryEngine.ts" />
-        <option value="$PROJECT_DIR$/typings.json" />
-        <option value="$PROJECT_DIR$/src/core/utils/EntityUtils.ts" />
         <option value="$PROJECT_DIR$/src/pouchdb/QueryFragment.ts" />
         <option value="$PROJECT_DIR$/src/pouchdb/PouchDbQueryEngine.ts" />
         <option value="$PROJECT_DIR$/src/pouchdb/PHQuery.ts" />
@@ -241,35 +250,50 @@
         <option value="$PROJECT_DIR$/src/core/operation/LogicalFieldOperation.ts" />
         <option value="$PROJECT_DIR$/src/core/operation/QueryOperation.ts" />
         <option value="$PROJECT_DIR$/src/pouchdb/PouchDbQuery.ts" />
-        <option value="$PROJECT_DIR$/src/core/entity/Entity.ts" />
-        <option value="$PROJECT_DIR$/src/core/entity/Relation.ts" />
         <option value="$PROJECT_DIR$/src/query/IEntityQuery.ts" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/src/query/pouchdb/PouchDbQuery.ts" />
         <option value="$PROJECT_DIR$/src/core/operation/FieldOperation.ts" />
         <option value="$PROJECT_DIR$/src/core/field/NumberOperation.ts" />
-        <option value="$PROJECT_DIR$/src/core/field/BooleanField.ts" />
-        <option value="$PROJECT_DIR$/src/core/operation/BooleanOperation.ts" />
-        <option value="$PROJECT_DIR$/src/core/field/NumberField.ts" />
-        <option value="$PROJECT_DIR$/src/core/operation/NumberOperation.ts" />
-        <option value="$PROJECT_DIR$/src/core/operation/DateOperation.ts" />
-        <option value="$PROJECT_DIR$/src/core/field/DateField.ts" />
-        <option value="$PROJECT_DIR$/src/core/field/StringField.ts" />
-        <option value="$PROJECT_DIR$/src/core/operation/StringOperation.ts" />
-        <option value="$PROJECT_DIR$/src/core/field/Field.ts" />
-        <option value="$PROJECT_DIR$/src/core/operation/Operation.ts" />
         <option value="$PROJECT_DIR$/src/core/operation/example.txt" />
         <option value="$PROJECT_DIR$/src/query/pouchdb/SQLQuery.ts" />
-        <option value="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" />
         <option value="$PROJECT_DIR$/src/query/PHQueryDslQuery.ts" />
         <option value="$PROJECT_DIR$/src/query/PHQueryDsl.ts" />
         <option value="$PROJECT_DIR$/src/query/PHQuery.ts" />
-        <option value="$PROJECT_DIR$/src/index.ts" />
-        <option value="$PROJECT_DIR$/src/query/SQLQuery.ts" />
-        <option value="$PROJECT_DIR$/src/query/PHSQLQuery.ts" />
         <option value="$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts" />
         <option value="$PROJECT_DIR$/src/query/PHGraphQuery.ts" />
         <option value="$PROJECT_DIR$/src/query/pouchdb/PouchDbGraphQuery.ts" />
+        <option value="$PROJECT_DIR$/src/core/entity/metadata/Types.ts" />
+        <option value="$PROJECT_DIR$/src/query/QueryTreeNode.ts" />
+        <option value="$PROJECT_DIR$/src/core/entity/metadata/EntityDecorators.ts" />
+        <option value="$PROJECT_DIR$/src/query/PHSQLQuery.ts" />
+        <option value="$PROJECT_DIR$/src/query/SQLQuery.ts" />
+        <option value="$PROJECT_DIR$/src/core/entity/EntityMetadata.ts" />
+        <option value="$PROJECT_DIR$/src/core/entity/metadata/ColumnDecorators.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/DateOperation.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/BooleanOperation.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/StringOperation.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/NumberOperation.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/Operation.ts" />
+        <option value="$PROJECT_DIR$/src/core/field/Field.ts" />
+        <option value="$PROJECT_DIR$/src/core/field/NumberField.ts" />
+        <option value="$PROJECT_DIR$/src/core/field/DateField.ts" />
+        <option value="$PROJECT_DIR$/src/core/field/StringField.ts" />
+        <option value="$PROJECT_DIR$/src/core/field/BooleanField.ts" />
+        <option value="$PROJECT_DIR$/src/core/entity/Relation.ts" />
+        <option value="$PROJECT_DIR$/src/query/sql/adaptor/MySql.ts" />
+        <option value="$PROJECT_DIR$/src/query/sql/adaptor/Oracle.ts" />
+        <option value="$PROJECT_DIR$/src/query/SQLStringQuery.ts" />
+        <option value="$PROJECT_DIR$/src/query/onSql/PHGraphQuery.ts" />
+        <option value="$PROJECT_DIR$/src/query/sql/adaptor/MySqlAdaptor.ts" />
+        <option value="$PROJECT_DIR$/src/query/sql/adaptor/OracleAdaptor.ts" />
+        <option value="$PROJECT_DIR$/src/query/noSql/pouchdb/PouchDbGraphQuery.ts" />
+        <option value="$PROJECT_DIR$/src/core/entity/Entity.ts" />
+        <option value="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" />
+        <option value="$PROJECT_DIR$/src/query/sql/adaptor/SqLiteAdaptor.ts" />
+        <option value="$PROJECT_DIR$/src/query/sql/adaptor/SQLAdaptor.ts" />
+        <option value="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" />
+        <option value="$PROJECT_DIR$/src/index.ts" />
+        <option value="$PROJECT_DIR$/package.json" />
       </list>
     </option>
   </component>
@@ -392,6 +416,80 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="sql" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QueryDSL-TypeScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QueryDSL-TypeScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="query" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="sql" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="adaptor" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QueryDSL-TypeScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QueryDSL-TypeScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="query" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="noSql" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QueryDSL-TypeScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QueryDSL-TypeScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="query" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="noSql" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="pouchdb" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -458,6 +556,54 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QueryDSL-TypeScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QueryDSL-TypeScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="entity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QueryDSL-TypeScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="QueryDSL-TypeScript" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="entity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="metadata" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -472,16 +618,17 @@
     <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\src\query" />
-      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\src" />
-      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\core" />
-      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\querydsl-core\src\javax\annotation\concurrent" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\src\query\pouchdb" />
       <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript" />
       <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\querydsl-core\src\com\querydsl\core\types" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\src\query\onSql" />
+      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\src\query\sql" />
+      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\src\query" />
+      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\src" />
+      <recent name="C:\Users\Papa\Documents\GitHub\QueryDSL-TypeScript\core" />
     </key>
   </component>
   <component name="RunManager" selected="Node.js.ph-dev-tools">
@@ -597,26 +744,26 @@
       <workItem from="1471532837000" duration="1793000" />
       <workItem from="1471604775371" duration="144000" />
       <workItem from="1471605137855" duration="38000" />
-      <workItem from="1471605185102" duration="8260000" />
+      <workItem from="1471605185102" duration="78720000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="277355000" />
+    <option name="totallyTimeSpent" value="347815000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32502595" sideWeight="0.4873551" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13645943" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3219107" sideWeight="0.42781875" order="6" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30737278" sideWeight="0.4520548" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3219107" sideWeight="0.4325606" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30633438" sideWeight="0.44783983" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3219107" sideWeight="0.5721812" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3219107" sideWeight="0.56743944" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -659,38 +806,11 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="5" />
+      <option name="time" value="6" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/querydsl-core/src/com/querydsl/core/types/ExpressionUtils.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1355">
-          <caret line="275" column="40" selection-start-line="275" selection-start-column="40" selection-end-line="275" selection-end-column="40" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/immutable/dist/immutable.js" />
-    <entry file="file://$PROJECT_DIR$/lib/entity/Entity.d.ts" />
-    <entry file="file://$PROJECT_DIR$/lib/index.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="47" selection-start-line="4" selection-start-column="47" selection-end-line="4" selection-end-column="47" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.orig.json" />
-    <entry file="file://$USER_HOME$/AppData/Local/Temp/$comment.url" />
-    <entry file="file://$PROJECT_DIR$/lib/operation/ComparisonOperation.js" />
-    <entry file="file://$PROJECT_DIR$/README.md" />
     <entry file="file://$PROJECT_DIR$/node_modules/immutable/package.json" />
     <entry file="file://$PROJECT_DIR$/tsd.json" />
     <entry file="file://$PROJECT_DIR$/.gitignore">
@@ -768,183 +888,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/entity/Relation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/IEntityQuery.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="25" selection-start-line="8" selection-start-column="25" selection-end-line="8" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operation/OperationType.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="4" column="12" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/operation/QueryOperation.ts" />
     <entry file="file://$PROJECT_DIR$/src/core/operation/FieldOperation.ts" />
-    <entry file="file://$PROJECT_DIR$/src/core/field/NumberField.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1802">
-          <caret line="108" column="20" selection-start-line="108" selection-start-column="20" selection-end-line="108" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#57#0" expanded="false" />
-            <element signature="n#!!doc;n#JSONNumberFieldOperation#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/field/DateField.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="259">
-          <caret line="58" column="33" selection-start-line="58" selection-start-column="33" selection-end-line="58" selection-end-column="33" />
-          <folding>
-            <element signature="e#0#57#0" expanded="false" />
-            <element signature="n#!!doc;n#JSONDateFieldOperation#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operation/DateOperation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-677">
-          <caret line="0" column="8" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-          <folding>
-            <element signature="n#!!doc;n#JSONDateOperation#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operation/NumberOperation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="61" column="16" selection-start-line="61" selection-start-column="16" selection-end-line="61" selection-end-column="16" />
-          <folding>
-            <element signature="e#0#41#0" expanded="false" />
-            <element signature="n#!!doc;n#JSONNumberOperation#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operation/StringOperation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="8" selection-start-line="0" selection-start-column="8" selection-end-line="0" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operation/BooleanOperation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="19" column="0" selection-start-line="19" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#41#0" expanded="false" />
-            <element signature="n#!!doc;n#JSONBooleanOperation#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalFieldOperation.ts" />
-    <entry file="file://$PROJECT_DIR$/src/core/field/BooleanField.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="9" column="42" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="42" />
-          <folding>
-            <element signature="e#0#57#0" expanded="true" />
-            <element signature="n#!!doc;n#JSONBooleanFieldOperation#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operation/example.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="1" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operation/Operation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalOperation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/field/StringField.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="16" column="31" selection-start-line="16" selection-start-column="31" selection-end-line="16" selection-end-column="31" />
-          <folding>
-            <element signature="n#!!doc;n#JSONStringFieldOperation#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="629">
-          <caret line="40" column="22" selection-start-line="40" selection-start-column="22" selection-end-line="40" selection-end-column="22" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1292">
-          <caret line="78" column="14" selection-start-line="78" selection-start-column="14" selection-end-line="78" selection-end-column="14" />
-          <folding>
-            <element signature="e#42#150#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="13" column="0" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-          <folding>
-            <element signature="e#41#83#0" expanded="true" />
-            <marker date="1471604434459" expanded="true" signature="1014:1018" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/PHSQLQuery.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="8" column="0" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#55#0" expanded="true" />
-            <element signature="n#!!doc;n#PHJsonSQLQuery#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/query/PHQuery.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
@@ -955,31 +901,323 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbQueryAllInOne.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1683">
+        <state relative-caret-position="-612">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/PHGraphQuery.ts">
+    <entry file="file://$PROJECT_DIR$/src/query/noSql/QueryTreeNode.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="16" column="19" selection-start-line="16" selection-start-column="19" selection-end-line="16" selection-end-column="19" />
+        <state relative-caret-position="255">
+          <caret line="17" column="40" selection-start-line="17" selection-start-column="28" selection-end-line="17" selection-end-column="40" />
           <folding>
-            <element signature="e#0#55#0" expanded="true" />
-            <element signature="e#175#215#0" expanded="false" />
+            <element signature="e#0#49#0" expanded="true" />
+            <element signature="e#107#147#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/pouchdb/PouchDbGraphQuery.ts">
+    <entry file="file://$PROJECT_DIR$/src/core/operation/DateOperation.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="77" column="29" selection-start-line="77" selection-start-column="29" selection-end-line="77" selection-end-column="29" />
+        <state relative-caret-position="129">
+          <caret line="11" column="15" selection-start-line="11" selection-start-column="15" selection-end-line="11" selection-end-column="15" />
           <folding>
-            <element signature="e#0#72#0" expanded="true" />
+            <element signature="e#0#41#0" expanded="true" />
+            <element signature="n#!!doc;n#JSONDateOperation#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/field/DateField.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+            <element signature="n#!!doc;n#JSONDateFieldOperation#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/field/StringField.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+            <element signature="n#!!doc;n#JSONStringFieldOperation#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/field/NumberField.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#42#0" expanded="true" />
+            <element signature="n#!!doc;n#JSONNumberFieldOperation#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/NumberOperation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="12" column="17" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
+          <folding>
+            <element signature="n#!!doc;n#JSONNumberOperation#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/StringOperation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="1" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/sql/adaptor/OracleAdaptor.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="23" column="20" selection-start-line="23" selection-start-column="20" selection-end-line="23" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#58#0" expanded="true" />
+            <element signature="n#!!doc;n#OracleAdaptor#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/metadata/ColumnDecorators.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-647">
+          <caret line="91" column="26" selection-start-line="91" selection-start-column="26" selection-end-line="91" selection-end-column="26" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+            <element signature="e#98#138#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/metadata/EntityDecorators.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-412">
+          <caret line="6" column="17" selection-start-line="6" selection-start-column="17" selection-end-line="6" selection-end-column="17" />
+          <folding>
+            <element signature="n#!!doc;n#EntityConfiguration#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/metadata/Types.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="8" column="38" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="31">
+          <caret line="104" column="82" selection-start-line="104" selection-start-column="82" selection-end-line="104" selection-end-column="82" />
+          <folding>
+            <element signature="e#41#80#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/EntityMetadata.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="18" column="44" selection-start-line="18" selection-start-column="44" selection-end-line="18" selection-end-column="44" />
+          <folding>
+            <element signature="e#0#131#0" expanded="true" />
+            <element signature="n#!!doc;n#EntityMetadata#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/field/BooleanField.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="30" column="4" selection-start-line="30" selection-start-column="4" selection-end-line="30" selection-end-column="4" />
+          <folding>
+            <element signature="e#0#57#0" expanded="true" />
+            <element signature="n#!!doc;n#JSONBooleanFieldOperation#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="425">
+          <caret line="27" column="0" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+          <folding>
+            <element signature="e#41#83#0" expanded="true" />
+            <marker date="1472299145843" expanded="true" signature="1324:1328" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/example.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="1" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/OperationType.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="4" column="12" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/Operation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="6" column="17" selection-start-line="6" selection-start-column="17" selection-end-line="6" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/noSql/pouchdb/PouchDbGraphQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2160">
+          <caret line="0" column="53" selection-start-line="0" selection-start-column="53" selection-end-line="0" selection-end-column="53" />
+          <folding>
             <element signature="n#!!doc;n#require#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/BooleanOperation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="16" column="3" selection-start-line="16" selection-start-column="3" selection-end-line="16" selection-end-column="3" />
+          <folding>
+            <element signature="n#!!doc;n#JSONBooleanOperation#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/noSql/PHGraphQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2738">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#58#0" expanded="true" />
+            <element signature="e#184#224#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalOperation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="113">
+          <caret line="41" column="6" selection-start-line="41" selection-start-column="6" selection-end-line="41" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/sql/adaptor/SQLAdaptor.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="21" column="12" selection-start-line="21" selection-start-column="12" selection-end-line="21" selection-end-column="12" />
+          <folding>
+            <element signature="e#0#58#0" expanded="true" />
+            <element signature="n#!!doc;n#ISQLAdaptor#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/sql/adaptor/SqLiteAdaptor.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="6" column="19" selection-start-line="6" selection-start-column="19" selection-end-line="6" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#41#0" expanded="true" />
+            <element signature="n#!!doc;n#SqLiteAdaptor#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-10249">
+          <caret line="27" column="22" selection-start-line="27" selection-start-column="22" selection-end-line="27" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+            <element signature="e#695#735#0" expanded="false" />
+            <marker date="1472523597693" expanded="true" signature="5639:5866" ph="..." />
+            <marker date="1472523597693" expanded="true" signature="5644:5866" ph="..." />
+            <marker date="1472523597693" expanded="true" signature="7390:7722" ph="..." />
+            <marker date="1472523597693" expanded="true" signature="7395:7722" ph="..." />
+            <marker date="1472523597693" expanded="true" signature="7490:7722" ph="..." />
+            <marker date="1472523597693" expanded="true" signature="7495:7722" ph="..." />
+            <marker date="1472523597693" expanded="true" signature="13024:13170" ph="..." />
+            <marker date="1472523597693" expanded="true" signature="13029:13170" ph="..." />
+            <marker date="1472523597693" expanded="true" signature="16539:17263" ph="..." />
+            <marker date="1472523597693" expanded="true" signature="17912:18580" ph="..." />
+            <marker date="1472523597693" expanded="true" signature="21782:23568" ph="..." />
+            <marker date="1472523597693" expanded="true" signature="21782:23569" ph="..." />
+            <marker date="1472523597693" expanded="true" signature="21787:23568" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/Relation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="623">
+          <caret line="80" column="43" selection-start-line="80" selection-start-column="43" selection-end-line="80" selection-end-column="43" />
+          <folding>
+            <element signature="e#0#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/IEntityQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="203">
+          <caret line="98" column="14" selection-start-line="98" selection-start-column="2" selection-end-line="98" selection-end-column="14" />
+          <folding>
+            <element signature="e#42#150#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#68#0" expanded="true" />
+            <element signature="n#!!doc;n#PHRawSQLQuery#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="20" />
+          <folding />
         </state>
       </provider>
     </entry>

@@ -7,15 +7,15 @@ export interface JSONLogicalOperation extends JSONBaseOperation {
     "$not"?: JSONBaseOperation;
     "$or"?: JSONBaseOperation[];
 }
-export interface ILogicalOperation extends IOperation {
-    and(...ops: JSONBaseOperation[]): JSONBaseOperation;
-    or(...ops: JSONBaseOperation[]): JSONBaseOperation;
-    not(op: JSONBaseOperation): JSONBaseOperation;
+export interface ILogicalOperation extends IOperation<any, JSONLogicalOperation> {
+    and(...ops: JSONBaseOperation[]): JSONLogicalOperation;
+    or(...ops: JSONBaseOperation[]): JSONLogicalOperation;
+    not(op: JSONBaseOperation): JSONLogicalOperation;
 }
-export declare class LogicalOperation extends Operation implements ILogicalOperation {
-    static verifyChildOps(ops: IOperation[]): void;
+export declare class LogicalOperation extends Operation<any, JSONLogicalOperation> implements ILogicalOperation {
+    static verifyChildOps(ops: IOperation<any, JSONLogicalOperation>[]): void;
     constructor();
-    and(...ops: JSONBaseOperation[]): JSONBaseOperation;
-    or(...ops: JSONBaseOperation[]): JSONBaseOperation;
-    not(op: JSONBaseOperation): JSONBaseOperation;
+    and(...ops: JSONBaseOperation[]): JSONLogicalOperation;
+    or(...ops: JSONBaseOperation[]): JSONLogicalOperation;
+    not(op: JSONBaseOperation): JSONLogicalOperation;
 }

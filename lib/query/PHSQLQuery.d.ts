@@ -1,18 +1,26 @@
-import { IEntity, QEntity } from "../core/entity/Entity";
-import { PHJsonQuery } from "./PHQuery";
-import { RelationRecord } from "../core/entity/Relation";
+import { IEntity, QEntity, IQEntity } from "../core/entity/Entity";
+import { RelationRecord, JSONRelation } from "../core/entity/Relation";
 import { JSONLogicalOperation } from "../core/operation/LogicalOperation";
 import { JSONBaseOperation } from "../core/operation/Operation";
 /**
  * Created by Papa on 8/12/2016.
  */
-export interface PHJsonSQLQuery<EQ extends IEntity> {
-    select: EQ;
-    join?: any;
+export interface PHRawSQLQuery<IE extends IEntity> {
+    select: IE;
+    from?: IQEntity[];
     where?: JSONBaseOperation;
 }
+export interface PHJsonSQLQuery<IE extends IEntity> {
+    select: IE;
+    from?: JSONRelation[];
+    where?: JSONBaseOperation;
+}
+export declare enum JoinType {
+    INNER_JOIN = 0,
+    LEFT_JOIN = 1,
+}
 export declare class PHSQLQuery<IE extends IEntity> {
-    phJsonQuery: PHJsonQuery;
+    phRawQuery: PHRawSQLQuery<IE>;
     qEntity: QEntity<any>;
     qEntityMap: {
         [entityName: string]: QEntity<any>;
@@ -27,7 +35,7 @@ export declare class PHSQLQuery<IE extends IEntity> {
             [propertyName: string]: boolean;
         };
     };
-    constructor(phJsonQuery: PHJsonQuery, qEntity: QEntity<any>, qEntityMap: {
+    constructor(phRawQuery: PHRawSQLQuery<IE>, qEntity: QEntity<any>, qEntityMap: {
         [entityName: string]: QEntity<any>;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
@@ -38,7 +46,7 @@ export declare class PHSQLQuery<IE extends IEntity> {
             [propertyName: string]: boolean;
         };
     });
-    toSQL(): string;
+    toSQL(): PHJsonSQLQuery<IE>;
     toWhereFragment(operation: JSONBaseOperation): string;
     toLogicalWhereFragment(logicalOperation: JSONLogicalOperation): string;
     toAndOrWhereFragment(operations: JSONBaseOperation[], sqlLogicalOperator: any): string;

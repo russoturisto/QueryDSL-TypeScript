@@ -1,6 +1,6 @@
-import {IEntity, QEntity} from "../core/entity/Entity";
-import {RelationRecord} from "../core/entity/Relation";
-import {JSONBaseOperation} from "../core/operation/Operation";
+import {IEntity, QEntity} from "../../core/entity/Entity";
+import {RelationRecord} from "../../core/entity/Relation";
+import {JSONBaseOperation} from "../../core/operation/Operation";
 /**
  * Created by Papa on 8/15/2016.
  */

@@ -1,24 +1,15 @@
-import {JSONBaseOperation} from "../operation/Operation";
 import {IQEntity} from "../entity/Entity";
 import {IQField, QField, FieldType} from "./Field";
-import {NumberOperation} from "../operation/NumberOperation";
+import {NumberOperation, JSONNumberOperation, INumberOperation} from "../operation/NumberOperation";
 /**
  * Created by Papa on 8/11/2016.
  */
 
 
-export interface JSONNumberFieldOperation extends JSONBaseOperation {
+export interface JSONNumberFieldOperation extends JSONNumberOperation {
 }
 
-export interface IQNumberField<IQ extends IQEntity> extends IQField<IQ> {
-
-    equals(
-        value:number | IQNumberField<any>
-    ):JSONNumberFieldOperation;
-
-    exists(
-        exists:boolean
-    ):JSONNumberFieldOperation;
+export interface IQNumberField<IQ extends IQEntity> extends IQField<IQ, number, JSONNumberFieldOperation, INumberOperation> {
 
     greaterThan(
         greaterThan:number | IQNumberField<any>
@@ -26,10 +17,6 @@ export interface IQNumberField<IQ extends IQEntity> extends IQField<IQ> {
 
     greaterThanOrEquals(
         greaterThanOrEquals:number | IQNumberField<any>
-    ):JSONNumberFieldOperation;
-
-    isIn(
-        values:number[]
     ):JSONNumberFieldOperation;
 
     lessThan(
@@ -40,19 +27,9 @@ export interface IQNumberField<IQ extends IQEntity> extends IQField<IQ> {
         lessThanOrEquals:number | IQNumberField<any>
     ):JSONNumberFieldOperation;
 
-    notEquals(
-        value:number | IQNumberField<any>
-    ):JSONNumberFieldOperation;
-
-    notIn(
-        values:number[]
-    ):JSONNumberFieldOperation;
-
 }
 
-export class QNumberField<IQ extends IQEntity> extends QField<IQ> implements IQNumberField<IQ> {
-
-    numberOperation:NumberOperation = new NumberOperation();
+export class QNumberField<IQ extends IQEntity> extends QField<IQ, number, JSONNumberFieldOperation, INumberOperation> implements IQNumberField<IQ> {
 
     constructor(
         q:IQ,
@@ -60,61 +37,31 @@ export class QNumberField<IQ extends IQEntity> extends QField<IQ> implements IQN
         entityName:string,
         fieldName:string
     ) {
-        super(q, qConstructor, entityName, fieldName, FieldType.NUMBER);
-    }
-
-    equals(
-        value:number
-    ):JSONNumberFieldOperation{
-        return this.setOperation(this.numberOperation.equals(value));
-    }
-
-    exists(
-        exists:boolean
-    ):JSONNumberFieldOperation{
-        return this.setOperation(this.numberOperation.exists(exists));
+        super(q, qConstructor, entityName, fieldName, FieldType.NUMBER, new NumberOperation());
     }
 
     greaterThan(
         greaterThan:number
     ):JSONNumberFieldOperation{
-        return this.setOperation(this.numberOperation.greaterThan(greaterThan));
+        return this.setOperation(this.operation.greaterThan(greaterThan));
     }
 
     greaterThanOrEquals(
         greaterThanOrEquals:number
     ):JSONNumberFieldOperation{
-        return this.setOperation(this.numberOperation.greaterThanOrEquals(greaterThanOrEquals));
-    }
-
-    isIn(
-        values:number[]
-    ):JSONNumberFieldOperation{
-        return this.setOperation(this.numberOperation.isIn(values));
+        return this.setOperation(this.operation.greaterThanOrEquals(greaterThanOrEquals));
     }
 
     lessThan(
         lessThan:number
     ):JSONNumberFieldOperation{
-        return this.setOperation(this.numberOperation.lessThan(lessThan));
+        return this.setOperation(this.operation.lessThan(lessThan));
     }
 
     lessThanOrEquals(
         lessThanOrEquals:number
     ):JSONNumberFieldOperation {
-        return this.setOperation(this.numberOperation.lessThanOrEquals(lessThanOrEquals));
-    }
-
-    notEquals(
-        value:number
-    ):JSONNumberFieldOperation {
-        return this.setOperation(this.numberOperation.notEquals(value));
-    }
-
-    notIn(
-        values:number[]
-    ):JSONNumberFieldOperation {
-        return this.setOperation(this.numberOperation.notIn(values));
+        return this.setOperation(this.operation.lessThanOrEquals(lessThanOrEquals));
     }
 
 }

@@ -1,27 +1,15 @@
-import { JSONBaseOperation } from "../operation/Operation";
 import { IQEntity } from "../entity/Entity";
 import { IQField, QField } from "./Field";
-import { StringOperation } from "../operation/StringOperation";
+import { IStringOperation, JSONStringOperation } from "../operation/StringOperation";
 /**
  * Created by Papa on 8/11/2016.
  */
-export interface JSONStringFieldOperation extends JSONBaseOperation {
+export interface JSONStringFieldOperation extends JSONStringOperation {
 }
-export interface IQStringField<IQ extends IQEntity> extends IQField<IQ> {
-    equals(value: string): JSONStringFieldOperation;
-    exists(exists: boolean): JSONStringFieldOperation;
-    isIn(values: string[]): JSONStringFieldOperation;
+export interface IQStringField<IQ extends IQEntity> extends IQField<IQ, string, JSONStringFieldOperation, IStringOperation> {
     like(like: string | RegExp): JSONStringFieldOperation;
-    notEquals(value: string): JSONStringFieldOperation;
-    notIn(values: string[]): JSONStringFieldOperation;
 }
-export declare class QStringField<IQ extends IQEntity> extends QField<IQ> implements IQStringField<IQ> {
-    stringOperation: StringOperation;
+export declare class QStringField<IQ extends IQEntity> extends QField<IQ, string, JSONStringFieldOperation, IStringOperation> implements IQStringField<IQ> {
     constructor(q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string);
-    equals(value: string): JSONStringFieldOperation;
-    exists(exists: boolean): JSONStringFieldOperation;
-    isIn(values: string[]): JSONStringFieldOperation;
     like(like: string | RegExp): JSONStringFieldOperation;
-    notEquals(value: string): JSONStringFieldOperation;
-    notIn(values: string[]): JSONStringFieldOperation;
 }

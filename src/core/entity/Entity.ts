@@ -2,33 +2,40 @@
  * Created by Papa on 4/21/2016.
  */
 import {IQField} from "../field/Field";
-import {IQRelation} from "./Relation";
+import {IQRelation, JSONRelation} from "./Relation";
+import {JoinType} from "../../query/sql/PHSQLQuery";
+import {JSONBaseOperation, IOperation} from "../operation/Operation";
 
 /**
  * Marker interface for all query interfaces
  */
 export interface IEntity {
-	__operator__?:'$and' | '$or';
 }
 
 export interface IQEntity {
 
-	__entityConstructor__:{new ():any};
-	__entityFields__:IQField<IQEntity>[];
-	__entityName__:string;
-	__entityRelations__:IQRelation<IQEntity, any, IQEntity>[];
+	__entityConstructor__: {new (): any};
+	__entityFieldMap__: {[propertyName:string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>};
+	__entityName__: string;
+	__entityRelationMap__: {[propertyName:string]: IQRelation<IQEntity, any, IQEntity>};
+
+	alias: string;
+	parentEntityAlias: string;
+	joinType: JoinType;
 
 	addEntityRelation<IQR extends IQEntity, R>(
-		relation:IQRelation<IQR, R, IQEntity>
-	):void;
+		propertyName:string,
+		relation: IQRelation<IQR, R, IQEntity>
+	): void;
 
-	addEntityField<IQF extends IQField<IQEntity>>(
-		field:IQF
-	):void;
+	addEntityField<IQF extends IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>>(
+		propertyName:string,
+		field: IQF
+	): void;
 
 	fields(
-		fields:IQField<IQEntity>[]
-	):IQEntity;
+		fields: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>[]
+	): IQEntity;
 
 	/*
 	 joinOn<T, C extends IQField<IQ>>(
@@ -36,34 +43,50 @@ export interface IQEntity {
 	 );
 	 */
 
+	getRelationJson(): JSONRelation;
+
 }
 
 export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 
-	__entityFields__:IQField<IQ>[] = [];
-	__entityRelations__:IQRelation<any, any, IQ>[] = [];
+	__entityFieldMap__: {[propertyName:string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>} = {};
+	__entityRelationMap__: {[propertyName:string]: IQRelation<IQEntity, any, IQEntity>} = {};
 
 	// rootOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(<any>this, OperationType.AND, []);
 
 	constructor(
-		public __entityConstructor__:{new():any},
-		public __entityName__:string,
-		private __isTemplateEntity__ = false,
-		private __nativeEntityName__?:string
+		public __entityConstructor__: {new(): any},
+		public __entityName__: string,
+		public alias: string,
+		public parentEntityAlias = null,
+		public relationPropertyName = null,
+		public joinType: JoinType = null
 	) {
 		// TODO: convert class name to native name if it's not provided
 	}
 
 	addEntityRelation<IQR extends IQEntity, R>(
-		relation:IQRelation<IQR, R, IQ>
-	):void {
-		this.__entityRelations__.push(relation);
+		propertyName:string,
+		relation: IQRelation<IQR, R, IQ>
+	): void {
+		this.__entityRelationMap__[propertyName] = relation;
 	}
 
-	addEntityField<T, IQF extends IQField<IQ>>(
-		field:IQF
-	):void {
-		this.__entityFields__.push(field);
+	addEntityField<T, IQF extends IQField<IQ, T, JSONBaseOperation, IOperation<T, JSONBaseOperation>>>(
+		propertyName:string,
+		field: IQF
+	): void {
+		this.__entityFieldMap__[propertyName] = field;
+	}
+
+	getRelationJson(): JSONRelation {
+		return {
+			alias: this.alias,
+			entityName: this.__entityName__,
+			joinType: this.joinType,
+			parentEntityAlias: this.parentEntityAlias,
+			relationPropertyName: this.relationPropertyName
+		};
 	}
 
 	/*
@@ -74,13 +97,13 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 	 }
 	 */
 
-	getQ():IQ {
+	getQ(): IQ {
 		return <any>this;
 	}
 
 	fields(
-		fields:IQField<IQ>[]
-	):IQ {
+		fields: IQField<IQ, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>[]
+	): IQ {
 		throw `Not implemented`;
 	}
 

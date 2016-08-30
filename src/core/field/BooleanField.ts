@@ -1,5 +1,5 @@
 import {JSONBaseOperation} from "../operation/Operation";
-import {BooleanOperation} from "../operation/BooleanOperation";
+import {BooleanOperation, JSONBooleanOperation, IBooleanOperation} from "../operation/BooleanOperation";
 import {IQEntity} from "../entity/Entity";
 import {IQField, QField, FieldType} from "./Field";
 /**
@@ -7,10 +7,10 @@ import {IQField, QField, FieldType} from "./Field";
  */
 
 
-export interface JSONBooleanFieldOperation extends JSONBaseOperation {
+export interface JSONBooleanFieldOperation extends JSONBooleanOperation {
 }
 
-export interface IQBooleanField<IQ extends IQEntity> extends IQField<IQ> {
+export interface IQBooleanField<IQ extends IQEntity> extends IQField<IQ, boolean, JSONBooleanFieldOperation, IBooleanOperation> {
 
     equals(
         value:boolean
@@ -26,9 +26,7 @@ export interface IQBooleanField<IQ extends IQEntity> extends IQField<IQ> {
 
 }
 
-export class QBooleanField<IQ extends IQEntity> extends QField<IQ> implements IQBooleanField<IQ> {
-
-    booleanOperation:BooleanOperation = new BooleanOperation();
+export class QBooleanField<IQ extends IQEntity> extends QField<IQ, boolean, JSONBooleanFieldOperation, IBooleanOperation> implements IQBooleanField<IQ> {
 
     constructor(
         q:IQ,
@@ -36,25 +34,7 @@ export class QBooleanField<IQ extends IQEntity> extends QField<IQ> implements IQ
         entityName:string,
         fieldName:string
     ) {
-        super(q, qConstructor, entityName, fieldName, FieldType.BOOLEAN);
-    }
-
-    equals(
-        value:boolean
-    ):JSONBooleanFieldOperation {
-        return this.setOperation(this.booleanOperation.equals(value));
-    }
-
-    exists(
-        exists:boolean
-    ):JSONBooleanFieldOperation {
-        return this.setOperation(this.booleanOperation.exists(exists));
-    }
-
-    notEquals(
-        value:boolean
-    ):JSONBooleanFieldOperation {
-        return this.setOperation(this.booleanOperation.notEquals(value));
+        super(q, qConstructor, entityName, fieldName, FieldType.BOOLEAN, new BooleanOperation());
     }
 
 }

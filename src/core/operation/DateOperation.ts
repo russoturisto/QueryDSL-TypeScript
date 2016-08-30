@@ -6,26 +6,13 @@ import {JSONBaseOperation, IOperation, Operation} from "./Operation";
 
 
 export interface JSONDateOperation extends JSONBaseOperation {
-	"$eq"?:Date;
-	"$exists"?:boolean;
 	"$gt"?:Date;
 	"$gte"?:Date;
-	"$in"?:Date[];
 	"$lt"?:Date;
 	"$lte"?:Date;
-	"$ne"?:Date;
-	"$nin"?:Date[];
 }
 
-export interface IDateOperation extends IOperation {
-
-	equals(
-		value:Date
-	):JSONDateOperation;
-
-	exists(
-		exists:boolean
-	):JSONDateOperation;
+export interface IDateOperation extends IOperation<Date, JSONDateOperation> {
 
 	greaterThan(
 		greaterThan:Date
@@ -33,10 +20,6 @@ export interface IDateOperation extends IOperation {
 
 	greaterThanOrEquals(
 		greaterThanOrEquals:Date
-	):JSONDateOperation;
-
-	isIn(
-		values:Date[]
 	):JSONDateOperation;
 
 	lessThan(
@@ -47,36 +30,12 @@ export interface IDateOperation extends IOperation {
 		lessThanOrEquals:Date
 	):JSONDateOperation;
 
-	notEquals(
-		value:Date
-	):JSONDateOperation;
-
-	notIn(
-		values:Date[]
-	):JSONDateOperation;
-
 }
 
-export class DateOperation extends Operation implements IDateOperation {
+export class DateOperation extends Operation<Date, JSONDateOperation> implements IDateOperation {
 
 	constructor() {
 		super(FieldType.DATE);
-	}
-
-	equals(
-		value:Date
-	):JSONDateOperation {
-		return {
-			$eq: value
-		};
-	}
-
-	exists(
-		exists:boolean
-	):JSONDateOperation {
-		return {
-			$exists: exists
-		};
 	}
 
 	greaterThan(
@@ -95,14 +54,6 @@ export class DateOperation extends Operation implements IDateOperation {
 		};
 	}
 
-	isIn(
-		values:Date[]
-	):JSONDateOperation {
-		return {
-			$in: values
-		};
-	}
-
 	lessThan(
 		lessThan:Date
 	):JSONDateOperation {
@@ -116,22 +67,6 @@ export class DateOperation extends Operation implements IDateOperation {
 	):JSONDateOperation {
 		return {
 			$lte: lessThanOrEquals
-		};
-	}
-
-	notEquals(
-		value:Date
-	):JSONDateOperation {
-		return {
-			$ne: value
-		};
-	}
-
-	notIn(
-		values:Date[]
-	):JSONDateOperation {
-		return {
-			$nin: values
 		};
 	}
 

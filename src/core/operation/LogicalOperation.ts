@@ -9,26 +9,26 @@ export interface JSONLogicalOperation extends JSONBaseOperation {
 	"$or"?:JSONBaseOperation[];
 }
 
-export interface ILogicalOperation extends IOperation {
+export interface ILogicalOperation extends IOperation<any, JSONLogicalOperation> {
 
 	and(
 		...ops:JSONBaseOperation[]
-	):JSONBaseOperation;
+	):JSONLogicalOperation;
 
 	or(
 		...ops:JSONBaseOperation[]
-	):JSONBaseOperation;
+	):JSONLogicalOperation;
 
 	not(
 		op:JSONBaseOperation
-	):JSONBaseOperation;
+	):JSONLogicalOperation;
 
 }
 
-export class LogicalOperation extends Operation implements ILogicalOperation {
+export class LogicalOperation extends Operation<any, JSONLogicalOperation> implements ILogicalOperation {
 
 	static verifyChildOps(
-		ops:IOperation[]
+		ops:IOperation<any, JSONLogicalOperation>[]
 	):void {
 		if (!ops || !ops.length) {
 			throw `No child operations provided`;
@@ -41,7 +41,7 @@ export class LogicalOperation extends Operation implements ILogicalOperation {
 
 	and(
 		...ops:JSONBaseOperation[]
-	):JSONBaseOperation {
+	):JSONLogicalOperation {
 		return {
 			$and: ops
 		};
@@ -49,7 +49,7 @@ export class LogicalOperation extends Operation implements ILogicalOperation {
 
 	or(
 		...ops:JSONBaseOperation[]
-	):JSONBaseOperation {
+	):JSONLogicalOperation {
 		return {
 			$or: ops
 		};
@@ -57,7 +57,7 @@ export class LogicalOperation extends Operation implements ILogicalOperation {
 
 	not(
 		op:JSONBaseOperation
-	):JSONBaseOperation {
+	):JSONLogicalOperation {
 		return {
 			$not: op
 		};

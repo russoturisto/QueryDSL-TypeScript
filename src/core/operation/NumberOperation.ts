@@ -1,31 +1,20 @@
 import {FieldType} from "../field/Field";
 import {OperationType} from "./OperationType";
 import {JSONBaseOperation, Operation, IOperation} from "./Operation";
+import {JSONStringOperation} from "./StringOperation";
 /**
  * Created by Papa on 6/20/2016.
  */
 
 export interface JSONNumberOperation extends JSONBaseOperation {
-	"$eq"?:number;
-	"$exists"?:boolean;
 	"$gt"?:number;
 	"$gte"?:number;
-	"$in"?:number[];
 	"$lt"?:number;
 	"$lte"?:number;
-	"$ne"?:number;
-	"$nin"?:number[];
 }
 
-export interface INumberOperation extends IOperation {
+export interface INumberOperation extends IOperation<number, JSONStringOperation> {
 
-	equals(
-		value:number
-	):JSONNumberOperation;
-
-	exists(
-		exists:boolean
-	):JSONNumberOperation;
 
 	greaterThan(
 		greaterThan:number
@@ -33,10 +22,6 @@ export interface INumberOperation extends IOperation {
 
 	greaterThanOrEquals(
 		greaterThanOrEquals:number
-	):JSONNumberOperation;
-
-	isIn(
-		values:number[]
 	):JSONNumberOperation;
 
 	lessThan(
@@ -47,36 +32,12 @@ export interface INumberOperation extends IOperation {
 		lessThanOrEquals:number
 	):JSONNumberOperation;
 
-	notEquals(
-		value:number
-	):JSONNumberOperation;
-
-	notIn(
-		values:number[]
-	):JSONNumberOperation;
-
 }
 
-export class NumberOperation extends Operation implements INumberOperation {
+export class NumberOperation extends Operation<number, JSONStringOperation> implements INumberOperation {
 
 	constructor() {
 		super(FieldType.NUMBER);
-	}
-
-	equals(
-		value:number
-	):JSONNumberOperation {
-		return {
-			$eq: value
-		};
-	}
-
-	exists(
-		exists:boolean
-	):JSONNumberOperation {
-		return {
-			$exists: exists
-		};
 	}
 
 	greaterThan(
@@ -95,14 +56,6 @@ export class NumberOperation extends Operation implements INumberOperation {
 		};
 	}
 
-	isIn(
-		values:number[]
-	):JSONNumberOperation {
-		return {
-			$in: values
-		};
-	}
-
 	lessThan(
 		lessThan:number
 	):JSONNumberOperation {
@@ -116,22 +69,6 @@ export class NumberOperation extends Operation implements INumberOperation {
 	):JSONNumberOperation {
 		return {
 			$lte: lessThanOrEquals
-		};
-	}
-
-	notEquals(
-		value:number
-	):JSONNumberOperation {
-		return {
-			$ne: value
-		};
-	}
-
-	notIn(
-		values:number[]
-	):JSONNumberOperation {
-		return {
-			$nin: values
 		};
 	}
 
