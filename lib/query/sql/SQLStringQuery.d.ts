@@ -3,6 +3,7 @@ import { RelationRecord } from "../../core/entity/Relation";
 import { IEntity, QEntity, IQEntity } from "../../core/entity/Entity";
 import { JSONBaseOperation } from "../../core/operation/Operation";
 import { ISQLAdaptor } from "./adaptor/SQLAdaptor";
+import { ColumnConfiguration, JoinColumnConfiguration } from "../../core/entity/metadata/ColumnDecorators";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -56,13 +57,20 @@ export declare class SQLStringQuery<IE extends IEntity> {
         };
     }, dialect: SQLDialect);
     toSQL(): string;
-    getSelectFragment(entityName: string, existingSelectFragment: string, selectClauseFragment: any, joinAliasMap: {
+    getSelectFragment(entityName: string, selectFragment: string, selectClauseFragment: any, joinAliasMap: {
         [entityName: string]: string;
     }, columnAliasMap: {
         [aliasPropertyCombo: string]: string;
     }, entityDefaultsMap: {
         [property: string]: any;
     }): string;
+    getColumnSelectFragment(entityName: string, propertyName: string, tableAlias: string, columnMap: {
+        [propertyName: string]: ColumnConfiguration;
+    }, joinColumnMap: {
+        [propertyName: string]: JoinColumnConfiguration;
+    }, columnAliasMap: {
+        [aliasWithProperty: string]: string;
+    }, existingSelectFragment: string): string;
     getFromFragment(joinQEntityMap: {
         [alias: string]: IQEntity;
     }, joinAliasMap: {

@@ -9,6 +9,7 @@ import {QDateField} from "../../core/field/DateField";
 import {QNumberField} from "../../core/field/NumberField";
 import {QStringField} from "../../core/field/StringField";
 import {ISQLAdaptor, getSQLAdaptor} from "./adaptor/SQLAdaptor";
+import {ColumnConfiguration, JoinColumnConfiguration} from "../../core/entity/metadata/ColumnDecorators";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -63,7 +64,7 @@ ${whereFragment}`;
 
 	getSelectFragment(
 		entityName: string,
-		existingSelectFragment: string,
+		selectFragment: string,
 		selectClauseFragment: any,
 		joinAliasMap: {[entityName: string]: string},
 		columnAliasMap: {[aliasPropertyCombo: string]: string},
@@ -81,7 +82,21 @@ ${whereFragment}`;
 		if (!tableAlias) {
 			throw `Alias for entity ${entityName} is not defined in the From clause.`;
 		}
-		let selectFragment = '';
+
+		let numProperties = 0;
+		for (let propertyName in selectClauseFragment) {
+			numProperties++;
+		}
+		// For {} select causes retrieve the entire object
+		if (numProperties === 0) {
+			selectClauseFragment = {};
+			for (let propertyName in entityPropertyTypeMap) {
+				selectClauseFragment[propertyName] = {};
+			}
+			for (let propertyName in entityRelationMap) {
+				selectClauseFragment[propertyName] = {};
+			}
+		}
 
 		for (let propertyName in selectClauseFragment) {
 			let value = selectClauseFragment[propertyName];
@@ -92,41 +107,69 @@ ${whereFragment}`;
 				entityDefaultsMap[propertyName] = value;
 			}
 			if (entityPropertyTypeMap[propertyName]) {
-				let columnName;
-				if (columnMap[propertyName]) {
-					columnName = columnMap[propertyName].name;
-					if (!columnName) {
-						throw `Found @Column but not @Column.name for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause.`;
-					}
-				} else if (joinColumnMap[propertyName]) {
-					columnName = joinColumnMap[propertyName].name;
-					if (!columnName) {
-						throw `Found @JoinColumn but not @JoinColumn.name for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause.`;
-					}
-				} else {
-					this.warn(`Did not find @Column or @JoinColumn for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause. Using property name`);
-					columnName = propertyName;
-				}
-				let columnAlias = `column_${++this.currentFieldIndex}`;
-				let columnSelect = `${tableAlias}.${columnName} as columnAlias\n`;
-				columnAliasMap[`${tableAlias}.${propertyName}`] = columnAlias;
-				if (existingSelectFragment) {
-					columnSelect = `\t, ${columnSelect}`;
-				} else {
-					columnSelect = `\t${columnSelect}`;
-				}
+				let columnSelect = this.getColumnSelectFragment(entityName, propertyName, tableAlias,
+					columnMap, null, columnAliasMap, selectFragment);
 				selectFragment += columnSelect;
 			} else if (entityRelationMap[propertyName]) {
 				let defaultsChildMap = {};
 				entityDefaultsMap[propertyName] = defaultsChildMap;
-				selectFragment += this.getSelectFragment(entityRelationMap[propertyName].entityName,
-					existingSelectFragment + selectFragment, selectClauseFragment[propertyName], joinAliasMap, columnAliasMap, defaultsChildMap);
+				let subSelectClauseFragment = selectClauseFragment[propertyName];
+				if (subSelectClauseFragment == null) {
+					if (entityMetadata.manyToOneMap[propertyName]) {
+						let columnSelect = this.getColumnSelectFragment(entityName, propertyName, tableAlias,
+							null, joinColumnMap, columnAliasMap, selectFragment);
+						selectFragment += columnSelect;
+						continue;
+					} else {
+						// Do not retrieve @OneToMay set to null
+						continue;
+					}
+				}
+				selectFragment = this.getSelectFragment(entityRelationMap[propertyName].entityName,
+					selectFragment, selectClauseFragment[propertyName], joinAliasMap, columnAliasMap, defaultsChildMap);
 			} else {
 				throw `Unexpected property '${propertyName}' on entity '${entityName}' (alias '${tableAlias}') in SELECT clause.`;
 			}
 		}
 
 		return selectFragment;
+	}
+
+	getColumnSelectFragment(
+		entityName: string,
+		propertyName: string,
+		tableAlias: string,
+		columnMap: {[propertyName: string]: ColumnConfiguration},
+		joinColumnMap: {[propertyName: string]: JoinColumnConfiguration},
+		columnAliasMap: {[aliasWithProperty: string]: string},
+		existingSelectFragment: string
+	): string {
+		let columnName;
+		if (columnMap && columnMap[propertyName]) {
+			columnName = columnMap[propertyName].name;
+			if (!columnName) {
+				throw `Found @Column but not @Column.name for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause.`;
+			}
+		} else if (joinColumnMap && joinColumnMap[propertyName]) {
+			columnName = joinColumnMap[propertyName].name;
+			if (!columnName) {
+				throw `Found @JoinColumn but not @JoinColumn.name for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause.`;
+			}
+		} else {
+			this.warn(`Did not find @Column/@JoinColumn for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause. Using property name`);
+			columnName = propertyName;
+		}
+
+		let columnAlias = `column_${++this.currentFieldIndex}`;
+		let columnSelect = `${tableAlias}.${columnName} as columnAlias\n`;
+		columnAliasMap[`${tableAlias}.${propertyName}`] = columnAlias;
+		if (existingSelectFragment) {
+			columnSelect = `\t, ${columnSelect}`;
+		} else {
+			columnSelect = `\t${columnSelect}`;
+		}
+
+		return columnSelect;
 	}
 
 	getFromFragment(
@@ -639,18 +682,26 @@ ${whereFragment}`;
 				resultObject[propertyName] = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], dataType, defaultValue);
 			} else if (entityRelationMap[propertyName]) {
 
-				let childEntityName = entityRelationMap[propertyName].entityName;
 				let childSelectClauseFragment = selectClauseFragment[propertyName];
-				let childDefaultsMap = entityDefaultsMap[propertyName];
+				if (childSelectClauseFragment == null) {
+					if (entityMetadata.manyToOneMap[propertyName]) {
+						let fieldKey = `${entityAlias}.${propertyName}`;
+						let columnAlias = this.columnAliasMap[fieldKey];
+						resultObject[propertyName] = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], SQLDataType.NUMBER, null);
+					}
+				} else {
+					let childDefaultsMap = entityDefaultsMap[propertyName];
+					let childEntityName = entityRelationMap[propertyName].entityName;
 
-				let childResultObject = this.parseQueryResult(
-					childEntityName,
-					childSelectClauseFragment,
-					resultRow,
-					nextFieldIndex,
-					childDefaultsMap
-				);
-				resultObject[propertyName] = childResultObject;
+					let childResultObject = this.parseQueryResult(
+						childEntityName,
+						childSelectClauseFragment,
+						resultRow,
+						nextFieldIndex,
+						childDefaultsMap
+					);
+					resultObject[propertyName] = childResultObject;
+				}
 			}
 			nextFieldIndex[0]++;
 		}

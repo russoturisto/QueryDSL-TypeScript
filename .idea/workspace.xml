@@ -5,32 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8322ebc1-9272-4c63-9e9f-f1c51e544bcc" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/PHQuery.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.d.ts" afterPath="$PROJECT_DIR$/lib/core/entity/Relation.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/Relation.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.d.ts" afterPath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.js" afterPath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.d.ts" afterPath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.d.ts" afterPath="$PROJECT_DIR$/lib/index.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.js" afterPath="$PROJECT_DIR$/lib/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.js.map" afterPath="$PROJECT_DIR$/lib/index.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/noSql/PHGraphQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/noSql/PHGraphQuery.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/noSql/PHGraphQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/noSql/PHGraphQuery.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.d.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/entity/Relation.ts" afterPath="$PROJECT_DIR$/src/core/entity/Relation.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/entity/metadata/ColumnDecorators.ts" afterPath="$PROJECT_DIR$/src/core/entity/metadata/ColumnDecorators.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" afterPath="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/index.ts" afterPath="$PROJECT_DIR$/src/index.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/noSql/PHGraphQuery.ts" afterPath="$PROJECT_DIR$/src/query/noSql/PHGraphQuery.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts" afterPath="$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" afterPath="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" />
     </list>
     <ignored path="QueryDSL-TypeScript.iws" />
@@ -234,13 +212,26 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="PouchDbGraphQuery.ts" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/src/query/noSql/pouchdb/PouchDbGraphQuery.ts">
+          <file leaf-file-name="SQLStringQuery.ts" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="53" selection-start-line="0" selection-start-column="53" selection-end-line="0" selection-end-column="53" />
+                <state relative-caret-position="149">
+                  <caret line="685" column="21" selection-start-line="685" selection-start-column="21" selection-end-line="685" selection-end-column="21" />
                   <folding>
-                    <element signature="n#!!doc;n#require#0" expanded="false" />
+                    <element signature="e#0#54#0" expanded="true" />
+                    <element signature="e#801#841#0" expanded="false" />
+                    <marker date="1472729530182" expanded="true" signature="7047:7274" ph="..." />
+                    <marker date="1472729530182" expanded="true" signature="7052:7274" ph="..." />
+                    <marker date="1472729530182" expanded="true" signature="8798:9130" ph="..." />
+                    <marker date="1472729530182" expanded="true" signature="8803:9130" ph="..." />
+                    <marker date="1472729530182" expanded="true" signature="8898:9130" ph="..." />
+                    <marker date="1472729530182" expanded="true" signature="8903:9130" ph="..." />
+                    <marker date="1472729530182" expanded="true" signature="14432:14578" ph="..." />
+                    <marker date="1472729530182" expanded="true" signature="14437:14578" ph="..." />
+                    <marker date="1472729530182" expanded="true" signature="17947:18671" ph="..." />
+                    <marker date="1472729530182" expanded="true" signature="19320:19988" ph="..." />
+                    <marker date="1472729530182" expanded="true" signature="23190:24193" ph="..." />
+                    <marker date="1472729530182" expanded="true" signature="23195:24193" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -305,7 +296,6 @@
         <option value="$PROJECT_DIR$/src/query/sql/adaptor/SqLiteAdaptor.ts" />
         <option value="$PROJECT_DIR$/src/query/sql/adaptor/SQLAdaptor.ts" />
         <option value="$PROJECT_DIR$/lib/index.js" />
-        <option value="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" />
         <option value="$PROJECT_DIR$/src/core/entity/Relation.ts" />
         <option value="$PROJECT_DIR$/src/core/entity/metadata/ColumnDecorators.ts" />
         <option value="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" />
@@ -314,6 +304,7 @@
         <option value="$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts" />
         <option value="$PROJECT_DIR$/src/query/noSql/PHGraphQuery.ts" />
         <option value="$PROJECT_DIR$/package.json" />
+        <option value="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" />
       </list>
     </option>
   </component>
@@ -752,12 +743,12 @@
       <workItem from="1471532837000" duration="1793000" />
       <workItem from="1471604775371" duration="144000" />
       <workItem from="1471605137855" duration="38000" />
-      <workItem from="1471605185102" duration="84839000" />
+      <workItem from="1471605185102" duration="92614000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="353934000" />
+    <option name="totallyTimeSpent" value="361709000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
@@ -1163,45 +1154,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="639" column="34" selection-start-line="639" selection-start-column="17" selection-end-line="639" selection-end-column="34" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-            <element signature="e#695#735#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="32" column="38" selection-start-line="32" selection-start-column="11" selection-end-line="32" selection-end-column="38" />
-          <folding>
-            <element signature="e#0#68#0" expanded="true" />
-            <element signature="n#!!doc;n#PHRawSQLQuery#0" expanded="false" />
-            <marker date="1472563727998" expanded="true" signature="1135:1379" ph="{...}" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/query/PHQuery.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="51">
           <caret line="5" column="47" selection-start-line="5" selection-start-column="47" selection-end-line="5" selection-end-column="47" />
           <folding>
             <element signature="n#!!doc;n#PHRawQuery#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/index.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="63" column="13" selection-start-line="63" selection-start-column="13" selection-end-line="63" selection-end-column="13" />
-          <folding>
-            <element signature="e#42#150#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1232,6 +1190,51 @@
         <state relative-caret-position="34">
           <caret line="2" column="20" selection-start-line="2" selection-start-column="20" selection-end-line="2" selection-end-column="20" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="213">
+          <caret line="32" column="38" selection-start-line="32" selection-start-column="11" selection-end-line="32" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#68#0" expanded="true" />
+            <element signature="n#!!doc;n#PHRawSQLQuery#0" expanded="false" />
+            <marker date="1472563727998" expanded="true" signature="1135:1379" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/index.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="63" column="13" selection-start-line="63" selection-start-column="13" selection-end-line="63" selection-end-column="13" />
+          <folding>
+            <element signature="e#42#150#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="149">
+          <caret line="685" column="21" selection-start-line="685" selection-start-column="21" selection-end-line="685" selection-end-column="21" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+            <element signature="e#801#841#0" expanded="false" />
+            <marker date="1472729530182" expanded="true" signature="7047:7274" ph="..." />
+            <marker date="1472729530182" expanded="true" signature="7052:7274" ph="..." />
+            <marker date="1472729530182" expanded="true" signature="8798:9130" ph="..." />
+            <marker date="1472729530182" expanded="true" signature="8803:9130" ph="..." />
+            <marker date="1472729530182" expanded="true" signature="8898:9130" ph="..." />
+            <marker date="1472729530182" expanded="true" signature="8903:9130" ph="..." />
+            <marker date="1472729530182" expanded="true" signature="14432:14578" ph="..." />
+            <marker date="1472729530182" expanded="true" signature="14437:14578" ph="..." />
+            <marker date="1472729530182" expanded="true" signature="17947:18671" ph="..." />
+            <marker date="1472729530182" expanded="true" signature="19320:19988" ph="..." />
+            <marker date="1472729530182" expanded="true" signature="23190:24193" ph="..." />
+            <marker date="1472729530182" expanded="true" signature="23195:24193" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>
