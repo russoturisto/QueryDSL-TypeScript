@@ -10,7 +10,7 @@ export interface EntityConfiguration {
  * @returns {function(Function)}
  * @constructor
  */
-export declare function Entity(entityConfiguration?: EntityConfiguration): (constructor: Function) => void;
+export declare function Entity(entityConfiguration?: EntityConfiguration): (constructor: new () => Object) => void;
 export interface TableConfiguration {
     name: string;
 }

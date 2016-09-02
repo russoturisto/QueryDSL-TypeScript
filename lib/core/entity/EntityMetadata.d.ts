@@ -4,6 +4,7 @@ import { TableConfiguration, EntityConfiguration } from "./metadata/EntityDecora
  * Created by Papa on 8/20/2016.
  */
 export interface EntityMetadata {
+    name: string;
     entity: EntityConfiguration;
     idProperty: string;
     table: TableConfiguration;

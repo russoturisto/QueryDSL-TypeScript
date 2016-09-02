@@ -8,7 +8,7 @@ import {TableConfiguration, EntityConfiguration} from "./metadata/EntityDecorato
  */
 
 export interface EntityMetadata {
-
+	name:string;
 	entity:EntityConfiguration;
 	idProperty:string;
 	table:TableConfiguration;

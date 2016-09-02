@@ -16,11 +16,13 @@ export interface EntityConfiguration {
  * @constructor
  */
 export function Entity(entityConfiguration?:EntityConfiguration) {
-	return function (constructor:Function) {
+	return function (constructor:{new (): Object}) {
 		let entityMetadata: EntityMetadata = <EntityMetadata><any>constructor;
 		if (entityMetadata.entity) {
 			throw `Cannot set @Table, it is already set to '${JSON.stringify(entityMetadata.entity)}'`;
 		}
+		// FIXME: verify this works! (that it's not constructor.name)
+		entityMetadata.name = constructor.prototype.name;
 		if(!entityConfiguration) {
 			entityConfiguration = <any>true;
 		}
