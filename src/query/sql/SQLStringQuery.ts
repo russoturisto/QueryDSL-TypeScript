@@ -74,7 +74,7 @@ ${whereFragment}`;
 		let qEntity = this.qEntityMap[entityName];
 		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
 		let columnMap = entityMetadata.columnMap;
-		let joinColumnMap = entityMetadata.joinColumns;
+		let joinColumnMap = entityMetadata.joinColumnMap;
 		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
 		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
 
@@ -260,7 +260,7 @@ ${whereFragment}`;
 			let rightEntityJoinColumn, leftColumn;
 
 			if (rightEntityMetadata.manyToOneMap[joinRelation.relationPropertyName]) {
-				let rightEntityJoinColumnMetadata = rightEntityMetadata.joinColumns[joinRelation.relationPropertyName];
+				let rightEntityJoinColumnMetadata = rightEntityMetadata.joinColumnMap[joinRelation.relationPropertyName];
 				if (!rightEntityJoinColumnMetadata || !rightEntityJoinColumnMetadata.name) {
 					throw `Could not find @JoinColumn for @ManyToOne relation: ${joinRelation.relationPropertyName} on Right entity in jon for table ${i + 1} in the FROM clause.`;
 				}
@@ -287,7 +287,7 @@ ${whereFragment}`;
 					throw `Could not find @OneToMany.mappedBy for relation ${joinRelation.relationPropertyName} of table ${i + 1} in FROM clause.`;
 				}
 				leftEntityMetadata.manyToOneMap[mappedByLeftEntityProperty]
-				let leftEntityJoinColumnMetadata = rightEntityMetadata.joinColumns[mappedByLeftEntityProperty];
+				let leftEntityJoinColumnMetadata = rightEntityMetadata.joinColumnMap[mappedByLeftEntityProperty];
 				if (!leftEntityJoinColumnMetadata || !leftEntityJoinColumnMetadata.name) {
 					throw `Could not find @JoinColumn for @ManyToOne relation: ${joinRelation.relationPropertyName} on Left entity in jon for table ${i + 1} in the FROM clause.`;
 				}
@@ -650,7 +650,7 @@ ${whereFragment}`;
 		let qEntity = this.qEntityMap[entityName];
 		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
 		let columnMap = entityMetadata.columnMap;
-		let joinColumnMap = entityMetadata.joinColumns;
+		let joinColumnMap = entityMetadata.joinColumnMap;
 		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
 		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
 

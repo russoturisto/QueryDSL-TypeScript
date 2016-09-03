@@ -66,10 +66,10 @@ export function JoinColumn( joinColumnConfiguration?: JoinColumnConfiguration ) 
 		propertyKey: string
 	) {
 		let entityMetadata: EntityMetadata = <EntityMetadata>targetObject;
-		if(!entityMetadata.joinColumns) {
-			entityMetadata.joinColumns = {};
+		if(!entityMetadata.joinColumnMap) {
+			entityMetadata.joinColumnMap = {};
 		}
-		entityMetadata.joinColumns[propertyKey] = joinColumnConfiguration;
+		entityMetadata.joinColumnMap[propertyKey] = joinColumnConfiguration;
 	}
 }
 

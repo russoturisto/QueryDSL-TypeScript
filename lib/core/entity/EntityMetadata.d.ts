@@ -17,7 +17,7 @@ export interface EntityMetadata {
     oneToManyMap: {
         [propertyName: string]: OneToManyElements;
     };
-    joinColumns: {
+    joinColumnMap: {
         [propertyName: string]: JoinColumnConfiguration;
     };
     transient: {
