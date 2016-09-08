@@ -96,7 +96,8 @@ export function Transient() {
 
 
 export interface ManyToOneElements {
-	cascade?:CascadeType;
+	// Not implementing cascade on ManyToOne
+	// cascade?:CascadeType;
 	fetch?:FetchType;
 	optional?:boolean;
 }

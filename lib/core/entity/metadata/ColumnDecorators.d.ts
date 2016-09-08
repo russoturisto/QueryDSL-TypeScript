@@ -41,7 +41,6 @@ export declare function JoinColumn(joinColumnConfiguration?: JoinColumnConfigura
  */
 export declare function Transient(): (targetObject: any, propertyKey: string) => void;
 export interface ManyToOneElements {
-    cascade?: CascadeType;
     fetch?: FetchType;
     optional?: boolean;
 }

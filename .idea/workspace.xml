@@ -6,14 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="8322ebc1-9272-4c63-9e9f-f1c51e544bcc" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/EntityMetadata.d.ts" afterPath="$PROJECT_DIR$/lib/core/entity/EntityMetadata.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.js" afterPath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.d.ts" afterPath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.d.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/entity/EntityMetadata.ts" afterPath="$PROJECT_DIR$/src/core/entity/EntityMetadata.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/entity/metadata/ColumnDecorators.ts" afterPath="$PROJECT_DIR$/src/core/entity/metadata/ColumnDecorators.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" afterPath="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" />
     </list>
     <ignored path="QueryDSL-TypeScript.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -95,11 +90,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="ColumnDecorators.ts" pinned="false" current-in-tab="false">
+          <file leaf-file-name="ColumnDecorators.ts" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/core/entity/metadata/ColumnDecorators.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="153">
-                  <caret line="11" column="3" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="3" />
+                <state relative-caret-position="17">
+                  <caret line="102" column="1" selection-start-line="102" selection-start-column="1" selection-end-line="102" selection-end-column="1" />
                   <folding>
                     <element signature="e#0#49#0" expanded="true" />
                     <element signature="e#98#138#0" expanded="false" />
@@ -108,7 +103,17 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="EntityMetadata.ts" pinned="false" current-in-tab="true">
+          <file leaf-file-name="Types.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/core/entity/metadata/Types.ts">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="34">
+                  <caret line="4" column="12" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="EntityMetadata.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/core/entity/EntityMetadata.ts">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="255">
@@ -162,8 +167,8 @@
           <file leaf-file-name="SQLStringQuery.ts" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="417">
-                  <caret line="685" column="21" selection-start-line="685" selection-start-column="21" selection-end-line="685" selection-end-column="21" />
+                <state relative-caret-position="162">
+                  <caret line="670" column="38" selection-start-line="670" selection-start-column="38" selection-end-line="670" selection-end-column="38" />
                   <folding>
                     <element signature="e#0#54#0" expanded="true" />
                     <element signature="e#801#841#0" expanded="false" />
@@ -230,7 +235,6 @@
         <option value="$PROJECT_DIR$/src/query/sql/adaptor/SQLAdaptor.ts" />
         <option value="$PROJECT_DIR$/lib/index.js" />
         <option value="$PROJECT_DIR$/src/core/entity/Relation.ts" />
-        <option value="$PROJECT_DIR$/src/core/entity/metadata/ColumnDecorators.ts" />
         <option value="$PROJECT_DIR$/src/core/operation/LogicalOperation.ts" />
         <option value="$PROJECT_DIR$/src/index.ts" />
         <option value="$PROJECT_DIR$/src/query/PHQuery.ts" />
@@ -240,6 +244,7 @@
         <option value="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" />
         <option value="$PROJECT_DIR$/src/core/entity/metadata/EntityDecorators.ts" />
         <option value="$PROJECT_DIR$/src/core/entity/EntityMetadata.ts" />
+        <option value="$PROJECT_DIR$/src/core/entity/metadata/ColumnDecorators.ts" />
       </list>
     </option>
   </component>
@@ -680,12 +685,12 @@
       <workItem from="1471605137855" duration="38000" />
       <workItem from="1471605185102" duration="92614000" />
       <workItem from="1472825760551" duration="2593000" />
-      <workItem from="1472856903975" duration="1598000" />
+      <workItem from="1472856903975" duration="5203000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="365900000" />
+    <option name="totallyTimeSpent" value="369505000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
@@ -694,10 +699,11 @@
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32502595" sideWeight="0.4873551" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13645943" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3219107" sideWeight="0.4409905" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30633438" sideWeight="0.5584826" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.30633438" sideWeight="0.44151738" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3219107" sideWeight="0.5590095" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3219107" sideWeight="0.5590095" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TypeScript Compiler" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3271028" sideWeight="0.49367756" order="8" side_tool="false" content_ui="tabs" />
@@ -706,7 +712,6 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2497309" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30633438" sideWeight="0.44362485" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
@@ -897,14 +902,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/entity/metadata/Types.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="8" column="38" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/field/BooleanField.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="476">
@@ -1037,17 +1034,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="417">
-          <caret line="685" column="21" selection-start-line="685" selection-start-column="21" selection-end-line="685" selection-end-column="21" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-            <element signature="e#801#841#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="510">
@@ -1109,17 +1095,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/entity/metadata/ColumnDecorators.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="11" column="3" selection-start-line="11" selection-start-column="3" selection-end-line="11" selection-end-column="3" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-            <element signature="e#98#138#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/core/entity/metadata/EntityDecorators.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
@@ -1137,6 +1112,36 @@
           <folding>
             <element signature="e#0#131#0" expanded="true" />
             <element signature="n#!!doc;n#EntityMetadata#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="670" column="38" selection-start-line="670" selection-start-column="38" selection-end-line="670" selection-end-column="38" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+            <element signature="e#801#841#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/metadata/Types.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="34">
+          <caret line="4" column="12" selection-start-line="4" selection-start-column="12" selection-end-line="4" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/metadata/ColumnDecorators.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="102" column="1" selection-start-line="102" selection-start-column="1" selection-end-line="102" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#49#0" expanded="true" />
+            <element signature="e#98#138#0" expanded="false" />
           </folding>
         </state>
       </provider>
