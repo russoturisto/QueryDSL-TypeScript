@@ -4,10 +4,12 @@
 
 export enum CascadeType {
 	ALL, //Cascade all operations
-	DETACH, // Cascade detach operation
-	MERGE, // Cascade merge operation
-	PERSIST, // Cascade persist operation
-	REFRESH, // Cascade refresh operation
+		// Cascade detach is not implemented because there is no session
+		// DETACH,
+	MERGE, // Cascade on update operation, with Creates and Updates
+	PERSIST, // Cascade on create operation with Creates only
+		// Cascade refresh is not implemented because there is no session
+		// REFRESH,
 	REMOVE // Cascade remove operation
 }
 

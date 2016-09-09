@@ -3,11 +3,9 @@
  */
 export declare enum CascadeType {
     ALL = 0,
-    DETACH = 1,
-    MERGE = 2,
-    PERSIST = 3,
-    REFRESH = 4,
-    REMOVE = 5,
+    MERGE = 1,
+    PERSIST = 2,
+    REMOVE = 3,
 }
 export declare enum FetchType {
     EAGER = 0,
