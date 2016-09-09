@@ -56,7 +56,7 @@ export declare class SQLStringQuery<IE extends IEntity> {
             [propertyName: string]: boolean;
         };
     }, dialect: SQLDialect);
-    toSQL(): string;
+    toSQL(embedParameters?: boolean, parameters?: any[]): string;
     getSelectFragment(entityName: string, selectFragment: string, selectClauseFragment: any, joinAliasMap: {
         [entityName: string]: string;
     }, columnAliasMap: {

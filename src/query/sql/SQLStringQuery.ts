@@ -46,7 +46,10 @@ export class SQLStringQuery<IE extends IEntity> {
 		this.sqlAdaptor = getSQLAdaptor(dialect);
 	}
 
-	toSQL(): string {
+	toSQL(
+		embedParameters: boolean = true,
+		parameters: any[] = null
+	): string {
 		let entityName = this.qEntity.__entityName__;
 
 		let joinQEntityMap: {[alias: string]: IQEntity} = {};
