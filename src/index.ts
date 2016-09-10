@@ -58,8 +58,13 @@ import {ISQLAdaptor, getSQLAdaptor} from "./query/sql/adaptor/SQLAdaptor";
 import {SQLDialect, SQLDataType, SQLStringQuery} from "./query/sql/SQLStringQuery";
 import {PHRawSQLQuery, PHJsonSQLQuery, JoinType, PHSQLQuery} from "./query/sql/PHSQLQuery";
 import {PHQuery, PHRawQuery} from "./query/PHQuery";
+import {FieldMap, EntityFieldMap, PropertyFieldEntry} from "./query/sql/FieldMap";
+
 
 export {
+	FieldMap,
+	EntityFieldMap,
+	PropertyFieldEntry,
 	PHQuery,
 	PHRawQuery,
 	PHSQLQuery,

@@ -3,6 +3,7 @@ import { RelationRecord } from "../../core/entity/Relation";
 import { IEntity, QEntity, IQEntity } from "../../core/entity/Entity";
 import { JSONBaseOperation } from "../../core/operation/Operation";
 import { ISQLAdaptor } from "./adaptor/SQLAdaptor";
+import { FieldMap } from "./FieldMap";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -15,34 +16,6 @@ export declare enum SQLDataType {
     DATE = 1,
     NUMBER = 2,
     STRING = 3,
-}
-export declare class FieldMap {
-    entityMap: {
-        [entityName: string]: EntityFieldMap;
-    };
-    tableMap: {
-        [tableName: string]: EntityFieldMap;
-    };
-    ensure(entityName: string, tableName: string): EntityFieldMap;
-    existsByStructure(tableName: string, columnName: string): boolean;
-    existsByModel(entityName: string, propertyName: string): boolean;
-}
-export declare class EntityFieldMap {
-    entityName: string;
-    tableName: string;
-    columnMap: {
-        [columnName: string]: PropertyFieldEntry;
-    };
-    propertyMap: {
-        [propertyName: string]: PropertyFieldEntry;
-    };
-    constructor(entityName: string, tableName: string);
-    ensure(propertyName: string, columnName: string): PropertyFieldEntry;
-}
-export declare class PropertyFieldEntry {
-    propertyName: string;
-    columnName: string;
-    constructor(propertyName: string, columnName: string);
 }
 export declare class SQLStringQuery<IE extends IEntity> {
     phJsonQuery: PHJsonSQLQuery<IE>;
