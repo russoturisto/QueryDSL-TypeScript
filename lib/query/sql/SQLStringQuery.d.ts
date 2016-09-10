@@ -63,7 +63,7 @@ export declare class SQLStringQuery<IE extends IEntity> {
         [aliasPropertyCombo: string]: string;
     }, entityDefaultsMap: {
         [property: string]: any;
-    }): string;
+    }, embedParameters?: boolean, parameters?: any[]): string;
     getColumnSelectFragment(entityName: string, propertyName: string, tableAlias: string, columnMap: {
         [propertyName: string]: ColumnConfiguration;
     }, joinColumnMap: {
@@ -75,18 +75,18 @@ export declare class SQLStringQuery<IE extends IEntity> {
         [alias: string]: IQEntity;
     }, joinAliasMap: {
         [entityName: string]: string;
-    }): string;
+    }, embedParameters?: boolean, parameters?: any[]): string;
     getWHEREFragment(operation: JSONBaseOperation, nestingIndex: number, joinQEntityMap: {
         [alias: string]: IQEntity;
-    }): string;
-    getComparibleOperatorAndValueFragment<T>(fieldOperation: string, value: any, alias: string, propertyName: string, typeCheckFunction: (value: any) => boolean, typeName: string, conversionFunction?: (value: any) => any): string;
-    getCommonOperatorAndValueFragment<T>(fieldOperation: string, value: any, alias: string, propertyName: string, typeCheckFunction: (value: any) => boolean, typeName: string, conversionFunction?: (value: any) => any): string;
+    }, embedParameters?: boolean, parameters?: any[]): string;
+    getComparibleOperatorAndValueFragment<T>(fieldOperation: string, value: any, alias: string, propertyName: string, typeCheckFunction: (value: any) => boolean, typeName: string, embedParameters?: boolean, parameters?: any[], conversionFunction?: (value: any, embedParameters: boolean) => any): string;
+    getCommonOperatorAndValueFragment<T>(fieldOperation: string, value: any, alias: string, propertyName: string, typeCheckFunction: (value: any) => boolean, typeName: string, embedParameters?: boolean, parameters?: any[], conversionFunction?: (value: any, embedParameters: boolean) => any): string;
     booleanTypeCheck(valueToCheck: any): boolean;
     dateTypeCheck(valueToCheck: any): boolean;
     numberTypeCheck(valueToCheck: any): boolean;
     stringTypeCheck(valueToCheck: any): boolean;
     throwValueOnOperationError(valueType: string, operation: string, alias: string, propertyName: string): void;
-    sanitizeStringValue(value: string): string;
+    sanitizeStringValue(value: string, embedParameters: boolean): string;
     warn(warning: string): void;
     parseQueryResults(entityName: string, selectClauseFragment: any, results: any[]): any[];
     parseQueryResult(entityName: string, selectClauseFragment: any, resultRow: any, nextFieldIndex: number[], entityDefaultsMap: {

@@ -3,7 +3,7 @@ import { SQLDialect, SQLDataType } from "../SQLStringQuery";
  * Created by Papa on 8/27/2016.
  */
 export interface ISQLAdaptor {
-    dateToDbQuery(date: Date): string;
+    dateToDbQuery(date: Date, embedParameters: any): string | number;
     getResultArray(rawResponse: any): any[];
     /**
      * Options in returned result:

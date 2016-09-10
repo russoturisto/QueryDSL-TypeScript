@@ -6,10 +6,14 @@ import {ISQLAdaptor} from "./SQLAdaptor";
 
 export class OracleAdaptor implements ISQLAdaptor {
 
-	dateToDbQuery( date: Date ): string {
+	dateToDbQuery( date: Date, embedParameters:boolean ): string | number {
+		if(embedParameters) {
 		let dateString = date.toJSON();
 		dateString = dateString.replace('Z', '');
 		return `trunc(to_timestamp_tz('${dateString}.GMT','YYYY-MM-DD"T"HH24:MI:SS.FF3.TZR'))`;
+		} else {
+			return date.getTime();
+		}
 	}
 
 	getResultArray(rawResponse:any):any[] {

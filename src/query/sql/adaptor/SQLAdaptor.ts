@@ -7,7 +7,7 @@ import {SqLiteAdaptor} from "./SqLiteAdaptor";
 
 export interface ISQLAdaptor {
 
-	dateToDbQuery( date: Date ): string;
+	dateToDbQuery( date: Date, embedParameters): string | number;
 
 	getResultArray(rawResponse:any):any[];
 

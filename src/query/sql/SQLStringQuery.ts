@@ -53,9 +53,9 @@ export class SQLStringQuery<IE extends IEntity> {
 		let entityName = this.qEntity.__entityName__;
 
 		let joinQEntityMap: {[alias: string]: IQEntity} = {};
-		let fromFragment = this.getFromFragment(joinQEntityMap, this.joinAliasMap);
-		let selectFragment = this.getSelectFragment(entityName, null, this.phJsonQuery.select, this.joinAliasMap, this.columnAliasMap, this.defaultsMap);
-		let whereFragment = this.getWHEREFragment(this.phJsonQuery.where, 0, joinQEntityMap);
+		let fromFragment = this.getFromFragment(joinQEntityMap, this.joinAliasMap, embedParameters, parameters);
+		let selectFragment = this.getSelectFragment(entityName, null, this.phJsonQuery.select, this.joinAliasMap, this.columnAliasMap, this.defaultsMap, embedParameters, parameters);
+		let whereFragment = this.getWHEREFragment(this.phJsonQuery.where, 0, joinQEntityMap, embedParameters, parameters);
 
 		return `SELECT
 ${selectFragment}
@@ -71,7 +71,9 @@ ${whereFragment}`;
 		selectClauseFragment: any,
 		joinAliasMap: {[entityName: string]: string},
 		columnAliasMap: {[aliasPropertyCombo: string]: string},
-		entityDefaultsMap: {[property: string]: any}
+		entityDefaultsMap: {[property: string]: any},
+		embedParameters: boolean = true,
+		parameters: any[] = null
 	): string {
 
 		let qEntity = this.qEntityMap[entityName];
@@ -177,7 +179,9 @@ ${whereFragment}`;
 
 	getFromFragment(
 		joinQEntityMap: {[alias: string]: IQEntity},
-		joinAliasMap: {[entityName: string]: string}
+		joinAliasMap: {[entityName: string]: string},
+		embedParameters: boolean = true,
+		parameters: any[] = null
 	): string {
 		let joinRelations: JSONRelation[] = this.phJsonQuery.from;
 
@@ -324,7 +328,9 @@ ${whereFragment}`;
 	getWHEREFragment(
 		operation: JSONBaseOperation,
 		nestingIndex: number,
-		joinQEntityMap: {[alias: string]: IQEntity}
+		joinQEntityMap: {[alias: string]: IQEntity},
+		embedParameters: boolean = true,
+		parameters: any[] = null
 	): string {
 		let whereFragment = '';
 
@@ -400,7 +406,7 @@ ${whereFragment}`;
 					let fieldOperation;
 					for (let operationProperty in valueOperation) {
 						if (fieldOperation) {
-							throw `More than open operation (${fieldOperation}, ${operationProperty}, ...) is defined on field '${alias}.${propertyName}' used in the WHERE clause.`;
+							throw `More than one operation (${fieldOperation}, ${operationProperty}, ...) is defined on field '${alias}.${propertyName}' used in the WHERE clause.`;
 						}
 						fieldOperation = operationProperty;
 					}
@@ -408,24 +414,29 @@ ${whereFragment}`;
 					let operatorAndValueFragment;
 					let value = valueOperation[fieldOperation];
 					if (field instanceof QBooleanField) {
-						operatorAndValueFragment = this.getCommonOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.stringTypeCheck, 'boolean');
+						operatorAndValueFragment = this.getCommonOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.stringTypeCheck, 'boolean', embedParameters, parameters);
 						if (!operatorAndValueFragment) {
 							throw `Unexpected operation '${fieldOperation}' on field '${alias}.${propertyName}' in the WHERE clause.`
 						}
 					} else if (field instanceof QDateField) {
-						operatorAndValueFragment = this.getComparibleOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.numberTypeCheck, 'Date', this.sqlAdaptor.dateToDbQuery);
+						operatorAndValueFragment = this.getComparibleOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.numberTypeCheck, 'Date', embedParameters, parameters, this.sqlAdaptor.dateToDbQuery);
 					} else if (field instanceof QNumberField) {
-						operatorAndValueFragment = this.getComparibleOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.numberTypeCheck, 'number');
+						operatorAndValueFragment = this.getComparibleOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.numberTypeCheck, 'number', embedParameters, parameters);
 
 					} else if (field instanceof QStringField) {
-						operatorAndValueFragment = this.getCommonOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.stringTypeCheck, 'string', this.sanitizeStringValue);
+						operatorAndValueFragment = this.getCommonOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.stringTypeCheck, 'string', embedParameters, parameters, this.sanitizeStringValue);
 						if (!operatorAndValueFragment) {
 							switch (fieldOperation) {
 								case '$like':
 									if (typeof value != 'string') {
 										this.throwValueOnOperationError('string', '$like (LIKE)', alias, propertyName);
 									}
-									operatorAndValueFragment = `LIKE ${this.sanitizeStringValue(value)}`;
+									value = this.sanitizeStringValue(value, embedParameters);
+									if (!embedParameters) {
+										parameters.push(value);
+										value = '?';
+									}
+									operatorAndValueFragment = `LIKE ${value}`;
 									break;
 								default:
 									throw `Unexpected operation '${fieldOperation}' on field '${alias}.${propertyName}' in the WHERE clause.`;
@@ -450,9 +461,14 @@ ${whereFragment}`;
 		propertyName: string,
 		typeCheckFunction: ( value: any )=>boolean,
 		typeName: string,
-		conversionFunction?: ( value: any )=>any
+		embedParameters: boolean = true,
+		parameters: any[] = null,
+		conversionFunction?: (
+			value: any,
+			embedParameters: boolean
+		)=>any
 	): string {
-		let operatorAndValueFragment = this.getCommonOperatorAndValueFragment(fieldOperation, value, alias, propertyName, typeCheckFunction, typeName, conversionFunction);
+		let operatorAndValueFragment = this.getCommonOperatorAndValueFragment(fieldOperation, value, alias, propertyName, typeCheckFunction, typeName, embedParameters, parameters, conversionFunction);
 		if (operatorAndValueFragment) {
 			return operatorAndValueFragment;
 		}
@@ -477,7 +493,11 @@ ${whereFragment}`;
 			this.throwValueOnOperationError(typeName, opString, alias, propertyName);
 		}
 		if (conversionFunction) {
-			value = conversionFunction(value);
+			value = conversionFunction(value, embedParameters);
+		}
+		if (!embedParameters) {
+			parameters.push(value);
+			value = '?';
 		}
 		switch (fieldOperation) {
 			case '$gt':
@@ -500,7 +520,12 @@ ${whereFragment}`;
 		propertyName: string,
 		typeCheckFunction: ( value: any )=>boolean,
 		typeName: string,
-		conversionFunction?: ( value: any )=>any
+		embedParameters: boolean = true,
+		parameters: any[] = null,
+		conversionFunction?: (
+			value: any,
+			embedParameters: boolean
+		)=>any
 	): string {
 		let sqlOperator;
 
@@ -511,7 +536,7 @@ ${whereFragment}`;
 					this.throwValueOnOperationError(typeName, '$eq (=)', alias, propertyName);
 				}
 				if (conversionFunction) {
-					value = conversionFunction(value);
+					value = conversionFunction(value, embedParameters);
 				}
 				break;
 			case '$exists':
@@ -532,7 +557,7 @@ ${whereFragment}`;
 					if (!typeCheckFunction(aValue)) {
 						this.throwValueOnOperationError(`${typeName}[]`, '$eq (=)', alias, propertyName);
 						if (conversionFunction) {
-							return conversionFunction(aValue);
+							return conversionFunction(aValue, embedParameters);
 						} else {
 							return aValue;
 						}
@@ -545,7 +570,7 @@ ${whereFragment}`;
 					this.throwValueOnOperationError(typeName, '$ne (!=)', alias, propertyName);
 				}
 				if (conversionFunction) {
-					value = conversionFunction(value);
+					value = conversionFunction(value, embedParameters);
 				}
 				break;
 			case '$nin':
@@ -557,7 +582,7 @@ ${whereFragment}`;
 					if (!typeCheckFunction(aValue)) {
 						this.throwValueOnOperationError(`${typeName}[]`, '$eq (=)', alias, propertyName);
 						if (conversionFunction) {
-							return conversionFunction(aValue);
+							return conversionFunction(aValue, embedParameters);
 						} else {
 							return aValue;
 						}
@@ -566,6 +591,11 @@ ${whereFragment}`;
 				break;
 			default:
 				return undefined;
+		}
+
+		if (!embedParameters) {
+			parameters.push(value);
+			value = '?';
 		}
 
 		return `${sqlOperator} ${value}`;
@@ -608,10 +638,16 @@ ${whereFragment}`;
 		throw `Expecting a string value for $eq (=) operation on '${alias}.${propertyName}' used in the WHERE clause.`;
 	}
 
-	sanitizeStringValue( value: string ): string {
+	sanitizeStringValue(
+		value: string,
+		embedParameters: boolean
+	): string {
 		// FIXME: sanitize the string to prevent SQL Injection attacks.
 
-		return `'${value}'`;
+		if (embedParameters) {
+			value = `'${value}'`;
+		}
+		return value;
 	}
 
 
