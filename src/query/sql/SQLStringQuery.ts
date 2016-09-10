@@ -26,12 +26,89 @@ export enum SQLDataType {
 	STRING
 }
 
+export class FieldMap {
+	entityMap: {[entityName: string]: EntityFieldMap} = {};
+	tableMap: {[tableName: string]: EntityFieldMap} = {};
+
+	ensure(
+		entityName: string,
+		tableName: string
+	): EntityFieldMap {
+		let entityFieldMap = this.entityMap[entityName];
+		if (!entityFieldMap) {
+			entityFieldMap = new EntityFieldMap(entityName, tableName);
+			this.entityMap[entityName] = entityFieldMap;
+			this.tableMap[tableName] = entityFieldMap;
+		}
+
+		return entityFieldMap;
+	}
+
+	existsByStructure(
+		tableName: string,
+		columnName: string
+	): boolean {
+		let entityFieldMap = this.tableMap[tableName];
+		if (!entityFieldMap) {
+			return false;
+		}
+		return !!entityFieldMap.columnMap[columnName];
+	}
+
+	existsByModel(
+		entityName: string,
+		propertyName: string
+	): boolean {
+		let entityFieldMap = this.entityMap[entityName];
+		if (!entityFieldMap) {
+			return false;
+		}
+		return !!entityFieldMap.propertyMap[propertyName];
+	}
+
+}
+
+export class EntityFieldMap {
+	columnMap: {[columnName: string]: PropertyFieldEntry} = {};
+	propertyMap: {[propertyName: string]: PropertyFieldEntry} = {};
+
+	constructor(
+		public entityName: string,
+		public tableName: string
+	) {
+	}
+
+	ensure(
+		propertyName: string,
+		columnName: string
+	): PropertyFieldEntry {
+		let propertyFieldEntry = this.propertyMap[propertyName];
+		if (!propertyFieldEntry) {
+			propertyFieldEntry = new PropertyFieldEntry(propertyName, columnName);
+			this.propertyMap[propertyName] = propertyFieldEntry;
+			this.columnMap[columnName] = propertyFieldEntry;
+		}
+
+		return propertyFieldEntry;
+	}
+
+}
+
+export class PropertyFieldEntry {
+	constructor(
+		public propertyName: string,
+		public columnName: string
+	) {
+	}
+}
+
 export class SQLStringQuery<IE extends IEntity> {
 
-	sqlAdaptor: ISQLAdaptor;
-	defaultsMap: {[property: string]: any} = {};
 	columnAliasMap: {[aliasPropertyCombo: string]: string} = {};
+	defaultsMap: {[property: string]: any} = {};
+	fieldMap: FieldMap = new FieldMap();
 	joinAliasMap: {[entityName: string]: string} = {};
+	sqlAdaptor: ISQLAdaptor;
 
 	private currentFieldIndex = 0;
 
@@ -44,6 +121,10 @@ export class SQLStringQuery<IE extends IEntity> {
 		private dialect: SQLDialect
 	) {
 		this.sqlAdaptor = getSQLAdaptor(dialect);
+	}
+
+	getFieldMap(): FieldMap {
+		return this.fieldMap;
 	}
 
 	toSQL(
@@ -65,7 +146,16 @@ WHERE
 ${whereFragment}`;
 	}
 
-	getSelectFragment(
+	private addField(
+		entityName: string,
+		tableName: string,
+		propertyName: string,
+		columnName: string
+	): void {
+		this.fieldMap.ensure(entityName, tableName).ensure(propertyName, columnName);
+	}
+
+	protected getSelectFragment(
 		entityName: string,
 		selectFragment: string,
 		selectClauseFragment: any,
@@ -78,8 +168,6 @@ ${whereFragment}`;
 
 		let qEntity = this.qEntityMap[entityName];
 		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
-		let columnMap = entityMetadata.columnMap;
-		let joinColumnMap = entityMetadata.joinColumnMap;
 		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
 		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
 
@@ -97,9 +185,13 @@ ${whereFragment}`;
 			selectClauseFragment = {};
 			for (let propertyName in entityPropertyTypeMap) {
 				selectClauseFragment[propertyName] = {};
+				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
 			}
 			for (let propertyName in entityRelationMap) {
 				selectClauseFragment[propertyName] = {};
+				if (entityMetadata.manyToOneMap[propertyName]) {
+					let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
+				}
 			}
 		}
 
@@ -112,8 +204,8 @@ ${whereFragment}`;
 				entityDefaultsMap[propertyName] = value;
 			}
 			if (entityPropertyTypeMap[propertyName]) {
-				let columnSelect = this.getColumnSelectFragment(entityName, propertyName, tableAlias,
-					columnMap, null, columnAliasMap, selectFragment);
+				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
+				let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, columnAliasMap, selectFragment);
 				selectFragment += columnSelect;
 			} else if (entityRelationMap[propertyName]) {
 				let defaultsChildMap = {};
@@ -121,8 +213,8 @@ ${whereFragment}`;
 				let subSelectClauseFragment = selectClauseFragment[propertyName];
 				if (subSelectClauseFragment == null) {
 					if (entityMetadata.manyToOneMap[propertyName]) {
-						let columnSelect = this.getColumnSelectFragment(entityName, propertyName, tableAlias,
-							null, joinColumnMap, columnAliasMap, selectFragment);
+						let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
+						let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, columnAliasMap, selectFragment);
 						selectFragment += columnSelect;
 						continue;
 					} else {
@@ -140,14 +232,26 @@ ${whereFragment}`;
 		return selectFragment;
 	}
 
-	getColumnSelectFragment(
+	private getEntityPropertyColumnName(
+		qEntity: IQEntity,
+		propertyName: string,
+		tableAlias: string
+	): string {
+		let entityName = qEntity.__entityName__;
+		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
+		let columnMap = entityMetadata.columnMap;
+
+		let columnName = this.getPropertyColumnName(entityName, propertyName, tableAlias, columnMap);
+		this.addField(entityName, this.getTableName(qEntity), propertyName, columnName);
+
+		return columnName;
+	}
+
+	private getPropertyColumnName(
 		entityName: string,
 		propertyName: string,
 		tableAlias: string,
-		columnMap: {[propertyName: string]: ColumnConfiguration},
-		joinColumnMap: {[propertyName: string]: JoinColumnConfiguration},
-		columnAliasMap: {[aliasWithProperty: string]: string},
-		existingSelectFragment: string
+		columnMap: {[propertyName: string]: ColumnConfiguration}
 	): string {
 		let columnName;
 		if (columnMap && columnMap[propertyName]) {
@@ -155,18 +259,58 @@ ${whereFragment}`;
 			if (!columnName) {
 				throw `Found @Column but not @Column.name for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause.`;
 			}
-		} else if (joinColumnMap && joinColumnMap[propertyName]) {
+		} else {
+			this.warn(`Did not find @Column for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause. Using property name`);
+			columnName = propertyName;
+		}
+
+		return columnName;
+	}
+
+	private getEntityManyToOneColumnName(
+		qEntity: IQEntity,
+		propertyName: string,
+		tableAlias: string
+	): string {
+		let entityName = qEntity.__entityName__;
+		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
+		let joinColumnMap = entityMetadata.joinColumnMap;
+
+		let columnName = this.getManyToOneColumnName(entityName, propertyName, tableAlias, joinColumnMap);
+		this.addField(entityName, this.getTableName(qEntity), propertyName, columnName);
+
+		return columnName;
+	}
+
+	private getManyToOneColumnName(
+		entityName: string,
+		propertyName: string,
+		tableAlias: string,
+		joinColumnMap: {[propertyName: string]: JoinColumnConfiguration}
+	): string {
+		let columnName;
+		if (joinColumnMap && joinColumnMap[propertyName]) {
 			columnName = joinColumnMap[propertyName].name;
 			if (!columnName) {
 				throw `Found @JoinColumn but not @JoinColumn.name for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause.`;
 			}
 		} else {
-			this.warn(`Did not find @Column/@JoinColumn for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause. Using property name`);
+			this.warn(`Did not find @JoinColumn for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause. Using property name`);
 			columnName = propertyName;
 		}
 
+		return columnName;
+	}
+
+	protected getColumnSelectFragment(
+		propertyName: string,
+		tableAlias: string,
+		columnName: string,
+		columnAliasMap: {[aliasWithProperty: string]: string},
+		existingSelectFragment: string
+	): string {
 		let columnAlias = `column_${++this.currentFieldIndex}`;
-		let columnSelect = `${tableAlias}.${columnName} as columnAlias\n`;
+		let columnSelect = `${tableAlias}.${columnName} as ${columnAlias}\n`;
 		columnAliasMap[`${tableAlias}.${propertyName}`] = columnAlias;
 		if (existingSelectFragment) {
 			columnSelect = `\t, ${columnSelect}`;
@@ -177,7 +321,23 @@ ${whereFragment}`;
 		return columnSelect;
 	}
 
-	getFromFragment(
+	private getTableName( qEntity: IQEntity ): string {
+		let tableName = qEntity.__entityName__;
+		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
+		if (entityMetadata.table) {
+			if (!entityMetadata.table.name) {
+				throw `Found @Table but not @Table.name for entity: ${tableName}`;
+			} else {
+				tableName = entityMetadata.table.name;
+			}
+		} else {
+			this.warn(`Did not find @Table.name for first table in FROM clause. Using entity class name.`);
+		}
+
+		return tableName;
+	}
+
+	protected getFromFragment(
 		joinQEntityMap: {[alias: string]: IQEntity},
 		joinAliasMap: {[entityName: string]: string},
 		embedParameters: boolean = true,
@@ -201,15 +361,7 @@ ${whereFragment}`;
 		if (firstEntity != this.qEntity) {
 			throw `Unexpected first table in FROM clause: ${firstRelation.entityName}, expecting: ${this.qEntity.__entityName__}`;
 		}
-
-		let firstEntityMetadata: EntityMetadata = <EntityMetadata><any>firstEntity.__entityConstructor__;
-
-		let tableName = firstEntity.__entityName__;
-		if (firstEntityMetadata.table && firstEntityMetadata.table.name) {
-			tableName = firstEntityMetadata.table.name;
-		} else {
-			this.warn(`Did not find @Table.name for first table in FROM clause. Using entity class name.`);
-		}
+		let tableName = this.getTableName(firstEntity);
 		if (!firstRelation.alias) {
 			throw `Missing an alias for the first table in the FROM clause.`;
 		}
@@ -244,15 +396,7 @@ ${whereFragment}`;
 			joinQEntityMap[joinRelation.alias] = rightEntity;
 			joinAliasMap[rightEntity.__entityName__] = joinRelation.alias;
 
-			let leftEntityMetadata: EntityMetadata = <EntityMetadata><any>leftEntity.__entityConstructor__;
-			let rightEntityMetadata: EntityMetadata = <EntityMetadata><any>rightEntity.__entityConstructor__;
-
-			let tableName = rightEntity.__entityName__;
-			if (rightEntityMetadata.table && rightEntityMetadata.table.name) {
-				tableName = rightEntityMetadata.table.name;
-			} else {
-				this.warn(`Did not find @Table.name for table ${i + 1} in FROM clause. Using entity class name.`);
-			}
+			let tableName = this.getTableName(rightEntity);
 
 			let joinTypeString;
 			switch (joinRelation.joinType) {
@@ -265,55 +409,28 @@ ${whereFragment}`;
 			}
 
 			let rightEntityJoinColumn, leftColumn;
+			let leftEntityMetadata: EntityMetadata = <EntityMetadata><any>leftEntity.__entityConstructor__;
+			let rightEntityMetadata: EntityMetadata = <EntityMetadata><any>rightEntity.__entityConstructor__;
 
 			if (rightEntityMetadata.manyToOneMap[joinRelation.relationPropertyName]) {
-				let rightEntityJoinColumnMetadata = rightEntityMetadata.joinColumnMap[joinRelation.relationPropertyName];
-				if (!rightEntityJoinColumnMetadata || !rightEntityJoinColumnMetadata.name) {
-					throw `Could not find @JoinColumn for @ManyToOne relation: ${joinRelation.relationPropertyName} on Right entity in jon for table ${i + 1} in the FROM clause.`;
-				}
-				rightEntityJoinColumn = rightEntityJoinColumnMetadata.name;
+				rightEntityJoinColumn = this.getEntityManyToOneColumnName(rightEntity, joinRelation.relationPropertyName, joinRelation.parentEntityAlias);
 
 				if (!leftEntityMetadata.idProperty) {
 					throw `Could not find @Id for right entity of join to table ${i + 1} in FROM clause`;
 				}
-				leftColumn = leftEntityMetadata.idProperty;
-				let leftEntityColumnMetadata = leftEntityMetadata.columnMap[leftColumn];
-				if (leftEntityColumnMetadata) {
-					if (leftEntityColumnMetadata.name) {
-						leftColumn = leftEntityColumnMetadata.name;
-					} else {
-						throw `Found @Column but not @Column.name for @Id column of left/parent entity in join for table ${i + 1} in FROM clause`;
-					}
-				} else {
-					this.warn(`Did not find @Column.name for @Id column of left/parent entity in join for table ${i + 1} in FROM clause. Using object property name.`);
-				}
+				leftColumn = this.getEntityPropertyColumnName(leftEntity, leftEntityMetadata.idProperty, joinRelation.alias);
 			} else if (rightEntityMetadata.oneToManyMap[joinRelation.relationPropertyName]) {
 				let rightEntityOneToManyMetadata = rightEntityMetadata.oneToManyMap[joinRelation.relationPropertyName];
 				let mappedByLeftEntityProperty = rightEntityOneToManyMetadata.mappedBy;
 				if (!mappedByLeftEntityProperty) {
 					throw `Could not find @OneToMany.mappedBy for relation ${joinRelation.relationPropertyName} of table ${i + 1} in FROM clause.`;
 				}
-				leftEntityMetadata.manyToOneMap[mappedByLeftEntityProperty]
-				let leftEntityJoinColumnMetadata = rightEntityMetadata.joinColumnMap[mappedByLeftEntityProperty];
-				if (!leftEntityJoinColumnMetadata || !leftEntityJoinColumnMetadata.name) {
-					throw `Could not find @JoinColumn for @ManyToOne relation: ${joinRelation.relationPropertyName} on Left entity in jon for table ${i + 1} in the FROM clause.`;
-				}
-				leftColumn = leftEntityJoinColumnMetadata.name;
+				leftColumn = this.getEntityManyToOneColumnName(leftEntity, mappedByLeftEntityProperty, joinRelation.alias);
 
 				if (!rightEntityMetadata.idProperty) {
 					throw `Could not find @Id for right entity of join to table ${i + 1} in FROM clause`;
 				}
-				rightEntityJoinColumn = leftEntityMetadata.idProperty;
-				let rightEntityColumnMetadata = leftEntityMetadata.columnMap[rightEntityJoinColumn];
-				if (rightEntityColumnMetadata && rightEntityColumnMetadata.name) {
-					if (rightEntityColumnMetadata.name) {
-						rightEntityJoinColumn = rightEntityColumnMetadata.name;
-					} else {
-						throw `Found @Column but not @Column.name for @Id column of Right entity in join for table ${i + 1} in FROM clause.`;
-					}
-				} else {
-					this.warn(`Did not find @Column.name for @Id column of Right entity in join for table ${i + 1} in FROM clause. Using object property name.`);
-				}
+				rightEntityJoinColumn = this.getEntityPropertyColumnName(rightEntity, rightEntityMetadata.idProperty, joinRelation.parentEntityAlias);
 			} else {
 				throw `Relation for table ${i + i} (${tableName}) in FROM clause is not listed as @ManyToOne or @OneToMany`;
 			}
@@ -325,7 +442,7 @@ ${whereFragment}`;
 		return fromFragment;
 	}
 
-	getWHEREFragment(
+	protected getWHEREFragment(
 		operation: JSONBaseOperation,
 		nestingIndex: number,
 		joinQEntityMap: {[alias: string]: IQEntity},
@@ -390,17 +507,8 @@ ${whereFragment}`;
 						throw `Did not find field '${alias}.${propertyName}' used in the WHERE clause.`;
 					}
 
-					let columnMetadata = entityMetadata.columnMap[propertyName];
-					if (columnMetadata) {
-						if (!columnMetadata.name) {
-							throw `Found @Column but not @Column.name for '${alias}.${propertyName}' in a WHERE clause.`;
-						} else {
-							whereFragment = `${alias}.${columnMetadata.name} `;
-						}
-					} else {
-						this.warn(`Did not find @Column for '${alias}.${propertyName}' in a WHERE clause. Using object property name.`);
-						whereFragment = `${alias}.${propertyName} `;
-					}
+					let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, alias);
+					whereFragment = `${alias}.${columnName} `;
 
 					let valueOperation = operation[property];
 					let fieldOperation;
@@ -454,7 +562,7 @@ ${whereFragment}`;
 		return whereFragment;
 	}
 
-	getComparibleOperatorAndValueFragment<T>(
+	protected getComparibleOperatorAndValueFragment<T>(
 		fieldOperation: string,
 		value: any,
 		alias: string,
@@ -513,7 +621,7 @@ ${whereFragment}`;
 		}
 	}
 
-	getCommonOperatorAndValueFragment<T>(
+	protected getCommonOperatorAndValueFragment<T>(
 		fieldOperation: string,
 		value: any,
 		alias: string,
@@ -601,13 +709,13 @@ ${whereFragment}`;
 		return `${sqlOperator} ${value}`;
 	}
 
-	booleanTypeCheck(
+	private booleanTypeCheck(
 		valueToCheck: any
 	): boolean {
 		return typeof valueToCheck === 'boolean';
 	}
 
-	dateTypeCheck(
+	private dateTypeCheck(
 		valueToCheck: any
 	): boolean {
 		// TODO: see if there is a more appropriate way to check serialized Dates
@@ -617,19 +725,19 @@ ${whereFragment}`;
 		return valueToCheck instanceof Date;
 	}
 
-	numberTypeCheck(
+	private numberTypeCheck(
 		valueToCheck: any
 	): boolean {
 		return typeof valueToCheck === 'number';
 	}
 
-	stringTypeCheck(
+	private stringTypeCheck(
 		valueToCheck: any
 	): boolean {
 		return typeof valueToCheck === 'string';
 	}
 
-	throwValueOnOperationError(
+	private throwValueOnOperationError(
 		valueType: string,
 		operation: string,
 		alias: string,
@@ -638,7 +746,7 @@ ${whereFragment}`;
 		throw `Expecting a string value for $eq (=) operation on '${alias}.${propertyName}' used in the WHERE clause.`;
 	}
 
-	sanitizeStringValue(
+	private sanitizeStringValue(
 		value: string,
 		embedParameters: boolean
 	): string {
@@ -651,15 +759,13 @@ ${whereFragment}`;
 	}
 
 
-	warn(
+	protected warn(
 		warning: string
 	): void {
 		console.log(warning);
 	}
 
 	parseQueryResults(
-		entityName: string,
-		selectClauseFragment: any,
 		results: any[]
 	): any[] {
 		let parsedResults: any[] = [];
@@ -669,12 +775,12 @@ ${whereFragment}`;
 		}
 
 		return results.map(( result ) => {
-			return this.parseQueryResult(entityName, selectClauseFragment, result, [0], this.defaultsMap);
+			return this.parseQueryResult(this.qEntity.__entityName__, this.phJsonQuery.select, result, [0], this.defaultsMap);
 		});
 
 	}
 
-	parseQueryResult(
+	protected parseQueryResult(
 		entityName: string,
 		selectClauseFragment: any,
 		resultRow: any,
