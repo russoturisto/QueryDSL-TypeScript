@@ -31,7 +31,26 @@ export interface JoinColumnConfiguration {
  * @returns {function(Function)}
  * @constructor
  */
-export declare function JoinColumn(joinColumnConfiguration?: JoinColumnConfiguration): (targetObject: any, propertyKey: string) => void;
+export declare function JoinColumn(joinColumnConfiguration: JoinColumnConfiguration): (targetObject: any, propertyKey: string) => void;
+/**
+export interface JoinColumnsConfiguration {
+    name: string;
+    referencedColumnName: string;
+    nullable: boolean;
+}
+export function JoinColumns( joinColumnConfigurations: JoinColumnsConfiguration[] ) {
+    return function (
+        targetObject: any,
+        propertyKey: string
+    ) {
+        let entityMetadata: EntityMetadata = <EntityMetadata>targetObject;
+        if(!entityMetadata.joinColumnMap) {
+            entityMetadata.joinColumnMap = {};
+        }
+        entityMetadata.joinColumnMap[propertyKey] = joinColumnConfigurations;
+    }
+}
+*/
 /**
  * Annotates columns.
  *

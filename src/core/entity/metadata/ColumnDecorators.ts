@@ -60,7 +60,7 @@ export interface JoinColumnConfiguration {
  * @returns {function(Function)}
  * @constructor
  */
-export function JoinColumn( joinColumnConfiguration?: JoinColumnConfiguration ) {
+export function JoinColumn( joinColumnConfiguration: JoinColumnConfiguration ) {
 	return function (
 		targetObject: any,
 		propertyKey: string
@@ -72,6 +72,25 @@ export function JoinColumn( joinColumnConfiguration?: JoinColumnConfiguration ) 
 		entityMetadata.joinColumnMap[propertyKey] = joinColumnConfiguration;
 	}
 }
+/**
+export interface JoinColumnsConfiguration {
+	name: string;
+	referencedColumnName: string;
+	nullable: boolean;
+}
+export function JoinColumns( joinColumnConfigurations: JoinColumnsConfiguration[] ) {
+	return function (
+		targetObject: any,
+		propertyKey: string
+	) {
+		let entityMetadata: EntityMetadata = <EntityMetadata>targetObject;
+		if(!entityMetadata.joinColumnMap) {
+			entityMetadata.joinColumnMap = {};
+		}
+		entityMetadata.joinColumnMap[propertyKey] = joinColumnConfigurations;
+	}
+}
+*/
 
 /**
  * Annotates columns.
