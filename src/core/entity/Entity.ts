@@ -10,26 +10,27 @@ import {JSONBaseOperation, IOperation} from "../operation/Operation";
  * Marker interface for all query interfaces
  */
 export interface IEntity {
+	'*'?: null | undefined;
 }
 
 export interface IQEntity {
 
 	__entityConstructor__: {new (): any};
-	__entityFieldMap__: {[propertyName:string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>};
+	__entityFieldMap__: {[propertyName: string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>};
 	__entityName__: string;
-	__entityRelationMap__: {[propertyName:string]: IQRelation<IQEntity, any, IQEntity>};
+	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any, IQEntity>};
 
 	alias: string;
 	parentEntityAlias: string;
 	joinType: JoinType;
 
 	addEntityRelation<IQR extends IQEntity, R>(
-		propertyName:string,
+		propertyName: string,
 		relation: IQRelation<IQR, R, IQEntity>
 	): void;
 
 	addEntityField<IQF extends IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>>(
-		propertyName:string,
+		propertyName: string,
 		field: IQF
 	): void;
 
@@ -49,8 +50,8 @@ export interface IQEntity {
 
 export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 
-	__entityFieldMap__: {[propertyName:string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>} = {};
-	__entityRelationMap__: {[propertyName:string]: IQRelation<IQEntity, any, IQEntity>} = {};
+	__entityFieldMap__: {[propertyName: string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>} = {};
+	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any, IQEntity>} = {};
 
 	// rootOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(<any>this, OperationType.AND, []);
 
@@ -66,14 +67,14 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 	}
 
 	addEntityRelation<IQR extends IQEntity, R>(
-		propertyName:string,
+		propertyName: string,
 		relation: IQRelation<IQR, R, IQ>
 	): void {
 		this.__entityRelationMap__[propertyName] = relation;
 	}
 
 	addEntityField<T, IQF extends IQField<IQ, T, JSONBaseOperation, IOperation<T, JSONBaseOperation>>>(
-		propertyName:string,
+		propertyName: string,
 		field: IQF
 	): void {
 		this.__entityFieldMap__[propertyName] = field;

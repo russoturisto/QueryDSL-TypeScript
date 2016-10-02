@@ -101,23 +101,28 @@ ${whereFragment}`;
 			throw `Alias for entity ${entityName} is not defined in the From clause.`;
 		}
 
+		let retrieveAllOwnFields: boolean = false;
 		let numProperties = 0;
 		for (let propertyName in selectClauseFragment) {
+			if (propertyName === '*') {
+				retrieveAllOwnFields = true;
+				delete selectClauseFragment['*'];
+			}
 			numProperties++;
 		}
-		// For {} select causes retrieve the entire object
-		if (numProperties === 0) {
+		//  For {} select causes or if __allOwnFields__ is present, retrieve the entire object
+		if (numProperties === 0 || retrieveAllOwnFields) {
 			selectClauseFragment = {};
 			for (let propertyName in entityPropertyTypeMap) {
-				selectClauseFragment[propertyName] = {};
-				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
+				selectClauseFragment[propertyName] = null;
+				// let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
 			}
-			for (let propertyName in entityRelationMap) {
+/*			for (let propertyName in entityRelationMap) {
 				selectClauseFragment[propertyName] = {};
 				if (entityMetadata.manyToOneMap[propertyName]) {
 					let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
 				}
-			}
+			}*/
 		}
 
 		for (let propertyName in selectClauseFragment) {
@@ -324,13 +329,25 @@ ${whereFragment}`;
 			let tableName = this.getTableName(rightEntity);
 
 			let joinTypeString;
+			/*
 			switch (joinRelation.joinType) {
-				case JoinType.INNER_JOIN:
+				case SQLJoinType.INNER_JOIN:
 					joinTypeString = 'INNER JOIN';
 					break;
-				case JoinType.LEFT_JOIN:
+				case SQLJoinType.LEFT_JOIN:
 					joinTypeString = 'LEFT JOIN';
 					break;
+				default:
+					throw `Unsupported join type: ${joinRelation.joinType}`;
+			}
+*/
+			// FIXME: figure out why the switch statement above quit working
+			if (joinRelation.joinType === <number>JoinType.INNER_JOIN) {
+				joinTypeString = 'INNER JOIN';
+			} else if (joinRelation.joinType === <number>JoinType.LEFT_JOIN) {
+				joinTypeString = 'LEFT JOIN';
+			} else {
+				throw `Unsupported join type: ${joinRelation.joinType}`;
 			}
 
 			let rightEntityJoinColumn, leftColumn;

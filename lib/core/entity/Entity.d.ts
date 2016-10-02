@@ -9,6 +9,7 @@ import { JSONBaseOperation, IOperation } from "../operation/Operation";
  * Marker interface for all query interfaces
  */
 export interface IEntity {
+    '*'?: null | undefined;
 }
 export interface IQEntity {
     __entityConstructor__: {
