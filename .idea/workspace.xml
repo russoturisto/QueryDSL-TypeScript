@@ -6,9 +6,12 @@
   <component name="ChangeListManager">
     <list default="true" id="8322ebc1-9272-4c63-9e9f-f1c51e544bcc" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.d.ts" afterPath="$PROJECT_DIR$/lib/core/entity/Entity.d.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.js" afterPath="$PROJECT_DIR$/lib/core/entity/Entity.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/Entity.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.d.ts" afterPath="$PROJECT_DIR$/lib/core/entity/Relation.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/Relation.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/metadata/EntityDecorators.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/metadata/EntityDecorators.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/metadata/Types.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/metadata/Types.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/BooleanField.js" afterPath="$PROJECT_DIR$/lib/core/field/BooleanField.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/BooleanField.js.map" afterPath="$PROJECT_DIR$/lib/core/field/BooleanField.js.map" />
@@ -23,24 +26,28 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/BooleanOperation.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/DateOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/DateOperation.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/DateOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/DateOperation.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/LogicalOperation.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/NumberOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/NumberOperation.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/NumberOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/NumberOperation.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/Operation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/Operation.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/OperationType.js" afterPath="$PROJECT_DIR$/lib/core/operation/OperationType.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/OperationType.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/OperationType.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/StringOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/StringOperation.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/StringOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/StringOperation.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/utils/EntityUtils.js.map" afterPath="$PROJECT_DIR$/lib/core/utils/EntityUtils.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.js.map" afterPath="$PROJECT_DIR$/lib/index.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/noSql/PHGraphQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/noSql/PHGraphQuery.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/noSql/QueryTreeNode.js.map" afterPath="$PROJECT_DIR$/lib/query/noSql/QueryTreeNode.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/noSql/pouchdb/PouchDbGraphQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/noSql/pouchdb/PouchDbGraphQuery.d.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/noSql/pouchdb/PouchDbGraphQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/noSql/pouchdb/PouchDbGraphQuery.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/FieldMap.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/FieldMap.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/adaptor/OracleAdaptor.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/adaptor/OracleAdaptor.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/adaptor/SQLAdaptor.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/adaptor/SQLAdaptor.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/adaptor/SqLiteAdaptor.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/adaptor/SqLiteAdaptor.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/entity/Entity.ts" afterPath="$PROJECT_DIR$/src/core/entity/Entity.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" afterPath="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" />
     </list>
     <ignored path="QueryDSL-TypeScript.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -169,7 +176,7 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="SQLStringQuery.ts" pinned="false" current-in-tab="true">
+          <file leaf-file-name="SQLStringQuery.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="566">
@@ -179,7 +186,7 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Entity.ts" pinned="false" current-in-tab="false">
+          <file leaf-file-name="Entity.ts" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="119">
@@ -738,16 +745,16 @@
       <workItem from="1472856903975" duration="20383000" />
       <workItem from="1473950335088" duration="5492000" />
       <workItem from="1475064921017" duration="2252000" />
-      <workItem from="1475413790691" duration="3144000" />
+      <workItem from="1475413790691" duration="4140000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="395573000" />
+    <option name="totallyTimeSpent" value="396569000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32502595" sideWeight="0.4873551" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13909379" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -756,7 +763,7 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31983384" sideWeight="0.54531085" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31983384" sideWeight="0.54531085" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -1163,18 +1170,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="12" column="24" selection-start-line="12" selection-start-column="24" selection-end-line="12" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="566">
           <caret line="128" column="44" selection-start-line="128" selection-start-column="44" selection-end-line="128" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="12" column="24" selection-start-line="12" selection-start-column="24" selection-end-line="12" selection-end-column="24" />
           <folding />
         </state>
       </provider>
