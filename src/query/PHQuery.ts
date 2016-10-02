@@ -7,6 +7,22 @@ export interface PHRawQuery<IE extends IEntity> {
 
 }
 
+export interface PHRawUpdate<IE extends IEntity> {
+
+}
+
+export interface PHRawDelete<IE extends IEntity> {
+
+}
+
 export interface PHQuery<IE extends IEntity> {
+
+}
+
+export interface PHUpdate<IE extends IEntity> {
+
+}
+
+export interface PHDelete<IE extends IEntity> {
 
 }
