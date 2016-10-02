@@ -1,26 +1,39 @@
 import {SQLStringWhereBase} from "./SQLStringWhereBase";
 import {IEntity, IQEntity} from "../../core/entity/Entity";
+import {RelationRecord} from "../../core/entity/Relation";
+import {SQLDialect} from "./SQLStringQuery";
+import {PHJsonSQLDelete} from "./PHSQLDelete";
+import {SQLStringNoJoinQuery} from "./SQLStringNoJoinQuery";
 /**
  * Created by Papa on 10/2/2016.
  */
 
-export class SQLStringDelete<IE extends IEntity> extends SQLStringWhereBase<IE> {
+export class SQLStringDelete<IE extends IEntity> extends SQLStringNoJoinQuery<IE> {
 
-    toSQL(
-        embedParameters: boolean = true,
-        parameters: any[] = null
-    ): string {
-        let entityName = this.qEntity.__entityName__;
+	constructor(
+		public phJsonDelete: PHJsonSQLDelete<IE>,
+		qEntity: IQEntity,
+		qEntityMap: {[entityName: string]: IQEntity},
+		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
+		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
+		dialect: SQLDialect
+	) {
+		super(qEntity, qEntityMap, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
+	}
 
-        let joinQEntityMap: {[alias: string]: IQEntity} = {};
-        let fromFragment = this.getFromFragment(joinQEntityMap, this.joinAliasMap, embedParameters, parameters);
-        let whereFragment = this.getWHEREFragment(this.phJsonQuery.where, 0, joinQEntityMap, embedParameters, parameters);
+	toSQL(
+		embedParameters: boolean = true,
+		parameters: any[] = null
+	): string {
+		let joinQEntityMap: {[alias: string]: IQEntity} = {};
+		let fromFragment = this.getTableFragment(this.phJsonDelete.deleteFrom);
+		let whereFragment = this.getWHEREFragment(this.phJsonDelete.where, 0, joinQEntityMap, embedParameters, parameters);
 
-        return `DELETE
+		return `DELETE
 FROM
 ${fromFragment}
 WHERE
 ${whereFragment}`;
-    }
+	}
 
 }

@@ -1,18 +1,16 @@
-import { IEntity, QEntity, IQEntity } from "../../core/entity/Entity";
+import { IEntity, IQEntity } from "../../core/entity/Entity";
 import { ISQLAdaptor } from "./adaptor/SQLAdaptor";
-import { PHJsonSQLQuery } from "./PHSQLQuery";
 import { SQLDialect } from "./SQLStringQuery";
-import { RelationRecord } from "../../core/entity/Relation";
+import { RelationRecord, JSONRelation } from "../../core/entity/Relation";
 import { JSONBaseOperation } from "../../core/operation/Operation";
 import { FieldMap } from "./FieldMap";
 /**
  * Created by Papa on 10/2/2016.
  */
 export declare abstract class SQLStringWhereBase<IE extends IEntity> {
-    phJsonQuery: PHJsonSQLQuery<IE>;
-    qEntity: QEntity<any>;
+    qEntity: IQEntity;
     qEntityMap: {
-        [entityName: string]: QEntity<any>;
+        [entityName: string]: IQEntity;
     };
     entitiesRelationPropertyMap: {
         [entityName: string]: {
@@ -30,8 +28,8 @@ export declare abstract class SQLStringWhereBase<IE extends IEntity> {
         [entityName: string]: string;
     };
     sqlAdaptor: ISQLAdaptor;
-    constructor(phJsonQuery: PHJsonSQLQuery<IE>, qEntity: QEntity<any>, qEntityMap: {
-        [entityName: string]: QEntity<any>;
+    constructor(qEntity: IQEntity, qEntityMap: {
+        [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
             [propertyName: string]: RelationRecord;
@@ -41,6 +39,13 @@ export declare abstract class SQLStringWhereBase<IE extends IEntity> {
             [propertyName: string]: boolean;
         };
     }, dialect: SQLDialect);
+    protected getFromFragment(joinQEntityMap: {
+        [alias: string]: IQEntity;
+    }, joinAliasMap: {
+        [entityName: string]: string;
+    }, joinRelations: JSONRelation[], embedParameters?: boolean, parameters?: any[]): string;
+    protected getEntityManyToOneColumnName(qEntity: IQEntity, propertyName: string, tableAlias: string): string;
+    private getManyToOneColumnName(entityName, propertyName, tableAlias, joinColumnMap);
     protected getWHEREFragment(operation: JSONBaseOperation, nestingIndex: number, joinQEntityMap: {
         [alias: string]: IQEntity;
     }, embedParameters?: boolean, parameters?: any[]): string;

@@ -1,6 +1,6 @@
 import { PHJsonSQLQuery } from "./PHSQLQuery";
 import { RelationRecord } from "../../core/entity/Relation";
-import { IEntity, QEntity, IQEntity } from "../../core/entity/Entity";
+import { IEntity, IQEntity } from "../../core/entity/Entity";
 import { FieldMap } from "./FieldMap";
 import { SQLStringWhereBase } from "./SQLStringWhereBase";
 /**
@@ -17,6 +17,7 @@ export declare enum SQLDataType {
     STRING = 3,
 }
 export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
+    phJsonQuery: PHJsonSQLQuery<IE>;
     columnAliasMap: {
         [aliasPropertyCombo: string]: string;
     };
@@ -24,8 +25,8 @@ export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBa
         [property: string]: any;
     };
     private currentFieldIndex;
-    constructor(phJsonQuery: PHJsonSQLQuery<IE>, qEntity: QEntity<any>, qEntityMap: {
-        [entityName: string]: QEntity<any>;
+    constructor(phJsonQuery: PHJsonSQLQuery<IE>, qEntity: IQEntity, qEntityMap: {
+        [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
             [propertyName: string]: RelationRecord;
@@ -44,16 +45,9 @@ export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBa
     }, entityDefaultsMap: {
         [property: string]: any;
     }, embedParameters?: boolean, parameters?: any[]): string;
-    private getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
-    private getManyToOneColumnName(entityName, propertyName, tableAlias, joinColumnMap);
     protected getColumnSelectFragment(propertyName: string, tableAlias: string, columnName: string, columnAliasMap: {
         [aliasWithProperty: string]: string;
     }, existingSelectFragment: string): string;
-    protected getFromFragment(joinQEntityMap: {
-        [alias: string]: IQEntity;
-    }, joinAliasMap: {
-        [entityName: string]: string;
-    }, embedParameters?: boolean, parameters?: any[]): string;
     parseQueryResults(results: any[]): any[];
     protected parseQueryResult(entityName: string, selectClauseFragment: any, resultRow: any, nextFieldIndex: number[], entityDefaultsMap: {
         [property: string]: any;
