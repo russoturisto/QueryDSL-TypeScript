@@ -1,6 +1,7 @@
 import { PHJsonSQLQuery } from "./PHSQLQuery";
 import { RelationRecord } from "../../core/entity/Relation";
 import { IEntity, IQEntity } from "../../core/entity/Entity";
+import { JoinColumnConfiguration } from "../../core/entity/metadata/ColumnDecorators";
 import { FieldMap } from "./FieldMap";
 import { SQLStringWhereBase } from "./SQLStringWhereBase";
 /**
@@ -38,7 +39,12 @@ export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBa
     }, dialect: SQLDialect);
     getFieldMap(): FieldMap;
     toSQL(embedParameters?: boolean, parameters?: any[]): string;
-    protected getSelectFragment(entityName: string, selectFragment: string, selectClauseFragment: any, joinAliasMap: {
+    private getFROMFragment(joinQEntityMap, joinAliasMap, joinRelations, embedParameters?, parameters?);
+    private getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
+    protected getManyToOneColumnName(entityName: string, propertyName: string, tableAlias: string, joinColumnMap: {
+        [propertyName: string]: JoinColumnConfiguration;
+    }): string;
+    protected getSELECTFragment(entityName: string, selectFragment: string, selectClauseFragment: any, joinAliasMap: {
         [entityName: string]: string;
     }, columnAliasMap: {
         [aliasPropertyCombo: string]: string;

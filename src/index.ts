@@ -59,7 +59,7 @@ import {SQLDialect, SQLDataType, SQLStringQuery} from "./query/sql/SQLStringQuer
 import {PHRawSQLQuery, PHJsonSQLQuery, JoinType, PHSQLQuery} from "./query/sql/PHSQLQuery";
 import {PHQuery, PHRawQuery} from "./query/PHQuery";
 import {FieldMap, EntityFieldMap, PropertyFieldEntry} from "./query/sql/FieldMap";
-
+import {MetadataUtils, OneToManyConfigAndProperty} from "./core/entity/metadata/MetadataUtils";
 
 export {
 	FieldMap,
@@ -149,5 +149,7 @@ export {
 	RelationType,
 	IQRelation,
 	QRelation,
-	RelationRecord
+	RelationRecord,
+	OneToManyConfigAndProperty,
+	MetadataUtils
 };

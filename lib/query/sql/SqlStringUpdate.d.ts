@@ -21,4 +21,6 @@ export declare class SQLStringUpdate<IE extends IEntity> extends SQLStringNoJoin
     }, dialect: SQLDialect);
     toSQL(embedParameters?: boolean, parameters?: any[]): string;
     protected getSetFragment(entityName: string, setClauseFragment: IE, embedParameters?: boolean, parameters?: any[]): string;
+    protected getSetPropertyColumnName(qEntity: IQEntity, propertyName: string): string;
+    private getSetValueFragment<T>(value, entityName, propertyName, typeCheckFunction, embedParameters?, parameters?, conversionFunction?);
 }

@@ -57,8 +57,8 @@ export class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
 		let entityName = this.qEntity.__entityName__;
 
 		let joinQEntityMap: {[alias: string]: IQEntity} = {};
-		let fromFragment = this.getFromFragment(joinQEntityMap, this.joinAliasMap, this.phJsonQuery.from, embedParameters, parameters);
-		let selectFragment = this.getSelectFragment(entityName, null, this.phJsonQuery.select, this.joinAliasMap, this.columnAliasMap, this.defaultsMap, embedParameters, parameters);
+		let fromFragment = this.getFROMFragment(joinQEntityMap, this.joinAliasMap, this.phJsonQuery.from, embedParameters, parameters);
+		let selectFragment = this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinAliasMap, this.columnAliasMap, this.defaultsMap, embedParameters, parameters);
 		let whereFragment = this.getWHEREFragment(this.phJsonQuery.where, 0, joinQEntityMap, embedParameters, parameters);
 
 		return `SELECT
@@ -69,7 +69,158 @@ WHERE
 ${whereFragment}`;
 	}
 
-	protected getSelectFragment(
+	private getFROMFragment(
+		joinQEntityMap: {[alias: string]: IQEntity},
+		joinAliasMap: {[entityName: string]: string},
+		joinRelations: JSONRelation[],
+		embedParameters: boolean = true,
+		parameters: any[] = null
+	): string {
+		if (joinRelations.length < 1) {
+			throw `Expecting at least one table in FROM clause`;
+		}
+
+		let firstRelation = joinRelations[0];
+
+		let fromFragment = '\t';
+
+		if (firstRelation.relationPropertyName || firstRelation.joinType || firstRelation.parentEntityAlias) {
+			throw `First table in FROM clause cannot be joined`;
+		}
+
+		let firstEntity = this.qEntityMap[firstRelation.entityName];
+		if (firstEntity != this.qEntity) {
+			throw `Unexpected first table in FROM clause: ${firstRelation.entityName}, expecting: ${this.qEntity.__entityName__}`;
+		}
+		let tableName = this.getTableName(firstEntity);
+		if (!firstRelation.alias) {
+			throw `Missing an alias for the first table in the FROM clause.`;
+		}
+		fromFragment += `${tableName} ${firstRelation.alias}`;
+
+		joinQEntityMap[firstRelation.alias] = firstEntity;
+		joinAliasMap[firstEntity.__entityName__] = firstRelation.alias;
+
+		for (let i = 1; i < joinRelations.length; i++) {
+			let joinRelation = joinRelations[i];
+			if (!joinRelation.relationPropertyName) {
+				throw `Table ${i + 1} in FROM clause is missing relationPropertyName`;
+			}
+			if (!joinRelation.joinType) {
+				throw `Table ${i + 1} in FROM clause is missing joinType`;
+			}
+			if (!joinRelation.parentEntityAlias) {
+				throw `Table ${i + 1} in FROM clause is missing parentEntityAlias`;
+			}
+			if (!joinQEntityMap[joinRelation.parentEntityAlias]) {
+				throw `Missing parent entity for alias ${joinRelation.parentEntityAlias}, on table ${i + 1} in FROM clause`;
+			}
+			let leftEntity = joinQEntityMap[joinRelation.parentEntityAlias];
+			if (!joinRelation.alias) {
+				throw `Missing an alias for the first table in the FROM clause.`;
+			}
+
+			let rightEntity = this.qEntityMap[joinRelation.entityName];
+			if (!rightEntity) {
+				throw `Could not find entity ${joinRelation.entityName} for table ${i + 1} in FROM clause`;
+			}
+			joinQEntityMap[joinRelation.alias] = rightEntity;
+			joinAliasMap[rightEntity.__entityName__] = joinRelation.alias;
+
+			let tableName = this.getTableName(rightEntity);
+
+			let joinTypeString;
+			/*
+			 switch (joinRelation.joinType) {
+			 case SQLJoinType.INNER_JOIN:
+			 joinTypeString = 'INNER JOIN';
+			 break;
+			 case SQLJoinType.LEFT_JOIN:
+			 joinTypeString = 'LEFT JOIN';
+			 break;
+			 default:
+			 throw `Unsupported join type: ${joinRelation.joinType}`;
+			 }
+			 */
+			// FIXME: figure out why the switch statement above quit working
+			if (joinRelation.joinType === <number>JoinType.INNER_JOIN) {
+				joinTypeString = 'INNER JOIN';
+			} else if (joinRelation.joinType === <number>JoinType.LEFT_JOIN) {
+				joinTypeString = 'LEFT JOIN';
+			} else {
+				throw `Unsupported join type: ${joinRelation.joinType}`;
+			}
+
+			let rightEntityJoinColumn, leftColumn;
+			let leftEntityMetadata: EntityMetadata = <EntityMetadata><any>leftEntity.__entityConstructor__;
+			let rightEntityMetadata: EntityMetadata = <EntityMetadata><any>rightEntity.__entityConstructor__;
+
+			if (rightEntityMetadata.manyToOneMap[joinRelation.relationPropertyName]) {
+				rightEntityJoinColumn = this.getEntityManyToOneColumnName(rightEntity, joinRelation.relationPropertyName, joinRelation.parentEntityAlias);
+
+				if (!leftEntityMetadata.idProperty) {
+					throw `Could not find @Id for right entity of join to table ${i + 1} in FROM clause`;
+				}
+				leftColumn = this.getEntityPropertyColumnName(leftEntity, leftEntityMetadata.idProperty, joinRelation.alias);
+			} else if (rightEntityMetadata.oneToManyMap[joinRelation.relationPropertyName]) {
+				let rightEntityOneToManyMetadata = rightEntityMetadata.oneToManyMap[joinRelation.relationPropertyName];
+				let mappedByLeftEntityProperty = rightEntityOneToManyMetadata.mappedBy;
+				if (!mappedByLeftEntityProperty) {
+					throw `Could not find @OneToMany.mappedBy for relation ${joinRelation.relationPropertyName} of table ${i + 1} in FROM clause.`;
+				}
+				leftColumn = this.getEntityManyToOneColumnName(leftEntity, mappedByLeftEntityProperty, joinRelation.alias);
+
+				if (!rightEntityMetadata.idProperty) {
+					throw `Could not find @Id for right entity of join to table ${i + 1} in FROM clause`;
+				}
+				rightEntityJoinColumn = this.getEntityPropertyColumnName(rightEntity, rightEntityMetadata.idProperty, joinRelation.parentEntityAlias);
+			} else {
+				throw `Relation for table ${i + i} (${tableName}) in FROM clause is not listed as @ManyToOne or @OneToMany`;
+			}
+			fromFragment += `\t${joinTypeString} ${tableName} ${joinRelation.alias}`;
+			// TODO: add support for custom JOIN ON clauses
+			fromFragment += `\t\tON ${joinRelation.parentEntityAlias}.${rightEntityJoinColumn} = ${joinRelation.alias}.${leftColumn}`;
+		}
+
+		return fromFragment;
+	}
+
+	private getEntityManyToOneColumnName(
+		qEntity: IQEntity,
+		propertyName: string,
+		tableAlias: string
+	): string {
+		let entityName = qEntity.__entityName__;
+		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
+		let joinColumnMap = entityMetadata.joinColumnMap;
+
+		let columnName = this.getManyToOneColumnName(entityName, propertyName, tableAlias, joinColumnMap);
+		this.addField(entityName, this.getTableName(qEntity), propertyName, columnName);
+
+		return columnName;
+	}
+
+	protected getManyToOneColumnName(
+		entityName: string,
+		propertyName: string,
+		tableAlias: string,
+		joinColumnMap: {[propertyName: string]: JoinColumnConfiguration}
+	): string {
+		let columnName;
+		if (joinColumnMap && joinColumnMap[propertyName]) {
+			columnName = joinColumnMap[propertyName].name;
+			if (!columnName) {
+				throw `Found @JoinColumn but not @JoinColumn.name for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause.`;
+			}
+		} else {
+			this.warn(`Did not find @JoinColumn for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause. Using property name`);
+			columnName = propertyName;
+		}
+
+		return columnName;
+	}
+
+	protected getSELECTFragment(
 		entityName: string,
 		selectFragment: string,
 		selectClauseFragment: any,
@@ -141,7 +292,7 @@ ${whereFragment}`;
 						continue;
 					}
 				}
-				selectFragment = this.getSelectFragment(entityRelationMap[propertyName].entityName,
+				selectFragment += this.getSELECTFragment(entityRelationMap[propertyName].entityName,
 					selectFragment, selectClauseFragment[propertyName], joinAliasMap, columnAliasMap, defaultsChildMap);
 			} else {
 				throw `Unexpected property '${propertyName}' on entity '${entityName}' (alias '${tableAlias}') in SELECT clause.`;

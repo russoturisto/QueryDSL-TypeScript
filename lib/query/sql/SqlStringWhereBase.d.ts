@@ -1,8 +1,9 @@
 import { IEntity, IQEntity } from "../../core/entity/Entity";
 import { ISQLAdaptor } from "./adaptor/SQLAdaptor";
 import { SQLDialect } from "./SQLStringQuery";
-import { RelationRecord, JSONRelation } from "../../core/entity/Relation";
+import { RelationRecord } from "../../core/entity/Relation";
 import { JSONBaseOperation } from "../../core/operation/Operation";
+import { ColumnConfiguration, JoinColumnConfiguration } from "../../core/entity/metadata/ColumnDecorators";
 import { FieldMap } from "./FieldMap";
 /**
  * Created by Papa on 10/2/2016.
@@ -39,13 +40,6 @@ export declare abstract class SQLStringWhereBase<IE extends IEntity> {
             [propertyName: string]: boolean;
         };
     }, dialect: SQLDialect);
-    protected getFromFragment(joinQEntityMap: {
-        [alias: string]: IQEntity;
-    }, joinAliasMap: {
-        [entityName: string]: string;
-    }, joinRelations: JSONRelation[], embedParameters?: boolean, parameters?: any[]): string;
-    protected getEntityManyToOneColumnName(qEntity: IQEntity, propertyName: string, tableAlias: string): string;
-    private getManyToOneColumnName(entityName, propertyName, tableAlias, joinColumnMap);
     protected getWHEREFragment(operation: JSONBaseOperation, nestingIndex: number, joinQEntityMap: {
         [alias: string]: IQEntity;
     }, embedParameters?: boolean, parameters?: any[]): string;
@@ -53,13 +47,18 @@ export declare abstract class SQLStringWhereBase<IE extends IEntity> {
     private getCommonOperatorAndValueFragment<T>(fieldOperation, value, alias, propertyName, typeCheckFunction, typeName, embedParameters?, parameters?, conversionFunction?);
     protected getEntityPropertyColumnName(qEntity: IQEntity, propertyName: string, tableAlias: string): string;
     protected getTableName(qEntity: IQEntity): string;
-    private getPropertyColumnName(entityName, propertyName, tableAlias, columnMap);
+    protected getPropertyColumnName(entityName: string, propertyName: string, tableAlias: string, columnMap: {
+        [propertyName: string]: ColumnConfiguration;
+    }): string;
+    protected getManyToOneColumnName(entityName: string, propertyName: string, tableAlias: string, joinColumnMap: {
+        [propertyName: string]: JoinColumnConfiguration;
+    }): string;
     private throwValueOnOperationError(valueType, operation, alias, propertyName);
-    private sanitizeStringValue(value, embedParameters);
-    private booleanTypeCheck(valueToCheck);
-    private dateTypeCheck(valueToCheck);
-    private numberTypeCheck(valueToCheck);
-    private stringTypeCheck(valueToCheck);
+    protected sanitizeStringValue(value: string, embedParameters: boolean): string;
+    protected booleanTypeCheck(valueToCheck: any): boolean;
+    protected dateTypeCheck(valueToCheck: any): boolean;
+    protected numberTypeCheck(valueToCheck: any): boolean;
+    protected stringTypeCheck(valueToCheck: any): boolean;
     protected addField(entityName: string, tableName: string, propertyName: string, columnName: string): void;
     protected warn(warning: string): void;
 }

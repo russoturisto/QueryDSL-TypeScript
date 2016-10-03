@@ -5,6 +5,12 @@ import {SQLDialect} from "./SQLStringQuery";
 import {RelationRecord} from "../../core/entity/Relation";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
 import {SQLStringNoJoinQuery} from "./SQLStringNoJoinQuery";
+import {QBooleanField} from "../../core/field/BooleanField";
+import {QDateField} from "../../core/field/DateField";
+import {QNumberField} from "../../core/field/NumberField";
+import {QStringField} from "../../core/field/StringField";
+import {JoinColumnConfiguration} from "../../core/entity/metadata/ColumnDecorators";
+import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
 /**
  * Created by Papa on 10/2/2016.
  */
@@ -55,70 +61,110 @@ ${whereFragment}`;
 		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
 		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
 
-		let tableAlias = joinAliasMap[entityName];
-		if (!tableAlias) {
-			throw `Alias for entity ${entityName} is not defined in the From clause.`;
-		}
+		let setFragments = [];
+		for (let propertyName in setClauseFragment) {
 
-		let retrieveAllOwnFields: boolean = false;
-		let numProperties = 0;
-		for (let propertyName in selectClauseFragment) {
-			if (propertyName === '*') {
-				retrieveAllOwnFields = true;
-				delete selectClauseFragment['*'];
-			}
-			numProperties++;
-		}
-		//  For {} select causes or if __allOwnFields__ is present, retrieve the entire object
-		if (numProperties === 0 || retrieveAllOwnFields) {
-			selectClauseFragment = {};
-			for (let propertyName in entityPropertyTypeMap) {
-				selectClauseFragment[propertyName] = null;
-				// let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
-			}
-			/*			for (let propertyName in entityRelationMap) {
-			 selectClauseFragment[propertyName] = {};
-			 if (entityMetadata.manyToOneMap[propertyName]) {
-			 let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
-			 }
-			 }*/
-		}
-
-		for (let propertyName in selectClauseFragment) {
-			let value = selectClauseFragment[propertyName];
+			let value = setClauseFragment[propertyName];
 			// Skip undefined values
 			if (value === undefined) {
 				continue;
-			} else if (value !== null) {
-				entityDefaultsMap[propertyName] = value;
 			}
+			let columnName;
 			if (entityPropertyTypeMap[propertyName]) {
-				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
-				let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, columnAliasMap, selectFragment);
-				selectFragment += columnSelect;
-			} else if (entityRelationMap[propertyName]) {
-				let defaultsChildMap = {};
-				entityDefaultsMap[propertyName] = defaultsChildMap;
-				let subSelectClauseFragment = selectClauseFragment[propertyName];
-				if (subSelectClauseFragment == null) {
-					if (entityMetadata.manyToOneMap[propertyName]) {
-						let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
-						let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, columnAliasMap, selectFragment);
-						selectFragment += columnSelect;
-						continue;
-					} else {
-						// Do not retrieve @OneToMay set to null
-						continue;
-					}
+				columnName = this.getEntityPropertyColumnName(qEntity, propertyName, null);
+
+				if (!embedParameters) {
+					parameters.push(value);
+					value = '?';
 				}
-				selectFragment = this.getSelectFragment(entityRelationMap[propertyName].entityName,
-					selectFragment, selectClauseFragment[propertyName], joinAliasMap, columnAliasMap, defaultsChildMap);
+				let field = qEntity.__entityFieldMap__[propertyName];
+				if (!field) {
+					throw `Did not find field '${entityName}.${propertyName}' used in the WHERE clause.`;
+				}
+				if (field instanceof QBooleanField) {
+					value = this.getSetValueFragment(value, entityName, propertyName, this.booleanTypeCheck, embedParameters, parameters);
+				} else if (field instanceof QDateField) {
+					value = this.getSetValueFragment(value, entityName, propertyName, this.dateTypeCheck, embedParameters, parameters, this.sqlAdaptor.dateToDbQuery);
+				} else if (field instanceof QNumberField) {
+					value = this.getSetValueFragment(value, entityName, propertyName, this.numberTypeCheck, embedParameters, parameters);
+				} else if (field instanceof QStringField) {
+					value = this.getSetValueFragment(value, entityName, propertyName, this.stringTypeCheck, embedParameters, parameters, this.sanitizeStringValue);
+				} else {
+					throw `Unexpected type '${(<any>field.constructor).name}' of field '${entityName}.${propertyName}' for assignment in the SET clause.`;
+				}
+			} else if (entityRelationMap[propertyName]) {
+				if (entityMetadata.manyToOneMap[propertyName]) {
+					columnName = this.getManyToOneColumnName(entityName, propertyName, null, entityMetadata.joinColumnMap);
+
+					let relation = qEntity.__entityRelationMap__[propertyName];
+					if (!relation) {
+						throw `Did not find field '${entityName}.${propertyName}' used in the WHERE clause.`;
+					}
+					let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>this.qEntityMap[relation.entityName].__entityConstructor__;
+					// get the parent object's id
+					value = MetadataUtils.getIdValue(value, relationEntityMetadata);
+					if (!value) {
+						throw `@ManyToOne relation's (${entityName}) object @Id value is missing `;
+					}
+					let fieldClass = relation.fieldClass;
+					if (fieldClass === QBooleanField) {
+						value = this.getSetValueFragment(value, entityName, propertyName, this.booleanTypeCheck, embedParameters, parameters);
+					} else if (fieldClass === QDateField) {
+						value = this.getSetValueFragment(value, entityName, propertyName, this.dateTypeCheck, embedParameters, parameters, this.sqlAdaptor.dateToDbQuery);
+					} else if (fieldClass === QNumberField) {
+						value = this.getSetValueFragment(value, entityName, propertyName, this.numberTypeCheck, embedParameters, parameters);
+					} else if (fieldClass === QStringField) {
+						value = this.getSetValueFragment(value, entityName, propertyName, this.stringTypeCheck, embedParameters, parameters, this.sanitizeStringValue);
+					} else {
+						throw `Unexpected type '${(<any>relation.constructor).name}' of field '${entityName}.${propertyName}' for assignment in the SET clause.`;
+					}
+				} else {
+					throw `Cannot use @OneToMany property '${entityName}.${propertyName}' for assignment in the SET clause.`;
+				}
 			} else {
-				throw `Unexpected property '${propertyName}' on entity '${entityName}' (alias '${tableAlias}') in SELECT clause.`;
+				throw `Unexpected property '${propertyName}' on entity '${entityName}' in SET clause.`;
 			}
+			setFragments.push(`\t${columnName} = ${value}`);
 		}
 
-		return selectFragment;
+		return setFragments.join(', \n');
+	}
+
+	protected getSetPropertyColumnName(
+		qEntity: IQEntity,
+		propertyName: string
+	): string {
+		let entityName = qEntity.__entityName__;
+		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
+		let columnMap = entityMetadata.columnMap;
+
+		return this.getPropertyColumnName(entityName, propertyName, null, columnMap);
+	}
+
+	private getSetValueFragment<T>(
+		value: any,
+		entityName: string,
+		propertyName: string,
+		typeCheckFunction: ( value: any )=>boolean,
+		embedParameters: boolean = true,
+		parameters: any[] = null,
+		conversionFunction?: (
+			value: any,
+			embedParameters: boolean
+		)=>any
+	): string {
+		if (!typeCheckFunction(value)) {
+			throw `Unexpected value (${value}) for $eq (=) operation on '${entityName}.${propertyName}' used in the SET clause.`;
+		}
+		if (conversionFunction) {
+			value = conversionFunction(value, embedParameters);
+		}
+		if (embedParameters) {
+			parameters.push(value);
+			value = '?';
+		}
+
+		return value;
 	}
 
 }
