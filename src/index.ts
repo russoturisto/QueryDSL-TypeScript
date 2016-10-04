@@ -60,6 +60,12 @@ import {PHRawSQLQuery, PHJsonSQLQuery, JoinType, PHSQLQuery} from "./query/sql/P
 import {PHQuery, PHRawQuery} from "./query/PHQuery";
 import {FieldMap, EntityFieldMap, PropertyFieldEntry} from "./query/sql/FieldMap";
 import {MetadataUtils, OneToManyConfigAndProperty} from "./core/entity/metadata/MetadataUtils";
+import {PHRawSQLDelete, PHJsonSQLDelete, PHSQLDelete} from "./query/sql/PHSQLDelete";
+import {SQLStringDelete} from "./query/sql/SQLStringDelete";
+import {SQLStringWhereBase} from "./query/sql/SQLStringWhereBase";
+import {SQLStringNoJoinQuery} from "./query/sql/SQLStringNoJoinQuery";
+import {PHRawSQLUpdate, PHJsonSQLUpdate, PHSQLUpdate} from "./query/sql/PHSQLUpdate";
+import {SQLStringUpdate} from "./query/sql/SQLStringUpdate";
 
 export {
 	FieldMap,
@@ -71,7 +77,17 @@ export {
 	PHJsonSQLQuery,
 	PHRawSQLQuery,
 	JoinType,
+	SQLStringWhereBase,
 	SQLStringQuery,
+	SQLStringNoJoinQuery,
+	PHRawSQLDelete,
+	PHJsonSQLDelete,
+	PHSQLDelete,
+	SQLStringDelete,
+	PHRawSQLUpdate,
+	PHJsonSQLUpdate,
+	PHSQLUpdate,
+	SQLStringUpdate,
 	SQLDialect,
 	SQLDataType,
 	getSQLAdaptor,

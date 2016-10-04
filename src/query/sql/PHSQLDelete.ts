@@ -16,7 +16,7 @@ export interface PHJsonSQLDelete<IE extends IEntity> {
     where?: JSONBaseOperation;
 }
 
-export class PHSQLUpdate<IE extends IEntity> implements PHDelete<IE> {
+export class PHSQLDelete<IE extends IEntity> implements PHDelete<IE> {
 
     constructor(public phRawQuery:PHRawSQLDelete<IE>,
                 public qEntity:QEntity<any>,

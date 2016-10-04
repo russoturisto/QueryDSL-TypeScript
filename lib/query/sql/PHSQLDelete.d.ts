@@ -13,7 +13,7 @@ export interface PHJsonSQLDelete<IE extends IEntity> {
     deleteFrom: JSONRelation;
     where?: JSONBaseOperation;
 }
-export declare class PHSQLUpdate<IE extends IEntity> implements PHDelete<IE> {
+export declare class PHSQLDelete<IE extends IEntity> implements PHDelete<IE> {
     phRawQuery: PHRawSQLDelete<IE>;
     qEntity: QEntity<any>;
     qEntityMap: {
