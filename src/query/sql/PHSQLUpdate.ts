@@ -2,7 +2,6 @@ import {IEntity, IQEntity, QEntity} from "../../core/entity/Entity";
 import {PHRawUpdate, PHUpdate} from "../PHQuery";
 import {JSONBaseOperation} from "../../core/operation/Operation";
 import {JSONRelation, RelationRecord} from "../../core/entity/Relation";
-import {PHJsonSQLQuery} from "./PHSQLQuery";
 /**
  * Created by Papa on 10/2/2016.
  */
