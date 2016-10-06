@@ -11,6 +11,7 @@ import {QNumberField} from "../../core/field/NumberField";
 import {QStringField} from "../../core/field/StringField";
 import {JoinColumnConfiguration} from "../../core/entity/metadata/ColumnDecorators";
 import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
+import {QField} from "../../core/field/Field";
 /**
  * Created by Papa on 10/2/2016.
  */
@@ -100,20 +101,21 @@ ${whereFragment}`;
 					if (!relation) {
 						throw `Did not find field '${entityName}.${propertyName}' used in the WHERE clause.`;
 					}
-					let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>this.qEntityMap[relation.entityName].__entityConstructor__;
+					let relationQEntity = this.qEntityMap[relation.entityName];
+					let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>relationQEntity.__entityConstructor__;
 					// get the parent object's id
 					value = MetadataUtils.getIdValue(value, relationEntityMetadata);
 					if (!value) {
 						throw `@ManyToOne relation's (${entityName}) object @Id value is missing `;
 					}
-					let fieldClass = relation.fieldClass;
-					if (fieldClass === QBooleanField) {
+					let relationField = relationQEntity.__entityFieldMap__[relationEntityMetadata.idProperty];
+					if (relationField instanceof QBooleanField) {
 						value = this.getSetValueFragment(value, entityName, propertyName, this.booleanTypeCheck, embedParameters, parameters);
-					} else if (fieldClass === QDateField) {
+					} else if (relationField instanceof QDateField) {
 						value = this.getSetValueFragment(value, entityName, propertyName, this.dateTypeCheck, embedParameters, parameters, this.sqlAdaptor.dateToDbQuery);
-					} else if (fieldClass === QNumberField) {
+					} else if (relationField instanceof QNumberField) {
 						value = this.getSetValueFragment(value, entityName, propertyName, this.numberTypeCheck, embedParameters, parameters);
-					} else if (fieldClass === QStringField) {
+					} else if (relationField instanceof QStringField) {
 						value = this.getSetValueFragment(value, entityName, propertyName, this.stringTypeCheck, embedParameters, parameters, this.sanitizeStringValue);
 					} else {
 						throw `Unexpected type '${(<any>relation.constructor).name}' of field '${entityName}.${propertyName}' for assignment in the SET clause.`;

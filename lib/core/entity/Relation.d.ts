@@ -16,11 +16,10 @@ export interface JSONRelation {
     parentEntityAlias: string;
     relationPropertyName: string;
 }
-export declare const INNER_JOIN: string;
-export declare const LEFT_JOIN: string;
+export declare const INNER_JOIN = "INNER_JOIN";
+export declare const LEFT_JOIN = "LEFT_JOIN";
 export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
     entityName: string;
-    fieldClass: any;
     q: IQ;
     qConstructor: new () => IQ;
     propertyName: string;
@@ -34,12 +33,11 @@ export declare class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> imp
     q: IQ;
     qConstructor: new () => IQ;
     relationType: RelationType;
-    fieldClass: any;
     entityName: string;
     propertyName: string;
     relationEntityConstructor: new () => R;
     relationQEntityConstructor: new (...args: any[]) => IQR;
-    constructor(q: IQ, qConstructor: new () => IQ, relationType: RelationType, fieldClass: any, entityName: string, propertyName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR);
+    constructor(q: IQ, qConstructor: new () => IQ, relationType: RelationType, entityName: string, propertyName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR);
     innerJoin(): IQR;
     leftJoin(): IQR;
     private getNewQEntity(joinType);

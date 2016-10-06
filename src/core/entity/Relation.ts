@@ -56,7 +56,6 @@ export const LEFT_JOIN = 'LEFT_JOIN';
 export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
 
 	entityName: string;
-	fieldClass: any;
 	q: IQ;
 	qConstructor: new () => IQ,
 	propertyName: string;
@@ -74,7 +73,6 @@ export class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> implements 
 		public q: IQ,
 		public qConstructor: new () => IQ,
 		public relationType: RelationType,
-		public fieldClass: any,
 		public entityName: string,
 		public propertyName: string,
 		public relationEntityConstructor: new () => R,
