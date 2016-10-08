@@ -58,7 +58,8 @@ export class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
 
 		let joinQEntityMap: {[alias: string]: IQEntity} = {};
 		let fromFragment = this.getFROMFragment(joinQEntityMap, this.joinAliasMap, this.phJsonQuery.from, embedParameters, parameters);
-		let selectFragment = this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinAliasMap, this.columnAliasMap, this.defaultsMap, embedParameters, parameters);
+		let selectEntitySet: {[entityName: string]: boolean} = {};
+		let selectFragment = this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinAliasMap, this.columnAliasMap, this.defaultsMap, selectEntitySet, embedParameters, parameters);
 		let whereFragment = this.getWHEREFragment(this.phJsonQuery.where, 0, joinQEntityMap, embedParameters, parameters);
 
 		return `SELECT
@@ -92,6 +93,7 @@ ${whereFragment}`;
 		if (firstEntity != this.qEntity) {
 			throw `Unexpected first table in FROM clause: ${firstRelation.entityName}, expecting: ${this.qEntity.__entityName__}`;
 		}
+
 		let tableName = this.getTableName(firstEntity);
 		if (!firstRelation.alias) {
 			throw `Missing an alias for the first table in the FROM clause.`;
@@ -123,6 +125,9 @@ ${whereFragment}`;
 			let rightEntity = this.qEntityMap[joinRelation.entityName];
 			if (!rightEntity) {
 				throw `Could not find entity ${joinRelation.entityName} for table ${i + 1} in FROM clause`;
+			}
+			if (joinQEntityMap[joinRelation.alias]) {
+				throw `Multiple instances of same entity currently not supported in FROM clause`;
 			}
 			joinQEntityMap[joinRelation.alias] = rightEntity;
 			joinAliasMap[rightEntity.__entityName__] = joinRelation.alias;
@@ -227,9 +232,15 @@ ${whereFragment}`;
 		joinAliasMap: {[entityName: string]: string},
 		columnAliasMap: {[aliasPropertyCombo: string]: string},
 		entityDefaultsMap: {[property: string]: any},
+		selectEntitySet: {[entityName: string]: boolean},
 		embedParameters: boolean = true,
 		parameters: any[] = null
 	): string {
+
+		if (selectEntitySet[entityName]) {
+			throw `Multiple instances of the same entity currently not supported in SELECT clause (but auto-populated for the sub-tree).`;
+		}
+		selectEntitySet[entityName] = true;
 
 		let qEntity = this.qEntityMap[entityName];
 		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
@@ -293,7 +304,7 @@ ${whereFragment}`;
 					}
 				}
 				selectFragment += this.getSELECTFragment(entityRelationMap[propertyName].entityName,
-					selectFragment, selectClauseFragment[propertyName], joinAliasMap, columnAliasMap, defaultsChildMap);
+					selectFragment, selectClauseFragment[propertyName], joinAliasMap, columnAliasMap, defaultsChildMap, selectEntitySet, embedParameters, parameters);
 			} else {
 				throw `Unexpected property '${propertyName}' on entity '${entityName}' (alias '${tableAlias}') in SELECT clause.`;
 			}
@@ -351,29 +362,29 @@ ${whereFragment}`;
 		 * b = [{
 		 *  a: {
 		 *  	b: b
-		 *      c: [b1.c, b2.c, ...]
+		 *    c: [b1.c, b2.c, ...]
 		 *  },
 		 * 	c: [
 		 * 	 {
 		 * 	    a: a
-		 * 	 	b: b
+		 * 	 	  b: b
 		 * 	 }
 		 * 	]
 		 * }, ...]
 		 *
 		 * Reconstruction has two types:
 		 *
-		 * 	a)	Reconstruct the Many-To-One relations by Id
-		 * 		for this we need a map of all entities [by Type]:[by id]:Entity
-		 * 	b)	Reconstruct the One-To-Many relations by Tree
+		 *  a)  Reconstruct the Many-To-One relations by Id
+		 *    for this we need a map of all entities [by Type]:[by id]:Entity
+		 *  b)  Reconstruct the One-To-Many relations by Tree
 		 *
 		 *
 		 * @type {{}}
-         */
+		 */
 
-		// Keys can only be strings or numbers
-		let entityMap:{[entityName:string]:{[entityId:string]:any}} = {};
-		let entityRelationMap:{[entityId:string]:{}} = {};
+			// Keys can only be strings or numbers
+		let entityMap: {[entityName: string]: {[entityId: string]: any}} = {};
+		let entityRelationMap: {[entityId: string]: {}} = {};
 
 		return results.map(( result ) => {
 			return this.parseQueryResult(this.qEntity.__entityName__, this.phJsonQuery.select, result, [0], this.defaultsMap, entityMap);
@@ -387,7 +398,7 @@ ${whereFragment}`;
 		resultRow: any,
 		nextFieldIndex: number[],
 		entityDefaultsMap: {[property: string]: any},
-		entityMap:{[entityName:string]:{[entityId:string]:any}}
+		entityMap: {[entityName: string]: {[entityId: string]: any}}
 	): any {
 		// Return blanks, primitives and Dates directly
 		if (!resultRow || !(resultRow instanceof Object) || resultRow instanceof Date) {
@@ -445,7 +456,8 @@ ${whereFragment}`;
 						childSelectClauseFragment,
 						resultRow,
 						nextFieldIndex,
-						childDefaultsMap
+						childDefaultsMap,
+						entityMap
 					);
 					resultObject[propertyName] = childResultObject;
 				}

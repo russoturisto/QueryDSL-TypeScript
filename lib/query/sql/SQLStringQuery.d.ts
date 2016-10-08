@@ -50,6 +50,8 @@ export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBa
         [aliasPropertyCombo: string]: string;
     }, entityDefaultsMap: {
         [property: string]: any;
+    }, selectEntitySet: {
+        [entityName: string]: boolean;
     }, embedParameters?: boolean, parameters?: any[]): string;
     protected getColumnSelectFragment(propertyName: string, tableAlias: string, columnName: string, columnAliasMap: {
         [aliasWithProperty: string]: string;
