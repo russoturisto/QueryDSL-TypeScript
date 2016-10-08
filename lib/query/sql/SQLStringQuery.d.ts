@@ -57,5 +57,9 @@ export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBa
     parseQueryResults(results: any[]): any[];
     protected parseQueryResult(entityName: string, selectClauseFragment: any, resultRow: any, nextFieldIndex: number[], entityDefaultsMap: {
         [property: string]: any;
+    }, entityMap: {
+        [entityName: string]: {
+            [entityId: string]: any;
+        };
     }): any;
 }

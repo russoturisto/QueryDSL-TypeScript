@@ -329,9 +329,54 @@ ${whereFragment}`;
 		if (!results || !results.length) {
 			return parsedResults;
 		}
+		/**
+		 * Keeping track of relations:
+		 *
+		 * in a given JSON tree:
+		 * b = [{
+		 *  a: {
+		 *  	b: [...]
+		 *      c: [...]
+		 *  },
+		 * 	c: [
+		 * 	 {
+		 * 	   a: ...
+		 * 	   b: ...
+		 * 	 }
+		 * 	]
+		 * }, ...]
+		 *
+		 * relations are tracked via foreign keys
+		 * hence it is possible to re-construct relationships to arrive at:
+		 * b = [{
+		 *  a: {
+		 *  	b: b
+		 *      c: [b1.c, b2.c, ...]
+		 *  },
+		 * 	c: [
+		 * 	 {
+		 * 	    a: a
+		 * 	 	b: b
+		 * 	 }
+		 * 	]
+		 * }, ...]
+		 *
+		 * Reconstruction has two types:
+		 *
+		 * 	a)	Reconstruct the Many-To-One relations by Id
+		 * 		for this we need a map of all entities [by Type]:[by id]:Entity
+		 * 	b)	Reconstruct the One-To-Many relations by Tree
+		 *
+		 *
+		 * @type {{}}
+         */
+
+		// Keys can only be strings or numbers
+		let entityMap:{[entityName:string]:{[entityId:string]:any}} = {};
+		let entityRelationMap:{[entityId:string]:{}} = {};
 
 		return results.map(( result ) => {
-			return this.parseQueryResult(this.qEntity.__entityName__, this.phJsonQuery.select, result, [0], this.defaultsMap);
+			return this.parseQueryResult(this.qEntity.__entityName__, this.phJsonQuery.select, result, [0], this.defaultsMap, entityMap);
 		});
 
 	}
@@ -341,7 +386,8 @@ ${whereFragment}`;
 		selectClauseFragment: any,
 		resultRow: any,
 		nextFieldIndex: number[],
-		entityDefaultsMap: {[property: string]: any}
+		entityDefaultsMap: {[property: string]: any},
+		entityMap:{[entityName:string]:{[entityId:string]:any}}
 	): any {
 		// Return blanks, primitives and Dates directly
 		if (!resultRow || !(resultRow instanceof Object) || resultRow instanceof Date) {
