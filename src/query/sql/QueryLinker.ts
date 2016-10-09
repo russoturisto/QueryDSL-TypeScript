@@ -102,9 +102,17 @@ export interface EntityReference {
  *   id
  *   @OneToMany
  *   relatedCategories:CategoryForGoal[];
+ *   @OneToMany
+ *   tasks:Task[];
  * }
-
  *
+ * @Entity
+ * Task {
+ * 	@Id
+ * 	id
+ * 	@ManyToOne
+ * 	goal:Goal
+ * }
  * and a query:
  *
  * QCategory.find({
@@ -116,16 +124,24 @@ export interface EntityReference {
  *      goal: {
  *        id: null,
  *        relatedCategories: null;
+ *        tasks:{}
  *      }
  *    }
  *  },
  *  from: [
  *    c = QCategory.from,
  *    cfg = c.relatedGoals.leftJoin(),
- *    g = cfg.goal.leftJoin()
+ *    g = cfg.goal.leftJoin(),
+ *    t = g.tasks.leftJoin()
  *  ],
- *  where: c.id.isIn(1, 2, ...)
+ *  where: or(
+ *  	c.id.isIn(1, 2, ...),
+ *  	t.id.isIn(1, 2, ...)
+ *  )
  * })
+ *
+ * FOR NOW ASSUMING THAT WITH THE OR CLAUSE ALL TASKS ARE RETURNED AND IF IT WERE TO BE CHANGED TO AN AND
+ * THE SAME TASKS WOULD ALWAYS BE RETURNED.
  *
  * A given goal can show up under different categories.  Currently, the query API does not allow for a given entity
  * type to show up more than once in the query graph.  This means that we are guaranteed that all objects of a given
@@ -304,12 +320,29 @@ export class QueryLinker {
 	}
 
 	private deDuplicate(
+		qEntity:IQEntity,
 		selectClauseFragment: any,
 		parsedResults: any[]
 	) {
-		parsedResults.forEach(( result ) => {
-			for (let propertyName in this.qEntity.__entityRelationMap__) {
-				let entityRelation = this.qEntity.__entityRelationMap__[propertyName];
+		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
+		let idProperty = entityMetadata.idProperty;
+
+		for(let i = parsedResults.length; i >=0; i--) {
+			let result = parsedResults[i];
+			let id = result[idProperty];
+			let entity;
+			if(id) {
+				entity = this.entityMap[qEntity.__entityName__][id];
+				parsedResults[i] = entity;
+			}
+			result = this.mergeEntities(result, entity);
+			for (let propertyName in qEntity.__entityRelationMap__) {
+				let selectClauseSubFragment = selectClauseFragment[propertyName];
+				if(!selectClauseSubFragment || !(selectClauseSubFragment instanceof Object)) {
+					continue;
+				}
+				if(selectClauseFragment[propertyName])
+				let entityRelation = qEntity.__entityRelationMap__[propertyName];
 				switch (entityRelation.relationType) {
 					case RelationType.MANY_TO_ONE:
 						break;
@@ -317,6 +350,33 @@ export class QueryLinker {
 						break;
 				}
 			}
-		});
+		}
+	}
+
+	private mergeEntities(source, target) {
+		if(!target) {
+			return source;
+		}
+
+		for (let propertyName in qEntity.__entityRelationMap__) {
+			let selectClauseSubFragment = selectClauseFragment[propertyName];
+			if(!selectClauseSubFragment || !(selectClauseSubFragment instanceof Object)) {
+				continue;
+			}
+			if(selectClauseFragment[propertyName])
+				let entityRelation = qEntity.__entityRelationMap__[propertyName];
+			switch (entityRelation.relationType) {
+				case RelationType.MANY_TO_ONE:
+					break;
+				case RelationType.ONE_TO_MANY:
+					break;
+			}
+		}
+
+		return target;
+	}
+
+	private deDuplicateCollection() {
+
 	}
 }

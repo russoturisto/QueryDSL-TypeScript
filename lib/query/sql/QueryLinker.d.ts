@@ -99,9 +99,17 @@ export interface EntityReference {
  *   id
  *   @OneToMany
  *   relatedCategories:CategoryForGoal[];
+ *   @OneToMany
+ *   tasks:Task[];
  * }
-
  *
+ * @Entity
+ * Task {
+ * 	@Id
+ * 	id
+ * 	@ManyToOne
+ * 	goal:Goal
+ * }
  * and a query:
  *
  * QCategory.find({
@@ -113,16 +121,24 @@ export interface EntityReference {
  *      goal: {
  *        id: null,
  *        relatedCategories: null;
+ *        tasks:{}
  *      }
  *    }
  *  },
  *  from: [
  *    c = QCategory.from,
  *    cfg = c.relatedGoals.leftJoin(),
- *    g = cfg.goal.leftJoin()
+ *    g = cfg.goal.leftJoin(),
+ *    t = g.tasks.leftJoin()
  *  ],
- *  where: c.id.isIn(1, 2, ...)
+ *  where: or(
+ *  	c.id.isIn(1, 2, ...),
+ *  	t.id.isIn(1, 2, ...)
+ *  )
  * })
+ *
+ * FOR NOW ASSUMING THAT WITH THE OR CLAUSE ALL TASKS ARE RETURNED AND IF IT WERE TO BE CHANGED TO AN AND
+ * THE SAME TASKS WOULD ALWAYS BE RETURNED.
  *
  * A given goal can show up under different categories.  Currently, the query API does not allow for a given entity
  * type to show up more than once in the query graph.  This means that we are guaranteed that all objects of a given
@@ -190,5 +206,7 @@ export declare class QueryLinker {
     bufferOneToManyStub(resultObject: any, propertyName: string): void;
     flushOneToManyStubBuffer(qEntity: IQEntity, entityMetadata: EntityMetadata, entityId: any): void;
     link(parsedResults: any[]): void;
-    private deDuplicate(selectClauseFragment, parsedResults);
+    private deDuplicate(qEntity, selectClauseFragment, parsedResults);
+    private mergeEntities(source, target);
+    private deDuplicateCollection();
 }
