@@ -12,6 +12,8 @@ import {ISQLAdaptor, getSQLAdaptor} from "./adaptor/SQLAdaptor";
 import {ColumnConfiguration, JoinColumnConfiguration} from "../../core/entity/metadata/ColumnDecorators";
 import {FieldMap} from "./FieldMap";
 import {SQLStringWhereBase} from "./SQLStringWhereBase";
+import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
+import {QueryLinker} from "./QueryLinker";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -34,6 +36,7 @@ export class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
 	defaultsMap: {[property: string]: any} = {};
 
 	private currentFieldIndex = 0;
+	private queryLinker: QueryLinker;
 
 	constructor(
 		public phJsonQuery: PHJsonSQLQuery<IE>,
@@ -41,9 +44,11 @@ export class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
 		qEntityMap: {[entityName: string]: IQEntity},
 		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
-		dialect: SQLDialect
+		dialect: SQLDialect,
+		performLinking: boolean = true
 	) {
 		super(qEntity, qEntityMap, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
+		this.queryLinker = new QueryLinker(performLinking, qEntityMap);
 	}
 
 	getFieldMap(): FieldMap {
@@ -293,6 +298,7 @@ ${whereFragment}`;
 				entityDefaultsMap[propertyName] = defaultsChildMap;
 				let subSelectClauseFragment = selectClauseFragment[propertyName];
 				if (subSelectClauseFragment == null) {
+					// For null entity reference, retrieve just the id
 					if (entityMetadata.manyToOneMap[propertyName]) {
 						let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
 						let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, columnAliasMap, selectFragment);
@@ -336,60 +342,15 @@ ${whereFragment}`;
 		results: any[]
 	): any[] {
 		let parsedResults: any[] = [];
-
 		if (!results || !results.length) {
 			return parsedResults;
 		}
-		/**
-		 * Keeping track of relations:
-		 *
-		 * in a given JSON tree:
-		 * b = [{
-		 *  a: {
-		 *  	b: [...]
-		 *      c: [...]
-		 *  },
-		 * 	c: [
-		 * 	 {
-		 * 	   a: ...
-		 * 	   b: ...
-		 * 	 }
-		 * 	]
-		 * }, ...]
-		 *
-		 * relations are tracked via foreign keys
-		 * hence it is possible to re-construct relationships to arrive at:
-		 * b = [{
-		 *  a: {
-		 *  	b: b
-		 *    c: [b1.c, b2.c, ...]
-		 *  },
-		 * 	c: [
-		 * 	 {
-		 * 	    a: a
-		 * 	 	  b: b
-		 * 	 }
-		 * 	]
-		 * }, ...]
-		 *
-		 * Reconstruction has two types:
-		 *
-		 *  a)  Reconstruct the Many-To-One relations by Id
-		 *    for this we need a map of all entities [by Type]:[by id]:Entity
-		 *  b)  Reconstruct the One-To-Many relations by Tree
-		 *
-		 *
-		 * @type {{}}
-		 */
-
-			// Keys can only be strings or numbers
-		let entityMap: {[entityName: string]: {[entityId: string]: any}} = {};
-		let entityRelationMap: {[entityId: string]: {}} = {};
-
-		return results.map(( result ) => {
-			return this.parseQueryResult(this.qEntity.__entityName__, this.phJsonQuery.select, result, [0], this.defaultsMap, entityMap);
+		parsedResults = results.map(( result ) => {
+			return this.parseQueryResult(this.qEntity.__entityName__, this.phJsonQuery.select, result, [0], this.defaultsMap);
 		});
+		this.queryLinker.link(parsedResults);
 
+		return parsedResults;
 	}
 
 	protected parseQueryResult(
@@ -397,8 +358,7 @@ ${whereFragment}`;
 		selectClauseFragment: any,
 		resultRow: any,
 		nextFieldIndex: number[],
-		entityDefaultsMap: {[property: string]: any},
-		entityMap: {[entityName: string]: {[entityId: string]: any}}
+		entityDefaultsMap: {[property: string]: any}
 	): any {
 		// Return blanks, primitives and Dates directly
 		if (!resultRow || !(resultRow instanceof Object) || resultRow instanceof Date) {
@@ -411,6 +371,7 @@ ${whereFragment}`;
 		let joinColumnMap = entityMetadata.joinColumnMap;
 		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
 		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
+		let entityId;
 
 		let entityAlias = this.joinAliasMap[entityName];
 
@@ -438,14 +399,21 @@ ${whereFragment}`;
 				let defaultValue = entityDefaultsMap[propertyName];
 
 				resultObject[propertyName] = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], dataType, defaultValue);
-			} else if (entityRelationMap[propertyName]) {
 
+				if (entityMetadata.idProperty == propertyName) {
+					entityId = resultObject[propertyName];
+					this.queryLinker.addEntity(qEntity, entityMetadata, resultObject, propertyName);
+				}
+			} else if (entityRelationMap[propertyName]) {
 				let childSelectClauseFragment = selectClauseFragment[propertyName];
 				if (childSelectClauseFragment == null) {
 					if (entityMetadata.manyToOneMap[propertyName]) {
 						let fieldKey = `${entityAlias}.${propertyName}`;
 						let columnAlias = this.columnAliasMap[fieldKey];
-						resultObject[propertyName] = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], SQLDataType.NUMBER, null);
+						let relatedEntityId = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], SQLDataType.NUMBER, null);
+						this.queryLinker.addManyToOneStub(qEntity, entityMetadata, resultObject, propertyName, relatedEntityId);
+					} else {
+						this.queryLinker.bufferOneToManyStub(resultObject, propertyName);
 					}
 				} else {
 					let childDefaultsMap = entityDefaultsMap[propertyName];
@@ -456,14 +424,14 @@ ${whereFragment}`;
 						childSelectClauseFragment,
 						resultRow,
 						nextFieldIndex,
-						childDefaultsMap,
-						entityMap
+						childDefaultsMap
 					);
 					resultObject[propertyName] = childResultObject;
 				}
 			}
 			nextFieldIndex[0]++;
 		}
+		this.queryLinker.flushOneToManyStubBuffer(qEntity, entityMetadata, entityId);
 
 		return resultObject;
 	}

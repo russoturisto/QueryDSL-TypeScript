@@ -444,7 +444,6 @@ export abstract class SQLStringWhereBase<IE extends IEntity> {
 		this.fieldMap.ensure(entityName, tableName).ensure(propertyName, columnName);
 	}
 
-
 	protected warn(
 		warning: string
 	): void {

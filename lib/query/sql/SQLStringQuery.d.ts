@@ -26,6 +26,7 @@ export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBa
         [property: string]: any;
     };
     private currentFieldIndex;
+    private queryLinker;
     constructor(phJsonQuery: PHJsonSQLQuery<IE>, qEntity: IQEntity, qEntityMap: {
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
@@ -36,7 +37,7 @@ export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBa
         [entityName: string]: {
             [propertyName: string]: boolean;
         };
-    }, dialect: SQLDialect);
+    }, dialect: SQLDialect, performLinking?: boolean);
     getFieldMap(): FieldMap;
     toSQL(embedParameters?: boolean, parameters?: any[]): string;
     private getFROMFragment(joinQEntityMap, joinAliasMap, joinRelations, embedParameters?, parameters?);
@@ -59,9 +60,5 @@ export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBa
     parseQueryResults(results: any[]): any[];
     protected parseQueryResult(entityName: string, selectClauseFragment: any, resultRow: any, nextFieldIndex: number[], entityDefaultsMap: {
         [property: string]: any;
-    }, entityMap: {
-        [entityName: string]: {
-            [entityId: string]: any;
-        };
     }): any;
 }
