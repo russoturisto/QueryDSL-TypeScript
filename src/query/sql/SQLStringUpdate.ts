@@ -37,10 +37,10 @@ export class SQLStringUpdate<IE extends IEntity> extends SQLStringNoJoinQuery<IE
 			throw `Expecting exactly one table in FROM clause`;
 		}
 		let entityName = this.qEntity.__entityName__;
-		let joinQEntityMap: {[alias: string]: IQEntity} = {};
+		let joinNodeMap = this.getJoinNodeMap();
 		let updateFragment = this.getTableFragment(this.phJsonUpdate.update);
 		let setFragment = this.getSetFragment(entityName, this.phJsonUpdate.set, embedParameters, parameters);
-		let whereFragment = this.getWHEREFragment(this.phJsonUpdate.where, 0, joinQEntityMap, embedParameters, parameters);
+		let whereFragment = this.getWHEREFragment(this.phJsonUpdate.where, 0, joinNodeMap, embedParameters, parameters);
 
 		return `update
 ${updateFragment}

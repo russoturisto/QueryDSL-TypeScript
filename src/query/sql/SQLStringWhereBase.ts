@@ -2,7 +2,7 @@ import {IEntity, QEntity, IQEntity} from "../../core/entity/Entity";
 import {ISQLAdaptor, getSQLAdaptor} from "./adaptor/SQLAdaptor";
 import {PHJsonSQLQuery, JoinType} from "./PHSQLQuery";
 import {SQLDialect} from "./SQLStringQuery";
-import {RelationRecord, JSONRelation} from "../../core/entity/Relation";
+import {RelationRecord, JSONRelation, JoinTreeNode} from "../../core/entity/Relation";
 import {QBooleanField} from "../../core/field/BooleanField";
 import {QDateField} from "../../core/field/DateField";
 import {QNumberField} from "../../core/field/NumberField";
@@ -19,7 +19,7 @@ export abstract class SQLStringWhereBase<IE extends IEntity> {
 
 	fieldMap: FieldMap = new FieldMap();
 	// FIXME: allow for multiple instances of the same table in the query
-	joinAliasMap: {[entityName: string]: string} = {};
+	joinAliasMap: {[key: string]: string} = {};
 	sqlAdaptor: ISQLAdaptor;
 
 	constructor(
@@ -35,7 +35,7 @@ export abstract class SQLStringWhereBase<IE extends IEntity> {
 	protected getWHEREFragment(
 		operation: JSONBaseOperation,
 		nestingIndex: number,
-		joinQEntityMap: {[alias: string]: IQEntity},
+		joinNodeMap: {[alias: string]: JoinTreeNode},
 		embedParameters: boolean = true,
 		parameters: any[] = null
 	): string {
@@ -64,13 +64,13 @@ export abstract class SQLStringWhereBase<IE extends IEntity> {
 						throw `Expecting an array of child operations as a value for operator ${operator}, in the WHERE Clause.`;
 					}
 					whereFragment = childOperations.map(( childOperation ) => {
-						this.getWHEREFragment(childOperation, nestingIndex + 1, joinQEntityMap);
+						this.getWHEREFragment(childOperation, nestingIndex + 1, joinNodeMap, embedParameters, parameters);
 					}).join(`\n${nestingPrefix}${operator} `);
 					whereFragment = `( ${whereFragment} )`;
 					break;
 				case '$not':
 					operator = 'NOT';
-					whereFragment = `${operator} ${this.getWHEREFragment(operation[property], nestingIndex + 1, joinQEntityMap)}`;
+					whereFragment = `${operator} ${this.getWHEREFragment(operation[property], nestingIndex + 1, joinNodeMap, embedParameters, parameters)}`;
 					break;
 				default:
 					let aliasColumnPair = property.split('.');
@@ -78,10 +78,11 @@ export abstract class SQLStringWhereBase<IE extends IEntity> {
 						throw `Expecting 'alias.column' instead of ${property}`;
 					}
 					let alias = aliasColumnPair[0];
-					let qEntity = joinQEntityMap[alias];
-					if (!qEntity) {
+					let joinNode = joinNodeMap[alias];
+					if (!joinNode) {
 						throw `Unknown alias '${alias}' in WHERE clause`;
 					}
+					let qEntity = this.qEntityMap[joinNode.jsonRelation.entityName];
 					let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
 					let propertyName = aliasColumnPair[1];
 					if (entityMetadata.manyToOneMap[propertyName]) {

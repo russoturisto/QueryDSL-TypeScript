@@ -1,19 +1,17 @@
 import {PHJsonSQLQuery, JoinType} from "./PHSQLQuery";
-import {RelationRecord, JSONRelation} from "../../core/entity/Relation";
-import {IEntity, QEntity, IQEntity} from "../../core/entity/Entity";
+import {RelationRecord, JSONRelation, QRelation, JoinTreeNode, ColumnAliases} from "../../core/entity/Relation";
+import {IEntity, IQEntity} from "../../core/entity/Entity";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
-import {QueryTreeNode, RelationType} from "../noSql/QueryTreeNode";
-import {JSONBaseOperation} from "../../core/operation/Operation";
 import {QBooleanField} from "../../core/field/BooleanField";
 import {QDateField} from "../../core/field/DateField";
 import {QNumberField} from "../../core/field/NumberField";
 import {QStringField} from "../../core/field/StringField";
-import {ISQLAdaptor, getSQLAdaptor} from "./adaptor/SQLAdaptor";
-import {ColumnConfiguration, JoinColumnConfiguration} from "../../core/entity/metadata/ColumnDecorators";
+import {JoinColumnConfiguration} from "../../core/entity/metadata/ColumnDecorators";
 import {FieldMap} from "./FieldMap";
 import {SQLStringWhereBase} from "./SQLStringWhereBase";
-import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
-import {QueryLinker} from "./QueryLinker";
+import {QueryBridge, QueryBridgeConfiguration, IQueryBridge} from "./QueryBridge";
+import {MappedEntityArray} from "../../core/MappedEntityArray";
+import {LastObjectTracker} from "./LastObjectTracker";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -30,13 +28,25 @@ export enum SQLDataType {
 	STRING
 }
 
+export class EntityDefaults {
+	map: {[alias: string]: {[property: string]: any}} = {};
+
+	getForAlias( alias: string ) {
+		let defaultsForAlias = this.map[alias];
+		if (!defaultsForAlias) {
+			defaultsForAlias = {};
+			this.map[alias] = defaultsForAlias;
+		}
+		return defaultsForAlias;
+	}
+}
+
 export class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
 
-	columnAliasMap: {[aliasPropertyCombo: string]: string} = {};
-	defaultsMap: {[property: string]: any} = {};
-
-	private currentFieldIndex = 0;
-	private queryLinker: QueryLinker;
+	columnAliases: ColumnAliases = new ColumnAliases();
+	entityDefaults: EntityDefaults = new EntityDefaults();
+	private queryBridge: IQueryBridge;
+	private joinTree: JoinTreeNode;
 
 	constructor(
 		public phJsonQuery: PHJsonSQLQuery<IE>,
@@ -45,14 +55,26 @@ export class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
 		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		dialect: SQLDialect,
-		performLinking: boolean = true
+		performBridging: boolean = true
 	) {
 		super(qEntity, qEntityMap, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
-		this.queryLinker = new QueryLinker(performLinking, qEntityMap);
+		this.queryBridge = new QueryBridge(performBridging, new QueryBridgeConfiguration(), qEntity, qEntityMap);
 	}
 
 	getFieldMap(): FieldMap {
 		return this.fieldMap;
+	}
+
+
+	/**
+	 * Useful when a query is executed remotely and a flat result set is returned.  JoinTree is needed to parse that
+	 * result set.
+	 */
+	buildJoinTree(): void {
+		let entityName = this.qEntity.__entityName__;
+		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
+		this.joinTree = this.buildFromJoinTree(entityName, this.phJsonQuery.from, joinNodeMap);
+		this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, false, []);
 	}
 
 	toSQL(
@@ -61,11 +83,11 @@ export class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
 	): string {
 		let entityName = this.qEntity.__entityName__;
 
-		let joinQEntityMap: {[alias: string]: IQEntity} = {};
-		let fromFragment = this.getFROMFragment(joinQEntityMap, this.joinAliasMap, this.phJsonQuery.from, embedParameters, parameters);
-		let selectEntitySet: {[entityName: string]: boolean} = {};
-		let selectFragment = this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinAliasMap, this.columnAliasMap, this.defaultsMap, selectEntitySet, embedParameters, parameters);
-		let whereFragment = this.getWHEREFragment(this.phJsonQuery.where, 0, joinQEntityMap, embedParameters, parameters);
+		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
+		this.joinTree = this.buildFromJoinTree(entityName, this.phJsonQuery.from, joinNodeMap);
+		let selectFragment = this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, embedParameters, parameters);
+		let fromFragment = this.getFROMFragment(null, this.joinTree, embedParameters, parameters);
+		let whereFragment = this.getWHEREFragment(this.phJsonQuery.where, 0, joinNodeMap, embedParameters, parameters);
 
 		return `SELECT
 ${selectFragment}
@@ -75,22 +97,25 @@ WHERE
 ${whereFragment}`;
 	}
 
-	private getFROMFragment(
-		joinQEntityMap: {[alias: string]: IQEntity},
-		joinAliasMap: {[entityName: string]: string},
+	buildFromJoinTree(
+		entityName: string,
 		joinRelations: JSONRelation[],
-		embedParameters: boolean = true,
-		parameters: any[] = null
-	): string {
+		joinNodeMap: {[alias: string]: JoinTreeNode}
+	): JoinTreeNode {
+		let jsonTree: JoinTreeNode;
 		if (joinRelations.length < 1) {
-			throw `Expecting at least one table in FROM clause`;
+			let onlyJsonRelation: JSONRelation = {
+				fromClausePosition: [],
+				entityName: entityName,
+				joinType: null,
+				relationPropertyName: null
+			};
+			joinRelations.push(onlyJsonRelation);
 		}
 
 		let firstRelation = joinRelations[0];
 
-		let fromFragment = '\t';
-
-		if (firstRelation.relationPropertyName || firstRelation.joinType || firstRelation.parentEntityAlias) {
+		if (firstRelation.relationPropertyName || firstRelation.joinType || firstRelation.fromClausePosition.length > 0) {
 			throw `First table in FROM clause cannot be joined`;
 		}
 
@@ -98,15 +123,10 @@ ${whereFragment}`;
 		if (firstEntity != this.qEntity) {
 			throw `Unexpected first table in FROM clause: ${firstRelation.entityName}, expecting: ${this.qEntity.__entityName__}`;
 		}
+		jsonTree = new JoinTreeNode(firstRelation, []);
 
-		let tableName = this.getTableName(firstEntity);
-		if (!firstRelation.alias) {
-			throw `Missing an alias for the first table in the FROM clause.`;
-		}
-		fromFragment += `${tableName} ${firstRelation.alias}`;
-
-		joinQEntityMap[firstRelation.alias] = firstEntity;
-		joinAliasMap[firstEntity.__entityName__] = firstRelation.alias;
+		let alias = QRelation.getAlias(firstRelation);
+		joinNodeMap[alias] = jsonTree;
 
 		for (let i = 1; i < joinRelations.length; i++) {
 			let joinRelation = joinRelations[i];
@@ -116,80 +136,193 @@ ${whereFragment}`;
 			if (!joinRelation.joinType) {
 				throw `Table ${i + 1} in FROM clause is missing joinType`;
 			}
-			if (!joinRelation.parentEntityAlias) {
-				throw `Table ${i + 1} in FROM clause is missing parentEntityAlias`;
+			let parentAlias = QRelation.getParentAlias(joinRelation);
+			if (!joinNodeMap[parentAlias]) {
+				throw `Missing parent entity for alias ${parentAlias}, on table ${i + 1} in FROM clause`;
 			}
-			if (!joinQEntityMap[joinRelation.parentEntityAlias]) {
-				throw `Missing parent entity for alias ${joinRelation.parentEntityAlias}, on table ${i + 1} in FROM clause`;
-			}
-			let leftEntity = joinQEntityMap[joinRelation.parentEntityAlias];
-			if (!joinRelation.alias) {
-				throw `Missing an alias for the first table in the FROM clause.`;
-			}
+			let leftNode = joinNodeMap[parentAlias];
+			let rightNode = new JoinTreeNode(joinRelation, []);
+			leftNode.addChildNode(rightNode);
 
+			alias = QRelation.getAlias(joinRelation);
 			let rightEntity = this.qEntityMap[joinRelation.entityName];
 			if (!rightEntity) {
 				throw `Could not find entity ${joinRelation.entityName} for table ${i + 1} in FROM clause`;
 			}
-			if (joinQEntityMap[joinRelation.alias]) {
-				throw `Multiple instances of same entity currently not supported in FROM clause`;
+			if (joinNodeMap[alias]) {
+				throw `Alias '${alias}' used more than once in the FROM clause.`;
 			}
-			joinQEntityMap[joinRelation.alias] = rightEntity;
-			joinAliasMap[rightEntity.__entityName__] = joinRelation.alias;
+			joinNodeMap[alias] = rightNode;
+		}
 
-			let tableName = this.getTableName(rightEntity);
+		return jsonTree;
+	}
+
+	protected getSELECTFragment(
+		entityName: string,
+		selectSqlFragment: string,
+		selectClauseFragment: any,
+		joinTree: JoinTreeNode,
+		entityDefaults: EntityDefaults,
+		embedParameters: boolean = true,
+		parameters: any[] = null
+	): string {
+		let qEntity = this.qEntityMap[entityName];
+		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
+		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
+		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
+
+		let tableAlias = QRelation.getAlias(joinTree.jsonRelation);
+
+		let retrieveAllOwnFields: boolean = false;
+		let numProperties = 0;
+		for (let propertyName in selectClauseFragment) {
+			if (propertyName === '*') {
+				retrieveAllOwnFields = true;
+				delete selectClauseFragment['*'];
+			}
+			numProperties++;
+		}
+		//  For {} select causes or if '*' is present, retrieve the entire object
+		if (numProperties === 0 || retrieveAllOwnFields) {
+			selectClauseFragment = {};
+			for (let propertyName in entityPropertyTypeMap) {
+				selectClauseFragment[propertyName] = null;
+			}
+		}
+
+		let defaults = entityDefaults.getForAlias(tableAlias);
+		for (let propertyName in selectClauseFragment) {
+			let value = selectClauseFragment[propertyName];
+			// Skip undefined values
+			if (value === undefined) {
+				continue;
+			} else if (value !== null) {
+				defaults[propertyName] = value;
+			}
+			let fieldKey = `${tableAlias}.${propertyName}`;
+			if (entityPropertyTypeMap[propertyName]) {
+				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
+				let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
+				selectSqlFragment += columnSelect;
+			} else if (entityRelationMap[propertyName]) {
+				let subSelectClauseFragment = selectClauseFragment[propertyName];
+				if (subSelectClauseFragment == null) {
+					// For null entity reference, retrieve just the id
+					if (entityMetadata.manyToOneMap[propertyName]) {
+						let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
+						let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
+						selectSqlFragment += columnSelect;
+						continue;
+					} else {
+						// Do not retrieve @OneToMay set to null
+						continue;
+					}
+				}
+				let childEntityName = entityRelationMap[propertyName].entityName;
+				selectSqlFragment += this.getSELECTFragment(entityRelationMap[propertyName].entityName,
+					selectSqlFragment, selectClauseFragment[propertyName], joinTree.getChildNode(childEntityName, propertyName), entityDefaults, embedParameters, parameters);
+			} else {
+				throw `Unexpected property '${propertyName}' on entity '${entityName}' (alias '${tableAlias}') in SELECT clause.`;
+			}
+		}
+
+		return selectSqlFragment;
+	}
+
+	protected getColumnSelectFragment(
+		propertyName: string,
+		tableAlias: string,
+		columnName: string,
+		existingSelectFragment: string
+	): string {
+		let columnAlias = this.columnAliases.addAlias(tableAlias, propertyName);
+		let columnSelect = `${tableAlias}.${columnName} as ${columnAlias}\n`;
+
+		if (existingSelectFragment) {
+			columnSelect = `\t, ${columnSelect}`;
+		} else {
+			columnSelect = `\t${columnSelect}`;
+		}
+
+		return columnSelect;
+	}
+
+	private getFROMFragment(
+		parentTree: JoinTreeNode,
+		currentTree: JoinTreeNode,
+		embedParameters: boolean = true,
+		parameters: any[] = null
+	): string {
+		let fromFragment = '\t';
+		let currentRelation = currentTree.jsonRelation;
+		let qEntity = this.qEntityMap[currentRelation.entityName];
+		let tableName = this.getTableName(qEntity);
+		let currentAlias = QRelation.getAlias(currentRelation);
+
+		if (!parentTree) {
+			fromFragment += `${tableName} ${currentAlias}`;
+		} else {
+			let parentRelation = parentTree.jsonRelation;
+			let parentAlias = QRelation.getAlias(parentRelation);
+			let leftEntity = this.qEntityMap[parentRelation.entityName];
+
+			let rightEntity = this.qEntityMap[currentRelation.entityName];
 
 			let joinTypeString;
-			/*
-			 switch (joinRelation.joinType) {
-			 case SQLJoinType.INNER_JOIN:
-			 joinTypeString = 'INNER JOIN';
-			 break;
-			 case SQLJoinType.LEFT_JOIN:
-			 joinTypeString = 'LEFT JOIN';
-			 break;
-			 default:
-			 throw `Unsupported join type: ${joinRelation.joinType}`;
-			 }
-			 */
-			// FIXME: figure out why the switch statement above quit working
-			if (joinRelation.joinType === <number>JoinType.INNER_JOIN) {
-				joinTypeString = 'INNER JOIN';
-			} else if (joinRelation.joinType === <number>JoinType.LEFT_JOIN) {
-				joinTypeString = 'LEFT JOIN';
-			} else {
-				throw `Unsupported join type: ${joinRelation.joinType}`;
+			switch (currentRelation.joinType) {
+				case JoinType.INNER_JOIN:
+					joinTypeString = 'INNER JOIN';
+					break;
+				case JoinType.LEFT_JOIN:
+					joinTypeString = 'LEFT JOIN';
+					break;
+				default:
+					throw `Unsupported join type: ${currentRelation.joinType}`;
 			}
+			// FIXME: figure out why the switch statement above quit working
+			/*			if (joinRelation.joinType === <number>JoinType.INNER_JOIN) {
+			 joinTypeString = 'INNER JOIN';
+			 } else if (joinRelation.joinType === <number>JoinType.LEFT_JOIN) {
+			 joinTypeString = 'LEFT JOIN';
+			 } else {
+			 throw `Unsupported join type: ${joinRelation.joinType}`;
+			 }*/
 
 			let rightEntityJoinColumn, leftColumn;
 			let leftEntityMetadata: EntityMetadata = <EntityMetadata><any>leftEntity.__entityConstructor__;
 			let rightEntityMetadata: EntityMetadata = <EntityMetadata><any>rightEntity.__entityConstructor__;
+			let errorPrefix = 'Error building FROM: ';
 
-			if (rightEntityMetadata.manyToOneMap[joinRelation.relationPropertyName]) {
-				rightEntityJoinColumn = this.getEntityManyToOneColumnName(rightEntity, joinRelation.relationPropertyName, joinRelation.parentEntityAlias);
+			if (rightEntityMetadata.manyToOneMap[currentRelation.relationPropertyName]) {
+				rightEntityJoinColumn = this.getEntityManyToOneColumnName(rightEntity, currentRelation.relationPropertyName, parentAlias);
 
 				if (!leftEntityMetadata.idProperty) {
-					throw `Could not find @Id for right entity of join to table ${i + 1} in FROM clause`;
+					throw `${errorPrefix} Could not find @Id for right entity of join to table  '${parentRelation.entityName}.${currentRelation.relationPropertyName}'`;
 				}
-				leftColumn = this.getEntityPropertyColumnName(leftEntity, leftEntityMetadata.idProperty, joinRelation.alias);
-			} else if (rightEntityMetadata.oneToManyMap[joinRelation.relationPropertyName]) {
-				let rightEntityOneToManyMetadata = rightEntityMetadata.oneToManyMap[joinRelation.relationPropertyName];
+				leftColumn = this.getEntityPropertyColumnName(leftEntity, leftEntityMetadata.idProperty, currentAlias);
+			} else if (rightEntityMetadata.oneToManyMap[currentRelation.relationPropertyName]) {
+				let rightEntityOneToManyMetadata = rightEntityMetadata.oneToManyMap[currentRelation.relationPropertyName];
 				let mappedByLeftEntityProperty = rightEntityOneToManyMetadata.mappedBy;
 				if (!mappedByLeftEntityProperty) {
-					throw `Could not find @OneToMany.mappedBy for relation ${joinRelation.relationPropertyName} of table ${i + 1} in FROM clause.`;
+					throw `${errorPrefix} Could not find @OneToMany.mappedBy for relation '${parentRelation.entityName}.${currentRelation.relationPropertyName}'.`;
 				}
-				leftColumn = this.getEntityManyToOneColumnName(leftEntity, mappedByLeftEntityProperty, joinRelation.alias);
+				leftColumn = this.getEntityManyToOneColumnName(leftEntity, mappedByLeftEntityProperty, currentAlias);
 
 				if (!rightEntityMetadata.idProperty) {
-					throw `Could not find @Id for right entity of join to table ${i + 1} in FROM clause`;
+					throw `${errorPrefix} Could not find @Id for right entity of join to table '${currentRelation.entityName}' `;
 				}
-				rightEntityJoinColumn = this.getEntityPropertyColumnName(rightEntity, rightEntityMetadata.idProperty, joinRelation.parentEntityAlias);
+				rightEntityJoinColumn = this.getEntityPropertyColumnName(rightEntity, rightEntityMetadata.idProperty, parentAlias);
 			} else {
-				throw `Relation for table ${i + i} (${tableName}) in FROM clause is not listed as @ManyToOne or @OneToMany`;
+				throw `${errorPrefix} Relation '${parentRelation.entityName}.${currentRelation.relationPropertyName}' for table (${tableName}) is not listed as @ManyToOne or @OneToMany`;
 			}
-			fromFragment += `\t${joinTypeString} ${tableName} ${joinRelation.alias}`;
+			fromFragment += `\t${joinTypeString} ${tableName} ${currentAlias}`;
 			// TODO: add support for custom JOIN ON clauses
-			fromFragment += `\t\tON ${joinRelation.parentEntityAlias}.${rightEntityJoinColumn} = ${joinRelation.alias}.${leftColumn}`;
+			fromFragment += `\t\tON ${parentAlias}.${rightEntityJoinColumn} = ${currentAlias}.${leftColumn}`;
+		}
+		for (let i = 0; i < currentTree.childNodes.length; i++) {
+			let childTreeNode = currentTree.childNodes[i];
+			fromFragment += this.getFROMFragment(currentTree, childTreeNode, embedParameters, parameters);
 		}
 
 		return fromFragment;
@@ -230,114 +363,18 @@ ${whereFragment}`;
 		return columnName;
 	}
 
-	protected getSELECTFragment(
-		entityName: string,
-		selectFragment: string,
-		selectClauseFragment: any,
-		joinAliasMap: {[entityName: string]: string},
-		columnAliasMap: {[aliasPropertyCombo: string]: string},
-		entityDefaultsMap: {[property: string]: any},
-		selectEntitySet: {[entityName: string]: boolean},
-		embedParameters: boolean = true,
-		parameters: any[] = null
-	): string {
-
-		if (selectEntitySet[entityName]) {
-			throw `Multiple instances of the same entity currently not supported in SELECT clause (but auto-populated for the sub-tree).`;
-		}
-		selectEntitySet[entityName] = true;
-
-		let qEntity = this.qEntityMap[entityName];
-		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
-		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
-		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
-
-		let tableAlias = joinAliasMap[entityName];
-		if (!tableAlias) {
-			throw `Alias for entity ${entityName} is not defined in the From clause.`;
-		}
-
-		let retrieveAllOwnFields: boolean = false;
-		let numProperties = 0;
-		for (let propertyName in selectClauseFragment) {
-			if (propertyName === '*') {
-				retrieveAllOwnFields = true;
-				delete selectClauseFragment['*'];
-			}
-			numProperties++;
-		}
-		//  For {} select causes or if __allOwnFields__ is present, retrieve the entire object
-		if (numProperties === 0 || retrieveAllOwnFields) {
-			selectClauseFragment = {};
-			for (let propertyName in entityPropertyTypeMap) {
-				selectClauseFragment[propertyName] = null;
-				// let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
-			}
-			/*			for (let propertyName in entityRelationMap) {
-			 selectClauseFragment[propertyName] = {};
-			 if (entityMetadata.manyToOneMap[propertyName]) {
-			 let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
-			 }
-			 }*/
-		}
-
-		for (let propertyName in selectClauseFragment) {
-			let value = selectClauseFragment[propertyName];
-			// Skip undefined values
-			if (value === undefined) {
-				continue;
-			} else if (value !== null) {
-				entityDefaultsMap[propertyName] = value;
-			}
-			if (entityPropertyTypeMap[propertyName]) {
-				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
-				let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, columnAliasMap, selectFragment);
-				selectFragment += columnSelect;
-			} else if (entityRelationMap[propertyName]) {
-				let defaultsChildMap = {};
-				entityDefaultsMap[propertyName] = defaultsChildMap;
-				let subSelectClauseFragment = selectClauseFragment[propertyName];
-				if (subSelectClauseFragment == null) {
-					// For null entity reference, retrieve just the id
-					if (entityMetadata.manyToOneMap[propertyName]) {
-						let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
-						let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, columnAliasMap, selectFragment);
-						selectFragment += columnSelect;
-						continue;
-					} else {
-						// Do not retrieve @OneToMay set to null
-						continue;
-					}
-				}
-				selectFragment += this.getSELECTFragment(entityRelationMap[propertyName].entityName,
-					selectFragment, selectClauseFragment[propertyName], joinAliasMap, columnAliasMap, defaultsChildMap, selectEntitySet, embedParameters, parameters);
-			} else {
-				throw `Unexpected property '${propertyName}' on entity '${entityName}' (alias '${tableAlias}') in SELECT clause.`;
-			}
-		}
-
-		return selectFragment;
-	}
-
-	protected getColumnSelectFragment(
-		propertyName: string,
-		tableAlias: string,
-		columnName: string,
-		columnAliasMap: {[aliasWithProperty: string]: string},
-		existingSelectFragment: string
-	): string {
-		let columnAlias = `column_${++this.currentFieldIndex}`;
-		let columnSelect = `${tableAlias}.${columnName} as ${columnAlias}\n`;
-		columnAliasMap[`${tableAlias}.${propertyName}`] = columnAlias;
-		if (existingSelectFragment) {
-			columnSelect = `\t, ${columnSelect}`;
-		} else {
-			columnSelect = `\t${columnSelect}`;
-		}
-
-		return columnSelect;
-	}
-
+	/**
+	 * If bridging is not applied:
+	 *
+	 * Entities get merged if they are right next to each other in the result set.  If they are not, they are
+	 * treated as separate entities - hence, your sort order matters.
+	 *
+	 * If bridging is applied - all entities get merged - your sort order does not matter.  Might as well disallow
+	 * sort order for bridged queries (or re-sort in memory)?
+	 *
+	 * @param results
+	 * @returns {any[]}
+	 */
 	parseQueryResults(
 		results: any[]
 	): any[] {
@@ -345,20 +382,29 @@ ${whereFragment}`;
 		if (!results || !results.length) {
 			return parsedResults;
 		}
-		parsedResults = results.map(( result ) => {
-			return this.parseQueryResult(this.qEntity.__entityName__, this.phJsonQuery.select, result, [0], this.defaultsMap);
+		parsedResults = [];
+		let lastResult;
+		results.forEach(( result ) => {
+			let parsedResult = this.parseQueryResult(null, null, this.qEntity.__entityName__, this.phJsonQuery.select, this.joinTree, result, [0]);
+			if(!lastResult) {
+				parsedResults.push(parsedResult);
+			} else if(lastResult !== parsedResult) {
+				lastResult = parsedResult;
+				parsedResults.push(parsedResult);
+			}
 		});
-		this.queryLinker.link(parsedResults);
 
-		return parsedResults;
+		return this.queryBridge.bridge(parsedResults, this.phJsonQuery.select);
 	}
 
 	protected parseQueryResult(
+		parentEntityName: string,
+		parentPropertyName: string,
 		entityName: string,
 		selectClauseFragment: any,
+		currentJoinNode: JoinTreeNode,
 		resultRow: any,
-		nextFieldIndex: number[],
-		entityDefaultsMap: {[property: string]: any}
+		nextFieldIndex: number[]
 	): any {
 		// Return blanks, primitives and Dates directly
 		if (!resultRow || !(resultRow instanceof Object) || resultRow instanceof Date) {
@@ -373,7 +419,7 @@ ${whereFragment}`;
 		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
 		let entityId;
 
-		let entityAlias = this.joinAliasMap[entityName];
+		let entityAlias = QRelation.getAlias(currentJoinNode.jsonRelation);
 
 		let resultObject = new qEntity.__entityConstructor__();
 
@@ -394,45 +440,58 @@ ${whereFragment}`;
 					dataType = SQLDataType.STRING;
 				}
 
-				let fieldKey = `${entityAlias}.${propertyName}`;
-				let columnAlias = this.columnAliasMap[fieldKey];
-				let defaultValue = entityDefaultsMap[propertyName];
+				let columnAlias = this.columnAliases.getAlias(entityAlias, propertyName);
+				let defaultValue = this.entityDefaults.getForAlias(entityAlias)[propertyName];
 
 				resultObject[propertyName] = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], dataType, defaultValue);
-
+				this.queryBridge.addProperty(entityAlias, resultObject, dataType, propertyName);
 				if (entityMetadata.idProperty == propertyName) {
 					entityId = resultObject[propertyName];
-					this.queryLinker.addEntity(qEntity, entityMetadata, resultObject, propertyName);
 				}
 			} else if (entityRelationMap[propertyName]) {
 				let childSelectClauseFragment = selectClauseFragment[propertyName];
+				let relation = qEntity.__entityRelationMap__[propertyName];
+				let relationQEntity = this.qEntityMap[relation.entityName];
+				let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>relationQEntity.__entityConstructor__;
+
 				if (childSelectClauseFragment == null) {
 					if (entityMetadata.manyToOneMap[propertyName]) {
-						let fieldKey = `${entityAlias}.${propertyName}`;
-						let columnAlias = this.columnAliasMap[fieldKey];
+						let columnAlias = this.columnAliases.getAlias(entityAlias, propertyName);
 						let relatedEntityId = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], SQLDataType.NUMBER, null);
-						this.queryLinker.addManyToOneStub(qEntity, entityMetadata, resultObject, propertyName, relatedEntityId);
+						let manyToOneStub = {};
+						resultObject[propertyName] = manyToOneStub;
+						manyToOneStub[relationEntityMetadata.idProperty] = relatedEntityId;
+						this.queryBridge.bufferManyToOneStub(qEntity, entityMetadata, resultObject, propertyName, relatedEntityId);
 					} else {
-						this.queryLinker.bufferOneToManyStub(resultObject, propertyName);
+						this.queryBridge.bufferOneToManyStub(resultObject, entityName, propertyName);
 					}
 				} else {
-					let childDefaultsMap = entityDefaultsMap[propertyName];
 					let childEntityName = entityRelationMap[propertyName].entityName;
+					let childJoinNode = currentJoinNode.getChildNode(childEntityName, propertyName);
 
 					let childResultObject = this.parseQueryResult(
+						entityName,
+						propertyName,
 						childEntityName,
 						childSelectClauseFragment,
+						childJoinNode,
 						resultRow,
-						nextFieldIndex,
-						childDefaultsMap
+						nextFieldIndex
 					);
-					resultObject[propertyName] = childResultObject;
+					if (entityMetadata.manyToOneMap[propertyName]) {
+						resultObject[propertyName] = childResultObject;
+						this.queryBridge.bufferManyToOneStub(qEntity, entityMetadata, resultObject, propertyName, relatedEntityId);
+					} else {
+
+						let childResultsArray = new MappedEntityArray(relationEntityMetadata.idProperty);
+						resultObject[propertyName] = childResultsArray;
+						childResultsArray.put(childResultObject);
+						this.queryBridge.bufferOneToManyStub(resultObject, entityName, propertyName);
+					}
 				}
 			}
 			nextFieldIndex[0]++;
 		}
-		this.queryLinker.flushOneToManyStubBuffer(qEntity, entityMetadata, entityId);
-
-		return resultObject;
+		return this.queryBridge.flushEntity(qEntity, entityMetadata, selectClauseFragment, entityPropertyTypeMap, entityRelationMap, entityId, resultObject);
 	}
 }

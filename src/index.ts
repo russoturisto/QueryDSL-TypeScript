@@ -37,7 +37,7 @@ import {
 } from "./core/operation/LogicalOperation";
 import {IOperation, Operation, JSONBaseOperation} from "./core/operation/Operation";
 import {OperationType} from "./core/operation/OperationType";
-import {RelationRecord, RelationType, IQRelation, QRelation, JSONRelation} from "./core/entity/Relation";
+import {ColumnAliases, JoinTreeNode, RelationRecord, RelationType, IQRelation, QRelation, JSONRelation} from "./core/entity/Relation";
 import {IEntityQuery} from "./query/IEntityQuery";
 import {PouchDbGraphQuery, PouchDbFindQuery} from "./query/noSql/pouchdb/PouchDbGraphQuery";
 import {
@@ -55,7 +55,7 @@ import {QueryTreeNode} from "./query/noSql/QueryTreeNode";
 import {OracleAdaptor} from "./query/sql/adaptor/OracleAdaptor";
 import {SqLiteAdaptor} from "./query/sql/adaptor/SqLiteAdaptor";
 import {ISQLAdaptor, getSQLAdaptor} from "./query/sql/adaptor/SQLAdaptor";
-import {SQLDialect, SQLDataType, SQLStringQuery} from "./query/sql/SQLStringQuery";
+import {EntityDefaults, SQLDialect, SQLDataType, SQLStringQuery} from "./query/sql/SQLStringQuery";
 import {PHRawSQLQuery, PHJsonSQLQuery, JoinType, PHSQLQuery} from "./query/sql/PHSQLQuery";
 import {PHQuery, PHRawQuery} from "./query/PHQuery";
 import {FieldMap, EntityFieldMap, PropertyFieldEntry} from "./query/sql/FieldMap";
@@ -88,6 +88,7 @@ export {
 	PHJsonSQLUpdate,
 	PHSQLUpdate,
 	SQLStringUpdate,
+	EntityDefaults,
 	SQLDialect,
 	SQLDataType,
 	getSQLAdaptor,
@@ -161,6 +162,8 @@ export {
 	IOperation,
 	Operation,
 	OperationType,
+	ColumnAliases,
+	JoinTreeNode,
 	JSONRelation,
 	RelationType,
 	IQRelation,

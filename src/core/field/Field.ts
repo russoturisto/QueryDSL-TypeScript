@@ -3,6 +3,7 @@
  */
 import {IQEntity} from "../entity/Entity";
 import {JSONBaseOperation, IOperation} from "../operation/Operation";
+import {QRelation} from "../entity/Relation";
 
 export enum FieldType {
 	BOOLEAN,
@@ -69,7 +70,7 @@ implements IQField<IQ, T, JO, IO> {
 	}
 
 	getFieldKey() {
-		let key = `${this.q.alias}.${this.fieldName}`;
+		let key = `${QRelation.getPositionAlias(this.q.fromClausePosition)}.${this.fieldName}`;
 
 		return key;
 	}

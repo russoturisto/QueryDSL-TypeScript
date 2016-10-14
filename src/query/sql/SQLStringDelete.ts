@@ -1,6 +1,6 @@
 import {SQLStringWhereBase} from "./SQLStringWhereBase";
 import {IEntity, IQEntity} from "../../core/entity/Entity";
-import {RelationRecord} from "../../core/entity/Relation";
+import {RelationRecord, JoinTreeNode, JSONRelation, QRelation} from "../../core/entity/Relation";
 import {SQLDialect} from "./SQLStringQuery";
 import {PHJsonSQLDelete} from "./PHSQLDelete";
 import {SQLStringNoJoinQuery} from "./SQLStringNoJoinQuery";
@@ -25,9 +25,9 @@ export class SQLStringDelete<IE extends IEntity> extends SQLStringNoJoinQuery<IE
 		embedParameters: boolean = true,
 		parameters: any[] = null
 	): string {
-		let joinQEntityMap: {[alias: string]: IQEntity} = {};
+		let joinNodeMap = this.getJoinNodeMap();
 		let fromFragment = this.getTableFragment(this.phJsonDelete.deleteFrom);
-		let whereFragment = this.getWHEREFragment(this.phJsonDelete.where, 0, joinQEntityMap, embedParameters, parameters);
+		let whereFragment = this.getWHEREFragment(this.phJsonDelete.where, 0, joinNodeMap, embedParameters, parameters);
 
 		return `DELETE
 FROM

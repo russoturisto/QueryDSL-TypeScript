@@ -1,5 +1,5 @@
 import { PHJsonSQLQuery } from "./PHSQLQuery";
-import { RelationRecord } from "../../core/entity/Relation";
+import { RelationRecord, JSONRelation, JoinTreeNode, ColumnAliases } from "../../core/entity/Relation";
 import { IEntity, IQEntity } from "../../core/entity/Entity";
 import { JoinColumnConfiguration } from "../../core/entity/metadata/ColumnDecorators";
 import { FieldMap } from "./FieldMap";
@@ -17,16 +17,22 @@ export declare enum SQLDataType {
     NUMBER = 2,
     STRING = 3,
 }
-export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
-    phJsonQuery: PHJsonSQLQuery<IE>;
-    columnAliasMap: {
-        [aliasPropertyCombo: string]: string;
+export declare class EntityDefaults {
+    map: {
+        [alias: string]: {
+            [property: string]: any;
+        };
     };
-    defaultsMap: {
+    getForAlias(alias: string): {
         [property: string]: any;
     };
-    private currentFieldIndex;
-    private queryLinker;
+}
+export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
+    phJsonQuery: PHJsonSQLQuery<IE>;
+    columnAliases: ColumnAliases;
+    entityDefaults: EntityDefaults;
+    private queryBridge;
+    private joinTree;
     constructor(phJsonQuery: PHJsonSQLQuery<IE>, qEntity: IQEntity, qEntityMap: {
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
@@ -37,28 +43,36 @@ export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBa
         [entityName: string]: {
             [propertyName: string]: boolean;
         };
-    }, dialect: SQLDialect, performLinking?: boolean);
+    }, dialect: SQLDialect, performBridging?: boolean);
     getFieldMap(): FieldMap;
+    /**
+     * Useful when a query is executed remotely and a flat result set is returned.  JoinTree is needed to parse that
+     * result set.
+     */
+    buildJoinTree(): void;
     toSQL(embedParameters?: boolean, parameters?: any[]): string;
-    private getFROMFragment(joinQEntityMap, joinAliasMap, joinRelations, embedParameters?, parameters?);
+    buildFromJoinTree(entityName: string, joinRelations: JSONRelation[], joinNodeMap: {
+        [alias: string]: JoinTreeNode;
+    }): JoinTreeNode;
+    protected getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults, embedParameters?: boolean, parameters?: any[]): string;
+    protected getColumnSelectFragment(propertyName: string, tableAlias: string, columnName: string, existingSelectFragment: string): string;
+    private getFROMFragment(parentTree, currentTree, embedParameters?, parameters?);
     private getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
     protected getManyToOneColumnName(entityName: string, propertyName: string, tableAlias: string, joinColumnMap: {
         [propertyName: string]: JoinColumnConfiguration;
     }): string;
-    protected getSELECTFragment(entityName: string, selectFragment: string, selectClauseFragment: any, joinAliasMap: {
-        [entityName: string]: string;
-    }, columnAliasMap: {
-        [aliasPropertyCombo: string]: string;
-    }, entityDefaultsMap: {
-        [property: string]: any;
-    }, selectEntitySet: {
-        [entityName: string]: boolean;
-    }, embedParameters?: boolean, parameters?: any[]): string;
-    protected getColumnSelectFragment(propertyName: string, tableAlias: string, columnName: string, columnAliasMap: {
-        [aliasWithProperty: string]: string;
-    }, existingSelectFragment: string): string;
+    /**
+     * If bridging is not applied:
+     *
+     * Entities get merged if they are right next to each other in the result set.  If they are not, they are
+     * treated as separate entities - hence, your sort order matters.
+     *
+     * If bridging is applied - all entities get merged - your sort order does not matter.  Might as well disallow
+     * sort order for bridged queries (or re-sort in memory)?
+     *
+     * @param results
+     * @returns {any[]}
+     */
     parseQueryResults(results: any[]): any[];
-    protected parseQueryResult(entityName: string, selectClauseFragment: any, resultRow: any, nextFieldIndex: number[], entityDefaultsMap: {
-        [property: string]: any;
-    }): any;
+    protected parseQueryResult(parentEntityName: string, parentPropertyName: string, entityName: string, selectClauseFragment: any, currentJoinNode: JoinTreeNode, resultRow: any, nextFieldIndex: number[]): any;
 }

@@ -1,7 +1,7 @@
 import { IEntity, IQEntity } from "../../core/entity/Entity";
 import { ISQLAdaptor } from "./adaptor/SQLAdaptor";
 import { SQLDialect } from "./SQLStringQuery";
-import { RelationRecord } from "../../core/entity/Relation";
+import { RelationRecord, JoinTreeNode } from "../../core/entity/Relation";
 import { JSONBaseOperation } from "../../core/operation/Operation";
 import { ColumnConfiguration, JoinColumnConfiguration } from "../../core/entity/metadata/ColumnDecorators";
 import { FieldMap } from "./FieldMap";
@@ -26,7 +26,7 @@ export declare abstract class SQLStringWhereBase<IE extends IEntity> {
     protected dialect: SQLDialect;
     fieldMap: FieldMap;
     joinAliasMap: {
-        [entityName: string]: string;
+        [key: string]: string;
     };
     sqlAdaptor: ISQLAdaptor;
     constructor(qEntity: IQEntity, qEntityMap: {
@@ -40,8 +40,8 @@ export declare abstract class SQLStringWhereBase<IE extends IEntity> {
             [propertyName: string]: boolean;
         };
     }, dialect: SQLDialect);
-    protected getWHEREFragment(operation: JSONBaseOperation, nestingIndex: number, joinQEntityMap: {
-        [alias: string]: IQEntity;
+    protected getWHEREFragment(operation: JSONBaseOperation, nestingIndex: number, joinNodeMap: {
+        [alias: string]: JoinTreeNode;
     }, embedParameters?: boolean, parameters?: any[]): string;
     private getComparibleOperatorAndValueFragment<T>(fieldOperation, value, alias, propertyName, typeCheckFunction, typeName, embedParameters?, parameters?, conversionFunction?);
     private getCommonOperatorAndValueFragment<T>(fieldOperation, value, alias, propertyName, typeCheckFunction, typeName, embedParameters?, parameters?, conversionFunction?);

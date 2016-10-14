@@ -15,7 +15,7 @@ export interface PHRawSQLQuery<IE extends IEntity> extends PHRawQuery<IE> {
 
 export interface PHJsonSQLQuery<IE extends IEntity> {
 	select: IE;
-	from: JSONRelation[];
+	from?: JSONRelation[];
 	where?: JSONBaseOperation;
 }
 

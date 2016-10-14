@@ -20,8 +20,7 @@ export interface IQEntity {
 	__entityName__: string;
 	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any, IQEntity>};
 
-	alias: string;
-	parentEntityAlias: string;
+	fromClausePosition: number[];
 	joinType: JoinType;
 
 	addEntityRelation<IQR extends IQEntity, R>(
@@ -46,6 +45,8 @@ export interface IQEntity {
 
 	getRelationJson(): JSONRelation;
 
+	getNextChildJoinPosition(): number[];
+
 }
 
 export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
@@ -55,11 +56,12 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 
 	// rootOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(<any>this, OperationType.AND, []);
 
+	private currentChildIndex = 0;
+
 	constructor(
 		public __entityConstructor__: {new(): any},
 		public __entityName__: string,
-		public alias: string,
-		public parentEntityAlias = null,
+		public fromClausePosition: number[],
 		public relationPropertyName = null,
 		public joinType: JoinType = null
 	) {
@@ -82,10 +84,9 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 
 	getRelationJson(): JSONRelation {
 		return {
-			alias: this.alias,
+			fromClausePosition: this.fromClausePosition,
 			entityName: this.__entityName__,
 			joinType: this.joinType,
-			parentEntityAlias: this.parentEntityAlias,
 			relationPropertyName: this.relationPropertyName
 		};
 	}
@@ -106,6 +107,13 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 		fields: IQField<IQ, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>[]
 	): IQ {
 		throw `Not implemented`;
+	}
+
+	getNextChildJoinPosition(): number[] {
+		let nextChildJoinPosition = this.fromClausePosition.slice();
+		nextChildJoinPosition.push(++this.currentChildIndex);
+
+		return nextChildJoinPosition;
 	}
 
 	/*

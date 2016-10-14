@@ -1,5 +1,21 @@
 import { IQEntity } from "./Entity";
 import { JoinType } from "../../query/sql/PHSQLQuery";
+export declare class ColumnAliases {
+    numFields: number;
+    private lastAlias;
+    private columnAliasMap;
+    addAlias(tableAlias: string, propertyName: string): string;
+    getAlias(tableAlias: string, propertyName: string): string;
+    private getAliasKey(tableAlias, propertyName);
+    private getNextAlias();
+}
+export declare class JoinTreeNode {
+    jsonRelation: JSONRelation;
+    childNodes: JoinTreeNode[];
+    constructor(jsonRelation: JSONRelation, childNodes: JoinTreeNode[]);
+    addChildNode(joinTreeNode: JoinTreeNode): void;
+    getChildNode(entityName: string, relationName: string): JoinTreeNode;
+}
 export interface RelationRecord {
     entityName: string;
     propertyName: string;
@@ -10,10 +26,9 @@ export declare enum RelationType {
     MANY_TO_ONE = 1,
 }
 export interface JSONRelation {
-    alias: string;
+    fromClausePosition: number[];
     entityName: string;
     joinType: JoinType;
-    parentEntityAlias: string;
     relationPropertyName: string;
 }
 export declare const INNER_JOIN: string;
@@ -37,6 +52,9 @@ export declare class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> imp
     propertyName: string;
     relationEntityConstructor: new () => R;
     relationQEntityConstructor: new (...args: any[]) => IQR;
+    static getPositionAlias(fromClausePosition: number[]): string;
+    static getAlias(jsonRelation: JSONRelation): string;
+    static getParentAlias(jsonRelation: JSONRelation): string;
     constructor(q: IQ, qConstructor: new () => IQ, relationType: RelationType, entityName: string, propertyName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR);
     innerJoin(): IQR;
     leftJoin(): IQR;

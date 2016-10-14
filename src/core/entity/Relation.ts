@@ -10,23 +10,91 @@ const ALIASES = ['a', 'b', 'c', 'd', 'e',
 	'p', 'q', 'r', 's', 't',
 	'u', 'v', 'w', 'x', 'y', 'z'];
 
-var currentAlias = [0, 0, 0, 0, 0];
+export class ColumnAliases {
+	numFields:number = 0;
+	private lastAlias = [-1, -1];
+	private columnAliasMap: {[aliasPropertyCombo: string]: string} = {};
 
-function getNextAlias(): string {
-	for (var i = 4; i >= 0; i--) {
-		let currentIndex = currentAlias[i];
-		currentIndex = (currentIndex + 1) % 26;
-		currentAlias[i] = currentIndex;
-		if (currentIndex !== 0) {
-			break;
+	addAlias(tableAlias:string, propertyName:string):string {
+		let aliasKey = this.getAliasKey(tableAlias, propertyName);
+		let columnAlias = this.getNextAlias();
+		this.columnAliasMap[aliasKey] = columnAlias;
+		this.numFields++;
+
+		return columnAlias;
+	}
+
+	getAlias(tableAlias:string, propertyName:string):string {
+		let aliasKey = this.getAliasKey(tableAlias, propertyName);
+		return this.columnAliasMap[aliasKey];
+	}
+
+	private getAliasKey(tableAlias:string, propertyName:string):string {
+		let aliasKey = `${tableAlias}.${propertyName}`;
+		return aliasKey;
+	}
+
+	private getNextAlias(): string {
+		let currentAlias = this.lastAlias;
+		for (var i = 1; i >= 0; i--) {
+			let currentIndex = currentAlias[i];
+			currentIndex = (currentIndex + 1) % 26;
+			currentAlias[i] = currentIndex;
+			if (currentIndex !== 0) {
+				break;
+			}
 		}
+		let aliasString = '';
+		for (var i = 0; i < 2; i++) {
+			aliasString += ALIASES[currentAlias[i]];
+		}
+
+		return aliasString;
 	}
-	let aliasString = '';
-	for (var i = 0; i < 5; i++) {
-		aliasString += ALIASES[currentAlias[i]];
+}
+
+export class JoinTreeNode {
+	constructor(
+		public jsonRelation: JSONRelation,
+		public childNodes: JoinTreeNode[]
+	) {
 	}
 
-	return aliasString;
+	addChildNode(
+		joinTreeNode: JoinTreeNode
+	): void {
+		let childPositionArray = joinTreeNode.jsonRelation.fromClausePosition;
+		let childPosition = childPositionArray[childPositionArray.length - 1];
+		this.childNodes[childPosition] = joinTreeNode;
+	}
+
+	getChildNode(
+		entityName: string,
+		relationName: string
+	): JoinTreeNode {
+		let matchingNodes = this.childNodes.filter(( childNode ) => {
+			return childNode.jsonRelation.relationPropertyName === relationName;
+		});
+		switch (matchingNodes.length) {
+			case 0:
+				break;
+			case 1:
+				return matchingNodes[0];
+			default:
+				throw `More than one child node matched relation property name '${relationName}'`;
+		}
+		let childPosition = this.jsonRelation.fromClausePosition.slice();
+		childPosition.push(this.childNodes.length);
+		let childTreeNode = new JoinTreeNode({
+			fromClausePosition: childPosition,
+			entityName: entityName,
+			joinType: JoinType.LEFT_JOIN,
+			relationPropertyName: relationName
+		}, []);
+		this.addChildNode(childTreeNode);
+
+		return childTreeNode;
+	}
 }
 
 export interface RelationRecord {
@@ -43,10 +111,9 @@ export enum RelationType {
 }
 
 export interface JSONRelation {
-	alias: string;
+	fromClausePosition: number[];
 	entityName: string;
 	joinType: JoinType;
-	parentEntityAlias: string;
 	relationPropertyName: string;
 }
 
@@ -69,6 +136,22 @@ export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
 
 export class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> implements IQRelation<IQR, R, IQ> {
 
+	static getPositionAlias( fromClausePosition: number[] ) {
+		return `rt_${fromClausePosition.join('_')}`;
+	}
+
+	static getAlias( jsonRelation: JSONRelation ): string {
+		return this.getPositionAlias(jsonRelation.fromClausePosition);
+	}
+
+	static getParentAlias( jsonRelation: JSONRelation ): string {
+		let position = jsonRelation.fromClausePosition;
+		if (position.length === 0) {
+			throw `Cannot find alias of a parent entity for the root entity`;
+		}
+		return this.getPositionAlias(position.slice(0, position.length - 1));
+	}
+
 	constructor(
 		public q: IQ,
 		public qConstructor: new () => IQ,
@@ -90,7 +173,7 @@ export class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> implements 
 	}
 
 	private getNewQEntity( joinType: JoinType ) {
-		return new this.relationQEntityConstructor(this.relationEntityConstructor, this.entityName, getNextAlias(), this.q.alias, this.propertyName, joinType);
+		return new this.relationQEntityConstructor(this.relationEntityConstructor, this.entityName, this.q.getNextChildJoinPosition(), this.propertyName, joinType);
 	}
 
 }
