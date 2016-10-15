@@ -13,5 +13,6 @@ export declare class LastObjectTracker {
         [alias: string]: boolean;
     };
     addProperty(entityAlias: string, resultObject: any, dataType: SQLDataType, propertyName: string): void;
-    private getObject(entityAlias, resultObject);
+    addManyToOneReference(entityAlias: string, resultObject: any, propertyName: string, manyToOneIdField: string): void;
+    private isDifferent(entityAlias, resultObject, propertyName);
 }

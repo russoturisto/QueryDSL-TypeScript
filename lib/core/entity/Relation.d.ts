@@ -44,6 +44,7 @@ export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
     innerJoin(): any;
     leftJoin(): any;
 }
+export declare const IS_ENTITY_PROPERTY_NAME: string;
 export declare class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> implements IQRelation<IQR, R, IQ> {
     q: IQ;
     qConstructor: new () => IQ;
@@ -52,6 +53,8 @@ export declare class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> imp
     propertyName: string;
     relationEntityConstructor: new () => R;
     relationQEntityConstructor: new (...args: any[]) => IQR;
+    static isStub(object: any): boolean;
+    static markAsEntity(object: any): void;
     static getPositionAlias(fromClausePosition: number[]): string;
     static getAlias(jsonRelation: JSONRelation): string;
     static getParentAlias(jsonRelation: JSONRelation): string;

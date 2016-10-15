@@ -1,53 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="BookmarkManager">
-    <bookmark url="file://$PROJECT_DIR$/src/query/sql/QueryBridge.ts" line="179" mnemonic="1" />
-    <bookmark url="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" line="485" mnemonic="9" />
+    <bookmark url="file://$PROJECT_DIR$/src/query/sql/QueryBridge.ts" line="166" mnemonic="1" />
+    <bookmark url="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" line="486" mnemonic="9" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8322ebc1-9272-4c63-9e9f-f1c51e544bcc" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/MappedEntityArray.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/sql/LastObjectTracker.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/sql/QueryBridge.ts" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/query/sql/QueryLinker.ts" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.js" afterPath="$PROJECT_DIR$/lib/core/entity/Entity.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/Entity.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.d.ts" afterPath="$PROJECT_DIR$/lib/core/entity/Relation.d.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.js" afterPath="$PROJECT_DIR$/lib/core/entity/Relation.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/Relation.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/Field.js" afterPath="$PROJECT_DIR$/lib/core/field/Field.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/Field.js.map" afterPath="$PROJECT_DIR$/lib/core/field/Field.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.d.ts" afterPath="$PROJECT_DIR$/lib/index.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.js" afterPath="$PROJECT_DIR$/lib/index.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.js.map" afterPath="$PROJECT_DIR$/lib/index.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/QueryLinker.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/QueryLinker.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/QueryLinker.js" afterPath="$PROJECT_DIR$/lib/query/sql/QueryLinker.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/QueryLinker.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/QueryLinker.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringNoJoinQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringNoJoinQuery.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringNoJoinQuery.js" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringNoJoinQuery.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringNoJoinQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringNoJoinQuery.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/LastObjectTracker.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/LastObjectTracker.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/LastObjectTracker.js" afterPath="$PROJECT_DIR$/lib/query/sql/LastObjectTracker.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/LastObjectTracker.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/LastObjectTracker.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/QueryBridge.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/QueryBridge.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/QueryBridge.js" afterPath="$PROJECT_DIR$/lib/query/sql/QueryBridge.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/QueryBridge.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/QueryBridge.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SqlStringDelete.js" afterPath="$PROJECT_DIR$/lib/query/sql/SqlStringDelete.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SqlStringDelete.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/SqlStringDelete.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SqlStringUpdate.js" afterPath="$PROJECT_DIR$/lib/query/sql/SqlStringUpdate.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SqlStringUpdate.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/SqlStringUpdate.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SqlStringWhereBase.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/SqlStringWhereBase.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SqlStringWhereBase.js" afterPath="$PROJECT_DIR$/lib/query/sql/SqlStringWhereBase.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SqlStringWhereBase.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/SqlStringWhereBase.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/entity/Entity.ts" afterPath="$PROJECT_DIR$/src/core/entity/Entity.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/entity/Relation.ts" afterPath="$PROJECT_DIR$/src/core/entity/Relation.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/field/Field.ts" afterPath="$PROJECT_DIR$/src/core/field/Field.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/index.ts" afterPath="$PROJECT_DIR$/src/index.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts" afterPath="$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/SQLStringDelete.ts" afterPath="$PROJECT_DIR$/src/query/sql/SQLStringDelete.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/SQLStringNoJoinQuery.ts" afterPath="$PROJECT_DIR$/src/query/sql/SQLStringNoJoinQuery.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/LastObjectTracker.ts" afterPath="$PROJECT_DIR$/src/query/sql/LastObjectTracker.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/QueryBridge.ts" afterPath="$PROJECT_DIR$/src/query/sql/QueryBridge.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" afterPath="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/SQLStringUpdate.ts" afterPath="$PROJECT_DIR$/src/query/sql/SQLStringUpdate.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/SQLStringWhereBase.ts" afterPath="$PROJECT_DIR$/src/query/sql/SQLStringWhereBase.ts" />
     </list>
     <ignored path="QueryDSL-TypeScript.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -61,113 +35,6 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
-  <component name="DockManager">
-    <window id="1">
-      <content type="file-editors">
-        <state>
-          <splitter split-orientation="horizontal" split-proportion="0.50104165">
-            <split-first>
-              <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-                <file leaf-file-name="SQLStringQuery.ts" pinned="false" current-in-tab="true">
-                  <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
-                    <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="113">
-                        <caret line="446" column="25" selection-start-line="446" selection-start-column="25" selection-end-line="446" selection-end-column="25" />
-                        <folding>
-                          <element signature="e#0#54#0" expanded="true" />
-                          <marker date="1476450931470" expanded="true" signature="9938:10124" ph="..." />
-                          <marker date="1476450931470" expanded="true" signature="10045:10124" ph="..." />
-                        </folding>
-                      </state>
-                    </provider>
-                  </entry>
-                </file>
-                <file leaf-file-name="MappedEntityArray.ts" pinned="false" current-in-tab="false">
-                  <entry file="file://$PROJECT_DIR$/src/core/MappedEntityArray.ts">
-                    <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="34">
-                        <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-                        <folding>
-                          <element signature="n#!!doc;n#MappedEntityArray#0" expanded="false" />
-                        </folding>
-                      </state>
-                    </provider>
-                  </entry>
-                </file>
-                <file leaf-file-name="SQLStringWhereBase.ts" pinned="false" current-in-tab="false">
-                  <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringWhereBase.ts">
-                    <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="-3306">
-                        <caret line="27" column="103" selection-start-line="27" selection-start-column="61" selection-end-line="27" selection-end-column="103" />
-                        <folding />
-                      </state>
-                    </provider>
-                  </entry>
-                </file>
-              </leaf>
-            </split-first>
-            <split-second>
-              <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-                <file leaf-file-name="SQLStringQuery.ts" pinned="false" current-in-tab="false">
-                  <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
-                    <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="0">
-                        <caret line="413" column="46" selection-start-line="413" selection-start-column="46" selection-end-line="413" selection-end-column="46" />
-                        <folding>
-                          <element signature="e#0#54#0" expanded="true" />
-                          <marker date="1476450931470" expanded="true" signature="1428:18907" ph="{...}" />
-                          <marker date="1476450931470" expanded="true" signature="9938:10124" ph="..." />
-                          <marker date="1476450931470" expanded="true" signature="10045:10124" ph="..." />
-                          <marker date="1476450931470" expanded="true" signature="14198:14772" ph="{...}" />
-                          <marker date="1476450931470" expanded="true" signature="17168:17980" ph="{...}" />
-                          <marker date="1476450931470" expanded="true" signature="17222:17823" ph="{...}" />
-                          <marker date="1476450931470" expanded="true" signature="18705:18717" ph="{...}" />
-                        </folding>
-                      </state>
-                    </provider>
-                  </entry>
-                </file>
-                <file leaf-file-name="QueryBridge.ts" pinned="false" current-in-tab="true">
-                  <entry file="file://$PROJECT_DIR$/src/query/sql/QueryBridge.ts">
-                    <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="1051">
-                        <caret line="431" column="15" selection-start-line="431" selection-start-column="15" selection-end-line="431" selection-end-column="15" />
-                        <folding>
-                          <element signature="e#0#50#0" expanded="true" />
-                          <element signature="n#!!doc;n#ManyToOneStubReference#0" expanded="false" />
-                          <marker date="1476450973928" expanded="true" signature="16340:16341" ph="..." />
-                        </folding>
-                      </state>
-                    </provider>
-                  </entry>
-                </file>
-                <file leaf-file-name="Entity.ts" pinned="false" current-in-tab="false">
-                  <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
-                    <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="255">
-                        <caret line="20" column="55" selection-start-line="20" selection-start-column="55" selection-end-line="20" selection-end-column="55" />
-                        <folding />
-                      </state>
-                    </provider>
-                  </entry>
-                </file>
-                <file leaf-file-name="MetadataUtils.ts" pinned="false" current-in-tab="false">
-                  <entry file="file://$PROJECT_DIR$/src/core/entity/metadata/MetadataUtils.ts">
-                    <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="326">
-                        <caret line="76" column="9" selection-start-line="76" selection-start-column="9" selection-end-line="76" selection-end-column="9" />
-                        <folding />
-                      </state>
-                    </provider>
-                  </entry>
-                </file>
-              </leaf>
-            </split-second>
-          </splitter>
-        </state>
-      </content>
-    </window>
-  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="QueryDSL-TypeScript" />
@@ -179,7 +46,7 @@
           <file leaf-file-name="index.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/index.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1683">
+                <state relative-caret-position="2754">
                   <caret line="164" column="16" selection-start-line="164" selection-start-column="16" selection-end-line="164" selection-end-column="16" />
                   <folding>
                     <element signature="e#42#150#0" expanded="true" />
@@ -191,7 +58,7 @@
           <file leaf-file-name="PHSQLQuery.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="306">
+                <state relative-caret-position="340">
                   <caret line="22" column="12" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
                   <folding>
                     <element signature="e#0#68#0" expanded="true" />
@@ -204,8 +71,8 @@
           <file leaf-file-name="QueryBridge.ts" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/query/sql/QueryBridge.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="156">
-                  <caret line="217" column="0" selection-start-line="217" selection-start-column="0" selection-end-line="217" selection-end-column="0" />
+                <state relative-caret-position="177">
+                  <caret line="230" column="0" selection-start-line="230" selection-start-column="0" selection-end-line="230" selection-end-column="0" />
                   <folding>
                     <element signature="e#0#50#0" expanded="true" />
                     <element signature="n#!!doc;n#ManyToOneStubReference#0" expanded="false" />
@@ -231,7 +98,7 @@
           <file leaf-file-name="LogicalOperation.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalOperation.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
+                <state relative-caret-position="442">
                   <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
                   <folding />
                 </state>
@@ -242,12 +109,22 @@
             <entry file="file://$PROJECT_DIR$/src/query/sql/QueryBridge.ts">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="455">
-                  <caret line="486" column="5" selection-start-line="486" selection-start-column="5" selection-end-line="486" selection-end-column="5" />
+                  <caret line="492" column="4" selection-start-line="376" selection-start-column="56" selection-end-line="376" selection-end-column="56" />
                   <folding>
                     <element signature="e#0#50#0" expanded="true" />
                     <element signature="n#!!doc;n#ManyToOneStubReference#0" expanded="false" />
-                    <marker date="1476450973928" expanded="true" signature="16340:16341" ph="..." />
+                    <marker date="1476457967028" expanded="true" signature="7649:20264" ph="{...}" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Relation.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/core/entity/Relation.ts">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="351">
+                  <caret line="145" column="46" selection-start-line="145" selection-start-column="46" selection-end-line="145" selection-end-column="46" />
+                  <folding />
                 </state>
               </provider>
             </entry>
@@ -255,7 +132,7 @@
           <file leaf-file-name="MappedEntityArray.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/core/MappedEntityArray.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="357">
+                <state relative-caret-position="578">
                   <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
                   <folding>
                     <element signature="n#!!doc;n#MappedEntityArray#0" expanded="false" />
@@ -264,25 +141,23 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="SQLStringQuery.ts" pinned="false" current-in-tab="false">
+          <file leaf-file-name="SQLStringQuery.ts" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="289">
-                  <caret line="392" column="41" selection-start-line="392" selection-start-column="41" selection-end-line="392" selection-end-column="41" />
+                <state relative-caret-position="155">
+                  <caret line="424" column="45" selection-start-line="424" selection-start-column="45" selection-end-line="424" selection-end-column="45" />
                   <folding>
                     <element signature="e#0#54#0" expanded="true" />
-                    <marker date="1476450931470" expanded="true" signature="9938:10124" ph="..." />
-                    <marker date="1476450931470" expanded="true" signature="10045:10124" ph="..." />
                   </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="LastObjectTracker.ts" pinned="false" current-in-tab="true">
+          <file leaf-file-name="LastObjectTracker.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/query/sql/LastObjectTracker.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="501">
-                  <caret line="33" column="18" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
+                <state relative-caret-position="378">
+                  <caret line="29" column="4" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="4" />
                   <folding>
                     <element signature="n#!!doc;n#LastObjectTracker#0" expanded="false" />
                   </folding>
@@ -352,10 +227,10 @@
         <option value="$PROJECT_DIR$/src/query/sql/SQLStringNoJoinQuery.ts" />
         <option value="$PROJECT_DIR$/src/query/sql/SQLStringUpdate.ts" />
         <option value="$PROJECT_DIR$/src/index.ts" />
-        <option value="$PROJECT_DIR$/src/core/entity/Relation.ts" />
         <option value="$PROJECT_DIR$/src/core/MappedArray.ts" />
-        <option value="$PROJECT_DIR$/src/query/sql/LastObjectTracker.ts" />
         <option value="$PROJECT_DIR$/src/core/MappedEntityArray.ts" />
+        <option value="$PROJECT_DIR$/src/query/sql/LastObjectTracker.ts" />
+        <option value="$PROJECT_DIR$/src/core/entity/Relation.ts" />
         <option value="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" />
         <option value="$PROJECT_DIR$/src/query/sql/QueryBridge.ts" />
       </list>
@@ -721,15 +596,16 @@
       <workItem from="1476058904500" duration="15544000" />
       <workItem from="1476271760181" duration="13461000" />
       <workItem from="1476354052080" duration="23805000" />
+      <workItem from="1476456141258" duration="1858000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="508084000" />
+    <option name="totallyTimeSpent" value="509942000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="TypeScript" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32502595" sideWeight="0.48524764" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13909379" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1033,7 +909,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/core/operation/LogicalOperation.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state relative-caret-position="442">
           <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding />
         </state>
@@ -1088,7 +964,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
+        <state relative-caret-position="340">
           <caret line="22" column="12" selection-start-line="22" selection-start-column="12" selection-end-line="22" selection-end-column="12" />
           <folding>
             <element signature="e#0#68#0" expanded="true" />
@@ -1099,7 +975,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/index.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1683">
+        <state relative-caret-position="2754">
           <caret line="164" column="16" selection-start-line="164" selection-start-column="16" selection-end-line="164" selection-end-column="16" />
           <folding>
             <element signature="e#42#150#0" expanded="true" />
@@ -1107,9 +983,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/EntityMetadata.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="16" column="2" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="2" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/MappedEntityArray.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="578">
+          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding>
+            <element signature="n#!!doc;n#MappedEntityArray#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringWhereBase.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-3306">
+        <state relative-caret-position="255">
           <caret line="27" column="103" selection-start-line="27" selection-start-column="61" selection-end-line="27" selection-end-column="103" />
           <folding />
         </state>
@@ -1117,7 +1011,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/core/entity/metadata/MetadataUtils.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
+        <state relative-caret-position="1275">
           <caret line="76" column="9" selection-start-line="76" selection-start-column="9" selection-end-line="76" selection-end-column="9" />
           <folding />
         </state>
@@ -1131,58 +1025,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/entity/EntityMetadata.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="16" column="2" selection-start-line="16" selection-start-column="2" selection-end-line="16" selection-end-column="2" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/entity/Relation.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="207">
-          <caret line="112" column="17" selection-start-line="112" selection-start-column="17" selection-end-line="112" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/MappedEntityArray.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!doc;n#MappedEntityArray#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="392" column="41" selection-start-line="392" selection-start-column="41" selection-end-line="392" selection-end-column="41" />
-          <folding>
-            <element signature="e#0#54#0" expanded="true" />
-            <marker date="1476450931470" expanded="true" signature="9938:10124" ph="..." />
-            <marker date="1476450931470" expanded="true" signature="10045:10124" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/query/sql/LastObjectTracker.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="501">
-          <caret line="33" column="18" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="18" />
+        <state relative-caret-position="378">
+          <caret line="29" column="4" selection-start-line="29" selection-start-column="4" selection-end-line="29" selection-end-column="4" />
           <folding>
             <element signature="n#!!doc;n#LastObjectTracker#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/Relation.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="351">
+          <caret line="145" column="46" selection-start-line="145" selection-start-column="46" selection-end-line="145" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="424" column="45" selection-start-line="424" selection-start-column="45" selection-end-line="424" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#54#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/query/sql/QueryBridge.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="156">
-          <caret line="217" column="0" selection-start-line="217" selection-start-column="0" selection-end-line="217" selection-end-column="0" />
+        <state relative-caret-position="177">
+          <caret line="230" column="0" selection-start-line="230" selection-start-column="0" selection-end-line="230" selection-end-column="0" />
           <folding>
             <element signature="e#0#50#0" expanded="true" />
             <element signature="n#!!doc;n#ManyToOneStubReference#0" expanded="false" />

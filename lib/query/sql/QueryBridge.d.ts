@@ -1,6 +1,6 @@
 import { IQEntity } from "../../core/entity/Entity";
 import { EntityMetadata } from "../../core/entity/EntityMetadata";
-import { RelationRecord } from "../../core/entity/Relation";
+import { RelationRecord, JoinTreeNode } from "../../core/entity/Relation";
 import { MappedEntityArray } from "../../core/MappedEntityArray";
 import { LastObjectTracker } from "./LastObjectTracker";
 import { SQLDataType } from "./SQLStringQuery";
@@ -28,7 +28,7 @@ export declare class QueryBridgeConfiguration {
 }
 export interface IQueryBridge {
     addProperty(entityAlias: string, resultObject: any, dataType: SQLDataType, propertyName: string): void;
-    bufferManyToOneStub(qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relatedEntityId: any): void;
+    bufferManyToOneStub(currentJoinNode: JoinTreeNode, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata, relatedEntityId: any): void;
     bufferOneToManyStub(resultObject: any, entityName: string, propertyName: string): void;
     flushEntity(qEntity: IQEntity, entityMetadata: EntityMetadata, selectClauseFragment: any, entityPropertyTypeMap: {
         [propertyName: string]: boolean;
@@ -102,7 +102,7 @@ export declare class QueryBridge implements IQueryBridge {
         [entityName: string]: IQEntity;
     });
     addProperty(entityAlias: string, resultObject: any, dataType: SQLDataType, propertyName: string): void;
-    bufferManyToOneStub(qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relatedEntityId: any): void;
+    bufferManyToOneStub(currentJoinNode: JoinTreeNode, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata, relatedEntityId: any): void;
     bufferOneToManyStub(resultObject: any, otmEntityName: string, propertyName: string): void;
     flushEntity(qEntity: IQEntity, entityMetadata: EntityMetadata, selectClauseFragment: any, entityPropertyTypeMap: {
         [propertyName: string]: boolean;

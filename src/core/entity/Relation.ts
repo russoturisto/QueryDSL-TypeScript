@@ -134,7 +134,17 @@ export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
 
 }
 
+export const IS_ENTITY_PROPERTY_NAME = '.isEntity';
+
 export class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> implements IQRelation<IQR, R, IQ> {
+
+	static isStub(object:any) {
+		return !object[IS_ENTITY_PROPERTY_NAME];
+	}
+
+	static markAsEntity(object:any) {
+		object[IS_ENTITY_PROPERTY_NAME] = true;
+	}
 
 	static getPositionAlias( fromClausePosition: number[] ) {
 		return `rt_${fromClausePosition.join('_')}`;

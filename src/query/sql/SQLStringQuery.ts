@@ -1,6 +1,6 @@
 import {PHJsonSQLQuery, JoinType} from "./PHSQLQuery";
 import {RelationRecord, JSONRelation, QRelation, JoinTreeNode, ColumnAliases} from "../../core/entity/Relation";
-import {IEntity, IQEntity} from "../../core/entity/Entity";
+import {IEntity, IQEntity, QEntity} from "../../core/entity/Entity";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
 import {QBooleanField} from "../../core/field/BooleanField";
 import {QDateField} from "../../core/field/DateField";
@@ -422,6 +422,7 @@ ${whereFragment}`;
 		let entityAlias = QRelation.getAlias(currentJoinNode.jsonRelation);
 
 		let resultObject = new qEntity.__entityConstructor__();
+		QRelation.markAsEntity(resultObject);
 
 		for (let propertyName in selectClauseFragment) {
 			if (selectClauseFragment[propertyName] === undefined) {
@@ -461,7 +462,7 @@ ${whereFragment}`;
 						let manyToOneStub = {};
 						resultObject[propertyName] = manyToOneStub;
 						manyToOneStub[relationEntityMetadata.idProperty] = relatedEntityId;
-						this.queryBridge.bufferManyToOneStub(qEntity, entityMetadata, resultObject, propertyName, relatedEntityId);
+						this.queryBridge.bufferManyToOneStub(currentJoinNode, qEntity, entityMetadata, resultObject, propertyName, relationQEntity, relationEntityMetadata, relatedEntityId);
 					} else {
 						this.queryBridge.bufferOneToManyStub(resultObject, entityName, propertyName);
 					}
@@ -480,7 +481,7 @@ ${whereFragment}`;
 					);
 					if (entityMetadata.manyToOneMap[propertyName]) {
 						resultObject[propertyName] = childResultObject;
-						this.queryBridge.bufferManyToOneStub(qEntity, entityMetadata, resultObject, propertyName, relatedEntityId);
+						this.queryBridge.bufferManyToOneStub(qEntity, entityMetadata, resultObject, propertyName, childResultObject[relationEntityMetadata.idProperty] );
 					} else {
 
 						let childResultsArray = new MappedEntityArray(relationEntityMetadata.idProperty);
