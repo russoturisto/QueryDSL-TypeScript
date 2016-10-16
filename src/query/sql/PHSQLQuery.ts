@@ -3,6 +3,7 @@ import {RelationRecord, JSONRelation} from "../../core/entity/Relation";
 import {JSONLogicalOperation} from "../../core/operation/LogicalOperation";
 import {JSONBaseOperation} from "../../core/operation/Operation";
 import {PHQuery, PHRawQuery} from "../PHQuery";
+import {JSONFieldInOrderBy} from "../../core/field/FieldInOrderBy";
 /**
  * Created by Papa on 8/12/2016.
  */
@@ -17,6 +18,7 @@ export interface PHJsonSQLQuery<IE extends IEntity> {
 	select: IE;
 	from?: JSONRelation[];
 	where?: JSONBaseOperation;
+	orderBy?: JSONFieldInOrderBy[];
 }
 
 

@@ -1,17 +1,12 @@
 import {PHJsonSQLQuery, JoinType} from "./PHSQLQuery";
 import {RelationRecord, JSONRelation, QRelation, JoinTreeNode, ColumnAliases} from "../../core/entity/Relation";
-import {IEntity, IQEntity, QEntity} from "../../core/entity/Entity";
+import {IEntity, IQEntity} from "../../core/entity/Entity";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
-import {QBooleanField} from "../../core/field/BooleanField";
-import {QDateField} from "../../core/field/DateField";
-import {QNumberField} from "../../core/field/NumberField";
-import {QStringField} from "../../core/field/StringField";
 import {JoinColumnConfiguration} from "../../core/entity/metadata/ColumnDecorators";
 import {FieldMap} from "./FieldMap";
 import {SQLStringWhereBase} from "./SQLStringWhereBase";
-import {QueryBridge, QueryBridgeConfiguration, IQueryBridge} from "./QueryBridge";
-import {MappedEntityArray} from "../../core/MappedEntityArray";
-import {LastObjectTracker} from "./LastObjectTracker";
+import {JSONFieldInOrderBy} from "../../core/field/FieldInOrderBy";
+import {BridgedQueryConfiguration} from "./objectQuery/resultParser/IQueryParser";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -41,12 +36,25 @@ export class EntityDefaults {
 	}
 }
 
-export class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
+export enum QueryResultType {
+	// Ordered query result with bridging for all MtOs and OtM
+	BRIDGED,
+		// Ordered query result, with objects grouped hierarchically by entity
+	HIERARCHICAL,
+		// Plain query result, with no forced ordering or grouping
+	PLAIN,
+		// A flat array of values, returned by a regular join
+	RAW
+}
 
-	columnAliases: ColumnAliases = new ColumnAliases();
-	entityDefaults: EntityDefaults = new EntityDefaults();
-	private queryBridge: IQueryBridge;
-	private joinTree: JoinTreeNode;
+/**
+ * String based SQL query.
+ */
+export abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
+
+	protected columnAliases: ColumnAliases = new ColumnAliases();
+	protected entityDefaults: EntityDefaults = new EntityDefaults();
+	protected joinTree: JoinTreeNode;
 
 	constructor(
 		public phJsonQuery: PHJsonSQLQuery<IE>,
@@ -55,16 +63,18 @@ export class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
 		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		dialect: SQLDialect,
-		performBridging: boolean = true
+		protected queryResultType: QueryResultType,
+		protected bridgedQueryConfiguration?: BridgedQueryConfiguration
 	) {
 		super(qEntity, qEntityMap, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
-		this.queryBridge = new QueryBridge(performBridging, new QueryBridgeConfiguration(), qEntity, qEntityMap);
+		if(this.bridgedQueryConfiguration.strict !== undefined) {
+
+		}
 	}
 
 	getFieldMap(): FieldMap {
 		return this.fieldMap;
 	}
-
 
 	/**
 	 * Useful when a query is executed remotely and a flat result set is returned.  JoinTree is needed to parse that
@@ -88,13 +98,16 @@ export class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
 		let selectFragment = this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, embedParameters, parameters);
 		let fromFragment = this.getFROMFragment(null, this.joinTree, embedParameters, parameters);
 		let whereFragment = this.getWHEREFragment(this.phJsonQuery.where, 0, joinNodeMap, embedParameters, parameters);
+		let orderByFragment = this.getOrderByFragment(this.phJsonQuery.orderBy);
 
 		return `SELECT
 ${selectFragment}
 FROM
 ${fromFragment}
 WHERE
-${whereFragment}`;
+${whereFragment}
+ORDER BY
+  ${orderByFragment}`;
 	}
 
 	buildFromJoinTree(
@@ -158,77 +171,15 @@ ${whereFragment}`;
 		return jsonTree;
 	}
 
-	protected getSELECTFragment(
+	protected abstract getSELECTFragment(
 		entityName: string,
 		selectSqlFragment: string,
 		selectClauseFragment: any,
 		joinTree: JoinTreeNode,
 		entityDefaults: EntityDefaults,
-		embedParameters: boolean = true,
-		parameters: any[] = null
-	): string {
-		let qEntity = this.qEntityMap[entityName];
-		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
-		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
-		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
-
-		let tableAlias = QRelation.getAlias(joinTree.jsonRelation);
-
-		let retrieveAllOwnFields: boolean = false;
-		let numProperties = 0;
-		for (let propertyName in selectClauseFragment) {
-			if (propertyName === '*') {
-				retrieveAllOwnFields = true;
-				delete selectClauseFragment['*'];
-			}
-			numProperties++;
-		}
-		//  For {} select causes or if '*' is present, retrieve the entire object
-		if (numProperties === 0 || retrieveAllOwnFields) {
-			selectClauseFragment = {};
-			for (let propertyName in entityPropertyTypeMap) {
-				selectClauseFragment[propertyName] = null;
-			}
-		}
-
-		let defaults = entityDefaults.getForAlias(tableAlias);
-		for (let propertyName in selectClauseFragment) {
-			let value = selectClauseFragment[propertyName];
-			// Skip undefined values
-			if (value === undefined) {
-				continue;
-			} else if (value !== null) {
-				defaults[propertyName] = value;
-			}
-			let fieldKey = `${tableAlias}.${propertyName}`;
-			if (entityPropertyTypeMap[propertyName]) {
-				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
-				let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
-				selectSqlFragment += columnSelect;
-			} else if (entityRelationMap[propertyName]) {
-				let subSelectClauseFragment = selectClauseFragment[propertyName];
-				if (subSelectClauseFragment == null) {
-					// For null entity reference, retrieve just the id
-					if (entityMetadata.manyToOneMap[propertyName]) {
-						let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
-						let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
-						selectSqlFragment += columnSelect;
-						continue;
-					} else {
-						// Do not retrieve @OneToMay set to null
-						continue;
-					}
-				}
-				let childEntityName = entityRelationMap[propertyName].entityName;
-				selectSqlFragment += this.getSELECTFragment(entityRelationMap[propertyName].entityName,
-					selectSqlFragment, selectClauseFragment[propertyName], joinTree.getChildNode(childEntityName, propertyName), entityDefaults, embedParameters, parameters);
-			} else {
-				throw `Unexpected property '${propertyName}' on entity '${entityName}' (alias '${tableAlias}') in SELECT clause.`;
-			}
-		}
-
-		return selectSqlFragment;
-	}
+		embedParameters?: boolean,
+		parameters?: any[]
+	): string;
 
 	protected getColumnSelectFragment(
 		propertyName: string,
@@ -328,7 +279,7 @@ ${whereFragment}`;
 		return fromFragment;
 	}
 
-	private getEntityManyToOneColumnName(
+	protected getEntityManyToOneColumnName(
 		qEntity: IQEntity,
 		propertyName: string,
 		tableAlias: string
@@ -375,124 +326,14 @@ ${whereFragment}`;
 	 * @param results
 	 * @returns {any[]}
 	 */
-	parseQueryResults(
-		results: any[]
-	): any[] {
-		let parsedResults: any[] = [];
-		if (!results || !results.length) {
-			return parsedResults;
-		}
-		parsedResults = [];
-		let lastResult;
-		results.forEach(( result ) => {
-			let parsedResult = this.parseQueryResult(null, null, this.qEntity.__entityName__, this.phJsonQuery.select, this.joinTree, result, [0]);
-			if(!lastResult) {
-				parsedResults.push(parsedResult);
-			} else if(lastResult !== parsedResult) {
-				lastResult = parsedResult;
-				parsedResults.push(parsedResult);
-			}
-		});
+	protected abstract parseQueryResults(
+		results: any[],
+		queryResultType: QueryResultType,
+		bridgedQueryConfiguration?: any
+	): any[];
 
-		return this.queryBridge.bridge(parsedResults, this.phJsonQuery.select);
-	}
+	protected abstract getOrderByFragment(
+		orderBy?: JSONFieldInOrderBy[]
+	):string;
 
-	protected parseQueryResult(
-		parentEntityName: string,
-		parentPropertyName: string,
-		entityName: string,
-		selectClauseFragment: any,
-		currentJoinNode: JoinTreeNode,
-		resultRow: any,
-		nextFieldIndex: number[]
-	): any {
-		// Return blanks, primitives and Dates directly
-		if (!resultRow || !(resultRow instanceof Object) || resultRow instanceof Date) {
-			return resultRow;
-		}
-
-		let qEntity = this.qEntityMap[entityName];
-		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
-		let columnMap = entityMetadata.columnMap;
-		let joinColumnMap = entityMetadata.joinColumnMap;
-		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
-		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
-		let entityId;
-
-		let entityAlias = QRelation.getAlias(currentJoinNode.jsonRelation);
-
-		let resultObject = new qEntity.__entityConstructor__();
-		QRelation.markAsEntity(resultObject);
-
-		for (let propertyName in selectClauseFragment) {
-			if (selectClauseFragment[propertyName] === undefined) {
-				continue;
-			}
-			if (entityPropertyTypeMap[propertyName]) {
-				let field = qEntity.__entityFieldMap__[propertyName];
-				let dataType: SQLDataType;
-				if (field instanceof QBooleanField) {
-					dataType = SQLDataType.BOOLEAN;
-				} else if (field instanceof QDateField) {
-					dataType = SQLDataType.DATE;
-				} else if (field instanceof QNumberField) {
-					dataType = SQLDataType.NUMBER;
-				} else if (field instanceof QStringField) {
-					dataType = SQLDataType.STRING;
-				}
-
-				let columnAlias = this.columnAliases.getAlias(entityAlias, propertyName);
-				let defaultValue = this.entityDefaults.getForAlias(entityAlias)[propertyName];
-
-				resultObject[propertyName] = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], dataType, defaultValue);
-				this.queryBridge.addProperty(entityAlias, resultObject, dataType, propertyName);
-				if (entityMetadata.idProperty == propertyName) {
-					entityId = resultObject[propertyName];
-				}
-			} else if (entityRelationMap[propertyName]) {
-				let childSelectClauseFragment = selectClauseFragment[propertyName];
-				let relation = qEntity.__entityRelationMap__[propertyName];
-				let relationQEntity = this.qEntityMap[relation.entityName];
-				let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>relationQEntity.__entityConstructor__;
-
-				if (childSelectClauseFragment == null) {
-					if (entityMetadata.manyToOneMap[propertyName]) {
-						let columnAlias = this.columnAliases.getAlias(entityAlias, propertyName);
-						let relatedEntityId = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], SQLDataType.NUMBER, null);
-						let manyToOneStub = {};
-						resultObject[propertyName] = manyToOneStub;
-						manyToOneStub[relationEntityMetadata.idProperty] = relatedEntityId;
-						this.queryBridge.bufferManyToOneStub(currentJoinNode, qEntity, entityMetadata, resultObject, propertyName, relationQEntity, relationEntityMetadata, relatedEntityId);
-					} else {
-						this.queryBridge.bufferOneToManyStub(resultObject, entityName, propertyName);
-					}
-				} else {
-					let childEntityName = entityRelationMap[propertyName].entityName;
-					let childJoinNode = currentJoinNode.getChildNode(childEntityName, propertyName);
-
-					let childResultObject = this.parseQueryResult(
-						entityName,
-						propertyName,
-						childEntityName,
-						childSelectClauseFragment,
-						childJoinNode,
-						resultRow,
-						nextFieldIndex
-					);
-					if (entityMetadata.manyToOneMap[propertyName]) {
-						resultObject[propertyName] = childResultObject;
-						this.queryBridge.bufferManyToOneStub(qEntity, entityMetadata, resultObject, propertyName, childResultObject[relationEntityMetadata.idProperty] );
-					} else {
-
-						let childResultsArray = new MappedEntityArray(relationEntityMetadata.idProperty);
-						resultObject[propertyName] = childResultsArray;
-						childResultsArray.put(childResultObject);
-						this.queryBridge.bufferOneToManyStub(resultObject, entityName, propertyName);
-					}
-				}
-			}
-			nextFieldIndex[0]++;
-		}
-		return this.queryBridge.flushEntity(qEntity, entityMetadata, selectClauseFragment, entityPropertyTypeMap, entityRelationMap, entityId, resultObject);
-	}
 }

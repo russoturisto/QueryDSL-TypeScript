@@ -3,6 +3,7 @@
  */
 import { IQEntity } from "../entity/Entity";
 import { JSONBaseOperation, IOperation } from "../operation/Operation";
+import { JSONFieldInOrderBy } from "./FieldInOrderBy";
 export declare enum FieldType {
     BOOLEAN = 0,
     BOOLEAN_ARRAY = 1,
@@ -28,6 +29,8 @@ export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, I
     isNull(): JO;
     notEquals(value: T): JO;
     notIn(values: T[]): JO;
+    asc(): JSONFieldInOrderBy;
+    desc(): JSONFieldInOrderBy;
 }
 export declare abstract class QField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>> implements IQField<IQ, T, JO, IO> {
     q: IQ;
@@ -47,4 +50,6 @@ export declare abstract class QField<IQ extends IQEntity, T, JO extends JSONBase
     isIn(values: T[]): JO;
     notEquals(value: T): JO;
     notIn(values: T[]): JO;
+    asc(): JSONFieldInOrderBy;
+    desc(): JSONFieldInOrderBy;
 }

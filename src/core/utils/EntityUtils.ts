@@ -5,8 +5,8 @@
 export class EntityUtils {
 
 	static getObjectClassName(
-		object:any
-	):string {
+		object: any
+	): string {
 		if (typeof object != "object" || object === null) {
 			throw `Not an object instance`;
 		}
@@ -14,8 +14,8 @@ export class EntityUtils {
 	}
 
 	static getClassName(
-		clazz:Function
-	):string {
+		clazz: Function
+	): string {
 		if (typeof clazz != "function") {
 			throw `Not a constructor function`;
 		}
@@ -24,5 +24,27 @@ export class EntityUtils {
 		// let className = /(\w+)\(/.exec(clazz.toString())[1];
 
 		return className;
+	}
+
+	static exists(
+		object: any
+	) {
+		return object !== null && object !== undefined;
+	}
+
+	static isBlank(
+		object: any
+	) {
+		for (let propertyName in object) {
+			let property = object[propertyName];
+			if (this.exists(property)) {
+				if (property instanceof Array && property.length > 0) {
+					return false;
+				} else {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }

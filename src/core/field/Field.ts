@@ -4,6 +4,7 @@
 import {IQEntity} from "../entity/Entity";
 import {JSONBaseOperation, IOperation} from "../operation/Operation";
 import {QRelation} from "../entity/Relation";
+import {FieldInOrderBy, SortOrder, JSONFieldInOrderBy} from "./FieldInOrderBy";
 
 export enum FieldType {
 	BOOLEAN,
@@ -52,6 +53,9 @@ export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, I
 		values: T[]
 	): JO;
 
+	asc(): JSONFieldInOrderBy;
+
+	desc(): JSONFieldInOrderBy;
 
 }
 
@@ -141,6 +145,14 @@ implements IQField<IQ, T, JO, IO> {
 		values: T[]
 	): JO {
 		return this.setOperation(this.operation.notIn(values));
+	}
+
+	asc(): JSONFieldInOrderBy {
+		return new FieldInOrderBy(this, SortOrder.ASCENDING).toJSON();
+	}
+
+	desc(): JSONFieldInOrderBy {
+		return new FieldInOrderBy(this, SortOrder.DESCENDING).toJSON();
 	}
 
 }

@@ -4,6 +4,8 @@ import { IEntity, IQEntity } from "../../core/entity/Entity";
 import { JoinColumnConfiguration } from "../../core/entity/metadata/ColumnDecorators";
 import { FieldMap } from "./FieldMap";
 import { SQLStringWhereBase } from "./SQLStringWhereBase";
+import { JSONFieldInOrderBy } from "../../core/field/FieldInOrderBy";
+import { BridgedQueryConfiguration } from "./objectQuery/resultParser/IQueryParser";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -27,12 +29,22 @@ export declare class EntityDefaults {
         [property: string]: any;
     };
 }
-export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
+export declare enum QueryResultType {
+    BRIDGED = 0,
+    HIERARCHICAL = 1,
+    PLAIN = 2,
+    RAW = 3,
+}
+/**
+ * String based SQL query.
+ */
+export declare abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
     phJsonQuery: PHJsonSQLQuery<IE>;
-    columnAliases: ColumnAliases;
-    entityDefaults: EntityDefaults;
-    private queryBridge;
-    private joinTree;
+    protected queryResultType: QueryResultType;
+    protected bridgedQueryConfiguration: BridgedQueryConfiguration;
+    protected columnAliases: ColumnAliases;
+    protected entityDefaults: EntityDefaults;
+    protected joinTree: JoinTreeNode;
     constructor(phJsonQuery: PHJsonSQLQuery<IE>, qEntity: IQEntity, qEntityMap: {
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
@@ -43,7 +55,7 @@ export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBa
         [entityName: string]: {
             [propertyName: string]: boolean;
         };
-    }, dialect: SQLDialect, performBridging?: boolean);
+    }, dialect: SQLDialect, queryResultType: QueryResultType, bridgedQueryConfiguration?: BridgedQueryConfiguration);
     getFieldMap(): FieldMap;
     /**
      * Useful when a query is executed remotely and a flat result set is returned.  JoinTree is needed to parse that
@@ -54,10 +66,10 @@ export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBa
     buildFromJoinTree(entityName: string, joinRelations: JSONRelation[], joinNodeMap: {
         [alias: string]: JoinTreeNode;
     }): JoinTreeNode;
-    protected getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults, embedParameters?: boolean, parameters?: any[]): string;
+    protected abstract getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults, embedParameters?: boolean, parameters?: any[]): string;
     protected getColumnSelectFragment(propertyName: string, tableAlias: string, columnName: string, existingSelectFragment: string): string;
     private getFROMFragment(parentTree, currentTree, embedParameters?, parameters?);
-    private getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
+    protected getEntityManyToOneColumnName(qEntity: IQEntity, propertyName: string, tableAlias: string): string;
     protected getManyToOneColumnName(entityName: string, propertyName: string, tableAlias: string, joinColumnMap: {
         [propertyName: string]: JoinColumnConfiguration;
     }): string;
@@ -73,6 +85,6 @@ export declare class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBa
      * @param results
      * @returns {any[]}
      */
-    parseQueryResults(results: any[]): any[];
-    protected parseQueryResult(parentEntityName: string, parentPropertyName: string, entityName: string, selectClauseFragment: any, currentJoinNode: JoinTreeNode, resultRow: any, nextFieldIndex: number[]): any;
+    protected abstract parseQueryResults(results: any[], queryResultType: QueryResultType, bridgedQueryConfiguration?: any): any[];
+    protected abstract getOrderByFragment(orderBy?: JSONFieldInOrderBy[]): string;
 }

@@ -53,8 +53,6 @@ export declare class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> imp
     propertyName: string;
     relationEntityConstructor: new () => R;
     relationQEntityConstructor: new (...args: any[]) => IQR;
-    static isStub(object: any): boolean;
-    static markAsEntity(object: any): void;
     static getPositionAlias(fromClausePosition: number[]): string;
     static getAlias(jsonRelation: JSONRelation): string;
     static getParentAlias(jsonRelation: JSONRelation): string;

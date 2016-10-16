@@ -1,6 +1,6 @@
 import { IQEntity } from "../../core/entity/Entity";
 import { EntityMetadata } from "../../core/entity/EntityMetadata";
-import { RelationRecord, JoinTreeNode } from "../../core/entity/Relation";
+import { RelationRecord } from "../../core/entity/Relation";
 import { MappedEntityArray } from "../../core/MappedEntityArray";
 import { LastObjectTracker } from "./LastObjectTracker";
 import { SQLDataType } from "./SQLStringQuery";
@@ -27,14 +27,20 @@ export declare class QueryBridgeConfiguration {
     failOnConflicts: boolean;
 }
 export interface IQueryBridge {
+    addEntity(entityAlias: string, resultObject: any): void;
     addProperty(entityAlias: string, resultObject: any, dataType: SQLDataType, propertyName: string): void;
-    bufferManyToOneStub(currentJoinNode: JoinTreeNode, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata, relatedEntityId: any): void;
-    bufferOneToManyStub(resultObject: any, entityName: string, propertyName: string): void;
-    flushEntity(qEntity: IQEntity, entityMetadata: EntityMetadata, selectClauseFragment: any, entityPropertyTypeMap: {
+    bufferManyToOneStub(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata, relatedEntityId: any): void;
+    bufferBlankManyToOne(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata): void;
+    bufferManyToOneObject(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata, relatedEntityId: any): void;
+    bufferOneToManyStub(resultObject: any, entityName: string, propertyName: string, relationEntityMetadata: EntityMetadata, childResultObject: any): void;
+    bufferOneToManyCollection(entityAlias: string, resultObject: any, otmEntityName: string, propertyName: string, relationEntityMetadata: EntityMetadata, childResultObject: any): any[] | MappedEntityArray<any>;
+    bufferBlankOneToMany(entityAlias: string, resultObject: any, otmEntityName: string, propertyName: string, relationEntityMetadata: EntityMetadata, childResultObject: any): void;
+    flushEntity(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, selectClauseFragment: any, entityPropertyTypeMap: {
         [propertyName: string]: boolean;
     }, entityRelationMap: {
         [propertyName: string]: RelationRecord;
     }, entityId: any, resultObject: any): void;
+    flushRow(): void;
     bridge(parsedResults: any[], selectClauseFragment: any): any[] | MappedEntityArray<any>;
 }
 export declare class OtmObjectReference {
@@ -101,17 +107,24 @@ export declare class QueryBridge implements IQueryBridge {
     constructor(performBridging: boolean, mapEntityArrays: boolean, config: QueryBridgeConfiguration, qEntity: IQEntity, qEntityMap: {
         [entityName: string]: IQEntity;
     });
+    addEntity(entityAlias: string, resultObject: any): void;
     addProperty(entityAlias: string, resultObject: any, dataType: SQLDataType, propertyName: string): void;
-    bufferManyToOneStub(currentJoinNode: JoinTreeNode, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata, relatedEntityId: any): void;
-    bufferOneToManyStub(resultObject: any, otmEntityName: string, propertyName: string): void;
-    flushEntity(qEntity: IQEntity, entityMetadata: EntityMetadata, selectClauseFragment: any, entityPropertyTypeMap: {
+    bufferManyToOneStub(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata, relatedEntityId: any): void;
+    bufferManyToOneObject(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata, relatedEntityId: any): any;
+    private bufferManyToOne(resultObject, propertyName, relationQEntity, relationEntityMetadata, relatedEntityId);
+    bufferBlankManyToOne(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata): void;
+    bufferOneToManyStub(resultObject: any, otmEntityName: string, propertyName: string, relationEntityMetadata: EntityMetadata, childResultObject: any): void;
+    bufferOneToManyCollection(entityAlias: string, resultObject: any, otmEntityName: string, propertyName: string, relationEntityMetadata: EntityMetadata, childResultObject: any): any[] | MappedEntityArray<any>;
+    bufferBlankOneToMany(entityAlias: string, resultObject: any, otmEntityName: string, propertyName: string, relationEntityMetadata: EntityMetadata, childResultObject: any): any[] | MappedEntityArray<any>;
+    private bufferOneToMany(resultObject, otmEntityName);
+    flushEntity(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, selectClauseFragment: any, entityPropertyTypeMap: {
         [propertyName: string]: boolean;
     }, entityRelationMap: {
         [propertyName: string]: RelationRecord;
     }, entityId: any, resultObject: any): void;
-    private mergeOneToManys();
-    private addEntity(qEntity, entityMetadata, selectClauseFragment, entityPropertyTypeMap, entityRelationMap, entityId, resultObject);
+    private getEntityToFlush(qEntity, entityMetadata, selectClauseFragment, entityPropertyTypeMap, entityRelationMap, entityId, resultObject);
     private mergeEntities(source, target, qEntity, selectClauseFragment, entityPropertyTypeMap, entityRelationMap);
     flushOneToManyStubBuffer(qEntity: IQEntity, entityMetadata: EntityMetadata, entityId: any): void;
+    flushRow(): void;
     bridge(parsedResults: any[], selectClauseFragment: any): any[];
 }
