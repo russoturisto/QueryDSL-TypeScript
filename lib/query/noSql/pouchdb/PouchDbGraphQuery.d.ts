@@ -2,7 +2,7 @@ import { RelationRecord } from "../../../core/entity/Relation";
 import { PHJsonGraphQuery } from "../PHGraphQuery";
 import { IEntity } from "../../../core/entity/Entity";
 import { JSONBaseOperation } from "../../../core/operation/Operation";
-export declare const CLOUDANT_ENTITY: string;
+export declare const CLOUDANT_ENTITY = "__entity__";
 export interface PouchDbFindQuery {
     selector: JSONBaseOperation;
     fields: string[];

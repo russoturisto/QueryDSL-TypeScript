@@ -14,7 +14,9 @@ export declare enum FieldType {
     STRING = 6,
     STRING_ARRAY = 7,
 }
-export interface JSONSelectField {
+export interface JSONSelectObject {
+}
+export interface JSONSelectField extends JSONSelectObject {
     propertyName: string;
     tableAlias: string;
 }

@@ -5,33 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8322ebc1-9272-4c63-9e9f-f1c51e544bcc" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/core/field/Functions.ts" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/query/sql/query/FlatSQLStringQuery.ts" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/src/query/sql/flatQuery/FlatSQLStringQuery.ts" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/sql/objectQuery/ObjectSQLStringQuery.ts" afterPath="$PROJECT_DIR$/src/query/sql/query/ObjectSQLStringQuery.ts" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/sql/objectQuery/queryParser/ExactOrderByParser.ts" afterPath="$PROJECT_DIR$/src/query/sql/query/orderBy/ExactOrderByParser.ts" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/sql/objectQuery/queryParser/ForcedOrderByParser.ts" afterPath="$PROJECT_DIR$/src/query/sql/query/orderBy/ForcedOrderByParser.ts" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/sql/objectQuery/queryParser/IOrderByParser.ts" afterPath="$PROJECT_DIR$/src/query/sql/query/orderBy/IOrderByParser.ts" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/sql/objectQuery/resultParser/BridgedMtoMapper.ts" afterPath="$PROJECT_DIR$/src/query/sql/query/result/BridgedMtoMapper.ts" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/sql/objectQuery/resultParser/BridgedOtmMapper.ts" afterPath="$PROJECT_DIR$/src/query/sql/query/result/BridgedOtmMapper.ts" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/sql/objectQuery/resultParser/BridgedQueryParser.ts" afterPath="$PROJECT_DIR$/src/query/sql/query/result/BridgedResultParser.ts" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/sql/objectQuery/resultParser/HierarchicalQueryParser.ts" afterPath="$PROJECT_DIR$/src/query/sql/query/result/HierarchicalResultParser.ts" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/sql/objectQuery/resultParser/IQueryParser.ts" afterPath="$PROJECT_DIR$/src/query/sql/query/result/IObjectResultParser.ts" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/sql/objectQuery/resultParser/PlainQueryParser.ts" afterPath="$PROJECT_DIR$/src/query/sql/query/result/PlainResultParser.ts" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/query/sql/objectQuery/resultParser/RawQueryParser.ts" afterPath="$PROJECT_DIR$/src/query/sql/query/result/FlattenedResultParser.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/MappedEntityArray.js" afterPath="$PROJECT_DIR$/lib/core/MappedEntityArray.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/MappedEntityArray.js.map" afterPath="$PROJECT_DIR$/lib/core/MappedEntityArray.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/ColumnAliases.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/ColumnAliases.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.js" afterPath="$PROJECT_DIR$/lib/core/entity/Entity.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Entity.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/Entity.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/JoinTreeNode.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/JoinTreeNode.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.d.ts" afterPath="$PROJECT_DIR$/lib/core/entity/Relation.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.js" afterPath="$PROJECT_DIR$/lib/core/entity/Relation.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/Relation.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/Relation.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/metadata/ColumnDecorators.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/metadata/EntityDecorators.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/metadata/EntityDecorators.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/metadata/MetadataUtils.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/metadata/MetadataUtils.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/entity/metadata/Types.js.map" afterPath="$PROJECT_DIR$/lib/core/entity/metadata/Types.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/BooleanField.js" afterPath="$PROJECT_DIR$/lib/core/field/BooleanField.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/BooleanField.js.map" afterPath="$PROJECT_DIR$/lib/core/field/BooleanField.js.map" />
@@ -40,6 +20,9 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/Field.d.ts" afterPath="$PROJECT_DIR$/lib/core/field/Field.d.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/Field.js.map" afterPath="$PROJECT_DIR$/lib/core/field/Field.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/FieldInOrderBy.js.map" afterPath="$PROJECT_DIR$/lib/core/field/FieldInOrderBy.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/Functions.d.ts" afterPath="$PROJECT_DIR$/lib/core/field/Functions.d.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/Functions.js" afterPath="$PROJECT_DIR$/lib/core/field/Functions.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/Functions.js.map" afterPath="$PROJECT_DIR$/lib/core/field/Functions.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/NumberField.js" afterPath="$PROJECT_DIR$/lib/core/field/NumberField.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/NumberField.js.map" afterPath="$PROJECT_DIR$/lib/core/field/NumberField.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/field/StringField.js" afterPath="$PROJECT_DIR$/lib/core/field/StringField.js" />
@@ -58,8 +41,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/StringOperation.js" afterPath="$PROJECT_DIR$/lib/core/operation/StringOperation.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/operation/StringOperation.js.map" afterPath="$PROJECT_DIR$/lib/core/operation/StringOperation.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/core/utils/EntityUtils.js.map" afterPath="$PROJECT_DIR$/lib/core/utils/EntityUtils.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.d.ts" afterPath="$PROJECT_DIR$/lib/index.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.js" afterPath="$PROJECT_DIR$/lib/index.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/index.js.map" afterPath="$PROJECT_DIR$/lib/index.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/noSql/PHGraphQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/noSql/PHGraphQuery.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/noSql/QueryTreeNode.js.map" afterPath="$PROJECT_DIR$/lib/query/noSql/QueryTreeNode.js.map" />
@@ -68,53 +49,35 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/FieldMap.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/FieldMap.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/PHSQLDelete.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/PHSQLDelete.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.js" afterPath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/PHSQLQuery.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/PHSQLUpdate.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/PHSQLUpdate.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringNoJoinQuery.js" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringNoJoinQuery.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringNoJoinQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringNoJoinQuery.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/SQLStringQuery.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SqlStringDelete.js" afterPath="$PROJECT_DIR$/lib/query/sql/SqlStringDelete.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SqlStringDelete.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/SqlStringDelete.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SqlStringUpdate.js" afterPath="$PROJECT_DIR$/lib/query/sql/SqlStringUpdate.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SqlStringUpdate.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/SqlStringUpdate.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/SqlStringWhereBase.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/SqlStringWhereBase.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/adaptor/OracleAdaptor.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/adaptor/OracleAdaptor.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/adaptor/SQLAdaptor.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/adaptor/SQLAdaptor.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/adaptor/SqLiteAdaptor.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/adaptor/SqLiteAdaptor.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/flatQuery/FlatSQLStringQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/flatQuery/FlatSQLStringQuery.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/flatQuery/FlatSQLStringQuery.js" afterPath="$PROJECT_DIR$/lib/query/sql/flatQuery/FlatSQLStringQuery.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/flatQuery/FlatSQLStringQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/flatQuery/FlatSQLStringQuery.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/ObjectSQLStringQuery.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/ObjectSQLStringQuery.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/ObjectSQLStringQuery.js" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/ObjectSQLStringQuery.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/ObjectSQLStringQuery.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/ObjectSQLStringQuery.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/queryParser/ExactOrderByParser.js" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/queryParser/ExactOrderByParser.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/queryParser/ExactOrderByParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/queryParser/ExactOrderByParser.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/queryParser/ForcedOrderByParser.js" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/queryParser/ForcedOrderByParser.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/queryParser/ForcedOrderByParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/queryParser/ForcedOrderByParser.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/queryParser/IOrderByParser.js" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/queryParser/IOrderByParser.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/queryParser/IOrderByParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/queryParser/IOrderByParser.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/BridgedMtoMapper.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/BridgedMtoMapper.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/BridgedOtmMapper.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/BridgedOtmMapper.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/BridgedQueryParser.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/BridgedQueryParser.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/BridgedQueryParser.js" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/BridgedQueryParser.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/BridgedQueryParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/BridgedQueryParser.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/HierarchicalQueryParser.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/HierarchicalQueryParser.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/HierarchicalQueryParser.js" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/HierarchicalQueryParser.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/HierarchicalQueryParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/HierarchicalQueryParser.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/IQueryParser.js" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/IQueryParser.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/IQueryParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/IQueryParser.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/PlainQueryParser.d.ts" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/PlainQueryParser.d.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/PlainQueryParser.js" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/PlainQueryParser.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/PlainQueryParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/PlainQueryParser.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/RawQueryParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/objectQuery/resultParser/RawQueryParser.js.map" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/entity/Relation.ts" afterPath="$PROJECT_DIR$/src/core/entity/Relation.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/orderBy/ExactOrderByParser.js" afterPath="$PROJECT_DIR$/lib/query/sql/query/orderBy/ExactOrderByParser.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/orderBy/ExactOrderByParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/query/orderBy/ExactOrderByParser.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/orderBy/ForcedOrderByParser.js" afterPath="$PROJECT_DIR$/lib/query/sql/query/orderBy/ForcedOrderByParser.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/orderBy/ForcedOrderByParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/query/orderBy/ForcedOrderByParser.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/result/BridgedMtoMapper.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/query/result/BridgedMtoMapper.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/result/BridgedOtmMapper.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/query/result/BridgedOtmMapper.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/result/BridgedResultParser.js" afterPath="$PROJECT_DIR$/lib/query/sql/query/result/BridgedResultParser.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/result/BridgedResultParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/query/result/BridgedResultParser.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/result/FlattenedResultParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/query/result/FlattenedResultParser.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/result/HierarchicalResultParser.js" afterPath="$PROJECT_DIR$/lib/query/sql/query/result/HierarchicalResultParser.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/result/HierarchicalResultParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/query/result/HierarchicalResultParser.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/result/IObjectResultParser.js" afterPath="$PROJECT_DIR$/lib/query/sql/query/result/IObjectResultParser.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/result/IObjectResultParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/query/result/IObjectResultParser.js.map" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/result/PlainResultParser.js" afterPath="$PROJECT_DIR$/lib/query/sql/query/result/PlainResultParser.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/query/sql/query/result/PlainResultParser.js.map" afterPath="$PROJECT_DIR$/lib/query/sql/query/result/PlainResultParser.js.map" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/field/Field.ts" afterPath="$PROJECT_DIR$/src/core/field/Field.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/index.ts" afterPath="$PROJECT_DIR$/src/index.ts" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/core/field/Functions.ts" afterPath="$PROJECT_DIR$/src/core/field/Functions.ts" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts" afterPath="$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" afterPath="$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts" />
     </list>
     <ignored path="QueryDSL-TypeScript.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -176,10 +139,10 @@
                 <file leaf-file-name="Functions.ts" pinned="false" current-in-tab="true">
                   <entry file="file://$PROJECT_DIR$/src/core/field/Functions.ts">
                     <provider selected="true" editor-type-id="text-editor">
-                      <state relative-caret-position="646">
-                        <caret line="38" column="61" selection-start-line="38" selection-start-column="61" selection-end-line="38" selection-end-column="61" />
+                      <state relative-caret-position="0">
+                        <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
                         <folding>
-                          <element signature="e#0#43#0" expanded="true" />
+                          <element signature="e#0#44#0" expanded="true" />
                         </folding>
                       </state>
                     </provider>
@@ -240,8 +203,8 @@
           <file leaf-file-name="Relation.ts" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/core/entity/Relation.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="610">
-                  <caret line="100" column="51" selection-start-line="100" selection-start-column="51" selection-end-line="100" selection-end-column="51" />
+                <state relative-caret-position="151">
+                  <caret line="59" column="56" selection-start-line="59" selection-start-column="56" selection-end-line="59" selection-end-column="56" />
                   <folding />
                 </state>
               </provider>
@@ -275,11 +238,11 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="PHSQLQuery.ts" pinned="false" current-in-tab="false">
+          <file leaf-file-name="PHSQLQuery.ts" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="932">
-                  <caret line="63" column="0" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
+                <state relative-caret-position="150">
+                  <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
                   <folding>
                     <element signature="e#0#68#0" expanded="true" />
                     <element signature="n#!!doc;n#PHRawSQLQuery#0" expanded="false" />
@@ -288,11 +251,21 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Field.ts" pinned="false" current-in-tab="true">
+          <file leaf-file-name="Field.ts" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="285">
-                  <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
+                <state relative-caret-position="202">
+                  <caret line="23" column="58" selection-start-line="23" selection-start-column="58" selection-end-line="23" selection-end-column="58" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Entity.ts" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="170">
+                  <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
                   <folding />
                 </state>
               </provider>
@@ -353,7 +326,6 @@
         <option value="$PROJECT_DIR$/src/query/sql/SQLStringWhereBase.ts" />
         <option value="$PROJECT_DIR$/src/query/sql/objectQuery/queryParser/ExactOrderByParser.ts" />
         <option value="$PROJECT_DIR$/src/core/entity/Relation.ts" />
-        <option value="$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts" />
         <option value="$PROJECT_DIR$/src/query/sql/flatQuery/FlatSQLStringQuery.ts" />
         <option value="$PROJECT_DIR$/src/query/sql/objectQuery/queryParser/IOrderByParser.ts" />
         <option value="$PROJECT_DIR$/src/query/sql/objectQuery/resultParser/IQueryParser.ts" />
@@ -363,9 +335,10 @@
         <option value="$PROJECT_DIR$/src/query/sql/objectQuery/resultParser/HierarchicalQueryParser.ts" />
         <option value="$PROJECT_DIR$/src/query/sql/objectQuery/resultParser/PlainQueryParser.ts" />
         <option value="$PROJECT_DIR$/src/query/sql/objectQuery/resultParser/IResultParser.ts" />
-        <option value="$PROJECT_DIR$/src/core/field/Field.ts" />
         <option value="$PROJECT_DIR$/src/core/field/Function.ts" />
+        <option value="$PROJECT_DIR$/src/core/field/Field.ts" />
         <option value="$PROJECT_DIR$/src/core/field/Functions.ts" />
+        <option value="$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts" />
       </list>
     </option>
   </component>
@@ -798,12 +771,12 @@
       <workItem from="1476271760181" duration="13461000" />
       <workItem from="1476354052080" duration="23805000" />
       <workItem from="1476456141258" duration="1858000" />
-      <workItem from="1476498775925" duration="71056000" />
+      <workItem from="1476498775925" duration="71790000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="580998000" />
+    <option name="totallyTimeSpent" value="581732000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1096" extended-state="6" />
@@ -1174,14 +1147,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringWhereBase.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="147">
@@ -1270,17 +1235,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="932">
-          <caret line="63" column="0" selection-start-line="63" selection-start-column="0" selection-end-line="63" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#68#0" expanded="true" />
-            <element signature="n#!!doc;n#PHRawSQLQuery#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/query/sql/SQLStringQuery.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="219">
@@ -1288,14 +1242,6 @@
           <folding>
             <element signature="e#0#60#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1319,18 +1265,45 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/core/entity/Relation.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="610">
-          <caret line="100" column="51" selection-start-line="100" selection-start-column="51" selection-end-line="100" selection-end-column="51" />
+        <state relative-caret-position="151">
+          <caret line="59" column="56" selection-start-line="59" selection-start-column="56" selection-end-line="59" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/entity/Entity.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core/field/Field.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="202">
+          <caret line="23" column="58" selection-start-line="23" selection-start-column="58" selection-end-line="23" selection-end-column="58" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/core/field/Functions.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="646">
-          <caret line="38" column="61" selection-start-line="38" selection-start-column="61" selection-end-line="38" selection-end-column="61" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#0#43#0" expanded="true" />
+            <element signature="e#0#44#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/query/sql/PHSQLQuery.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="18" column="27" selection-start-line="18" selection-start-column="27" selection-end-line="18" selection-end-column="27" />
+          <folding>
+            <element signature="e#0#68#0" expanded="true" />
+            <element signature="n#!!doc;n#PHRawSQLQuery#0" expanded="false" />
           </folding>
         </state>
       </provider>

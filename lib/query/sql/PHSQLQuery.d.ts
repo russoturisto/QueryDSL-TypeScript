@@ -3,6 +3,7 @@ import { RelationRecord, JSONRelation } from "../../core/entity/Relation";
 import { JSONBaseOperation } from "../../core/operation/Operation";
 import { PHQuery, PHRawQuery } from "../PHQuery";
 import { JSONFieldInOrderBy } from "../../core/field/FieldInOrderBy";
+import { JSONSelectObject } from "../../core/field/Field";
 /**
  * Created by Papa on 8/12/2016.
  */
@@ -12,7 +13,7 @@ export interface PHRawSQLQuery<IE extends IEntity> extends PHRawQuery<IE> {
     where?: JSONBaseOperation;
 }
 export interface PHJsonFlatSQLQuery extends PHJsonCommonSQLQuery {
-    select?: any[];
+    select?: JSONSelectObject[];
     groupBy: any;
     having: any;
 }

@@ -1,9 +1,10 @@
-import { QNumberField } from "./NumberField";
-import { JSONSelectField } from "./Field";
+import { IQNumberField } from "./NumberField";
+import { JSONSelectField, JSONSelectObject } from "./Field";
+import { IQManyToOneRelation } from "../entity/Relation";
 /**
  * Created by Papa on 10/18/2016.
  */
-export interface JSONSqlFunctionCall {
+export interface JSONSqlFunctionCall extends JSONSelectObject {
     functionType: SqlFunction;
     field: JSONSelectField;
 }
@@ -26,4 +27,4 @@ export declare enum SqlFunction {
     NOW = 12,
     FORMAT = 13,
 }
-export declare function avg(numberField: QNumberField<any>): JSONSqlFunctionCall;
+export declare function avg(numberObject: IQNumberField<any> | IQManyToOneRelation<any, any, any>): JSONSqlFunctionCall;

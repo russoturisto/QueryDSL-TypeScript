@@ -1,10 +1,11 @@
-import {QNumberField} from "./NumberField";
-import {JSONSelectField} from "./Field";
+import {IQNumberField} from "./NumberField";
+import {JSONSelectField, JSONSelectObject} from "./Field";
+import {QRelation, IQManyToOneRelation} from "../entity/Relation";
 /**
  * Created by Papa on 10/18/2016.
  */
 
-export interface JSONSqlFunctionCall {
+export interface JSONSqlFunctionCall extends JSONSelectObject {
 	functionType: SqlFunction,
 	field: JSONSelectField
 }
@@ -36,11 +37,15 @@ export enum SqlFunction {
 	FORMAT, // Formats how a field is to be displayed
 }
 
-export function avg( numberField: QNumberField<any> | numberRelation ):JSONSqlFunctionCall {
+export function avg( numberObject: IQNumberField<any> | IQManyToOneRelation<any, any, any> ):JSONSqlFunctionCall {
+
 	return {
 		functionType: SqlFunction.AVG,
 		field: {
-			propertyName: numberField.fieldName,
+			propertyName: numberObject.fieldName,
+			tableAlias: QRelation.getPositionAlias(numberObject.q.fromClausePosition)
 		}
 	};
 }
+
+TODO: work here next - add the rest of the functions
