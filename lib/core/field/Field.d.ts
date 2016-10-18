@@ -14,6 +14,10 @@ export declare enum FieldType {
     STRING = 6,
     STRING_ARRAY = 7,
 }
+export interface JSONSelectField {
+    propertyName: string;
+    tableAlias: string;
+}
 export interface Orderable<IQ extends IQEntity> {
     asc(): JSONFieldInOrderBy;
     desc(): JSONFieldInOrderBy;

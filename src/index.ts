@@ -59,7 +59,7 @@ import {OracleAdaptor} from "./query/sql/adaptor/OracleAdaptor";
 import {SqLiteAdaptor} from "./query/sql/adaptor/SqLiteAdaptor";
 import {ISQLAdaptor, getSQLAdaptor} from "./query/sql/adaptor/SQLAdaptor";
 import {EntityDefaults, SQLDialect, SQLDataType, SQLStringQuery} from "./query/sql/SQLStringQuery";
-import {PHRawSQLQuery, PHJsonSQLQuery, JoinType, PHSQLQuery} from "./query/sql/PHSQLQuery";
+import {PHRawSQLQuery, PHJsonCommonSQLQuery, JoinType, PHSQLQuery} from "./query/sql/PHSQLQuery";
 import {PHQuery, PHRawQuery} from "./query/PHQuery";
 import {FieldMap, EntityFieldMap, PropertyFieldEntry} from "./query/sql/FieldMap";
 import {MetadataUtils, OneToManyConfigAndProperty} from "./core/entity/metadata/MetadataUtils";
@@ -71,22 +71,22 @@ import {PHRawSQLUpdate, PHJsonSQLUpdate, PHSQLUpdate} from "./query/sql/PHSQLUpd
 import {SQLStringUpdate} from "./query/sql/SQLStringUpdate";
 import {ColumnAliases} from "./core/entity/ColumnAliases";
 import {JoinTreeNode} from "./core/entity/JoinTreeNode";
-import {FlatSQLStringQuery} from "./query/sql/flatQuery/FlatSQLStringQuery";
-import {ExactOrderByParser} from "./query/sql/objectQuery/queryParser/ExactOrderByParser";
-import {ForcedOrderByParser} from "./query/sql/objectQuery/queryParser/ForcedOrderByParser";
-import {IOrderByParser, AbstractOrderByParser} from "./query/sql/objectQuery/queryParser/IOrderByParser";
-import {ManyToOneStubReference, BridgedMtoMapper} from "./query/sql/objectQuery/resultParser/BridgedMtoMapper";
-import {BridgedOtmMapper, OneToManyStubReference} from "./query/sql/objectQuery/resultParser/BridgedOtmMapper";
-import {BridgedQueryParser} from "./query/sql/objectQuery/resultParser/BridgedQueryParser";
-import {HierarchicalQueryParser} from "./query/sql/objectQuery/resultParser/HierarchicalQueryParser";
+import {FlatSQLStringQuery} from "./query/sql/query/FlatSQLStringQuery";
+import {ExactOrderByParser} from "./query/sql/query/orderBy/ExactOrderByParser";
+import {ForcedOrderByParser} from "./query/sql/query/orderBy/ForcedOrderByParser";
+import {IOrderByParser, AbstractOrderByParser} from "./query/sql/query/orderBy/IOrderByParser";
+import {ManyToOneStubReference, BridgedMtoMapper} from "./query/sql/query/result/BridgedMtoMapper";
+import {BridgedOtmMapper, OneToManyStubReference} from "./query/sql/query/result/BridgedOtmMapper";
+import {BridgedResultParser} from "./query/sql/query/result/BridgedResultParser";
+import {HierarchicalResultParser} from "./query/sql/query/result/HierarchicalResultParser";
 import {JSONFieldInOrderBy, SortOrder, IFieldInOrderBy, FieldInOrderBy} from "./core/field/FieldInOrderBy";
 import {
-	BridgedQueryConfiguration, IQueryParser,
-	getObjectQueryParser, AbstractObjectQueryParser
-} from "./query/sql/objectQuery/resultParser/IQueryParser";
-import {PlainQueryParser} from "./query/sql/objectQuery/resultParser/PlainQueryParser";
-import {RawQueryParser} from "./query/sql/objectQuery/resultParser/RawQueryParser";
-import {ObjectSQLStringQuery} from "./query/sql/objectQuery/ObjectSQLStringQuery";
+	BridgedQueryConfiguration, IObjectResultParser,
+	getObjectResultParser, AbstractObjectResultParser
+} from "./query/sql/query/result/IObjectResultParser";
+import {PlainResultParser} from "./query/sql/query/result/PlainResultParser";
+import {FlattenedResultParser} from "./query/sql/query/result/FlattenedResultParser";
+import {ObjectSQLStringQuery} from "./query/sql/query/ObjectSQLStringQuery";
 
 
 
@@ -105,14 +105,14 @@ export {
 	BridgedMtoMapper,
 	OneToManyStubReference,
 	BridgedOtmMapper,
-	BridgedQueryParser,
-	HierarchicalQueryParser,
+	BridgedResultParser,
+	HierarchicalResultParser,
 	BridgedQueryConfiguration,
-	IQueryParser,
-	getObjectQueryParser,
-	AbstractObjectQueryParser,
-	PlainQueryParser,
-	RawQueryParser,
+	IObjectResultParser,
+	getObjectResultParser,
+	AbstractObjectResultParser,
+	PlainResultParser,
+	FlattenedResultParser,
 	ObjectSQLStringQuery,
 	FieldMap,
 	EntityFieldMap,
@@ -120,7 +120,7 @@ export {
 	PHQuery,
 	PHRawQuery,
 	PHSQLQuery,
-	PHJsonSQLQuery,
+	PHJsonCommonSQLQuery,
 	PHRawSQLQuery,
 	JoinType,
 	SQLStringWhereBase,

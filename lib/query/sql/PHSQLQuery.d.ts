@@ -1,6 +1,5 @@
 import { IEntity, QEntity, IQEntity } from "../../core/entity/Entity";
 import { RelationRecord, JSONRelation } from "../../core/entity/Relation";
-import { JSONLogicalOperation } from "../../core/operation/LogicalOperation";
 import { JSONBaseOperation } from "../../core/operation/Operation";
 import { PHQuery, PHRawQuery } from "../PHQuery";
 import { JSONFieldInOrderBy } from "../../core/field/FieldInOrderBy";
@@ -12,15 +11,24 @@ export interface PHRawSQLQuery<IE extends IEntity> extends PHRawQuery<IE> {
     from?: IQEntity[];
     where?: JSONBaseOperation;
 }
-export interface PHJsonSQLQuery<IE extends IEntity> {
+export interface PHJsonFlatSQLQuery extends PHJsonCommonSQLQuery {
+    select?: any[];
+    groupBy: any;
+    having: any;
+}
+export interface PHJsonObjectSQLQuery<IE extends IEntity> extends PHJsonCommonSQLQuery {
     select: IE;
+}
+export interface PHJsonCommonSQLQuery {
     from?: JSONRelation[];
     where?: JSONBaseOperation;
     orderBy?: JSONFieldInOrderBy[];
 }
 export declare enum JoinType {
-    INNER_JOIN = 0,
-    LEFT_JOIN = 1,
+    FULL_JOIN = 0,
+    INNER_JOIN = 1,
+    LEFT_JOIN = 2,
+    RIGHT_JOIN = 3,
 }
 export declare class PHSQLQuery<IE extends IEntity> implements PHQuery<IE> {
     phRawQuery: PHRawSQLQuery<IE>;
@@ -49,9 +57,5 @@ export declare class PHSQLQuery<IE extends IEntity> implements PHQuery<IE> {
             [propertyName: string]: boolean;
         };
     });
-    toSQL(): PHJsonSQLQuery<IE>;
-    toWhereFragment(operation: JSONBaseOperation): string;
-    toLogicalWhereFragment(logicalOperation: JSONLogicalOperation): string;
-    toAndOrWhereFragment(operations: JSONBaseOperation[], sqlLogicalOperator: any): string;
-    getLogicalOperator(logicalOperation: JSONLogicalOperation): string;
+    toSQL(): PHJsonCommonSQLQuery<IE>;
 }

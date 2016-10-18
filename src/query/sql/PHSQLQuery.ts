@@ -14,8 +14,17 @@ export interface PHRawSQLQuery<IE extends IEntity> extends PHRawQuery<IE> {
 	where?: JSONBaseOperation;
 }
 
-export interface PHJsonSQLQuery<IE extends IEntity> {
+export interface PHJsonFlatSQLQuery extends PHJsonCommonSQLQuery {
+	select?: any[];
+	groupBy: any;
+	having: any;
+}
+
+export interface PHJsonObjectSQLQuery<IE extends IEntity> extends PHJsonCommonSQLQuery {
 	select: IE;
+}
+
+export interface PHJsonCommonSQLQuery {
 	from?: JSONRelation[];
 	where?: JSONBaseOperation;
 	orderBy?: JSONFieldInOrderBy[];
@@ -23,8 +32,10 @@ export interface PHJsonSQLQuery<IE extends IEntity> {
 
 
 export enum JoinType {
+	FULL_JOIN,
 	INNER_JOIN,
-	LEFT_JOIN
+	LEFT_JOIN,
+	RIGHT_JOIN
 }
 
 export class PHSQLQuery<IE extends IEntity> implements PHQuery<IE> {
@@ -38,7 +49,7 @@ export class PHSQLQuery<IE extends IEntity> implements PHQuery<IE> {
 	) {
 	}
 
-	toSQL(): PHJsonSQLQuery<IE> {
+	toSQL(): PHJsonCommonSQLQuery<IE> {
 		let phJoin: JSONRelation[] = [];
 		this.phRawQuery.from.forEach((iEntity:IQEntity) => {
 			phJoin.push(iEntity.getRelationJson());
@@ -51,67 +62,4 @@ export class PHSQLQuery<IE extends IEntity> implements PHQuery<IE> {
 		};
 	}
 
-	toWhereFragment(
-		operation: JSONBaseOperation
-	): string {
-		let sqlLogicalOperator = this.getLogicalOperator(operation);
-		if (sqlLogicalOperator) {
-			this.toLogicalWhereFragment(operation);
-		}
-
-		return null;
-	}
-
-	toLogicalWhereFragment(
-		logicalOperation: JSONLogicalOperation
-	): string {
-		let sqlLogicalOperator;
-		for (let operator in logicalOperation) {
-			if (sqlLogicalOperator) {
-				throw 'Logical operator is already defined';
-			}
-			switch (operator) {
-				case '$and':
-					sqlLogicalOperator = 'AND';
-					break;
-				case '$not':
-					sqlLogicalOperator = 'NOT';
-					break;
-				case '$or':
-					sqlLogicalOperator = 'OR';
-					break;
-			}
-		}
-		return null;
-	}
-
-	toAndOrWhereFragment(
-		operations: JSONBaseOperation[],
-		sqlLogicalOperator
-	): string {
-		return null;
-	}
-
-	getLogicalOperator(
-		logicalOperation: JSONLogicalOperation
-	): string {
-		let sqlLogicalOperator;
-		for (let operator in logicalOperation) {
-			if (sqlLogicalOperator) {
-				throw 'Logical operator is already defined';
-			}
-			switch (operator) {
-				case '$and':
-					sqlLogicalOperator = 'AND';
-					break;
-				case '$not':
-					sqlLogicalOperator = 'NOT';
-					break;
-				case '$or':
-					sqlLogicalOperator = 'OR';
-					break;
-			}
-		}
-		return sqlLogicalOperator;
-	}
 }

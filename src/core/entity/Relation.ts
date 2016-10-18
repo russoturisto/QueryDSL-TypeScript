@@ -85,12 +85,20 @@ export abstract class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> im
 		this.q.addEntityRelation(propertyName, this);
 	}
 
+	fullJoin(): IQR {
+		return this.getNewQEntity(JoinType.FULL_JOIN);
+	}
+
 	innerJoin(): IQR {
 		return this.getNewQEntity(JoinType.INNER_JOIN);
 	}
 
 	leftJoin(): IQR {
 		return this.getNewQEntity(JoinType.LEFT_JOIN);
+	}
+
+	rightJoin(): IQR {
+		return this.getNewQEntity(JoinType.RIGHT_JOIN);
 	}
 
 	private getNewQEntity( joinType: JoinType ): IQR {

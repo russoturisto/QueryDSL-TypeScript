@@ -4,9 +4,9 @@
 import { RelationRecord } from "../../../core/entity/Relation";
 import { EntityDefaults, SQLStringQuery, QueryResultType, SQLDialect } from "../SQLStringQuery";
 import { IEntity, IQEntity } from "../../../core/entity/Entity";
-import { BridgedQueryConfiguration } from "./resultParser/IQueryParser";
+import { BridgedQueryConfiguration } from "../objectQuery/resultParser/IObjectResultParser";
 import { JSONFieldInOrderBy } from "../../../core/field/FieldInOrderBy";
-import { PHJsonSQLQuery } from "../PHSQLQuery";
+import { PHJsonCommonSQLQuery } from "../PHSQLQuery";
 import { JoinTreeNode } from "../../../core/entity/JoinTreeNode";
 /**
  * Represents SQL String query with object tree Select clause.
@@ -14,7 +14,7 @@ import { JoinTreeNode } from "../../../core/entity/JoinTreeNode";
 export declare class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE> {
     protected bridgedQueryConfiguration: BridgedQueryConfiguration;
     private queryParser;
-    constructor(phJsonQuery: PHJsonSQLQuery<IE>, qEntity: IQEntity, qEntityMapByName: {
+    constructor(phJsonQuery: PHJsonCommonSQLQuery<IE>, qEntity: IQEntity, qEntityMapByName: {
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {

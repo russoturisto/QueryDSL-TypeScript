@@ -1,4 +1,4 @@
-import { IQueryParser, AbstractObjectQueryParser } from "./IQueryParser";
+import { IResultParser, AbstractObjectResultParser } from "./IResultParser";
 import { IQEntity } from "../../../../core/entity/Entity";
 import { SQLDataType } from "../../SQLStringQuery";
 import { EntityMetadata } from "../../../../core/entity/EntityMetadata";
@@ -10,7 +10,7 @@ import { RelationRecord } from "../../../../core/entity/Relation";
  * The goal of this Parser is to determine which objects in the current row are the same
  * as they were in the previous row.  If the objects are the same this parser will merge them.
  */
-export declare class HierarchicalQueryParser extends AbstractObjectQueryParser implements IQueryParser {
+export declare class HierarchicalResultParser extends AbstractObjectResultParser implements IResultParser {
     currentRowObjectMap: {
         [alias: string]: any;
     };

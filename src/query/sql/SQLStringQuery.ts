@@ -1,11 +1,11 @@
-import {PHJsonSQLQuery, JoinType} from "./PHSQLQuery";
+import {PHJsonCommonSQLQuery, JoinType} from "./PHSQLQuery";
 import {RelationRecord, JSONRelation, QRelation} from "../../core/entity/Relation";
 import {IEntity, IQEntity} from "../../core/entity/Entity";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
 import {FieldMap} from "./FieldMap";
 import {SQLStringWhereBase} from "./SQLStringWhereBase";
 import {JSONFieldInOrderBy} from "../../core/field/FieldInOrderBy";
-import {IOrderByParser, getOrderByParser} from "./objectQuery/queryParser/IOrderByParser";
+import {IOrderByParser, getOrderByParser} from "./query/orderBy/IOrderByParser";
 import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
 import {ColumnAliases} from "../../core/entity/ColumnAliases";
 import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
@@ -41,11 +41,15 @@ export class EntityDefaults {
 export enum QueryResultType {
 	// Ordered query result with bridging for all MtOs and OtM
 	BRIDGED,
+		// A flat array of values, returned by a regular join
+	FLAT,
+		// A flat array of values, returned by a on object select
+	FLATTENED,
 		// Ordered query result, with objects grouped hierarchically by entity
 	HIERARCHICAL,
 		// Plain query result, with no forced ordering or grouping
 	PLAIN,
-		// A flat array of values, returned by a regular join
+		// Raw result, returned by a SQL string query
 	RAW
 }
 
@@ -60,7 +64,7 @@ export abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereB
 	protected orderByParser: IOrderByParser;
 
 	constructor(
-		protected phJsonQuery: PHJsonSQLQuery<IE>,
+		protected phJsonQuery: PHJsonCommonSQLQuery<IE>,
 		rootQEntity: IQEntity,
 		qEntityMapByName: {[alias: string]: IQEntity},
 		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
@@ -224,12 +228,23 @@ ORDER BY
 
 			let joinTypeString;
 			switch (currentRelation.joinType) {
+				case JoinType.FULL_JOIN:
+					if (this.queryResultType !== QueryResultType.FLAT) {
+						throw `Full Joins only allowed in flat queries`;
+					}
+					joinTypeString = 'FULL JOIN';
+					break;
 				case JoinType.INNER_JOIN:
 					joinTypeString = 'INNER JOIN';
 					break;
 				case JoinType.LEFT_JOIN:
 					joinTypeString = 'LEFT JOIN';
 					break;
+				case JoinType.RIGHT_JOIN:
+					if (this.queryResultType !== QueryResultType.FLAT) {
+						throw `Full Joins only allowed in flat queries`;
+					}
+					joinTypeString = 'RIGHT JOIN';
 				default:
 					throw `Unsupported join type: ${currentRelation.joinType}`;
 			}

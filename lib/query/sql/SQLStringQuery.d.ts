@@ -1,10 +1,10 @@
-import { PHJsonSQLQuery } from "./PHSQLQuery";
+import { PHJsonCommonSQLQuery } from "./PHSQLQuery";
 import { RelationRecord, JSONRelation } from "../../core/entity/Relation";
 import { IEntity, IQEntity } from "../../core/entity/Entity";
 import { FieldMap } from "./FieldMap";
 import { SQLStringWhereBase } from "./SQLStringWhereBase";
 import { JSONFieldInOrderBy } from "../../core/field/FieldInOrderBy";
-import { IOrderByParser } from "./objectQuery/queryParser/IOrderByParser";
+import { IOrderByParser } from "./query/orderBy/IOrderByParser";
 import { ColumnAliases } from "../../core/entity/ColumnAliases";
 import { JoinTreeNode } from "../../core/entity/JoinTreeNode";
 /**
@@ -32,21 +32,23 @@ export declare class EntityDefaults {
 }
 export declare enum QueryResultType {
     BRIDGED = 0,
-    HIERARCHICAL = 1,
-    PLAIN = 2,
-    RAW = 3,
+    FLAT = 1,
+    FLATTENED = 2,
+    HIERARCHICAL = 3,
+    PLAIN = 4,
+    RAW = 5,
 }
 /**
  * String based SQL query.
  */
 export declare abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
-    protected phJsonQuery: PHJsonSQLQuery<IE>;
+    protected phJsonQuery: PHJsonCommonSQLQuery<IE>;
     protected queryResultType: QueryResultType;
     protected columnAliases: ColumnAliases;
     protected entityDefaults: EntityDefaults;
     protected joinTree: JoinTreeNode;
     protected orderByParser: IOrderByParser;
-    constructor(phJsonQuery: PHJsonSQLQuery<IE>, rootQEntity: IQEntity, qEntityMapByName: {
+    constructor(phJsonQuery: PHJsonCommonSQLQuery<IE>, rootQEntity: IQEntity, qEntityMapByName: {
         [alias: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {

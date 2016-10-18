@@ -1,4 +1,4 @@
-import { IQueryParser, BridgedQueryConfiguration, AbstractObjectQueryParser } from "./IQueryParser";
+import { IResultParser, BridgedQueryConfiguration, AbstractObjectResultParser } from "./IResultParser";
 import { BridgedOtmMapper, OneToManyStubReference } from "./BridgedOtmMapper";
 import { BridgedMtoMapper, ManyToOneStubReference } from "./BridgedMtoMapper";
 import { IQEntity } from "../../../../core/entity/Entity";
@@ -11,7 +11,7 @@ import { RelationRecord } from "../../../../core/entity/Relation";
 /**
  * The goal of this parser to to bridge all entity references and arrive at an inter-connected graph (where possible).
  */
-export declare class BridgedQueryParser extends AbstractObjectQueryParser implements IQueryParser {
+export declare class BridgedResultParser extends AbstractObjectResultParser implements IResultParser {
     private config;
     private rootQEntity;
     private qEntityMapByName;
