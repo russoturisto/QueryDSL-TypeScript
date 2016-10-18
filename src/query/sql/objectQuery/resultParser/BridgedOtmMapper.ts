@@ -11,7 +11,7 @@ export interface OneToManyStubReference {
 }
 
 // For OtM mapping in bridged queries
-export class BridgedQueryOtmMapper {
+export class BridgedOtmMapper {
 	// Map of MtO referred objects by OtM references
 	mtoEntityReferenceMap: {
 		// Name of OTM reference class

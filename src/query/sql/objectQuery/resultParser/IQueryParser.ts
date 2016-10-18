@@ -43,18 +43,15 @@ export interface IQueryParser {
 		entityMetadata: EntityMetadata,
 		resultObject: any,
 		propertyName: string,
-		relationQEntity: IQEntity,
+		relationGenericQEntity: IQEntity,
 		relationEntityMetadata: EntityMetadata,
 		relatedEntityId: any
 	): void;
 
 	bufferBlankManyToOneStub(
 		entityAlias: string,
-		qEntity: IQEntity,
-		entityMetadata: EntityMetadata,
 		resultObject: any,
 		propertyName: string,
-		relationQEntity: IQEntity,
 		relationEntityMetadata: EntityMetadata
 	): void;
 
@@ -125,12 +122,12 @@ export interface IQueryParser {
 export function getObjectQueryParser(
 	queryResultType: QueryResultType,
 	config: BridgedQueryConfiguration,
-	qEntity: IQEntity,
-	qEntityMap: {[entityName: string]: IQEntity}
+	rootQEntity: IQEntity,
+	qEntityMapByName: {[entityName: string]: IQEntity}
 ): IQueryParser {
 	switch (queryResultType) {
 		case QueryResultType.BRIDGED:
-			return new BridgedQueryParser(config, qEntity, qEntityMap);
+			return new BridgedQueryParser(config, rootQEntity, qEntityMapByName);
 		case QueryResultType.HIERARCHICAL:
 			return new HierarchicalQueryParser();
 		case QueryResultType.PLAIN:

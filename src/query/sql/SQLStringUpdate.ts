@@ -2,16 +2,14 @@ import {IEntity, IQEntity} from "../../core/entity/Entity";
 import {SQLStringWhereBase} from "./SQLStringWhereBase";
 import {PHJsonSQLUpdate} from "./PHSQLUpdate";
 import {SQLDialect} from "./SQLStringQuery";
-import {RelationRecord} from "../../core/entity/Relation";
+import {RelationRecord, QRelation} from "../../core/entity/Relation";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
 import {SQLStringNoJoinQuery} from "./SQLStringNoJoinQuery";
 import {QBooleanField} from "../../core/field/BooleanField";
 import {QDateField} from "../../core/field/DateField";
 import {QNumberField} from "../../core/field/NumberField";
 import {QStringField} from "../../core/field/StringField";
-import {JoinColumnConfiguration} from "../../core/entity/metadata/ColumnDecorators";
 import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
-import {QField} from "../../core/field/Field";
 /**
  * Created by Papa on 10/2/2016.
  */
@@ -36,10 +34,11 @@ export class SQLStringUpdate<IE extends IEntity> extends SQLStringNoJoinQuery<IE
 		if (!this.phJsonUpdate.update) {
 			throw `Expecting exactly one table in FROM clause`;
 		}
-		let entityName = this.qEntity.__entityName__;
+		let entityName = this.rootQEntity.__entityName__;
 		let joinNodeMap = this.getJoinNodeMap();
+		let updateAlias = QRelation.getAlias(this.phJsonUpdate.update);
 		let updateFragment = this.getTableFragment(this.phJsonUpdate.update);
-		let setFragment = this.getSetFragment(entityName, this.phJsonUpdate.set, embedParameters, parameters);
+		let setFragment = this.getSetFragment(updateAlias, entityName, this.phJsonUpdate.set, embedParameters, parameters);
 		let whereFragment = this.getWHEREFragment(this.phJsonUpdate.where, 0, joinNodeMap, embedParameters, parameters);
 
 		return `update
@@ -51,13 +50,14 @@ ${whereFragment}`;
 	}
 
 	protected getSetFragment(
+		updateAlias: string,
 		entityName: string,
 		setClauseFragment: IE,
 		embedParameters: boolean = true,
 		parameters: any[] = null
 	): string {
 
-		let qEntity = this.qEntityMap[entityName];
+		let qEntity = this.qEntityMapByAlias[updateAlias];
 		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
 		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
 		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
@@ -95,20 +95,20 @@ ${whereFragment}`;
 				}
 			} else if (entityRelationMap[propertyName]) {
 				if (entityMetadata.manyToOneMap[propertyName]) {
-					columnName = this.getManyToOneColumnName(entityName, propertyName, null, entityMetadata.joinColumnMap);
+					columnName = MetadataUtils.getJoinColumnName(propertyName, entityMetadata);
 
 					let relation = qEntity.__entityRelationMap__[propertyName];
 					if (!relation) {
 						throw `Did not find field '${entityName}.${propertyName}' used in the WHERE clause.`;
 					}
-					let relationQEntity = this.qEntityMap[relation.entityName];
-					let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>relationQEntity.__entityConstructor__;
+					let relationGenericQEntity = this.qEntityMapByName[relation.entityName];
+					let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>relationGenericQEntity.__entityConstructor__;
 					// get the parent object's id
 					value = MetadataUtils.getIdValue(value, relationEntityMetadata);
 					if (!value) {
 						throw `@ManyToOne relation's (${entityName}) object @Id value is missing `;
 					}
-					let relationField = relationQEntity.__entityFieldMap__[relationEntityMetadata.idProperty];
+					let relationField = relationGenericQEntity.__entityFieldMap__[relationEntityMetadata.idProperty];
 					if (relationField instanceof QBooleanField) {
 						value = this.getSetValueFragment(value, entityName, propertyName, this.booleanTypeCheck, embedParameters, parameters);
 					} else if (relationField instanceof QDateField) {
@@ -136,11 +136,9 @@ ${whereFragment}`;
 		qEntity: IQEntity,
 		propertyName: string
 	): string {
-		let entityName = qEntity.__entityName__;
 		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
-		let columnMap = entityMetadata.columnMap;
 
-		return this.getPropertyColumnName(entityName, propertyName, null, columnMap);
+		return MetadataUtils.getPropertyColumnName(propertyName, entityMetadata);
 	}
 
 	private getSetValueFragment<T>(

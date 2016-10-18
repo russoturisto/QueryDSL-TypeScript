@@ -12,7 +12,7 @@ export interface ManyToOneStubReference {
 }
 
 // For MtO mapping in bridged queries
-export class BridgedQueryMtoMapper {
+export class BridgedMtoMapper {
 	// Map of all objects that have a given MtO reference
 	mtoStubReferenceMap: {
 		// Type of MtO reference object

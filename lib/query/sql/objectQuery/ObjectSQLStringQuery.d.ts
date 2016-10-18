@@ -1,15 +1,30 @@
 /**
  * Created by Papa on 10/16/2016.
  */
-import { JoinTreeNode } from "../../../core/entity/Relation";
-import { EntityDefaults, SQLStringQuery } from "../SQLStringQuery";
-import { IEntity } from "../../../core/entity/Entity";
+import { RelationRecord } from "../../../core/entity/Relation";
+import { EntityDefaults, SQLStringQuery, QueryResultType, SQLDialect } from "../SQLStringQuery";
+import { IEntity, IQEntity } from "../../../core/entity/Entity";
+import { BridgedQueryConfiguration } from "./resultParser/IQueryParser";
 import { JSONFieldInOrderBy } from "../../../core/field/FieldInOrderBy";
+import { PHJsonSQLQuery } from "../PHSQLQuery";
+import { JoinTreeNode } from "../../../core/entity/JoinTreeNode";
 /**
  * Represents SQL String query with object tree Select clause.
  */
 export declare class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE> {
+    protected bridgedQueryConfiguration: BridgedQueryConfiguration;
     private queryParser;
+    constructor(phJsonQuery: PHJsonSQLQuery<IE>, qEntity: IQEntity, qEntityMapByName: {
+        [entityName: string]: IQEntity;
+    }, entitiesRelationPropertyMap: {
+        [entityName: string]: {
+            [propertyName: string]: RelationRecord;
+        };
+    }, entitiesPropertyTypeMap: {
+        [entityName: string]: {
+            [propertyName: string]: boolean;
+        };
+    }, dialect: SQLDialect, queryResultType: QueryResultType, bridgedQueryConfiguration?: BridgedQueryConfiguration);
     protected getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults, embedParameters?: boolean, parameters?: any[]): string;
     protected getOrderByFragment(orderBy?: JSONFieldInOrderBy[]): string;
     /**
@@ -25,5 +40,5 @@ export declare class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQ
      * @returns {any[]}
      */
     parseQueryResults(results: any[]): any[];
-    protected parseQueryResult(parentEntityName: string, parentPropertyName: string, entityName: string, selectClauseFragment: any, entityAlias: string, currentJoinNode: JoinTreeNode, resultRow: any, nextFieldIndex: number[]): any;
+    protected parseQueryResult(entityName: string, selectClauseFragment: any, entityAlias: string, currentJoinNode: JoinTreeNode, resultRow: any, nextFieldIndex: number[]): any;
 }

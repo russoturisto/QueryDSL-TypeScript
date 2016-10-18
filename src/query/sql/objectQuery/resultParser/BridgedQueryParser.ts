@@ -1,6 +1,6 @@
 import {IQueryParser, BridgedQueryConfiguration, AbstractObjectQueryParser} from "./IQueryParser";
-import {BridgedQueryOtmMapper, OneToManyStubReference} from "./BridgedOtmMapper";
-import {BridgedQueryMtoMapper, ManyToOneStubReference} from "./BridgedMtoMapper";
+import {BridgedOtmMapper, OneToManyStubReference} from "./BridgedOtmMapper";
+import {BridgedMtoMapper, ManyToOneStubReference} from "./BridgedMtoMapper";
 import {IQEntity} from "../../../../core/entity/Entity";
 import {SQLDataType} from "../../SQLStringQuery";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
@@ -16,10 +16,10 @@ import {MappedEntityArray} from "../../../../core/MappedEntityArray";
 export class BridgedQueryParser extends AbstractObjectQueryParser implements IQueryParser {
 
 	// Keys can only be strings or numbers | TODO: change to JS Maps, if needed
-	entityMap: {[entityName: string]: {[entityId: string]: any}} = {};
+	entityMapByName: {[entityName: string]: {[entityId: string]: any}} = {};
 
-	otmMapper: BridgedQueryOtmMapper = new BridgedQueryOtmMapper();
-	mtoMapper: BridgedQueryMtoMapper = new BridgedQueryMtoMapper();
+	otmMapper: BridgedOtmMapper = new BridgedOtmMapper();
+	mtoMapper: BridgedMtoMapper = new BridgedMtoMapper();
 
 	// One-To-Many & MtO temp stubs (before entityId is available)
 	otmStubBuffer: OneToManyStubReference[] = [];
@@ -30,8 +30,8 @@ export class BridgedQueryParser extends AbstractObjectQueryParser implements IQu
 
 	constructor(
 		private config: BridgedQueryConfiguration,
-		private qEntity: IQEntity,
-		private qEntityMap: {[entityName: string]: IQEntity}
+		private rootQEntity: IQEntity,
+		private qEntityMapByName: {[entityName: string]: IQEntity}
 	) {
 		super();
 	}
@@ -59,21 +59,18 @@ export class BridgedQueryParser extends AbstractObjectQueryParser implements IQu
 		entityMetadata: EntityMetadata,
 		resultObject: any,
 		propertyName: string,
-		relationQEntity: IQEntity,
+		relationGenericQEntity: IQEntity,
 		relationEntityMetadata: EntityMetadata,
 		relatedEntityId: any
 	): void {
 		this.addManyToOneStub(resultObject, propertyName, relationEntityMetadata, relatedEntityId);
-		this.bufferManyToOne(qEntity.__entityName__, propertyName, relationQEntity, relationEntityMetadata, relatedEntityId);
+		this.bufferManyToOne(qEntity.__entityName__, propertyName, relationGenericQEntity, relationEntityMetadata, relatedEntityId);
 	}
 
 	bufferBlankManyToOneStub(
 		entityAlias: string,
-		qEntity: IQEntity,
-		entityMetadata: EntityMetadata,
 		resultObject: any,
 		propertyName: string,
-		relationQEntity: IQEntity,
 		relationEntityMetadata: EntityMetadata
 	): void {
 		// Nothing to do for bridged parser - bridging will map blanks, where possible
@@ -97,13 +94,13 @@ export class BridgedQueryParser extends AbstractObjectQueryParser implements IQu
 	private bufferManyToOne(
 		entityName: string,
 		propertyName: string,
-		relationQEntity: IQEntity,
+		relationGenericQEntity: IQEntity,
 		relationEntityMetadata: EntityMetadata,
 		relatedEntityId: any
 	): void {
 		let otmEntityField;
-		for (let otmRelationProperty in relationQEntity.__entityRelationMap__) {
-			let otmRelation = relationQEntity.__entityRelationMap__[otmRelationProperty];
+		for (let otmRelationProperty in relationGenericQEntity.__entityRelationMap__) {
+			let otmRelation = relationGenericQEntity.__entityRelationMap__[otmRelationProperty];
 			if (otmRelation.relationType === RelationType.ONE_TO_MANY) {
 				let otmElements = relationEntityMetadata.oneToManyMap[otmRelationProperty];
 				if (otmElements.mappedBy === propertyName) {
@@ -115,7 +112,7 @@ export class BridgedQueryParser extends AbstractObjectQueryParser implements IQu
 
 		this.mtoStubBuffer.push({
 			otmEntityId: relatedEntityId,
-			otmEntityName: relationQEntity.__entityName__,
+			otmEntityName: relationGenericQEntity.__entityName__,
 			otmEntityField: otmEntityField,
 			mtoEntityName: entityName,
 			mtoRelationField: propertyName,
@@ -191,7 +188,7 @@ export class BridgedQueryParser extends AbstractObjectQueryParser implements IQu
 		if (!entityId) {
 			throw `No Id provided for entity of type '${qEntity.__entityName__}'`;
 		}
-		let currentEntity = this.getEntityToFlush(qEntity, entityMetadata, selectClauseFragment, entityPropertyTypeMap, entityRelationMap, entityId, resultObject);
+		let currentEntity = this.getEntityToFlush(qEntity, selectClauseFragment, entityPropertyTypeMap, entityRelationMap, entityId, resultObject);
 		this.flushRelationStubBuffers(entityId, currentEntity);
 
 		return currentEntity;
@@ -199,7 +196,6 @@ export class BridgedQueryParser extends AbstractObjectQueryParser implements IQu
 
 	private getEntityToFlush(
 		qEntity: IQEntity,
-		entityMetadata: EntityMetadata,
 		selectClauseFragment: any,
 		entityPropertyTypeMap: {[propertyName: string]: boolean},
 		entityRelationMap: {[propertyName: string]: RelationRecord},
@@ -210,19 +206,30 @@ export class BridgedQueryParser extends AbstractObjectQueryParser implements IQu
 		if (!entityId) {
 			throw `Entity ID not specified for entity '${entityName}'`
 		}
-		let entityMapForType = this.entityMap[entityName];
-		if (!entityMapForType) {
-			entityMapForType = {};
-			this.entityMap[entityName] = entityMapForType;
+		let entityMapForName = this.entityMapByName[entityName];
+		if (!entityMapForName) {
+			entityMapForName = {};
+			this.entityMapByName[entityName] = entityMapForName;
 		}
-		let existingEntity = entityMapForType[entityId];
+		let existingEntity = entityMapForName[entityId];
 		let currentEntity = this.mergeEntities(existingEntity, resultObject, qEntity, selectClauseFragment, entityPropertyTypeMap, entityRelationMap);
-		entityMapForType[entityId] = currentEntity;
+		entityMapForName[entityId] = currentEntity;
 
 		return currentEntity;
 	}
 
 	// Must merge the one-to-many relationships returned as part of the result tree
+	/**
+	 * Merge entities with of the same class and with the same Id
+	 *
+	 * @param source
+	 * @param target
+	 * @param qEntity
+	 * @param selectClauseFragment
+	 * @param entityPropertyTypeMap
+	 * @param entityRelationMap
+	 * @returns {any}
+	 */
 	private mergeEntities(
 		source: any,
 		target: any,
@@ -264,7 +271,7 @@ export class BridgedQueryParser extends AbstractObjectQueryParser implements IQu
 				// For actual objects
 				else {
 					let childEntityName = entityRelationMap[propertyName].entityName;
-					let entityMetadata: EntityMetadata = <EntityMetadata><any>this.qEntityMap[childEntityName].__entityConstructor__;
+					let entityMetadata: EntityMetadata = <EntityMetadata><any>this.qEntityMapByName[childEntityName].__entityConstructor__;
 					let childIdProperty = entityMetadata.idProperty;
 					// Many-to-One (conflicts detected at query parsing time)
 					if (entityMetadata.manyToOneMap[propertyName]) {
@@ -352,10 +359,10 @@ export class BridgedQueryParser extends AbstractObjectQueryParser implements IQu
 		parsedResults: any[],
 		selectClauseFragment: any
 	): any[] {
-		this.mtoMapper.populateMtos(this.entityMap);
-		this.otmMapper.populateOtms(this.entityMap, this.config.mapped);
+		this.mtoMapper.populateMtos(this.entityMapByName);
+		this.otmMapper.populateOtms(this.entityMapByName, this.config.mapped);
 
-		let entityMetadata: EntityMetadata = <EntityMetadata><any>this.qEntity.__entityConstructor__;
+		let entityMetadata: EntityMetadata = <EntityMetadata><any>this.rootQEntity.__entityConstructor__;
 
 		// merge any out of order entity references (there shouldn't be any)
 		let resultMEA = new MappedEntityArray(entityMetadata.idProperty);

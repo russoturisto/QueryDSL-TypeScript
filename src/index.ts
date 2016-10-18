@@ -20,7 +20,7 @@ import {
 import {
 	FieldType,
 	IQField,
-	QField,
+	QField, Orderable,
 } from "./core/field/Field";
 import {
 	JSONNumberFieldOperation,
@@ -37,7 +37,10 @@ import {
 } from "./core/operation/LogicalOperation";
 import {IOperation, Operation, JSONBaseOperation} from "./core/operation/Operation";
 import {OperationType} from "./core/operation/OperationType";
-import {ColumnAliases, JoinTreeNode, RelationRecord, RelationType, IQRelation, QRelation, JSONRelation} from "./core/entity/Relation";
+import {
+	RelationRecord, RelationType, IQRelation, QRelation, JSONRelation,
+	IQManyToOneRelation, QManyToOneRelation, QOneToManyRelation
+} from "./core/entity/Relation";
 import {IEntityQuery} from "./query/IEntityQuery";
 import {PouchDbGraphQuery, PouchDbFindQuery} from "./query/noSql/pouchdb/PouchDbGraphQuery";
 import {
@@ -66,8 +69,51 @@ import {SQLStringWhereBase} from "./query/sql/SQLStringWhereBase";
 import {SQLStringNoJoinQuery} from "./query/sql/SQLStringNoJoinQuery";
 import {PHRawSQLUpdate, PHJsonSQLUpdate, PHSQLUpdate} from "./query/sql/PHSQLUpdate";
 import {SQLStringUpdate} from "./query/sql/SQLStringUpdate";
+import {ColumnAliases} from "./core/entity/ColumnAliases";
+import {JoinTreeNode} from "./core/entity/JoinTreeNode";
+import {FlatSQLStringQuery} from "./query/sql/flatQuery/FlatSQLStringQuery";
+import {ExactOrderByParser} from "./query/sql/objectQuery/queryParser/ExactOrderByParser";
+import {ForcedOrderByParser} from "./query/sql/objectQuery/queryParser/ForcedOrderByParser";
+import {IOrderByParser, AbstractOrderByParser} from "./query/sql/objectQuery/queryParser/IOrderByParser";
+import {ManyToOneStubReference, BridgedMtoMapper} from "./query/sql/objectQuery/resultParser/BridgedMtoMapper";
+import {BridgedOtmMapper, OneToManyStubReference} from "./query/sql/objectQuery/resultParser/BridgedOtmMapper";
+import {BridgedQueryParser} from "./query/sql/objectQuery/resultParser/BridgedQueryParser";
+import {HierarchicalQueryParser} from "./query/sql/objectQuery/resultParser/HierarchicalQueryParser";
+import {JSONFieldInOrderBy, SortOrder, IFieldInOrderBy, FieldInOrderBy} from "./core/field/FieldInOrderBy";
+import {
+	BridgedQueryConfiguration, IQueryParser,
+	getObjectQueryParser, AbstractObjectQueryParser
+} from "./query/sql/objectQuery/resultParser/IQueryParser";
+import {PlainQueryParser} from "./query/sql/objectQuery/resultParser/PlainQueryParser";
+import {RawQueryParser} from "./query/sql/objectQuery/resultParser/RawQueryParser";
+import {ObjectSQLStringQuery} from "./query/sql/objectQuery/ObjectSQLStringQuery";
+
+
 
 export {
+	JSONFieldInOrderBy,
+	SortOrder,
+	IFieldInOrderBy,
+	FieldInOrderBy,
+	Orderable,
+	ExactOrderByParser,
+	ForcedOrderByParser,
+	IOrderByParser,
+	AbstractOrderByParser,
+	FlatSQLStringQuery,
+	ManyToOneStubReference,
+	BridgedMtoMapper,
+	OneToManyStubReference,
+	BridgedOtmMapper,
+	BridgedQueryParser,
+	HierarchicalQueryParser,
+	BridgedQueryConfiguration,
+	IQueryParser,
+	getObjectQueryParser,
+	AbstractObjectQueryParser,
+	PlainQueryParser,
+	RawQueryParser,
+	ObjectSQLStringQuery,
 	FieldMap,
 	EntityFieldMap,
 	PropertyFieldEntry,

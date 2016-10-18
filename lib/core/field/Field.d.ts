@@ -14,7 +14,13 @@ export declare enum FieldType {
     STRING = 6,
     STRING_ARRAY = 7,
 }
-export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>> {
+export interface Orderable<IQ extends IQEntity> {
+    asc(): JSONFieldInOrderBy;
+    desc(): JSONFieldInOrderBy;
+    fieldName: string;
+    q: IQ;
+}
+export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>> extends Orderable<IQ> {
     entityName: string;
     fieldName: string;
     fieldType: FieldType;
@@ -29,8 +35,6 @@ export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, I
     isNull(): JO;
     notEquals(value: T): JO;
     notIn(values: T[]): JO;
-    asc(): JSONFieldInOrderBy;
-    desc(): JSONFieldInOrderBy;
 }
 export declare abstract class QField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>> implements IQField<IQ, T, JO, IO> {
     q: IQ;

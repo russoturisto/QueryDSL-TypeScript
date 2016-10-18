@@ -1,9 +1,9 @@
 /**
  * Created by Papa on 10/16/2016.
  */
-import {JoinTreeNode, QRelation} from "../../../core/entity/Relation";
-import {EntityDefaults, SQLStringQuery, SQLDataType, QueryResultType} from "../SQLStringQuery";
-import {IEntity} from "../../../core/entity/Entity";
+import {QRelation, RelationRecord} from "../../../core/entity/Relation";
+import {EntityDefaults, SQLStringQuery, SQLDataType, QueryResultType, SQLDialect} from "../SQLStringQuery";
+import {IEntity, IQEntity} from "../../../core/entity/Entity";
 import {EntityMetadata} from "../../../core/entity/EntityMetadata";
 import {getObjectQueryParser, BridgedQueryConfiguration, IQueryParser} from "./resultParser/IQueryParser";
 import {QBooleanField} from "../../../core/field/BooleanField";
@@ -12,12 +12,30 @@ import {QNumberField} from "../../../core/field/NumberField";
 import {QStringField} from "../../../core/field/StringField";
 import {EntityUtils} from "../../../core/utils/EntityUtils";
 import {JSONFieldInOrderBy} from "../../../core/field/FieldInOrderBy";
+import {PHJsonSQLQuery} from "../PHSQLQuery";
+import {JoinTreeNode} from "../../../core/entity/JoinTreeNode";
 /**
  * Represents SQL String query with object tree Select clause.
  */
 export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE> {
 
 	private queryParser: IQueryParser;
+
+	constructor(
+		phJsonQuery: PHJsonSQLQuery<IE>,
+		qEntity: IQEntity,
+		qEntityMapByName: {[entityName: string]: IQEntity},
+		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
+		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
+		dialect: SQLDialect,
+		queryResultType: QueryResultType,
+		protected bridgedQueryConfiguration?: BridgedQueryConfiguration
+	) {
+		super(phJsonQuery, qEntity, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect, queryResultType);
+		if (bridgedQueryConfiguration && this.bridgedQueryConfiguration.strict !== undefined) {
+			throw `"strict" configuration is not yet implemented for QueryResultType.BRIDGED`;
+		}
+	}
 
 	protected getSELECTFragment(
 		entityName: string,
@@ -28,12 +46,12 @@ export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE>
 		embedParameters: boolean = true,
 		parameters: any[] = null
 	): string {
-		let qEntity = this.qEntityMap[entityName];
+		let tableAlias = QRelation.getAlias(joinTree.jsonRelation);
+		let qEntity = this.qEntityMapByAlias[tableAlias];
 		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
 		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
 		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
 
-		let tableAlias = QRelation.getAlias(joinTree.jsonRelation);
 
 		let retrieveAllOwnFields: boolean = false;
 		let numProperties = 0;
@@ -93,8 +111,8 @@ export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE>
 
 	protected getOrderByFragment(
 		orderBy?: JSONFieldInOrderBy[]
-	):string {
-
+	): string {
+		return this.orderByParser.getOrderByFragment(this.joinTree, this.qEntityMapByAlias);
 	}
 
 	/**
@@ -112,7 +130,7 @@ export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE>
 	parseQueryResults(
 		results: any[]
 	): any[] {
-		this.queryParser = getObjectQueryParser(this.queryResultType, this.bridgedQueryConfiguration, this.qEntity, this.qEntityMap);
+		this.queryParser = getObjectQueryParser(this.queryResultType, this.bridgedQueryConfiguration, this.rootQEntity, this.qEntityMapByName);
 		let parsedResults: any[] = [];
 		if (!results || !results.length) {
 			return parsedResults;
@@ -121,7 +139,7 @@ export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE>
 		let lastResult;
 		results.forEach(( result ) => {
 			let entityAlias = QRelation.getAlias(this.joinTree.jsonRelation);
-			let parsedResult = this.parseQueryResult(null, null, this.qEntity.__entityName__, this.phJsonQuery.select, entityAlias, this.joinTree, result, [0]);
+			let parsedResult = this.parseQueryResult(this.rootQEntity.__entityName__, this.phJsonQuery.select, entityAlias, this.joinTree, result, [0]);
 			if (!lastResult) {
 				parsedResults.push(parsedResult);
 			} else if (lastResult !== parsedResult) {
@@ -135,8 +153,6 @@ export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE>
 	}
 
 	protected parseQueryResult(
-		parentEntityName: string,
-		parentPropertyName: string,
 		entityName: string,
 		selectClauseFragment: any,
 		entityAlias: string,
@@ -149,7 +165,7 @@ export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE>
 			return resultRow;
 		}
 
-		let qEntity = this.qEntityMap[entityName];
+		let qEntity = this.qEntityMapByAlias[entityAlias];
 		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
 		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
 		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
@@ -185,17 +201,17 @@ export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE>
 			} else if (entityRelationMap[propertyName]) {
 				let childSelectClauseFragment = selectClauseFragment[propertyName];
 				let relation = qEntity.__entityRelationMap__[propertyName];
-				let relationQEntity = this.qEntityMap[relation.entityName];
-				let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>relationQEntity.__entityConstructor__;
 
-				if (childSelectClauseFragment == null) {
+				if (childSelectClauseFragment === null) {
 					if (entityMetadata.manyToOneMap[propertyName]) {
+						let relationGenericQEntity = this.qEntityMapByName[relation.entityName];
+						let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>relationGenericQEntity.__entityConstructor__;
 						let columnAlias = this.columnAliases.getAlias(entityAlias, propertyName);
 						let relatedEntityId = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], SQLDataType.NUMBER, null);
 						if (EntityUtils.exists(relatedEntityId)) {
-							this.queryParser.bufferManyToOneStub(entityAlias, qEntity, entityMetadata, resultObject, propertyName, relationQEntity, relationEntityMetadata, relatedEntityId);
+							this.queryParser.bufferManyToOneStub(entityAlias, qEntity, entityMetadata, resultObject, propertyName, relationGenericQEntity, relationEntityMetadata, relatedEntityId);
 						} else {
-							this.queryParser.bufferBlankManyToOneStub(entityAlias, qEntity, entityMetadata, resultObject, propertyName, relationQEntity, relationEntityMetadata);
+							this.queryParser.bufferBlankManyToOneStub(entityAlias, resultObject, propertyName, relationEntityMetadata);
 						}
 					} else {
 						this.queryParser.bufferOneToManyStub(entityName, propertyName);
@@ -204,10 +220,10 @@ export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE>
 					let childEntityName = entityRelationMap[propertyName].entityName;
 					let childJoinNode = currentJoinNode.getChildNode(childEntityName, propertyName);
 					let childEntityAlias = QRelation.getAlias(currentJoinNode.jsonRelation);
+					let relationQEntity = this.qEntityMapByAlias[childEntityAlias];
+					let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>relationQEntity.__entityConstructor__;
 
 					let childResultObject = this.parseQueryResult(
-						entityName,
-						propertyName,
 						childEntityName,
 						childSelectClauseFragment,
 						childEntityAlias,

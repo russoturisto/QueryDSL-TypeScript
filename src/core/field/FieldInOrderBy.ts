@@ -3,11 +3,12 @@
  */
 
 import {IQEntity} from "../entity/Entity";
-import {IQField} from "./Field";
+import {IQField, Orderable} from "./Field";
 import {QRelation} from "../entity/Relation";
 
 export interface JSONFieldInOrderBy {
 	alias: string;
+	isManyToOneReference?:boolean;
 	propertyName: string;
 	sortOrder: SortOrder;
 }
@@ -18,14 +19,14 @@ export enum SortOrder {
 }
 
 export interface IFieldInOrderBy<IQ extends IQEntity> {
-	field: IQField<IQ, any, any, any>;
+	field: Orderable<IQ>;
 	sortOrder: SortOrder;
 }
 
 export class FieldInOrderBy<IQ extends IQEntity> implements IFieldInOrderBy<IQ> {
 
 	constructor(
-		public field: IQField<IQ, any, any, any>,
+		public field: Orderable<IQ>,
 		public sortOrder: SortOrder
 	) {
 	}

@@ -1,21 +1,10 @@
 import { IQEntity } from "./Entity";
 import { JoinType } from "../../query/sql/PHSQLQuery";
-export declare class ColumnAliases {
-    numFields: number;
-    private lastAlias;
-    private columnAliasMap;
-    addAlias(tableAlias: string, propertyName: string): string;
-    getAlias(tableAlias: string, propertyName: string): string;
-    private getAliasKey(tableAlias, propertyName);
-    private getNextAlias();
-}
-export declare class JoinTreeNode {
-    jsonRelation: JSONRelation;
-    childNodes: JoinTreeNode[];
-    constructor(jsonRelation: JSONRelation, childNodes: JoinTreeNode[]);
-    addChildNode(joinTreeNode: JoinTreeNode): void;
-    getChildNode(entityName: string, relationName: string): JoinTreeNode;
-}
+import { Orderable } from "../field/Field";
+import { JSONFieldInOrderBy } from "../field/FieldInOrderBy";
+/**
+ * Created by Papa on 4/26/2016.
+ */
 export interface RelationRecord {
     entityName: string;
     propertyName: string;
@@ -31,8 +20,6 @@ export interface JSONRelation {
     joinType: JoinType;
     relationPropertyName: string;
 }
-export declare const INNER_JOIN: string;
-export declare const LEFT_JOIN: string;
 export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
     entityName: string;
     q: IQ;
@@ -44,8 +31,10 @@ export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
     innerJoin(): any;
     leftJoin(): any;
 }
-export declare const IS_ENTITY_PROPERTY_NAME: string;
-export declare class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> implements IQRelation<IQR, R, IQ> {
+export interface IQManyToOneRelation<IQR extends IQEntity, R, IQ extends IQEntity> extends IQRelation<IQR, R, IQ>, Orderable<IQ> {
+}
+export declare const IS_ENTITY_PROPERTY_NAME = ".isEntity";
+export declare abstract class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> implements IQRelation<IQR, R, IQ> {
     q: IQ;
     qConstructor: new () => IQ;
     relationType: RelationType;
@@ -60,4 +49,28 @@ export declare class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> imp
     innerJoin(): IQR;
     leftJoin(): IQR;
     private getNewQEntity(joinType);
+    static createRelatedQEntity<IQ extends IQEntity>(joinRelation: JSONRelation, entityMapByName: {
+        [entityName: string]: IQEntity;
+    }): IQ;
+}
+export declare class QManyToOneRelation<IQR extends IQEntity, R, IQ extends IQEntity> extends QRelation<IQR, R, IQ> implements IQManyToOneRelation<IQR, R, IQ> {
+    q: IQ;
+    qConstructor: new () => IQ;
+    entityName: string;
+    propertyName: string;
+    relationEntityConstructor: new () => R;
+    relationQEntityConstructor: new (...args: any[]) => IQR;
+    constructor(q: IQ, qConstructor: new () => IQ, entityName: string, propertyName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR);
+    readonly fieldName: string;
+    asc(): JSONFieldInOrderBy;
+    desc(): JSONFieldInOrderBy;
+}
+export declare class QOneToManyRelation<IQR extends IQEntity, R, IQ extends IQEntity> extends QRelation<IQR, R, IQ> {
+    q: IQ;
+    qConstructor: new () => IQ;
+    entityName: string;
+    propertyName: string;
+    relationEntityConstructor: new () => R;
+    relationQEntityConstructor: new (...args: any[]) => IQR;
+    constructor(q: IQ, qConstructor: new () => IQ, entityName: string, propertyName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR);
 }

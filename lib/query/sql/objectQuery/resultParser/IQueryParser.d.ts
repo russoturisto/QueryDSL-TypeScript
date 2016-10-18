@@ -13,8 +13,8 @@ export declare class BridgedQueryConfiguration {
 export interface IQueryParser {
     addEntity(entityAlias: string, resultObject: any): any;
     addProperty(entityAlias: string, resultObject: any, dataType: SQLDataType, propertyName: string, propertyValue: any): void;
-    bufferManyToOneStub(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata, relatedEntityId: any): void;
-    bufferBlankManyToOneStub(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata): void;
+    bufferManyToOneStub(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationGenericQEntity: IQEntity, relationEntityMetadata: EntityMetadata, relatedEntityId: any): void;
+    bufferBlankManyToOneStub(entityAlias: string, resultObject: any, propertyName: string, relationEntityMetadata: EntityMetadata): void;
     bufferManyToOneObject(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata, relatedEntityId: any): void;
     bufferBlankManyToOneObject(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationQEntity: IQEntity, relationEntityMetadata: EntityMetadata): void;
     bufferOneToManyStub(entityName: string, otmPropertyName: string): void;
@@ -28,7 +28,7 @@ export interface IQueryParser {
     flushRow(): void;
     bridge(parsedResults: any[], selectClauseFragment: any): any[] | MappedEntityArray<any>;
 }
-export declare function getObjectQueryParser(queryResultType: QueryResultType, config: BridgedQueryConfiguration, qEntity: IQEntity, qEntityMap: {
+export declare function getObjectQueryParser(queryResultType: QueryResultType, config: BridgedQueryConfiguration, rootQEntity: IQEntity, qEntityMapByName: {
     [entityName: string]: IQEntity;
 }): IQueryParser;
 export declare abstract class AbstractObjectQueryParser {

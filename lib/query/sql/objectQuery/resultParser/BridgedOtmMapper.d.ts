@@ -8,7 +8,7 @@ export interface OneToManyStubReference {
     otmPropertyName: string;
     otmObject: any;
 }
-export declare class BridgedQueryOtmMapper {
+export declare class BridgedOtmMapper {
     mtoEntityReferenceMap: {
         [otmReferenceEntityName: string]: {
             [otmReferenceId: string]: {

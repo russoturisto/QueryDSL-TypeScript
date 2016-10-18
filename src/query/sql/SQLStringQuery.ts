@@ -1,12 +1,14 @@
 import {PHJsonSQLQuery, JoinType} from "./PHSQLQuery";
-import {RelationRecord, JSONRelation, QRelation, JoinTreeNode, ColumnAliases} from "../../core/entity/Relation";
+import {RelationRecord, JSONRelation, QRelation} from "../../core/entity/Relation";
 import {IEntity, IQEntity} from "../../core/entity/Entity";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
-import {JoinColumnConfiguration} from "../../core/entity/metadata/ColumnDecorators";
 import {FieldMap} from "./FieldMap";
 import {SQLStringWhereBase} from "./SQLStringWhereBase";
 import {JSONFieldInOrderBy} from "../../core/field/FieldInOrderBy";
-import {BridgedQueryConfiguration} from "./objectQuery/resultParser/IQueryParser";
+import {IOrderByParser, getOrderByParser} from "./objectQuery/queryParser/IOrderByParser";
+import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
+import {ColumnAliases} from "../../core/entity/ColumnAliases";
+import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -55,21 +57,19 @@ export abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereB
 	protected columnAliases: ColumnAliases = new ColumnAliases();
 	protected entityDefaults: EntityDefaults = new EntityDefaults();
 	protected joinTree: JoinTreeNode;
+	protected orderByParser: IOrderByParser;
 
 	constructor(
-		public phJsonQuery: PHJsonSQLQuery<IE>,
-		qEntity: IQEntity,
-		qEntityMap: {[entityName: string]: IQEntity},
+		protected phJsonQuery: PHJsonSQLQuery<IE>,
+		rootQEntity: IQEntity,
+		qEntityMapByName: {[alias: string]: IQEntity},
 		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		dialect: SQLDialect,
-		protected queryResultType: QueryResultType,
-		protected bridgedQueryConfiguration?: BridgedQueryConfiguration
+		protected queryResultType: QueryResultType
 	) {
-		super(qEntity, qEntityMap, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
-		if(this.bridgedQueryConfiguration.strict !== undefined) {
-
-		}
+		super(rootQEntity, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
+		this.orderByParser = getOrderByParser(queryResultType, rootQEntity, phJsonQuery.select, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, phJsonQuery.orderBy);
 	}
 
 	getFieldMap(): FieldMap {
@@ -81,7 +81,7 @@ export abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereB
 	 * result set.
 	 */
 	buildJoinTree(): void {
-		let entityName = this.qEntity.__entityName__;
+		let entityName = this.rootQEntity.__entityName__;
 		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
 		this.joinTree = this.buildFromJoinTree(entityName, this.phJsonQuery.from, joinNodeMap);
 		this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, false, []);
@@ -91,7 +91,7 @@ export abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereB
 		embedParameters: boolean = true,
 		parameters: any[] = null
 	): string {
-		let entityName = this.qEntity.__entityName__;
+		let entityName = this.rootQEntity.__entityName__;
 
 		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
 		this.joinTree = this.buildFromJoinTree(entityName, this.phJsonQuery.from, joinNodeMap);
@@ -132,13 +132,14 @@ ORDER BY
 			throw `First table in FROM clause cannot be joined`;
 		}
 
-		let firstEntity = this.qEntityMap[firstRelation.entityName];
-		if (firstEntity != this.qEntity) {
-			throw `Unexpected first table in FROM clause: ${firstRelation.entityName}, expecting: ${this.qEntity.__entityName__}`;
-		}
-		jsonTree = new JoinTreeNode(firstRelation, []);
-
 		let alias = QRelation.getAlias(firstRelation);
+		let firstEntity = QRelation.createRelatedQEntity(firstRelation, this.qEntityMapByName);
+		this.qEntityMapByAlias[alias] = firstEntity;
+		if (firstEntity != this.rootQEntity) {
+			throw `Unexpected first table in FROM clause: ${firstRelation.entityName}, expecting: ${this.rootQEntity.__entityName__}`;
+		}
+		jsonTree = new JoinTreeNode(firstRelation, [], null);
+
 		joinNodeMap[alias] = jsonTree;
 
 		for (let i = 1; i < joinRelations.length; i++) {
@@ -154,11 +155,12 @@ ORDER BY
 				throw `Missing parent entity for alias ${parentAlias}, on table ${i + 1} in FROM clause`;
 			}
 			let leftNode = joinNodeMap[parentAlias];
-			let rightNode = new JoinTreeNode(joinRelation, []);
+			let rightNode = new JoinTreeNode(joinRelation, [], leftNode);
 			leftNode.addChildNode(rightNode);
 
 			alias = QRelation.getAlias(joinRelation);
-			let rightEntity = this.qEntityMap[joinRelation.entityName];
+			let rightEntity = QRelation.createRelatedQEntity(joinRelation, this.qEntityMapByName);
+			this.qEntityMapByAlias[alias] = rightEntity;
 			if (!rightEntity) {
 				throw `Could not find entity ${joinRelation.entityName} for table ${i + 1} in FROM clause`;
 			}
@@ -207,18 +209,18 @@ ORDER BY
 	): string {
 		let fromFragment = '\t';
 		let currentRelation = currentTree.jsonRelation;
-		let qEntity = this.qEntityMap[currentRelation.entityName];
-		let tableName = this.getTableName(qEntity);
 		let currentAlias = QRelation.getAlias(currentRelation);
+		let qEntity = this.qEntityMapByAlias[currentAlias];
+		let tableName = this.getTableName(qEntity);
 
 		if (!parentTree) {
 			fromFragment += `${tableName} ${currentAlias}`;
 		} else {
 			let parentRelation = parentTree.jsonRelation;
 			let parentAlias = QRelation.getAlias(parentRelation);
-			let leftEntity = this.qEntityMap[parentRelation.entityName];
+			let leftEntity = this.qEntityMapByAlias[parentAlias];
 
-			let rightEntity = this.qEntityMap[currentRelation.entityName];
+			let rightEntity = this.qEntityMapByAlias[currentAlias];
 
 			let joinTypeString;
 			switch (currentRelation.joinType) {
@@ -286,30 +288,9 @@ ORDER BY
 	): string {
 		let entityName = qEntity.__entityName__;
 		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
-		let joinColumnMap = entityMetadata.joinColumnMap;
 
-		let columnName = this.getManyToOneColumnName(entityName, propertyName, tableAlias, joinColumnMap);
+		let columnName = MetadataUtils.getJoinColumnName(propertyName, entityMetadata, tableAlias);
 		this.addField(entityName, this.getTableName(qEntity), propertyName, columnName);
-
-		return columnName;
-	}
-
-	protected getManyToOneColumnName(
-		entityName: string,
-		propertyName: string,
-		tableAlias: string,
-		joinColumnMap: {[propertyName: string]: JoinColumnConfiguration}
-	): string {
-		let columnName;
-		if (joinColumnMap && joinColumnMap[propertyName]) {
-			columnName = joinColumnMap[propertyName].name;
-			if (!columnName) {
-				throw `Found @JoinColumn but not @JoinColumn.name for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause.`;
-			}
-		} else {
-			this.warn(`Did not find @JoinColumn for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause. Using property name`);
-			columnName = propertyName;
-		}
 
 		return columnName;
 	}
@@ -334,6 +315,6 @@ ORDER BY
 
 	protected abstract getOrderByFragment(
 		orderBy?: JSONFieldInOrderBy[]
-	):string;
+	): string;
 
 }

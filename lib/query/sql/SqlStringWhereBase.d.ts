@@ -1,35 +1,35 @@
 import { IEntity, IQEntity } from "../../core/entity/Entity";
 import { ISQLAdaptor } from "./adaptor/SQLAdaptor";
 import { SQLDialect } from "./SQLStringQuery";
-import { RelationRecord, JoinTreeNode } from "../../core/entity/Relation";
+import { RelationRecord } from "../../core/entity/Relation";
 import { JSONBaseOperation } from "../../core/operation/Operation";
-import { ColumnConfiguration, JoinColumnConfiguration } from "../../core/entity/metadata/ColumnDecorators";
 import { FieldMap } from "./FieldMap";
+import { JoinTreeNode } from "../../core/entity/JoinTreeNode";
 /**
  * Created by Papa on 10/2/2016.
  */
 export declare abstract class SQLStringWhereBase<IE extends IEntity> {
-    qEntity: IQEntity;
-    qEntityMap: {
+    protected rootQEntity: IQEntity;
+    protected qEntityMapByName: {
         [entityName: string]: IQEntity;
     };
-    entitiesRelationPropertyMap: {
+    protected entitiesRelationPropertyMap: {
         [entityName: string]: {
             [propertyName: string]: RelationRecord;
         };
     };
-    entitiesPropertyTypeMap: {
+    protected entitiesPropertyTypeMap: {
         [entityName: string]: {
             [propertyName: string]: boolean;
         };
     };
     protected dialect: SQLDialect;
-    fieldMap: FieldMap;
-    joinAliasMap: {
-        [key: string]: string;
+    protected fieldMap: FieldMap;
+    protected sqlAdaptor: ISQLAdaptor;
+    protected qEntityMapByAlias: {
+        [entityName: string]: IQEntity;
     };
-    sqlAdaptor: ISQLAdaptor;
-    constructor(qEntity: IQEntity, qEntityMap: {
+    constructor(rootQEntity: IQEntity, qEntityMapByName: {
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
@@ -47,12 +47,6 @@ export declare abstract class SQLStringWhereBase<IE extends IEntity> {
     private getCommonOperatorAndValueFragment<T>(fieldOperation, value, alias, propertyName, typeCheckFunction, typeName, embedParameters?, parameters?, conversionFunction?);
     protected getEntityPropertyColumnName(qEntity: IQEntity, propertyName: string, tableAlias: string): string;
     protected getTableName(qEntity: IQEntity): string;
-    protected getPropertyColumnName(entityName: string, propertyName: string, tableAlias: string, columnMap: {
-        [propertyName: string]: ColumnConfiguration;
-    }): string;
-    protected getManyToOneColumnName(entityName: string, propertyName: string, tableAlias: string, joinColumnMap: {
-        [propertyName: string]: JoinColumnConfiguration;
-    }): string;
     private throwValueOnOperationError(valueType, operation, alias, propertyName);
     protected sanitizeStringValue(value: string, embedParameters: boolean): string;
     protected booleanTypeCheck(valueToCheck: any): boolean;

@@ -15,6 +15,7 @@ export interface IEntity {
 
 export interface IQEntity {
 
+	__qEntityConstructor__: {new ( ...args: any[] ): any};
 	__entityConstructor__: {new (): any};
 	__entityFieldMap__: {[propertyName: string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>};
 	__entityName__: string;
@@ -59,6 +60,7 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 	private currentChildIndex = 0;
 
 	constructor(
+		public __qEntityConstructor__: {new( ...args: any[] ): any},
 		public __entityConstructor__: {new(): any},
 		public __entityName__: string,
 		public fromClausePosition: number[],

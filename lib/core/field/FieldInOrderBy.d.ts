@@ -2,9 +2,10 @@
  * Created by Papa on 10/16/2016.
  */
 import { IQEntity } from "../entity/Entity";
-import { IQField } from "./Field";
+import { Orderable } from "./Field";
 export interface JSONFieldInOrderBy {
     alias: string;
+    isManyToOneReference?: boolean;
     propertyName: string;
     sortOrder: SortOrder;
 }
@@ -13,12 +14,12 @@ export declare enum SortOrder {
     DESCENDING = 1,
 }
 export interface IFieldInOrderBy<IQ extends IQEntity> {
-    field: IQField<IQ, any, any, any>;
+    field: Orderable<IQ>;
     sortOrder: SortOrder;
 }
 export declare class FieldInOrderBy<IQ extends IQEntity> implements IFieldInOrderBy<IQ> {
-    field: IQField<IQ, any, any, any>;
+    field: Orderable<IQ>;
     sortOrder: SortOrder;
-    constructor(field: IQField<IQ, any, any, any>, sortOrder: SortOrder);
+    constructor(field: Orderable<IQ>, sortOrder: SortOrder);
     toJSON(): JSONFieldInOrderBy;
 }

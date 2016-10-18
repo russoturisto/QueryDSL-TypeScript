@@ -1,6 +1,5 @@
-import {SQLStringWhereBase} from "./SQLStringWhereBase";
 import {IEntity, IQEntity} from "../../core/entity/Entity";
-import {RelationRecord, JoinTreeNode, JSONRelation, QRelation} from "../../core/entity/Relation";
+import {RelationRecord} from "../../core/entity/Relation";
 import {SQLDialect} from "./SQLStringQuery";
 import {PHJsonSQLDelete} from "./PHSQLDelete";
 import {SQLStringNoJoinQuery} from "./SQLStringNoJoinQuery";

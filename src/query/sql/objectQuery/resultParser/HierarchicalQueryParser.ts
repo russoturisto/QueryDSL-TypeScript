@@ -91,7 +91,7 @@ export class HierarchicalQueryParser extends AbstractObjectQueryParser implement
 		entityMetadata: EntityMetadata,
 		resultObject: any,
 		propertyName: string,
-		relationQEntity: IQEntity,
+		relationGenericQEntity: IQEntity,
 		relationEntityMetadata: EntityMetadata,
 		relatedEntityId: any
 	): void {
@@ -115,11 +115,8 @@ export class HierarchicalQueryParser extends AbstractObjectQueryParser implement
 
 	bufferBlankManyToOneStub(
 		entityAlias: string,
-		qEntity: IQEntity,
-		entityMetadata: EntityMetadata,
 		resultObject: any,
 		propertyName: string,
-		relationQEntity: IQEntity,
 		relationEntityMetadata: EntityMetadata
 	): void {
 		this.addManyToOneReference(entityAlias, resultObject, propertyName, relationEntityMetadata.idProperty);

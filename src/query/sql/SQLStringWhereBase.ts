@@ -1,32 +1,31 @@
-import {IEntity, QEntity, IQEntity} from "../../core/entity/Entity";
+import {IEntity, IQEntity} from "../../core/entity/Entity";
 import {ISQLAdaptor, getSQLAdaptor} from "./adaptor/SQLAdaptor";
-import {PHJsonSQLQuery, JoinType} from "./PHSQLQuery";
 import {SQLDialect} from "./SQLStringQuery";
-import {RelationRecord, JSONRelation, JoinTreeNode} from "../../core/entity/Relation";
+import {RelationRecord} from "../../core/entity/Relation";
 import {QBooleanField} from "../../core/field/BooleanField";
 import {QDateField} from "../../core/field/DateField";
 import {QNumberField} from "../../core/field/NumberField";
 import {QStringField} from "../../core/field/StringField";
 import {JSONBaseOperation} from "../../core/operation/Operation";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
-import {ColumnConfiguration, JoinColumnConfiguration} from "../../core/entity/metadata/ColumnDecorators";
 import {FieldMap} from "./FieldMap";
+import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
+import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
 /**
  * Created by Papa on 10/2/2016.
  */
 
 export abstract class SQLStringWhereBase<IE extends IEntity> {
 
-	fieldMap: FieldMap = new FieldMap();
-	// FIXME: allow for multiple instances of the same table in the query
-	joinAliasMap: {[key: string]: string} = {};
-	sqlAdaptor: ISQLAdaptor;
+	protected fieldMap: FieldMap = new FieldMap();
+	protected sqlAdaptor: ISQLAdaptor;
+	protected qEntityMapByAlias: {[entityName: string]: IQEntity} = {};
 
 	constructor(
-		public qEntity: IQEntity,
-		public qEntityMap: {[entityName: string]: IQEntity},
-		public entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
-		public entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
+		protected rootQEntity: IQEntity,
+		protected qEntityMapByName: {[entityName: string]: IQEntity},
+		protected entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
+		protected entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		protected dialect: SQLDialect
 	) {
 		this.sqlAdaptor = getSQLAdaptor(dialect);
@@ -82,7 +81,7 @@ export abstract class SQLStringWhereBase<IE extends IEntity> {
 					if (!joinNode) {
 						throw `Unknown alias '${alias}' in WHERE clause`;
 					}
-					let qEntity = this.qEntityMap[joinNode.jsonRelation.entityName];
+					let qEntity = this.qEntityMapByAlias[alias];
 					let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
 					let propertyName = aliasColumnPair[1];
 					if (entityMetadata.manyToOneMap[propertyName]) {
@@ -307,9 +306,8 @@ export abstract class SQLStringWhereBase<IE extends IEntity> {
 	): string {
 		let entityName = qEntity.__entityName__;
 		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
-		let columnMap = entityMetadata.columnMap;
 
-		let columnName = this.getPropertyColumnName(entityName, propertyName, tableAlias, columnMap);
+		let columnName = MetadataUtils.getPropertyColumnName(propertyName, entityMetadata, tableAlias);
 		this.addField(entityName, this.getTableName(qEntity), propertyName, columnName);
 
 		return columnName;
@@ -329,62 +327,6 @@ export abstract class SQLStringWhereBase<IE extends IEntity> {
 		}
 
 		return tableName;
-	}
-
-	protected getPropertyColumnName(
-		entityName: string,
-		propertyName: string,
-		tableAlias: string,
-		columnMap: {[propertyName: string]: ColumnConfiguration}
-	): string {
-		let columnName;
-		if (columnMap && columnMap[propertyName]) {
-			columnName = columnMap[propertyName].name;
-			if (!columnName) {
-				if (tableAlias) {
-					throw `Found @Column but not @Column.name for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause.`;
-				} else {
-					throw `Found @Column but not @Column.name for '${entityName}.${propertyName}' in the SET clause.`;
-				}
-			}
-		} else {
-			if (tableAlias) {
-				this.warn(`Did not find @Column for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause. Using property name`);
-			} else {
-				this.warn(`Did not find @Column for '${entityName}.${propertyName}' in the SET clause. Using property name`);
-			}
-			columnName = propertyName;
-		}
-
-		return columnName;
-	}
-
-	protected getManyToOneColumnName(
-		entityName: string,
-		propertyName: string,
-		tableAlias: string,
-		joinColumnMap: {[propertyName: string]: JoinColumnConfiguration}
-	): string {
-		let columnName;
-		if (joinColumnMap && joinColumnMap[propertyName]) {
-			columnName = joinColumnMap[propertyName].name;
-			if (!columnName) {
-				if (tableAlias) {
-					throw `Found @JoinColumn but not @JoinColumn.name for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause.`;
-				} else {
-					throw `Found @JoinColumn but not @JoinColumn.name for '${entityName}.${propertyName}' in the SET clause.`;
-				}
-			}
-		} else {
-			if (tableAlias) {
-				this.warn(`Did not find @JoinColumn for '${entityName}.${propertyName}' (alias '${tableAlias}') in the SELECT clause. Using property name`);
-			} else {
-				this.warn(`Did not find @JoinColumn for '${entityName}.${propertyName}' in the SET clause. Using property name`);
-			}
-			columnName = propertyName;
-		}
-
-		return columnName;
 	}
 
 	private throwValueOnOperationError(

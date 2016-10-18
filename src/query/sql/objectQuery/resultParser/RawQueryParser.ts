@@ -34,7 +34,7 @@ export class RawQueryParser implements IQueryParser {
 		entityMetadata: EntityMetadata,
 		resultObject: any,
 		propertyName: string,
-		relationQEntity: IQEntity,
+		relationGenericQEntity: IQEntity,
 		relationEntityMetadata: EntityMetadata,
 		relatedEntityId: any
 	): void {
@@ -43,11 +43,8 @@ export class RawQueryParser implements IQueryParser {
 
 	bufferBlankManyToOneStub(
 		entityAlias: string,
-		qEntity: IQEntity,
-		entityMetadata: EntityMetadata,
 		resultObject: any,
 		propertyName: string,
-		relationQEntity: IQEntity,
 		relationEntityMetadata: EntityMetadata
 	): void {
 		resultObject.push(null);

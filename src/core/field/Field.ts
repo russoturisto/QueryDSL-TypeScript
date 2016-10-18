@@ -17,7 +17,19 @@ export enum FieldType {
 	STRING_ARRAY
 }
 
-export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>> {
+export interface Orderable<IQ extends IQEntity> {
+
+	asc(): JSONFieldInOrderBy;
+
+	desc(): JSONFieldInOrderBy;
+
+	fieldName: string;
+	q: IQ;
+
+}
+
+export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>>
+extends Orderable<IQ> {
 
 	entityName: string;
 	fieldName: string;
@@ -52,10 +64,6 @@ export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, I
 	notIn(
 		values: T[]
 	): JO;
-
-	asc(): JSONFieldInOrderBy;
-
-	desc(): JSONFieldInOrderBy;
 
 }
 
@@ -148,11 +156,11 @@ implements IQField<IQ, T, JO, IO> {
 	}
 
 	asc(): JSONFieldInOrderBy {
-		return new FieldInOrderBy(this, SortOrder.ASCENDING).toJSON();
+		return new FieldInOrderBy<IQ>(this, SortOrder.ASCENDING).toJSON();
 	}
 
 	desc(): JSONFieldInOrderBy {
-		return new FieldInOrderBy(this, SortOrder.DESCENDING).toJSON();
+		return new FieldInOrderBy<IQ>(this, SortOrder.DESCENDING).toJSON();
 	}
 
 }

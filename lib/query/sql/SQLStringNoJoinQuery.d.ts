@@ -1,6 +1,7 @@
 import { SQLStringWhereBase } from "./SQLStringWhereBase";
 import { IEntity } from "../../core/entity/Entity";
-import { JSONRelation, JoinTreeNode } from "../../core/entity/Relation";
+import { JSONRelation } from "../../core/entity/Relation";
+import { JoinTreeNode } from "../../core/entity/JoinTreeNode";
 /**
  * Created by Papa on 10/2/2016.
  */

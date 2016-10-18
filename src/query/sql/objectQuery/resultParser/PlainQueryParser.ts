@@ -35,7 +35,7 @@ export class PlainQueryParser extends AbstractObjectQueryParser implements IQuer
 		entityMetadata: EntityMetadata,
 		resultObject: any,
 		propertyName: string,
-		relationQEntity: IQEntity,
+		relationGenericQEntity: IQEntity,
 		relationEntityMetadata: EntityMetadata,
 		relatedEntityId: any
 	): void {
@@ -59,11 +59,8 @@ export class PlainQueryParser extends AbstractObjectQueryParser implements IQuer
 
 	bufferBlankManyToOneStub(
 		entityAlias: string,
-		qEntity: IQEntity,
-		entityMetadata: EntityMetadata,
 		resultObject: any,
 		propertyName: string,
-		relationQEntity: IQEntity,
 		relationEntityMetadata: EntityMetadata
 	): void {
 		// Nothing to do the object simply doesn't have anything in it

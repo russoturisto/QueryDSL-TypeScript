@@ -9,8 +9,8 @@ export interface OneToManyConfigAndProperty {
 }
 export declare class MetadataUtils {
     static getRelatedOneToManyConfig(manyToOnePropertyName: any, entityMetadata: EntityMetadata): OneToManyConfigAndProperty;
-    static getPropertyColumnName(propertyName: string, entityMetadata: EntityMetadata): string;
-    static getJoinColumnName(propertyName: string, entityMetadata: EntityMetadata): string;
+    static getPropertyColumnName(propertyName: string, entityMetadata: EntityMetadata, tableAlias?: string): string;
+    static getJoinColumnName(propertyName: string, entityMetadata: EntityMetadata, tableAlias?: string): string;
     static getIdValue(entityObject: any, entityMetadata: EntityMetadata): string;
     static getTableName(entityMetadata: EntityMetadata): string;
     static getOneToManyConfig(propertyName: string, entityMetadata: EntityMetadata): OneToManyElements;

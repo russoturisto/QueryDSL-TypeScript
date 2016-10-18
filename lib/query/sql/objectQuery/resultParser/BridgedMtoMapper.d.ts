@@ -9,7 +9,7 @@ export interface ManyToOneStubReference {
     otmEntityId: string | number;
     otmEntityName: string;
 }
-export declare class BridgedQueryMtoMapper {
+export declare class BridgedMtoMapper {
     mtoStubReferenceMap: {
         [mtoEntityName: string]: {
             [mtoEntityId: string]: {

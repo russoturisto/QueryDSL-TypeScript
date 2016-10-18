@@ -1,12 +1,12 @@
 import {EntityMetadata} from "../EntityMetadata";
-import {OneToManyElements} from "./ColumnDecorators";
+import {OneToManyElements, ColumnConfiguration, JoinColumnConfiguration} from "./ColumnDecorators";
 /**
  * Created by Papa on 9/2/2016.
  */
 
 export interface OneToManyConfigAndProperty {
-	propertyName:string;
-	config:OneToManyElements;
+	propertyName: string;
+	config: OneToManyElements;
 }
 
 export class MetadataUtils {
@@ -29,7 +29,8 @@ export class MetadataUtils {
 
 	static getPropertyColumnName(
 		propertyName: string,
-		entityMetadata: EntityMetadata
+		entityMetadata: EntityMetadata,
+		tableAlias?: string
 	): string {
 		let entityName = entityMetadata.name;
 		let columnMap = entityMetadata.columnMap;
@@ -37,10 +38,12 @@ export class MetadataUtils {
 		if (columnMap[propertyName]) {
 			columnName = columnMap[propertyName].name;
 			if (!columnName) {
-				throw `Found @Column but not @Column.name for '${entityName}.${propertyName}'.`;
+				let aliasErrorFragment = tableAlias ? ` (alias: ${tableAlias})` : '';
+				throw `Found @Column but not @Column.name for '${entityName}.${propertyName}'${aliasErrorFragment}.`;
 			}
 		} else {
-			this.warn(`Did not find @Column for '${entityName}.${propertyName}'. Using property name.`);
+			let aliasWarningFragment = tableAlias ? `(alias: ${tableAlias})` : '';
+			this.warn(`Did not find @Column for '${entityName}.${propertyName}'${aliasWarningFragment}. Using property name.`);
 			columnName = propertyName;
 		}
 
@@ -49,7 +52,8 @@ export class MetadataUtils {
 
 	static getJoinColumnName(
 		propertyName: string,
-		entityMetadata: EntityMetadata
+		entityMetadata: EntityMetadata,
+		tableAlias?: string
 	): string {
 		let entityName = entityMetadata.name;
 		let joinColumnMap = entityMetadata.joinColumnMap;
@@ -57,10 +61,12 @@ export class MetadataUtils {
 		if (joinColumnMap[propertyName]) {
 			joinColumnName = joinColumnMap[propertyName].name;
 			if (!joinColumnName) {
-				throw `Found @JoinColumn but not @JoinColumn.name for '${entityName}.${propertyName}'.`;
+				let aliasErrorFragment = tableAlias ? ` (alias: ${tableAlias})` : '';
+				throw `Found @JoinColumn but not @JoinColumn.name for '${entityName}.${propertyName}'${aliasErrorFragment}.`;
 			}
 		} else {
-			this.warn(`Did not find @JoinColumn for '${entityName}.${propertyName}'. Using property name.`);
+			let aliasWarningFragment = tableAlias ? ` (alias: ${tableAlias})` : '';
+			this.warn(`Did not find @JoinColumn for '${entityName}.${propertyName}'${aliasWarningFragment}. Using property name.`);
 			joinColumnName = propertyName;
 		}
 
@@ -109,7 +115,7 @@ export class MetadataUtils {
 		return oneToManyConfig;
 	}
 
-	static warn(message: string) {
+	static warn( message: string ) {
 		console.log(message);
 	}
 
