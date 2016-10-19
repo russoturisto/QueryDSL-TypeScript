@@ -4,7 +4,7 @@ import {JSONLogicalOperation} from "../../core/operation/LogicalOperation";
 import {JSONBaseOperation} from "../../core/operation/Operation";
 import {PHQuery, PHRawQuery} from "../PHQuery";
 import {JSONFieldInOrderBy} from "../../core/field/FieldInOrderBy";
-import {JSONSelectObject} from "../../core/field/Field";
+import {JSONClauseObject} from "../../core/field/Field";
 /**
  * Created by Papa on 8/12/2016.
  */
@@ -16,7 +16,7 @@ export interface PHRawSQLQuery<IE extends IEntity> extends PHRawQuery<IE> {
 }
 
 export interface PHJsonFlatSQLQuery extends PHJsonCommonSQLQuery {
-	select?: JSONSelectObject[];
+	select?: JSONClauseObject[];
 	groupBy: any;
 	having: any;
 }

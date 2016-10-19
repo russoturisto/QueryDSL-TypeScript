@@ -1,15 +1,19 @@
 import {SQLDialect, SQLDataType} from "../SQLStringQuery";
 import {OracleAdaptor} from "./OracleAdaptor";
 import {SqLiteAdaptor} from "./SqLiteAdaptor";
+import {JSONSqlFunctionCall} from "../../../core/field/Functions";
 /**
  * Created by Papa on 8/27/2016.
  */
 
 export interface ISQLAdaptor {
 
-	dateToDbQuery( date: Date, embedParameters): string | number;
+	dateToDbQuery(
+		date: Date,
+		embedParameters
+	): string | number;
 
-	getResultArray(rawResponse:any):any[];
+	getResultArray( rawResponse: any ): any[];
 
 	/**
 	 * Options in returned result:
@@ -20,12 +24,23 @@ export interface ISQLAdaptor {
 	 * This is a common API on top of both
 	 */
 	getResultCellValue(
-		resultRow:any,
-		columnName:string,
-		index:number,
-		dataType:SQLDataType,
-	  defaultValue:any
-	):any;
+		resultRow: any,
+		columnName: string,
+		index: number,
+		dataType: SQLDataType,
+		defaultValue: any
+	): any;
+
+	getFunctionAdaptor(): ISQLFunctionAdaptor;
+}
+
+export interface ISQLFunctionAdaptor {
+
+	getFunctionCall(
+		jsonFunctionCall: JSONSqlFunctionCall,
+		value: string
+	):string;
+
 }
 
 export function getSQLAdaptor(

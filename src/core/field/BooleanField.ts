@@ -34,7 +34,7 @@ export class QBooleanField<IQ extends IQEntity> extends QField<IQ, boolean, JSON
         entityName:string,
         fieldName:string
     ) {
-        super(q, qConstructor, entityName, fieldName, FieldType.BOOLEAN, new BooleanOperation());
+        super(QBooleanField, q, qConstructor, entityName, fieldName, FieldType.BOOLEAN, new BooleanOperation());
     }
 
 }

@@ -3,13 +3,10 @@
  */
 
 import {IQEntity} from "../entity/Entity";
-import {IQField, Orderable} from "./Field";
-import {QRelation} from "../entity/Relation";
+import {Orderable, JSONClauseField} from "./Field";
 
 export interface JSONFieldInOrderBy {
-	alias: string;
-	isManyToOneReference?:boolean;
-	propertyName: string;
+	field: JSONClauseField;
 	sortOrder: SortOrder;
 }
 
@@ -33,11 +30,9 @@ export class FieldInOrderBy<IQ extends IQEntity> implements IFieldInOrderBy<IQ> 
 
 	toJSON(): JSONFieldInOrderBy {
 		return {
-			alias: QRelation.getPositionAlias(this.field.q.fromClausePosition),
-			propertyName: this.field.fieldName,
+			field: this.field.toJSON(),
 			sortOrder: this.sortOrder
 		};
-
 	}
 
 }

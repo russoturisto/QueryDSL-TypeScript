@@ -7,6 +7,7 @@ import {RelationRecord} from "../../../../core/entity/Relation";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
 import {MetadataUtils} from "../../../../core/entity/metadata/MetadataUtils";
 import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
+import {applyFunctionsReturnString} from "../../../../core/field/Applicable";
 /**
  * Created by Papa on 10/16/2016.
  */
@@ -47,6 +48,8 @@ export abstract class AbstractOrderByParser {
 			} else {
 				columnName = MetadataUtils.getPropertyColumnName(propertyName, entityMetadata, orderByField.alias);
 			}
+
+			let orderFieldClause = applyFunctionsReturnString(orderByField.field);
 
 			let orderFieldClause = `${orderByField.alias}.${columnName} `;
 			switch (orderByField.sortOrder) {

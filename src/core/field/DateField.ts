@@ -37,7 +37,7 @@ export class QDateField<IQ extends IQEntity> extends QField<IQ, Date, JSONDateFi
         entityName:string,
         fieldName:string
     ) {
-        super(q, qConstructor, entityName, fieldName, FieldType.DATE, new DateOperation());
+        super(QDateField, q, qConstructor, entityName, fieldName, FieldType.DATE, new DateOperation());
     }
 
     greaterThan(

@@ -1,7 +1,8 @@
 import {IQEntity, QEntity} from "./Entity";
 import {JoinType} from "../../query/sql/PHSQLQuery";
-import {Orderable} from "../field/Field";
+import {Orderable, JSONClauseField, JSONClauseObjectType} from "../field/Field";
 import {JSONFieldInOrderBy, SortOrder, FieldInOrderBy} from "../field/FieldInOrderBy";
+import {SqlFunction, JSONSqlFunctionCall} from "../field/Functions";
 /**
  * Created by Papa on 4/26/2016.
  */
@@ -124,6 +125,8 @@ export abstract class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> im
 export class QManyToOneRelation<IQR extends IQEntity, R, IQ extends IQEntity>
 extends QRelation<IQR, R, IQ> implements IQManyToOneRelation<IQR, R, IQ> {
 
+	appliedFunctions: JSONSqlFunctionCall[] = [];
+
 	constructor(
 		public q: IQ,
 		public qConstructor: new () => IQ,
@@ -145,6 +148,23 @@ extends QRelation<IQR, R, IQ> implements IQManyToOneRelation<IQR, R, IQ> {
 
 	desc(): JSONFieldInOrderBy {
 		return new FieldInOrderBy<IQ>(this, SortOrder.DESCENDING).toJSON();
+	}
+
+	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQManyToOneRelation <IQR, R, IQ> {
+		let appliedMtoRelation = new QManyToOneRelation(this.q, this.qConstructor, this.entityName, this.propertyName, this.relationEntityConstructor, this.relationQEntityConstructor);
+		appliedMtoRelation.appliedFunctions = appliedMtoRelation.appliedFunctions.concat(this.appliedFunctions);
+		appliedMtoRelation.appliedFunctions.push(sqlFunctionCall);
+
+		return appliedMtoRelation;
+	}
+
+	toJSON(): JSONClauseField {
+		return {
+			appliedFunctions: this.appliedFunctions,
+			propertyName: this.fieldName,
+			tableAlias: QRelation.getPositionAlias(this.q.fromClausePosition),
+			type: JSONClauseObjectType.MANY_TO_ONE_RELATION
+		};
 	}
 
 }

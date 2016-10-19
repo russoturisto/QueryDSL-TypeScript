@@ -5,6 +5,8 @@ import {IQEntity} from "../entity/Entity";
 import {JSONBaseOperation, IOperation} from "../operation/Operation";
 import {QRelation} from "../entity/Relation";
 import {FieldInOrderBy, SortOrder, JSONFieldInOrderBy} from "./FieldInOrderBy";
+import {JSONSqlFunctionCall} from "./Functions";
+import {Appliable, JSONClauseField, JSONClauseObjectType} from "./Applicable";
 
 export enum FieldType {
 	BOOLEAN,
@@ -17,23 +19,11 @@ export enum FieldType {
 	STRING_ARRAY
 }
 
-export interface JSONSelectObject {
-
-}
-
-export interface JSONSelectField extends JSONSelectObject {
-	propertyName: string,
-	tableAlias: string
-}
-
-export interface Orderable<IQ extends IQEntity> {
+export interface Orderable<IQ extends IQEntity> extends Appliable<JSONClauseField, IQ> {
 
 	asc(): JSONFieldInOrderBy;
 
 	desc(): JSONFieldInOrderBy;
-
-	fieldName: string;
-	q: IQ;
 
 }
 
@@ -46,8 +36,6 @@ extends Orderable<IQ> {
 	operation: IO;
 	q: IQ;
 	qConstructor: new() => IQ;
-
-	getFieldKey(): string;
 
 	equals(
 		value: T
@@ -79,7 +67,16 @@ extends Orderable<IQ> {
 export abstract class QField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>>
 implements IQField<IQ, T, JO, IO> {
 
+	appliedFunctions: JSONSqlFunctionCall[] = [];
+
 	constructor(
+		// All child field constructors must have the following signature (4 parameters):
+		public childConstructor: new(
+			q: IQ,
+			qConstructor: new() => IQ,
+			entityName: string,
+			fieldName: string
+		) => IQField<IQ, T, JO, IO>,
 		public q: IQ,
 		public qConstructor: new() => IQ,
 		public entityName: string,
@@ -90,7 +87,7 @@ implements IQField<IQ, T, JO, IO> {
 		q.addEntityField(fieldName, this);
 	}
 
-	getFieldKey() {
+	protected getFieldKey() {
 		let key = `${QRelation.getPositionAlias(this.q.fromClausePosition)}.${this.fieldName}`;
 
 		return key;
@@ -170,6 +167,23 @@ implements IQField<IQ, T, JO, IO> {
 
 	desc(): JSONFieldInOrderBy {
 		return new FieldInOrderBy<IQ>(this, SortOrder.DESCENDING).toJSON();
+	}
+
+	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQField<IQ, T, JO, IO> {
+		let appliedField = new this.childConstructor(this.q, this.qConstructor, this.entityName, this.fieldName);
+		appliedField.appliedFunctions = appliedField.appliedFunctions.concat(this.appliedFunctions);
+		appliedField.appliedFunctions.push(sqlFunctionCall);
+
+		return appliedField;
+	}
+
+	toJSON(): JSONClauseField {
+		return {
+			appliedFunctions: this.appliedFunctions,
+			propertyName: this.fieldName,
+			tableAlias: QRelation.getPositionAlias(this.q.fromClausePosition),
+			type: JSONClauseObjectType.FIELD
+		};
 	}
 
 }

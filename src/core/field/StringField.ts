@@ -25,7 +25,7 @@ export class QStringField<IQ extends IQEntity> extends QField<IQ, string, JSONSt
         entityName:string,
         fieldName:string
     ) {
-        super(q, qConstructor, entityName, fieldName, FieldType.BOOLEAN, new StringOperation());
+        super(QStringField, q, qConstructor, entityName, fieldName, FieldType.STRING, new StringOperation());
     }
 
     like(

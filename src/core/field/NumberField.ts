@@ -37,7 +37,7 @@ export class QNumberField<IQ extends IQEntity> extends QField<IQ, number, JSONNu
         entityName:string,
         fieldName:string
     ) {
-        super(q, qConstructor, entityName, fieldName, FieldType.NUMBER, new NumberOperation());
+        super(QNumberField, q, qConstructor, entityName, fieldName, FieldType.NUMBER, new NumberOperation());
     }
 
     greaterThan(

@@ -1,7 +1,8 @@
 import { IQEntity } from "./Entity";
 import { JoinType } from "../../query/sql/PHSQLQuery";
-import { Orderable } from "../field/Field";
+import { Orderable, JSONClauseField } from "../field/Field";
 import { JSONFieldInOrderBy } from "../field/FieldInOrderBy";
+import { JSONSqlFunctionCall } from "../field/Functions";
 /**
  * Created by Papa on 4/26/2016.
  */
@@ -62,10 +63,13 @@ export declare class QManyToOneRelation<IQR extends IQEntity, R, IQ extends IQEn
     propertyName: string;
     relationEntityConstructor: new () => R;
     relationQEntityConstructor: new (...args: any[]) => IQR;
+    appliedFunctions: JSONSqlFunctionCall[];
     constructor(q: IQ, qConstructor: new () => IQ, entityName: string, propertyName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR);
     fieldName: string;
     asc(): JSONFieldInOrderBy;
     desc(): JSONFieldInOrderBy;
+    applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQManyToOneRelation<IQR, R, IQ>;
+    toJSON(): JSONClauseField;
 }
 export declare class QOneToManyRelation<IQR extends IQEntity, R, IQ extends IQEntity> extends QRelation<IQR, R, IQ> {
     q: IQ;

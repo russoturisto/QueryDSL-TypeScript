@@ -2,11 +2,9 @@
  * Created by Papa on 10/16/2016.
  */
 import { IQEntity } from "../entity/Entity";
-import { Orderable } from "./Field";
+import { Orderable, JSONClauseField } from "./Field";
 export interface JSONFieldInOrderBy {
-    alias: string;
-    isManyToOneReference?: boolean;
-    propertyName: string;
+    field: JSONClauseField;
     sortOrder: SortOrder;
 }
 export declare enum SortOrder {
