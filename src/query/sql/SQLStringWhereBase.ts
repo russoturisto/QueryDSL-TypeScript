@@ -6,7 +6,7 @@ import {QBooleanField} from "../../core/field/BooleanField";
 import {QDateField} from "../../core/field/DateField";
 import {QNumberField} from "../../core/field/NumberField";
 import {QStringField} from "../../core/field/StringField";
-import {JSONBaseOperation} from "../../core/operation/Operation";
+import {JSONBaseOperation, OperationCategory} from "../../core/operation/Operation";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
 import {FieldMap} from "./FieldMap";
 import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
@@ -45,19 +45,16 @@ export abstract class SQLStringWhereBase<IE extends IEntity> {
 			nestingPrefix += '\t';
 		}
 
-		let foundProperty;
-		for (let property in operation) {
-			if (foundProperty) {
-				throw `More than one property found in a WHERE Clause operation ${foundProperty}, ${property}, ...`;
-			}
-			foundProperty = property;
-
 			let operator;
-			switch (property) {
-				case '$and':
-					operator = 'AND';
-				case '$or':
-					operator = 'OR';
+			switch (operation.category) {
+				case OperationCategory.LOGICAL:
+					switch (operation.operator) {
+						case '$and':
+							operator = 'AND';
+						case '$or':
+							operator = 'OR';
+
+					}
 					let childOperations = operation[property];
 					if (!(childOperations instanceof Array)) {
 						throw `Expecting an array of child operations as a value for operator ${operator}, in the WHERE Clause.`;
@@ -72,6 +69,8 @@ export abstract class SQLStringWhereBase<IE extends IEntity> {
 					whereFragment = `${operator} ${this.getWHEREFragment(operation[property], nestingIndex + 1, joinNodeMap, embedParameters, parameters)}`;
 					break;
 				default:
+			}
+			case B
 					let aliasColumnPair = property.split('.');
 					if (aliasColumnPair.length != 2) {
 						throw `Expecting 'alias.column' instead of ${property}`;
@@ -147,7 +146,6 @@ export abstract class SQLStringWhereBase<IE extends IEntity> {
 					whereFragment += operatorAndValueFragment;
 					break;
 			}
-		}
 
 		return whereFragment;
 	}

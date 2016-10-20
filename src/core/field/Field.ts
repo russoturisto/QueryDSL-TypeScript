@@ -6,7 +6,7 @@ import {JSONBaseOperation, IOperation} from "../operation/Operation";
 import {QRelation} from "../entity/Relation";
 import {FieldInOrderBy, SortOrder, JSONFieldInOrderBy} from "./FieldInOrderBy";
 import {JSONSqlFunctionCall} from "./Functions";
-import {Appliable, JSONClauseField, JSONClauseObjectType} from "./Applicable";
+import {Appliable, JSONClauseField, JSONClauseObjectType} from "./Appliable";
 
 export enum FieldType {
 	BOOLEAN,

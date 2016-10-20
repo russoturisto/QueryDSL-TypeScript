@@ -32,8 +32,8 @@ export interface ISQLFunctionAdaptor {
     }): string;
 }
 export declare abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
-    getFunctionCalls<A extends Appliable<any, any>>(appliable: A, qEntityMapByAlias: {
-        [entityName: string]: IQEntity;
+    getFunctionCalls<A extends Appliable<any, any>>(clause: JSONClauseObject, qEntityMapByAlias: {
+        [alias: string]: IQEntity;
     }): string;
     abstract getFunctionCall(jsonFunctionCall: JSONSqlFunctionCall, value: string, qEntityMapByAlias: {
         [entityName: string]: IQEntity;

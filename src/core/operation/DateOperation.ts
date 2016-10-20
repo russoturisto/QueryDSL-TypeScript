@@ -1,15 +1,15 @@
 import {FieldType} from "../field/Field";
 import {JSONBaseOperation, IOperation, Operation} from "./Operation";
+import {JSONClauseObject} from "../field/Appliable";
 /**
  * Created by Papa on 6/20/2016.
  */
 
 
 export interface JSONDateOperation extends JSONBaseOperation {
-	"$gt"?:Date;
-	"$gte"?:Date;
-	"$lt"?:Date;
-	"$lte"?:Date;
+	operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin" | "$gt" | "$gte" | "$lt" | "$lte";
+	lValue:JSONClauseObject | JSONClauseObject[] | Date | Date[];
+	rValue:JSONClauseObject | JSONClauseObject[] | Date | Date[];
 }
 
 export interface IDateOperation extends IOperation<Date, JSONDateOperation> {

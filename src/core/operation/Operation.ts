@@ -2,14 +2,19 @@
  * Created by Papa on 4/21/2016.
  */
 import {FieldType} from "../field/Field";
+import {JSONClauseObject} from "../field/Appliable";
 
+export enum OperationCategory {
+	BOOLEAN,
+	DATE,
+	LOGICAL,
+	NUMBER,
+	STRING
+}
 
 export interface JSONBaseOperation {
-	"$eq"?:Date;
-	"$exists"?:boolean;
-	"$in"?:Date[];
-	"$ne"?:Date;
-	"$nin"?:Date[];
+	operator: string;
+	category: OperationCategory;
 }
 
 export interface IOperation<T, JO extends JSONBaseOperation> {

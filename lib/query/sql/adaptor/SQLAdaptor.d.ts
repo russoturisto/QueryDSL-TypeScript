@@ -1,5 +1,5 @@
 import { SQLDialect, SQLDataType } from "../SQLStringQuery";
-import { JSONSqlFunctionCall } from "../../../core/field/Functions";
+import { ISQLFunctionAdaptor } from "../../../core/field/Appliable";
 /**
  * Created by Papa on 8/27/2016.
  */
@@ -16,8 +16,5 @@ export interface ISQLAdaptor {
      */
     getResultCellValue(resultRow: any, columnName: string, index: number, dataType: SQLDataType, defaultValue: any): any;
     getFunctionAdaptor(): ISQLFunctionAdaptor;
-}
-export interface ISQLFunctionAdaptor {
-    getFunctionCall(jsonFunctionCall: JSONSqlFunctionCall, value: string): string;
 }
 export declare function getSQLAdaptor(sqlDialect: SQLDialect): ISQLAdaptor;

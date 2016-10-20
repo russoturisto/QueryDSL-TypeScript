@@ -7,7 +7,7 @@ import {RelationRecord} from "../../../../core/entity/Relation";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
 import {MetadataUtils} from "../../../../core/entity/metadata/MetadataUtils";
 import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
-import {applyFunctionsReturnString} from "../../../../core/field/Applicable";
+import {applyFunctionsReturnString} from "../../../../core/field/Appliable";
 /**
  * Created by Papa on 10/16/2016.
  */

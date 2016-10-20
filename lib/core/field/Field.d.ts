@@ -5,7 +5,7 @@ import { IQEntity } from "../entity/Entity";
 import { JSONBaseOperation, IOperation } from "../operation/Operation";
 import { JSONFieldInOrderBy } from "./FieldInOrderBy";
 import { JSONSqlFunctionCall } from "./Functions";
-import { Appliable, JSONClauseField } from "./Applicable";
+import { Appliable, JSONClauseField } from "./Appliable";
 export declare enum FieldType {
     BOOLEAN = 0,
     BOOLEAN_ARRAY = 1,

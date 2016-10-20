@@ -1,8 +1,9 @@
 import { IQEntity } from "./Entity";
 import { JoinType } from "../../query/sql/PHSQLQuery";
-import { Orderable, JSONClauseField } from "../field/Field";
+import { Orderable } from "../field/Field";
 import { JSONFieldInOrderBy } from "../field/FieldInOrderBy";
 import { JSONSqlFunctionCall } from "../field/Functions";
+import { JSONClauseField } from "../field/Appliable";
 /**
  * Created by Papa on 4/26/2016.
  */

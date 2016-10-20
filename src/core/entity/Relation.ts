@@ -1,8 +1,9 @@
 import {IQEntity, QEntity} from "./Entity";
 import {JoinType} from "../../query/sql/PHSQLQuery";
-import {Orderable, JSONClauseField, JSONClauseObjectType} from "../field/Field";
+import {Orderable} from "../field/Field";
 import {JSONFieldInOrderBy, SortOrder, FieldInOrderBy} from "../field/FieldInOrderBy";
 import {SqlFunction, JSONSqlFunctionCall} from "../field/Functions";
+import {JSONClauseField, JSONClauseObjectType} from "../field/Appliable";
 /**
  * Created by Papa on 4/26/2016.
  */

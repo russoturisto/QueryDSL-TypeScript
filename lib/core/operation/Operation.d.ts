@@ -2,12 +2,16 @@
  * Created by Papa on 4/21/2016.
  */
 import { FieldType } from "../field/Field";
+export declare enum OperationCategory {
+    BOOLEAN = 0,
+    DATE = 1,
+    LOGICAL = 2,
+    NUMBER = 3,
+    STRING = 4,
+}
 export interface JSONBaseOperation {
-    "$eq"?: Date;
-    "$exists"?: boolean;
-    "$in"?: Date[];
-    "$ne"?: Date;
-    "$nin"?: Date[];
+    operator: string;
+    category: OperationCategory;
 }
 export interface IOperation<T, JO extends JSONBaseOperation> {
     type: FieldType;

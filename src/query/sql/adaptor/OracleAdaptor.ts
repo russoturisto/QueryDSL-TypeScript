@@ -1,5 +1,5 @@
 import {SQLDialect, SQLDataType} from "../SQLStringQuery";
-import {ISQLAdaptor} from "./SQLAdaptor";
+import {ISQLAdaptor, ISQLFunctionAdaptor} from "./SQLAdaptor";
 /**
  * Created by Papa on 8/27/2016.
  */
@@ -28,5 +28,9 @@ export class OracleAdaptor implements ISQLAdaptor {
 		defaultValue:any
 	):any {
 		throw `Not implemented - getResultCellValue`;
+	}
+
+	getFunctionAdaptor(): ISQLFunctionAdaptor {
+		throw `Not implemented getFunctionAdaptor`;
 	}
 }

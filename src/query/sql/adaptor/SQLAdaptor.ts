@@ -2,6 +2,8 @@ import {SQLDialect, SQLDataType} from "../SQLStringQuery";
 import {OracleAdaptor} from "./OracleAdaptor";
 import {SqLiteAdaptor} from "./SqLiteAdaptor";
 import {JSONSqlFunctionCall} from "../../../core/field/Functions";
+import {Appliable, ISQLFunctionAdaptor} from "../../../core/field/Appliable";
+import {IQEntity} from "../../../core/entity/Entity";
 /**
  * Created by Papa on 8/27/2016.
  */
@@ -32,15 +34,6 @@ export interface ISQLAdaptor {
 	): any;
 
 	getFunctionAdaptor(): ISQLFunctionAdaptor;
-}
-
-export interface ISQLFunctionAdaptor {
-
-	getFunctionCall(
-		jsonFunctionCall: JSONSqlFunctionCall,
-		value: string
-	):string;
-
 }
 
 export function getSQLAdaptor(
