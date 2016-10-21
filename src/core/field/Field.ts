@@ -88,7 +88,7 @@ implements IQField<IQ, T, JO, IO> {
 	}
 
 	protected getFieldKey() {
-		let key = `${QRelation.getPositionAlias(this.q.fromClausePosition)}.${this.fieldName}`;
+		let key = `${QRelation.getPositionAlias(this.q.rootEntityPrefix, this.q.fromClausePosition)}.${this.fieldName}`;
 
 		return key;
 	}
@@ -181,7 +181,7 @@ implements IQField<IQ, T, JO, IO> {
 		return {
 			appliedFunctions: this.appliedFunctions,
 			propertyName: this.fieldName,
-			tableAlias: QRelation.getPositionAlias(this.q.fromClausePosition),
+			tableAlias: QRelation.getPositionAlias(this.q.rootEntityPrefix, this.q.fromClausePosition),
 			type: JSONClauseObjectType.FIELD
 		};
 	}

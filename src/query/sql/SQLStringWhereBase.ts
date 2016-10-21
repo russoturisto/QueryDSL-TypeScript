@@ -11,6 +11,7 @@ import {EntityMetadata} from "../../core/entity/EntityMetadata";
 import {FieldMap} from "./FieldMap";
 import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
 import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
+import {JSONLogicalOperation} from "../../core/operation/LogicalOperation";
 /**
  * Created by Papa on 10/2/2016.
  */
@@ -33,121 +34,127 @@ export abstract class SQLStringWhereBase<IE extends IEntity> {
 
 	protected getWHEREFragment(
 		operation: JSONBaseOperation,
-		nestingIndex: number,
+		nestingPrefix: string,
 		joinNodeMap: {[alias: string]: JoinTreeNode},
 		embedParameters: boolean = true,
 		parameters: any[] = null
 	): string {
 		let whereFragment = '';
+		nestingPrefix = `${nestingPrefix}  `;
 
-		let nestingPrefix = '';
-		for (let i = 0; i < nestingIndex; i++) {
-			nestingPrefix += '\t';
+		switch (operation.category) {
+			case OperationCategory.LOGICAL:
+				return this.getLogicalWhereFragment(<JSONLogicalOperation>operation, nestingPrefix, joinNodeMap, embedParameters, parameters);
+			case OperationCategory.BOOLEAN:
+				let aliasColumnPair = property.split('.');
+				if (aliasColumnPair.length != 2) {
+					throw `Expecting 'alias.column' instead of ${property}`;
+				}
+				let alias = aliasColumnPair[0];
+				let joinNode = joinNodeMap[alias];
+				if (!joinNode) {
+					throw `Unknown alias '${alias}' in WHERE clause`;
+				}
+				let qEntity = this.qEntityMapByAlias[alias];
+				let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
+				let propertyName = aliasColumnPair[1];
+				if (entityMetadata.manyToOneMap[propertyName]) {
+					throw `Found @ManyToOne property '${alias}.${propertyName}' -  cannot be used in a WHERE clause.`;
+				} else if (entityMetadata.oneToManyMap[propertyName]) {
+					throw `Found @OneToMany property '${alias}.${propertyName}' -  cannot be used in a WHERE clause.`;
+				} else if (entityMetadata.transient[propertyName]) {
+					throw `Found @Transient property '${alias}.${propertyName}' -  cannot be used in a WHERE clause.`;
+				}
+
+				let field = qEntity.__entityFieldMap__[propertyName];
+				if (!field) {
+					throw `Did not find field '${alias}.${propertyName}' used in the WHERE clause.`;
+				}
+
+				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, alias);
+				whereFragment = `${alias}.${columnName} `;
+
+				let valueOperation = operation[property];
+				let fieldOperation;
+				for (let operationProperty in valueOperation) {
+					if (fieldOperation) {
+						throw `More than one operation (${fieldOperation}, ${operationProperty}, ...) is defined on field '${alias}.${propertyName}' used in the WHERE clause.`;
+					}
+					fieldOperation = operationProperty;
+				}
+
+				let operatorAndValueFragment;
+				let value = valueOperation[fieldOperation];
+				if (field instanceof QBooleanField) {
+					operatorAndValueFragment = this.getCommonOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.stringTypeCheck, 'boolean', embedParameters, parameters);
+					if (!operatorAndValueFragment) {
+						throw `Unexpected operation '${fieldOperation}' on field '${alias}.${propertyName}' in the WHERE clause.`
+					}
+				} else if (field instanceof QDateField) {
+					operatorAndValueFragment = this.getComparibleOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.numberTypeCheck, 'Date', embedParameters, parameters, this.sqlAdaptor.dateToDbQuery);
+				} else if (field instanceof QNumberField) {
+					operatorAndValueFragment = this.getComparibleOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.numberTypeCheck, 'number', embedParameters, parameters);
+
+				} else if (field instanceof QStringField) {
+					operatorAndValueFragment = this.getCommonOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.stringTypeCheck, 'string', embedParameters, parameters, this.sanitizeStringValue);
+					if (!operatorAndValueFragment) {
+						switch (fieldOperation) {
+							case '$like':
+								if (typeof value != 'string') {
+									this.throwValueOnOperationError('string', '$like (LIKE)', alias, propertyName);
+								}
+								value = this.sanitizeStringValue(value, embedParameters);
+								if (!embedParameters) {
+									parameters.push(value);
+									value = '?';
+								}
+								operatorAndValueFragment = `LIKE ${value}`;
+								break;
+							default:
+								throw `Unexpected operation '${fieldOperation}' on field '${alias}.${propertyName}' in the WHERE clause.`;
+						}
+					}
+				} else {
+					throw `Unexpected type '${(<any>field.constructor).name}' of field '${alias}.${propertyName}' for operation '${fieldOperation}' in the WHERE clause.`;
+				}
+
+				whereFragment += operatorAndValueFragment;
+				break;
 		}
 
-			let operator;
-			switch (operation.category) {
-				case OperationCategory.LOGICAL:
-					switch (operation.operator) {
-						case '$and':
-							operator = 'AND';
-						case '$or':
-							operator = 'OR';
-
-					}
-					let childOperations = operation[property];
-					if (!(childOperations instanceof Array)) {
-						throw `Expecting an array of child operations as a value for operator ${operator}, in the WHERE Clause.`;
-					}
-					whereFragment = childOperations.map(( childOperation ) => {
-						this.getWHEREFragment(childOperation, nestingIndex + 1, joinNodeMap, embedParameters, parameters);
-					}).join(`\n${nestingPrefix}${operator} `);
-					whereFragment = `( ${whereFragment} )`;
-					break;
-				case '$not':
-					operator = 'NOT';
-					whereFragment = `${operator} ${this.getWHEREFragment(operation[property], nestingIndex + 1, joinNodeMap, embedParameters, parameters)}`;
-					break;
-				default:
-			}
-			case B
-					let aliasColumnPair = property.split('.');
-					if (aliasColumnPair.length != 2) {
-						throw `Expecting 'alias.column' instead of ${property}`;
-					}
-					let alias = aliasColumnPair[0];
-					let joinNode = joinNodeMap[alias];
-					if (!joinNode) {
-						throw `Unknown alias '${alias}' in WHERE clause`;
-					}
-					let qEntity = this.qEntityMapByAlias[alias];
-					let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
-					let propertyName = aliasColumnPair[1];
-					if (entityMetadata.manyToOneMap[propertyName]) {
-						throw `Found @ManyToOne property '${alias}.${propertyName}' -  cannot be used in a WHERE clause.`;
-					} else if (entityMetadata.oneToManyMap[propertyName]) {
-						throw `Found @OneToMany property '${alias}.${propertyName}' -  cannot be used in a WHERE clause.`;
-					} else if (entityMetadata.transient[propertyName]) {
-						throw `Found @Transient property '${alias}.${propertyName}' -  cannot be used in a WHERE clause.`;
-					}
-
-					let field = qEntity.__entityFieldMap__[propertyName];
-					if (!field) {
-						throw `Did not find field '${alias}.${propertyName}' used in the WHERE clause.`;
-					}
-
-					let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, alias);
-					whereFragment = `${alias}.${columnName} `;
-
-					let valueOperation = operation[property];
-					let fieldOperation;
-					for (let operationProperty in valueOperation) {
-						if (fieldOperation) {
-							throw `More than one operation (${fieldOperation}, ${operationProperty}, ...) is defined on field '${alias}.${propertyName}' used in the WHERE clause.`;
-						}
-						fieldOperation = operationProperty;
-					}
-
-					let operatorAndValueFragment;
-					let value = valueOperation[fieldOperation];
-					if (field instanceof QBooleanField) {
-						operatorAndValueFragment = this.getCommonOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.stringTypeCheck, 'boolean', embedParameters, parameters);
-						if (!operatorAndValueFragment) {
-							throw `Unexpected operation '${fieldOperation}' on field '${alias}.${propertyName}' in the WHERE clause.`
-						}
-					} else if (field instanceof QDateField) {
-						operatorAndValueFragment = this.getComparibleOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.numberTypeCheck, 'Date', embedParameters, parameters, this.sqlAdaptor.dateToDbQuery);
-					} else if (field instanceof QNumberField) {
-						operatorAndValueFragment = this.getComparibleOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.numberTypeCheck, 'number', embedParameters, parameters);
-
-					} else if (field instanceof QStringField) {
-						operatorAndValueFragment = this.getCommonOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.stringTypeCheck, 'string', embedParameters, parameters, this.sanitizeStringValue);
-						if (!operatorAndValueFragment) {
-							switch (fieldOperation) {
-								case '$like':
-									if (typeof value != 'string') {
-										this.throwValueOnOperationError('string', '$like (LIKE)', alias, propertyName);
-									}
-									value = this.sanitizeStringValue(value, embedParameters);
-									if (!embedParameters) {
-										parameters.push(value);
-										value = '?';
-									}
-									operatorAndValueFragment = `LIKE ${value}`;
-									break;
-								default:
-									throw `Unexpected operation '${fieldOperation}' on field '${alias}.${propertyName}' in the WHERE clause.`;
-							}
-						}
-					} else {
-						throw `Unexpected type '${(<any>field.constructor).name}' of field '${alias}.${propertyName}' for operation '${fieldOperation}' in the WHERE clause.`;
-					}
-
-					whereFragment += operatorAndValueFragment;
-					break;
-			}
-
 		return whereFragment;
+	}
+
+	private getLogicalWhereFragment(
+		operation: JSONLogicalOperation,
+		nestingPrefix: string,
+		joinNodeMap: {[alias: string]: JoinTreeNode},
+		embedParameters: boolean = true,
+		parameters: any[] = null
+	) {
+		let operator;
+		switch (operation.operator) {
+			case '$and':
+				operator = 'AND';
+				break;
+			case '$or':
+				operator = 'OR';
+				break;
+			case '$not':
+				operator = 'NOT';
+				return `${operator} (${this.getWHEREFragment(<JSONBaseOperation>operation.value, nestingPrefix, joinNodeMap, embedParameters, parameters)})`;
+			default:
+				throw `Unknown logical operator: ${operation.operator}`;
+		}
+		let childOperations = <JSONBaseOperation[]>operation.value;
+		if (!(childOperations instanceof Array)) {
+			throw `Expecting an array of child operations as a value for operator ${operator}, in the WHERE Clause.`;
+		}
+		let whereFragment = childOperations.map(( childOperation ) => {
+			this.getWHEREFragment(childOperation, nestingPrefix, joinNodeMap, embedParameters, parameters);
+		}).join(`\n${nestingPrefix}${operator} `);
+
+		return `( ${whereFragment} )`;
 	}
 
 	private getComparibleOperatorAndValueFragment<T>(

@@ -8,9 +8,30 @@ const ALIASES = ['a', 'b', 'c', 'd', 'e',
 	'p', 'q', 'r', 's', 't',
 	'u', 'v', 'w', 'x', 'y', 'z'];
 
+
+const lastRootEntityName = [-1, -1, -1];
+
+export function getNextRootEntityName(): string {
+	let currentName = this.lastRootEntityName;
+	for (var i = 2; i >= 0; i--) {
+		let currentIndex = currentName[i];
+		currentIndex = (currentIndex + 1) % 26;
+		currentName[i] = currentIndex;
+		if (currentIndex !== 0) {
+			break;
+		}
+	}
+	let nameString = '';
+	for (var i = 0; i < 3; i++) {
+		nameString += ALIASES[currentName[i]];
+	}
+
+	return nameString;
+}
+
 export class ColumnAliases {
 	numFields: number = 0;
-	private lastAlias = [-1, -1];
+	private lastAlias = [-1, -1, -1];
 	private columnAliasMap: {[aliasPropertyCombo: string]: string} = {};
 
 	addAlias(
@@ -43,7 +64,7 @@ export class ColumnAliases {
 
 	private getNextAlias(): string {
 		let currentAlias = this.lastAlias;
-		for (var i = 1; i >= 0; i--) {
+		for (var i = 2; i >= 0; i--) {
 			let currentIndex = currentAlias[i];
 			currentIndex = (currentIndex + 1) % 26;
 			currentAlias[i] = currentIndex;
@@ -52,7 +73,7 @@ export class ColumnAliases {
 			}
 		}
 		let aliasString = '';
-		for (var i = 0; i < 2; i++) {
+		for (var i = 0; i < 3; i++) {
 			aliasString += ALIASES[currentAlias[i]];
 		}
 

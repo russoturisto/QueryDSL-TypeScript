@@ -3,7 +3,8 @@
  */
 
 import {IQEntity} from "../entity/Entity";
-import {Orderable, JSONClauseField} from "./Field";
+import {Orderable} from "./Field";
+import {JSONClauseField} from "./Appliable";
 
 export interface JSONFieldInOrderBy {
 	field: JSONClauseField;

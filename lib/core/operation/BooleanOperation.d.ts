@@ -1,15 +1,12 @@
-import { JSONBaseOperation, Operation, IOperation } from "./Operation";
-import { JSONClauseObject } from "../field/Appliable";
+import { ValueOperation, IValueOperation, JSONValueOperation } from "./Operation";
 /**
  * Created by Papa on 6/20/2016.
  */
-export interface JSONBooleanOperation extends JSONBaseOperation {
+export interface JSONBooleanOperation extends JSONValueOperation<boolean> {
     operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin";
-    lValue: JSONClauseObject | JSONClauseObject[] | boolean | boolean[];
-    rValue: JSONClauseObject | JSONClauseObject[] | boolean | boolean[];
 }
-export interface IBooleanOperation extends IOperation<boolean, JSONBooleanOperation> {
+export interface IBooleanOperation extends IValueOperation<boolean, JSONBooleanOperation> {
 }
-export declare class BooleanOperation extends Operation<boolean, JSONBooleanOperation> implements IBooleanOperation {
+export declare class BooleanOperation extends ValueOperation<boolean, JSONBooleanOperation> implements IBooleanOperation {
     constructor();
 }

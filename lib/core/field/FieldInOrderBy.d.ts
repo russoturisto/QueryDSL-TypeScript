@@ -2,7 +2,8 @@
  * Created by Papa on 10/16/2016.
  */
 import { IQEntity } from "../entity/Entity";
-import { Orderable, JSONClauseField } from "./Field";
+import { Orderable } from "./Field";
+import { JSONClauseField } from "./Appliable";
 export interface JSONFieldInOrderBy {
     field: JSONClauseField;
     sortOrder: SortOrder;

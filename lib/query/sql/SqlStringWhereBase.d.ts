@@ -40,7 +40,20 @@ export declare abstract class SQLStringWhereBase<IE extends IEntity> {
             [propertyName: string]: boolean;
         };
     }, dialect: SQLDialect);
-    protected getWHEREFragment(operation: JSONBaseOperation, nestingIndex: number, joinNodeMap: {
+    protected getWHEREFragment(operation: JSONBaseOperation, nestingPrefix: string, joinNodeMap: {
         [alias: string]: JoinTreeNode;
     }, embedParameters?: boolean, parameters?: any[]): string;
+    private getLogicalWhereFragment(operation, nestingPrefix, joinNodeMap, embedParameters?, parameters?);
+    private getComparibleOperatorAndValueFragment<T>(fieldOperation, value, alias, propertyName, typeCheckFunction, typeName, embedParameters?, parameters?, conversionFunction?);
+    private getCommonOperatorAndValueFragment<T>(fieldOperation, value, alias, propertyName, typeCheckFunction, typeName, embedParameters?, parameters?, conversionFunction?);
+    protected getEntityPropertyColumnName(qEntity: IQEntity, propertyName: string, tableAlias: string): string;
+    protected getTableName(qEntity: IQEntity): string;
+    private throwValueOnOperationError(valueType, operation, alias, propertyName);
+    protected sanitizeStringValue(value: string, embedParameters: boolean): string;
+    protected booleanTypeCheck(valueToCheck: any): boolean;
+    protected dateTypeCheck(valueToCheck: any): boolean;
+    protected numberTypeCheck(valueToCheck: any): boolean;
+    protected stringTypeCheck(valueToCheck: any): boolean;
+    protected addField(entityName: string, tableName: string, propertyName: string, columnName: string): void;
+    protected warn(warning: string): void;
 }

@@ -2,7 +2,9 @@
  * Created by Papa on 4/21/2016.
  */
 import {FieldType} from "../field/Field";
-import {JSONClauseObject} from "../field/Appliable";
+import {JSONClauseObject, Appliable} from "../field/Appliable";
+import {IQEntity} from "../entity/Entity";
+import {PHSQLQuery, PHRawSQLQuery, PHFlatSQLQuery, PHRawFlatSQLQuery} from "../../query/sql/PHSQLQuery";
 
 export enum OperationCategory {
 	BOOLEAN,
@@ -17,20 +19,28 @@ export interface JSONBaseOperation {
 	category: OperationCategory;
 }
 
+export interface JSONValueOperation<T> extends JSONBaseOperation {
+	lValue:JSONClauseObject;
+	rValue:JSONClauseObject | JSONClauseObject[] | T | T[];
+}
+
 export interface IOperation<T, JO extends JSONBaseOperation> {
+}
+
+export interface IValueOperation<T, JO extends JSONBaseOperation> extends IOperation<T, JO> {
 
 	type: FieldType;
 
-	equals(
-		value: T
+	equals<JCO extends JSONClauseObject, IQ extends IQEntity>(
+		value: T | Appliable<JCO, IQ> | PHRawSQLQuery
 	): JO;
 
 	exists(
-		exists: boolean
+		exists: PHRawFlatSQLQuery
 	): JO;
 
-	isIn(
-		values: T[]
+	isIn<JCO extends JSONClauseObject, IQ extends IQEntity>(
+		values: (T | Appliable<JCO, IQ>)[]
 	): JO;
 
 
@@ -38,8 +48,9 @@ export interface IOperation<T, JO extends JSONBaseOperation> {
 
 	isNull(): JO;
 
+	TODO: work here next
 	notEquals(
-		value: T
+		value: T | PHRawFlatSQLQuery
 	): JO;
 
 	notIn(
@@ -54,6 +65,16 @@ export abstract class Operation<T, JO extends JSONBaseOperation> implements IOpe
 	constructor(
 		public type: FieldType
 	) {
+	}
+
+}
+
+export abstract class ValueOperation<T, JO extends JSONValueOperation> extends Operation<T, JO> implements IValueOperation<T, JO> {
+
+	constructor(
+		public type: FieldType
+	) {
+		super(type);
 	}
 
 	equals(

@@ -6,7 +6,7 @@ import { JSONClauseObject } from "../field/Appliable";
  */
 export interface JSONStringOperation extends JSONBaseOperation {
     operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin" | "$like";
-    lValue: JSONClauseObject | JSONClauseObject[] | string | string[];
+    lValue: JSONClauseObject;
     rValue: JSONClauseObject | JSONClauseObject[] | string | string[];
 }
 export interface IStringOperation extends IOperation<string, JSONStringOperation> {

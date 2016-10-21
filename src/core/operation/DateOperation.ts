@@ -8,7 +8,7 @@ import {JSONClauseObject} from "../field/Appliable";
 
 export interface JSONDateOperation extends JSONBaseOperation {
 	operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin" | "$gt" | "$gte" | "$lt" | "$lte";
-	lValue:JSONClauseObject | JSONClauseObject[] | Date | Date[];
+	lValue:JSONClauseObject;
 	rValue:JSONClauseObject | JSONClauseObject[] | Date | Date[];
 }
 

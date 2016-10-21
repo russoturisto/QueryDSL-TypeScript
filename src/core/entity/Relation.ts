@@ -22,6 +22,7 @@ export enum RelationType {
 }
 
 export interface JSONRelation {
+	rootEntityName: string;
 	fromClausePosition: number[];
 	entityName: string;
 	joinType: JoinType;
@@ -59,12 +60,15 @@ export abstract class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> im
 	 }
 	 */
 
-	static getPositionAlias( fromClausePosition: number[] ) {
-		return `rt_${fromClausePosition.join('_')}`;
+	static getPositionAlias(
+		rootEntityName: string,
+		fromClausePosition: number[]
+	) {
+		return `${rootEntityName}_${fromClausePosition.join('_')}`;
 	}
 
 	static getAlias( jsonRelation: JSONRelation ): string {
-		return this.getPositionAlias(jsonRelation.fromClausePosition);
+		return this.getPositionAlias(jsonRelation.rootEntityName, jsonRelation.fromClausePosition);
 	}
 
 	static getParentAlias( jsonRelation: JSONRelation ): string {
@@ -72,7 +76,7 @@ export abstract class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> im
 		if (position.length === 0) {
 			throw `Cannot find alias of a parent entity for the root entity`;
 		}
-		return this.getPositionAlias(position.slice(0, position.length - 1));
+		return this.getPositionAlias(jsonRelation.rootEntityName, position.slice(0, position.length - 1));
 	}
 
 	constructor(
@@ -139,7 +143,7 @@ extends QRelation<IQR, R, IQ> implements IQManyToOneRelation<IQR, R, IQ> {
 		super(q, qConstructor, RelationType.MANY_TO_ONE, entityName, propertyName, relationEntityConstructor, relationQEntityConstructor);
 	}
 
-	get fieldName():string {
+	get fieldName(): string {
 		return this.propertyName;
 	}
 
@@ -163,7 +167,7 @@ extends QRelation<IQR, R, IQ> implements IQManyToOneRelation<IQR, R, IQ> {
 		return {
 			appliedFunctions: this.appliedFunctions,
 			propertyName: this.fieldName,
-			tableAlias: QRelation.getPositionAlias(this.q.fromClausePosition),
+			tableAlias: QRelation.getPositionAlias(this.q.rootEntityPrefix, this.q.fromClausePosition),
 			type: JSONClauseObjectType.MANY_TO_ONE_RELATION
 		};
 	}

@@ -1,3 +1,4 @@
+export declare function getNextRootEntityName(): string;
 export declare class ColumnAliases {
     numFields: number;
     private lastAlias;

@@ -1,6 +1,6 @@
 import {FieldType} from "../field/Field";
 import {OperationType} from "./OperationType";
-import {JSONBaseOperation, Operation, IOperation} from "./Operation";
+import {JSONBaseOperation, Operation, IOperation, IValueOperation} from "./Operation";
 import {JSONStringOperation} from "./StringOperation";
 import {JSONClauseObject} from "../field/Appliable";
 /**
@@ -9,11 +9,11 @@ import {JSONClauseObject} from "../field/Appliable";
 
 export interface JSONNumberOperation extends JSONBaseOperation {
 	operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin" | "$gt" | "$gte" | "$lt" | "$lte";
-	lValue:JSONClauseObject | JSONClauseObject[] | number | number[];
+	lValue:JSONClauseObject;
 	rValue:JSONClauseObject | JSONClauseObject[] | number | number[];
 }
 
-export interface INumberOperation extends IOperation<number, JSONStringOperation> {
+export interface INumberOperation extends IValueOperation<number, JSONStringOperation> {
 
 
 	greaterThan(

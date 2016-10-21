@@ -17,6 +17,7 @@ export declare enum RelationType {
     MANY_TO_ONE = 1,
 }
 export interface JSONRelation {
+    rootEntityName: string;
     fromClausePosition: number[];
     entityName: string;
     joinType: JoinType;
@@ -44,7 +45,7 @@ export declare abstract class QRelation<IQR extends IQEntity, R, IQ extends IQEn
     propertyName: string;
     relationEntityConstructor: new () => R;
     relationQEntityConstructor: new (...args: any[]) => IQR;
-    static getPositionAlias(fromClausePosition: number[]): string;
+    static getPositionAlias(rootEntityName: string, fromClausePosition: number[]): string;
     static getAlias(jsonRelation: JSONRelation): string;
     static getParentAlias(jsonRelation: JSONRelation): string;
     constructor(q: IQ, qConstructor: new () => IQ, relationType: RelationType, entityName: string, propertyName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR);

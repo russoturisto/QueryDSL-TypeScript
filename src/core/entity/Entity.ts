@@ -5,6 +5,7 @@ import {IQField} from "../field/Field";
 import {IQRelation, JSONRelation} from "./Relation";
 import {JoinType} from "../../query/sql/PHSQLQuery";
 import {JSONBaseOperation, IOperation} from "../operation/Operation";
+import {getNextRootEntityName} from "./ColumnAliases";
 
 /**
  * Marker interface for all query interfaces
@@ -21,6 +22,7 @@ export interface IQEntity {
 	__entityName__: string;
 	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any, IQEntity>};
 
+	rootEntityPrefix:string;
 	fromClausePosition: number[];
 	joinType: JoinType;
 
@@ -63,7 +65,8 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 		public __qEntityConstructor__: {new( ...args: any[] ): any},
 		public __entityConstructor__: {new(): any},
 		public __entityName__: string,
-		public fromClausePosition: number[],
+		public rootEntityPrefix:string = getNextRootEntityName(),
+		public fromClausePosition: number[] = [],
 		public relationPropertyName = null,
 		public joinType: JoinType = null
 	) {
@@ -86,6 +89,7 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 
 	getRelationJson(): JSONRelation {
 		return {
+			rootEntityName: this.rootEntityPrefix,
 			fromClausePosition: this.fromClausePosition,
 			entityName: this.__entityName__,
 			joinType: this.joinType,
