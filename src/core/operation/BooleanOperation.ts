@@ -10,8 +10,6 @@ import {PHRawFieldSQLQuery} from "../../query/sql/PHSQLQuery";
  * Created by Papa on 6/20/2016.
  */
 
-TODO: next, define code for converting from Raw JSON operations to Pure JSON Operations
-
 export interface JSONRawBooleanOperation<IQ extends IQEntity> extends JSONRawValueOperation<IQBooleanField<IQ>> {
 	operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin";
 	lValue: IQBooleanField<IQ>;

@@ -36,7 +36,7 @@ export interface PHRawEntitySQLQuery<IE extends IEntity> extends PHRawSQLQuery {
 
 export interface PHRawNonEntitySQLQuery extends PHRawSQLQuery {
 	from: IQEntity[];
-	groupBy?: (IQField<any, any, any, any> | IQManyToOneRelation<any, any, any>)[];
+	groupBy?: IQField<any, any, any, any, any>[];
 	having?: JSONRawValueOperation<any>[],
 	limit?: number;
 	offset?: number;
@@ -174,33 +174,3 @@ export class PHObjectSQLQuery<IE extends IEntity> implements PHSQLQuery {
 }
 
 
-export class PHFlatSQLQuery implements PHSQLQuery {
-
-	constructor(
-		public phRawQuery: PHRawNonEntitySQLQuery,
-		public qEntity: QEntity<any>,
-		public qEntityMap: {[entityName: string]: QEntity<any>},
-		public entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
-		public entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}}
-	) {
-	}
-
-	toSQL(): PHJsonFlatSQLQuery {
-
-		let jsonObjectSqlQuery: PHJsonFlatSQLQuery = <PHJsonFlatSQLQuery>getCommonJsonQuery(this.phRawQuery, true);
-
-		let groupBy: JSONClauseObject[] = [];
-		if (this.phRawQuery.groupBy) {
-			groupBy = this.phRawQuery.groupBy.map(( appliable ) => {
-				return appliable.toJSON();
-			});
-		}
-
-		jsonObjectSqlQuery.groupBy = groupBy;
-		jsonObjectSqlQuery.having = this.phRawQuery.having;
-
-		return jsonObjectSqlQuery;
-
-	}
-
-}

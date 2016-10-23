@@ -1,5 +1,5 @@
 import { IEntity, QEntity, IQEntity } from "../../core/entity/Entity";
-import { RelationRecord, JSONRelation, IQManyToOneRelation } from "../../core/entity/Relation";
+import { RelationRecord, JSONRelation } from "../../core/entity/Relation";
 import { JSONBaseOperation, JSONRawValueOperation } from "../../core/operation/Operation";
 import { PHQuery, PHRawQuery } from "../PHQuery";
 import { JSONFieldInOrderBy } from "../../core/field/FieldInOrderBy";
@@ -19,7 +19,7 @@ export interface PHRawEntitySQLQuery<IE extends IEntity> extends PHRawSQLQuery {
 }
 export interface PHRawNonEntitySQLQuery extends PHRawSQLQuery {
     from: IQEntity[];
-    groupBy?: (IQField<any, any, any, any> | IQManyToOneRelation<any, any, any>)[];
+    groupBy?: IQField<any, any, any, any, any>[];
     having?: JSONRawValueOperation<any>[];
     limit?: number;
     offset?: number;
@@ -97,33 +97,4 @@ export declare class PHObjectSQLQuery<IE extends IEntity> implements PHSQLQuery 
         };
     });
     toSQL(): PHJsonObjectSQLQuery<IE>;
-}
-export declare class PHFlatSQLQuery implements PHSQLQuery {
-    phRawQuery: PHRawNonEntitySQLQuery;
-    qEntity: QEntity<any>;
-    qEntityMap: {
-        [entityName: string]: QEntity<any>;
-    };
-    entitiesRelationPropertyMap: {
-        [entityName: string]: {
-            [propertyName: string]: RelationRecord;
-        };
-    };
-    entitiesPropertyTypeMap: {
-        [entityName: string]: {
-            [propertyName: string]: boolean;
-        };
-    };
-    constructor(phRawQuery: PHRawNonEntitySQLQuery, qEntity: QEntity<any>, qEntityMap: {
-        [entityName: string]: QEntity<any>;
-    }, entitiesRelationPropertyMap: {
-        [entityName: string]: {
-            [propertyName: string]: RelationRecord;
-        };
-    }, entitiesPropertyTypeMap: {
-        [entityName: string]: {
-            [propertyName: string]: boolean;
-        };
-    });
-    toSQL(): PHJsonFlatSQLQuery;
 }

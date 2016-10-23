@@ -2,8 +2,8 @@
  * Created by Papa on 4/21/2016.
  */
 import {IQField} from "../field/Field";
-import {IQRelation, JSONRelation} from "./Relation";
-import {JoinType} from "../../query/sql/PHSQLQuery";
+import {IQRelation, JSONRelation, JoinFields} from "./Relation";
+import {JoinType, PHRawMappedSQLQuery} from "../../query/sql/PHSQLQuery";
 import {JSONBaseOperation, IOperation} from "../operation/Operation";
 import {getNextRootEntityName} from "./Aliases";
 import {IQNumberField} from "../field/NumberField";
@@ -99,6 +99,24 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 			relationPropertyName: this.relationPropertyName
 		};
 	}
+
+	innerJoin<IQ extends IQEntity, IE>(
+	    entity:IQ | PHRawMappedSQLQuery<IE>
+    ):JoinFields {
+
+    }
+
+    fullJoin() {
+
+    }
+
+	leftJoin() {
+
+    }
+
+    rightJoin() {
+
+    }
 
 	/*
 	 addOperation<O extends IOperation<IQ>>(

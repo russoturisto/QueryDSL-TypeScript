@@ -2,6 +2,9 @@ import { ValueOperation, IValueOperation, JSONRawValueOperation } from "./Operat
 import { IQBooleanField } from "../field/BooleanField";
 import { IQEntity } from "../entity/Entity";
 import { PHRawFieldSQLQuery } from "../../query/sql/PHSQLQuery";
+/**
+ * Created by Papa on 6/20/2016.
+ */
 export interface JSONRawBooleanOperation<IQ extends IQEntity> extends JSONRawValueOperation<IQBooleanField<IQ>> {
     operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin";
     lValue: IQBooleanField<IQ>;
