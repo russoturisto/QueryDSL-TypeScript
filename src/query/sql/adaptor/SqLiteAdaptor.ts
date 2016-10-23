@@ -113,7 +113,7 @@ export class SqlLiteFunctionAdaptor extends AbstractFunctionAdaptor {
 					let formatParam = jsonFunctionCall.parameters[i];
 					switch ((<JSONClauseObject>formatParam).type) {
 						case JSONClauseObjectType.FIELD:
-						case JSONClauseObjectType.FUNCTION:
+						case JSONClauseObjectType.FIELD_FUNCTION:
 						case JSONClauseObjectType.MANY_TO_ONE_RELATION:
 							formatParam = this.getFunctionCalls(formatParam, qEntityMapByAlias);
 							break;

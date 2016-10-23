@@ -5,7 +5,7 @@ import { FieldMap } from "./FieldMap";
 import { SQLStringWhereBase } from "./SQLStringWhereBase";
 import { JSONFieldInOrderBy } from "../../core/field/FieldInOrderBy";
 import { IOrderByParser } from "./query/orderBy/IOrderByParser";
-import { ColumnAliases } from "../../core/entity/ColumnAliases";
+import { ColumnAliases } from "../../core/entity/Aliases";
 import { JoinTreeNode } from "../../core/entity/JoinTreeNode";
 /**
  * Created by Papa on 8/20/2016.
@@ -35,8 +35,9 @@ export declare enum QueryResultType {
     FLAT = 1,
     FLATTENED = 2,
     HIERARCHICAL = 3,
-    PLAIN = 4,
-    RAW = 5,
+    MAPPED = 4,
+    PLAIN = 5,
+    RAW = 6,
 }
 /**
  * String based SQL query.

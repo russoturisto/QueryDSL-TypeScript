@@ -1,5 +1,4 @@
-import {JSONBaseOperation} from "../operation/Operation";
-import {BooleanOperation, JSONBooleanOperation, IBooleanOperation} from "../operation/BooleanOperation";
+import {BooleanOperation, JSONRawBooleanOperation, IBooleanOperation} from "../operation/BooleanOperation";
 import {IQEntity} from "../entity/Entity";
 import {IQField, QField, FieldType} from "./Field";
 /**
@@ -7,26 +6,10 @@ import {IQField, QField, FieldType} from "./Field";
  */
 
 
-export interface JSONBooleanFieldOperation extends JSONBooleanOperation {
+export interface IQBooleanField<IQ extends IQEntity> extends IQField<IQ, boolean, JSONRawBooleanOperation<IQ>, IBooleanOperation<IQ>, IQBooleanField<IQ>> {
 }
 
-export interface IQBooleanField<IQ extends IQEntity> extends IQField<IQ, boolean, JSONBooleanFieldOperation, IBooleanOperation> {
-
-    equals(
-        value:boolean
-    ):JSONBooleanFieldOperation;
-
-    exists(
-        exists:boolean
-    ):JSONBooleanFieldOperation;
-
-    notEquals(
-        value:boolean
-    ):JSONBooleanFieldOperation;
-
-}
-
-export class QBooleanField<IQ extends IQEntity> extends QField<IQ, boolean, JSONBooleanFieldOperation, IBooleanOperation> implements IQBooleanField<IQ> {
+export class QBooleanField<IQ extends IQEntity> extends QField<IQ, boolean, JSONRawBooleanOperation<IQ>, IBooleanOperation<IQ>, IQBooleanField<IQ>> implements IQBooleanField<IQ> {
 
     constructor(
         q:IQ,
@@ -34,7 +17,7 @@ export class QBooleanField<IQ extends IQEntity> extends QField<IQ, boolean, JSON
         entityName:string,
         fieldName:string
     ) {
-        super(QBooleanField, q, qConstructor, entityName, fieldName, FieldType.BOOLEAN, new BooleanOperation());
+        super(QBooleanField, q, qConstructor, entityName, fieldName, FieldType.BOOLEAN, new BooleanOperation<IQ>());
     }
 
 }

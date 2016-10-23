@@ -1,35 +1,34 @@
 import {IQEntity} from "../entity/Entity";
 import {IQField, QField, FieldType} from "./Field";
-import {DateOperation, JSONDateOperation, IDateOperation} from "../operation/DateOperation";
+import {DateOperation, JSONRawDateOperation, IDateOperation} from "../operation/DateOperation";
+import {PHRawFieldSQLQuery} from "../../query/sql/PHSQLQuery";
+import {JSONSqlFunctionCall} from "./Functions";
+import {JSONClauseField, JSONClauseObjectType} from "./Appliable";
 /**
  * Created by Papa on 8/11/2016.
  */
 
-
-export interface JSONDateFieldOperation extends JSONDateOperation {
-}
-
-export interface IQDateField<IQ extends IQEntity> extends IQField<IQ, Date, JSONDateFieldOperation, IDateOperation> {
+export interface IQDateField<IQ extends IQEntity> extends IQField<IQ, Date, JSONRawDateOperation<IQ>, IDateOperation<IQ>, IQDateField<IQ>> {
 
     greaterThan(
-        greaterThan:Date
-    ):JSONDateFieldOperation;
+        value:Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
+    ):JSONRawDateOperation<IQ>;
 
     greaterThanOrEquals(
-        greaterThanOrEquals:Date
-    ):JSONDateFieldOperation;
+      value:Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
+    ):JSONRawDateOperation<IQ>;
 
     lessThan(
-        lessThan:Date
-    ):JSONDateFieldOperation;
+      value:Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
+    ):JSONRawDateOperation<IQ>;
 
     lessThanOrEquals(
-        lessThanOrEquals:Date
-    ):JSONDateFieldOperation;
+      value:Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
+    ):JSONRawDateOperation<IQ>;
 
 }
 
-export class QDateField<IQ extends IQEntity> extends QField<IQ, Date, JSONDateFieldOperation, IDateOperation> implements IQDateField<IQ> {
+export class QDateField<IQ extends IQEntity> extends QField<IQ, Date, JSONRawDateOperation<IQ>, IDateOperation<IQ>, IQDateField<IQ>> implements IQDateField<IQ> {
 
     constructor(
         q:IQ,
@@ -37,31 +36,52 @@ export class QDateField<IQ extends IQEntity> extends QField<IQ, Date, JSONDateFi
         entityName:string,
         fieldName:string
     ) {
-        super(QDateField, q, qConstructor, entityName, fieldName, FieldType.DATE, new DateOperation());
+        super(QDateField, q, qConstructor, entityName, fieldName, FieldType.DATE, new DateOperation<IQ>());
     }
 
     greaterThan(
-        greaterThan:Date
-    ):JSONDateFieldOperation {
-        return this.setOperation(this.operation.greaterThan(greaterThan));
+      value:Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
+    ):JSONRawDateOperation<IQ> {
+        return this.setOperation(this.operation.greaterThan(value));
     }
 
     greaterThanOrEquals(
-        greaterThanOrEquals:Date
-    ):JSONDateFieldOperation {
-        return this.setOperation(this.operation.greaterThanOrEquals(greaterThanOrEquals));
+      value:Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
+    ):JSONRawDateOperation<IQ> {
+        return this.setOperation(this.operation.greaterThanOrEquals(value));
     }
 
     lessThan(
-        lessThan:Date
-    ):JSONDateFieldOperation {
-        return this.setOperation(this.operation.lessThan(lessThan));
+      value:Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
+    ):JSONRawDateOperation<IQ> {
+        return this.setOperation(this.operation.lessThan(value));
     }
 
     lessThanOrEquals(
-        lessThanOrEquals:Date
-    ):JSONDateFieldOperation {
-        return this.setOperation(this.operation.lessThanOrEquals(lessThanOrEquals));
+      value:Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
+    ):JSONRawDateOperation<IQ> {
+        return this.setOperation(this.operation.lessThanOrEquals(value));
     }
 
+}
+
+export class QDateFunction extends QDateField<any> {
+    constructor() {
+        super(null, null, null, null);
+    }
+
+    applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQDateField<any> {
+        let functionApplicable = new QDateFunction();
+        functionApplicable.__appliedFunctions__ = functionApplicable.__appliedFunctions__.concat(this.__appliedFunctions__);
+        functionApplicable.__appliedFunctions__.push(sqlFunctionCall);
+
+        return functionApplicable;
+    }
+
+    toJSON(): JSONClauseField {
+        return {
+            __appliedFunctions__: this.__appliedFunctions__,
+            type: JSONClauseObjectType.FIELD_FUNCTION
+        };
+    }
 }

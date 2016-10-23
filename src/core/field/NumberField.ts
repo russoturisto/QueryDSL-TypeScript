@@ -1,67 +1,88 @@
 import {IQEntity} from "../entity/Entity";
 import {IQField, QField, FieldType} from "./Field";
-import {NumberOperation, JSONNumberOperation, INumberOperation} from "../operation/NumberOperation";
+import {NumberOperation, JSONRawNumberOperation, INumberOperation} from "../operation/NumberOperation";
+import {PHRawFieldSQLQuery} from "../../query/sql/PHSQLQuery";
+import {JSONSqlFunctionCall} from "./Functions";
+import {JSONClauseField, JSONClauseObjectType} from "./Appliable";
 /**
  * Created by Papa on 8/11/2016.
  */
 
 
-export interface JSONNumberFieldOperation extends JSONNumberOperation {
-}
+export interface IQNumberField<IQ extends IQEntity> extends IQField<IQ, number, JSONRawNumberOperation<IQ>, INumberOperation<IQ>, IQNumberField<IQ>> {
 
-export interface IQNumberField<IQ extends IQEntity> extends IQField<IQ, number, JSONNumberFieldOperation, INumberOperation> {
+	greaterThan(
+		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
+	): JSONRawNumberOperation<IQ>;
 
-    greaterThan(
-        greaterThan:number | IQNumberField<any>
-    ):JSONNumberFieldOperation;
+	greaterThanOrEquals(
+		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
+	): JSONRawNumberOperation<IQ>;
 
-    greaterThanOrEquals(
-        greaterThanOrEquals:number | IQNumberField<any>
-    ):JSONNumberFieldOperation;
+	lessThan(
+		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
+	): JSONRawNumberOperation<IQ>;
 
-    lessThan(
-        lessThan:number | IQNumberField<any>
-    ):JSONNumberFieldOperation;
-
-    lessThanOrEquals(
-        lessThanOrEquals:number | IQNumberField<any>
-    ):JSONNumberFieldOperation;
+	lessThanOrEquals(
+		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
+	): JSONRawNumberOperation<IQ>;
 
 }
 
-export class QNumberField<IQ extends IQEntity> extends QField<IQ, number, JSONNumberFieldOperation, INumberOperation> implements IQNumberField<IQ> {
+export class QNumberField<IQ extends IQEntity> extends QField<IQ, number, JSONRawNumberOperation<IQ>, INumberOperation<IQ>, IQNumberField<IQ>> implements IQNumberField<IQ> {
 
-    constructor(
-        q:IQ,
-        qConstructor:new() => IQ,
-        entityName:string,
-        fieldName:string
-    ) {
-        super(QNumberField, q, qConstructor, entityName, fieldName, FieldType.NUMBER, new NumberOperation());
-    }
+	constructor(
+		q: IQ,
+		qConstructor: new() => IQ,
+		entityName: string,
+		fieldName: string
+	) {
+		super(QNumberField, q, qConstructor, entityName, fieldName, FieldType.DATE, new NumberOperation<IQ>());
+	}
 
-    greaterThan(
-        greaterThan:number
-    ):JSONNumberFieldOperation{
-        return this.setOperation(this.operation.greaterThan(greaterThan));
-    }
+	greaterThan(
+		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
+	): JSONRawNumberOperation<IQ> {
+		return this.setOperation(this.operation.greaterThan(value));
+	}
 
-    greaterThanOrEquals(
-        greaterThanOrEquals:number
-    ):JSONNumberFieldOperation{
-        return this.setOperation(this.operation.greaterThanOrEquals(greaterThanOrEquals));
-    }
+	greaterThanOrEquals(
+		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
+	): JSONRawNumberOperation<IQ> {
+		return this.setOperation(this.operation.greaterThanOrEquals(value));
+	}
 
-    lessThan(
-        lessThan:number
-    ):JSONNumberFieldOperation{
-        return this.setOperation(this.operation.lessThan(lessThan));
-    }
+	lessThan(
+		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
+	): JSONRawNumberOperation<IQ> {
+		return this.setOperation(this.operation.lessThan(value));
+	}
 
-    lessThanOrEquals(
-        lessThanOrEquals:number
-    ):JSONNumberFieldOperation {
-        return this.setOperation(this.operation.lessThanOrEquals(lessThanOrEquals));
-    }
+	lessThanOrEquals(
+		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
+	): JSONRawNumberOperation<IQ> {
+		return this.setOperation(this.operation.lessThanOrEquals(value));
+	}
 
+}
+
+export class QNumberFunction extends QNumberField<any> {
+	constructor() {
+		super(null, null, null, null);
+	}
+
+	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQNumberField<any> {
+		let functionApplicable = new QNumberFunction();
+		functionApplicable.__appliedFunctions__ = functionApplicable.__appliedFunctions__.concat(this.__appliedFunctions__);
+		functionApplicable.__appliedFunctions__.push(sqlFunctionCall);
+
+		return functionApplicable;
+	}
+
+	toJSON(): JSONClauseField {
+		return {
+			__appliedFunctions__: this.__appliedFunctions__,
+			type: JSONClauseObjectType.FIELD_FUNCTION
+		};
+	}
 }

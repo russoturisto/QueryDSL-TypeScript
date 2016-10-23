@@ -1,4 +1,10 @@
-import { Appliable, JSONClauseObject } from "./Appliable";
+import { IQStringField } from "./StringField";
+import { Appliable, JSONClauseObject, JSONClauseField } from "./Appliable";
+import { IQEntity } from "../entity/Entity";
+import { PHRawNonEntitySQLQuery } from "../../query/sql/PHSQLQuery";
+import { IQNumberField } from "./NumberField";
+import { IQDateField } from "./DateField";
+import { IQField } from "./Field";
 /**
  * Created by Papa on 10/18/2016.
  */
@@ -6,8 +12,6 @@ export interface JSONSqlFunctionCall {
     functionType: SqlFunction;
     parameters: any[];
     valueIsPrimitive: boolean;
-}
-export interface JSONClauseFunction extends JSONClauseObject {
 }
 /**
  * Extrated from http://www.w3schools.com/sql/sql_functions.asp
@@ -28,26 +32,37 @@ export declare enum SqlFunction {
     FORMAT = 12,
     REPLACE = 13,
     TRIM = 14,
+    DISTINCT = 15,
+    EXISTS = 16,
 }
-export declare function abs<A extends Appliable<any, any>>(appliable: A | number): A;
-export declare function avg<A extends Appliable<any, any>>(appliable: A): A;
-export declare function count<A extends Appliable<any, any>>(appliable: A): A;
-export declare function max<A extends Appliable<any, any>>(appliable: A): A;
-export declare function min<A extends Appliable<any, any>>(appliable: A): A;
-export declare function sum<A extends Appliable<any, any>>(appliable: A): A;
-export declare function ucase<A extends Appliable<any, any>>(appliable: A | string): A;
-export declare function lcase<A extends Appliable<any, any>>(appliable: A | string): A;
-export declare function mid<A extends Appliable<any, any>>(appliable: A | string, start: number, length: number): A;
-export declare function len<A extends Appliable<any, any>>(appliable: A | string): A;
-export declare function round<A extends Appliable<any, any>>(appliable: A | number, digits?: number): A;
-export declare function now(): Appliable<any, any>;
-export declare function format<A extends Appliable<any, any>>(format: string, ...appliables: any[]): A;
-export declare function replace<A extends Appliable<any, any>>(appliable: A | string, toReplace: string, replaceWith: string): A;
-export declare function trim<A extends Appliable<any, any>>(appliable: A | string): A;
-export declare class FunctionAppliable implements Appliable<JSONClauseFunction, any> {
-    fieldName: string;
-    q: any;
-    appliedFunctions: JSONSqlFunctionCall[];
-    applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): Appliable<JSONClauseFunction, any>;
-    toJSON(): JSONClauseFunction;
+export declare function abs<A extends Appliable<any, any, any>>(appliable: A | number): A;
+export declare function avg<A extends Appliable<any, any, any>>(appliable: A): A;
+export declare function count<IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, IQF>>(field: IQF): IQF;
+export declare function max<IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, IQF>>(field: IQF): IQF;
+export declare function min<IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, IQF>>(field: IQF): IQF;
+export declare function sum<IQ extends IQEntity>(numberField: IQNumberField<IQ>): IQNumberField<IQ>;
+export declare function ucase<IQ extends IQEntity>(stringField: IQStringField<IQ> | string): IQStringField<IQ>;
+export declare function lcase<IQ extends IQEntity>(stringField: IQStringField<IQ> | string): IQStringField<IQ>;
+export declare function mid<IQ extends IQEntity>(stringField: IQStringField<IQ> | string, start: number, length: number): IQStringField<IQ>;
+export declare function len<IQ extends IQEntity>(stringField: IQStringField<IQ> | string): IQStringField<IQ>;
+export declare function round<IQ extends IQEntity>(numberField: IQNumberField<IQ> | number, digits?: number): IQNumberField<IQ>;
+export declare function now(): IQDateField<any>;
+export declare function format(format: string, ...formatParameters: any[]): IQStringField<any>;
+export declare function replace<IQ extends IQEntity>(stringField: IQStringField<IQ> | string, toReplace: string, replaceWith: string): IQStringField<IQ>;
+export declare function trim<IQ extends IQEntity>(stringField: IQStringField<IQ> | string): IQStringField<IQ>;
+export declare function distinct(selectClause: any): IQDistinctFunction;
+export interface IQDistinctFunction {
+}
+export declare class QDistinctFunction implements IQDistinctFunction, Appliable<JSONClauseObject, any, any> {
+    __appliedFunctions__: JSONSqlFunctionCall[];
+    applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): any;
+    toJSON(): JSONClauseField;
+}
+export declare function exists(phRawQuery: PHRawNonEntitySQLQuery): IQExistsFunction;
+export interface IQExistsFunction {
+}
+export declare class QExistsFunction implements IQDistinctFunction, Appliable<JSONClauseObject, any, any> {
+    __appliedFunctions__: JSONSqlFunctionCall[];
+    applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): any;
+    toJSON(): JSONClauseField;
 }

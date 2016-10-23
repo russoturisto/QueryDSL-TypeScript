@@ -1,3 +1,5 @@
+import {QField} from "../field/Field";
+import {QManyToOneRelation} from "../entity/Relation";
 /**
  * Created by Papa on 6/14/2016.
  */
@@ -47,4 +49,11 @@ export class EntityUtils {
 		}
 		return true;
 	}
+}
+
+export function isAppliable( object: any ): boolean {
+
+	return object instanceof QField
+		|| object instanceof QManyToOneRelation;
+
 }

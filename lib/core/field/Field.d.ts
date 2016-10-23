@@ -2,61 +2,56 @@
  * Created by Papa on 4/21/2016.
  */
 import { IQEntity } from "../entity/Entity";
-import { JSONBaseOperation, IOperation } from "../operation/Operation";
+import { JSONBaseOperation, IOperation, JSONRawValueOperation, IValueOperation } from "../operation/Operation";
 import { JSONFieldInOrderBy } from "./FieldInOrderBy";
 import { JSONSqlFunctionCall } from "./Functions";
 import { Appliable, JSONClauseField } from "./Appliable";
+import { PHRawFieldSQLQuery } from "../../query/sql/PHSQLQuery";
 export declare enum FieldType {
     BOOLEAN = 0,
-    BOOLEAN_ARRAY = 1,
-    DATE = 2,
-    DATE_ARRAY = 3,
-    NUMBER = 4,
-    NUMBER_ARRAY = 5,
-    STRING = 6,
-    STRING_ARRAY = 7,
+    DATE = 1,
+    NUMBER = 2,
+    STRING = 3,
 }
-export interface Orderable<IQ extends IQEntity> extends Appliable<JSONClauseField, IQ> {
+export interface Orderable<IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, any>> {
     asc(): JSONFieldInOrderBy;
     desc(): JSONFieldInOrderBy;
 }
-export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>> extends Orderable<IQ> {
+export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>, IQF extends IQField<IQ, T, JO, IO, any>> extends Orderable<IQ, IQF> {
     entityName: string;
     fieldName: string;
     fieldType: FieldType;
     operation: IO;
     q: IQ;
     qConstructor: new () => IQ;
-    equals(value: T): JO;
-    exists(exists: boolean): JO;
-    isIn(values: T[]): JO;
+    equals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
+    isIn(values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]): JO;
     isNotNull(): JO;
     isNull(): JO;
-    notEquals(value: T): JO;
-    notIn(values: T[]): JO;
+    notEquals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
+    notIn(values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]): JO;
 }
-export declare abstract class QField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>> implements IQField<IQ, T, JO, IO> {
-    childConstructor: new (q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string) => IQField<IQ, T, JO, IO>;
+export declare abstract class QField<IQ extends IQEntity, T, JO extends JSONRawValueOperation<IQF>, IO extends IValueOperation<T, JO, IQ, IQF>, IQF extends IQField<any, T, JO, IO, any>> implements IQField<IQ, T, JO, IO, IQF>, Appliable<JSONClauseField, IQ, IQF> {
+    childConstructor: new (q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string, fieldType: FieldType) => IQField<IQ, T, JO, IO, IQF>;
     q: IQ;
     qConstructor: new () => IQ;
     entityName: string;
     fieldName: string;
     fieldType: FieldType;
     operation: IO;
-    appliedFunctions: JSONSqlFunctionCall[];
-    constructor(childConstructor: new (q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string) => IQField<IQ, T, JO, IO>, q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string, fieldType: FieldType, operation: IO);
+    __appliedFunctions__: JSONSqlFunctionCall[];
+    constructor(childConstructor: new (q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string, fieldType: FieldType) => IQField<IQ, T, JO, IO, IQF>, q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string, fieldType: FieldType, operation: IO);
     protected getFieldKey(): string;
     setOperation(jsonOperation: JO): JO;
-    objectEquals<IQF extends IQField<any, any, JOE, IOE>, JOE extends JSONBaseOperation, IOE extends IOperation<any, JOE>>(otherField: IQF, checkValue?: boolean): boolean;
-    equals(value: T): JO;
-    exists(exists: boolean): JO;
+    objectEquals<IQF extends IQField<any, any, JOE, IOE, IQF>, JOE extends JSONBaseOperation, IOE extends IOperation<any, JOE>>(otherField: IQF, checkValue?: boolean): boolean;
+    equals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
     isNotNull(): JO;
     isNull(): JO;
-    isIn(values: T[]): JO;
-    notEquals(value: T): JO;
-    notIn(values: T[]): JO;
+    isIn(values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]): JO;
+    notEquals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
+    notIn(values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]): JO;
     asc(): JSONFieldInOrderBy;
     desc(): JSONFieldInOrderBy;
-    applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQField<IQ, T, JO, IO>;
+    applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQField<IQ, T, JO, IO, IQF>;
     toJSON(): JSONClauseField;
 }

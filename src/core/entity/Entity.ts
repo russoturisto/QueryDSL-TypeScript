@@ -5,7 +5,11 @@ import {IQField} from "../field/Field";
 import {IQRelation, JSONRelation} from "./Relation";
 import {JoinType} from "../../query/sql/PHSQLQuery";
 import {JSONBaseOperation, IOperation} from "../operation/Operation";
-import {getNextRootEntityName} from "./ColumnAliases";
+import {getNextRootEntityName} from "./Aliases";
+import {IQNumberField} from "../field/NumberField";
+import {IQBooleanField} from "../field/BooleanField";
+import {IQDateField} from "../field/DateField";
+import {IQStringField} from "../field/StringField";
 
 /**
  * Marker interface for all query interfaces
@@ -22,7 +26,7 @@ export interface IQEntity {
 	__entityName__: string;
 	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any, IQEntity>};
 
-	rootEntityPrefix:string;
+	rootEntityPrefix: string;
 	fromClausePosition: number[];
 	joinType: JoinType;
 
@@ -65,12 +69,11 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 		public __qEntityConstructor__: {new( ...args: any[] ): any},
 		public __entityConstructor__: {new(): any},
 		public __entityName__: string,
-		public rootEntityPrefix:string = getNextRootEntityName(),
+		public rootEntityPrefix: string = getNextRootEntityName(),
 		public fromClausePosition: number[] = [],
 		public relationPropertyName = null,
 		public joinType: JoinType = null
 	) {
-		// TODO: convert class name to native name if it's not provided
 	}
 
 	addEntityRelation<IQR extends IQEntity, R>(

@@ -25,6 +25,7 @@ export interface IQEntity {
     __entityRelationMap__: {
         [propertyName: string]: IQRelation<IQEntity, any, IQEntity>;
     };
+    rootEntityPrefix: string;
     fromClausePosition: number[];
     joinType: JoinType;
     addEntityRelation<IQR extends IQEntity, R>(propertyName: string, relation: IQRelation<IQR, R, IQEntity>): void;
@@ -41,6 +42,7 @@ export declare abstract class QEntity<IQ extends IQEntity> implements IQEntity {
         new (): any;
     };
     __entityName__: string;
+    rootEntityPrefix: string;
     fromClausePosition: number[];
     relationPropertyName: any;
     joinType: JoinType;
@@ -55,7 +57,7 @@ export declare abstract class QEntity<IQ extends IQEntity> implements IQEntity {
         new (...args: any[]): any;
     }, __entityConstructor__: {
         new (): any;
-    }, __entityName__: string, fromClausePosition: number[], relationPropertyName?: any, joinType?: JoinType);
+    }, __entityName__: string, rootEntityPrefix?: string, fromClausePosition?: number[], relationPropertyName?: any, joinType?: JoinType);
     addEntityRelation<IQR extends IQEntity, R>(propertyName: string, relation: IQRelation<IQR, R, IQ>): void;
     addEntityField<T, IQF extends IQField<IQ, T, JSONBaseOperation, IOperation<T, JSONBaseOperation>>>(propertyName: string, field: IQF): void;
     getRelationJson(): JSONRelation;

@@ -2,6 +2,15 @@
  * Created by Papa on 10/18/2016.
  */
 
+function test<A>(a:A):A {
+	return a;
+}
+
+let a = test({
+	b: 1,
+	c: 2
+});
+
 const ALIASES = ['a', 'b', 'c', 'd', 'e',
 	'f', 'g', 'h', 'i', 'j',
 	'k', 'l', 'm', 'n', 'o',

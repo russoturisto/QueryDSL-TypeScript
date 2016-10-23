@@ -1,10 +1,9 @@
 /**
  * Created by Papa on 4/21/2016.
  */
-import {FieldType} from "../field/Field";
-import {JSONClauseObject, Appliable} from "../field/Appliable";
 import {IQEntity} from "../entity/Entity";
-import {PHSQLQuery, PHRawSQLQuery, PHFlatSQLQuery, PHRawFlatSQLQuery} from "../../query/sql/PHSQLQuery";
+import {PHRawFieldSQLQuery} from "../../query/sql/PHSQLQuery";
+import {IQField} from "../field/Field";
 
 export enum OperationCategory {
 	BOOLEAN,
@@ -19,109 +18,109 @@ export interface JSONBaseOperation {
 	category: OperationCategory;
 }
 
-export interface JSONValueOperation<T> extends JSONBaseOperation {
-	lValue:JSONClauseObject;
-	rValue:JSONClauseObject | JSONClauseObject[] | T | T[];
+export interface JSONRawValueOperation<IQF extends IQField<any, any, any, any, any>> extends JSONBaseOperation {
+	lValue?: IQF;
+	rValue?: any;
 }
 
 export interface IOperation<T, JO extends JSONBaseOperation> {
 }
 
-export interface IValueOperation<T, JO extends JSONBaseOperation> extends IOperation<T, JO> {
+export interface IValueOperation<T, JRO extends JSONBaseOperation, IQ extends IQEntity, IQF extends IQField<any, T, JRO, any, any>> extends IOperation<T, JRO> {
 
-	type: FieldType;
+	category: OperationCategory;
 
-	equals<JCO extends JSONClauseObject, IQ extends IQEntity>(
-		value: T | Appliable<JCO, IQ> | PHRawSQLQuery
-	): JO;
+	equals(
+		value: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JRO;
 
-	exists(
-		exists: PHRawFlatSQLQuery
-	): JO;
+	isIn(
+		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
+	): JRO;
 
-	isIn<JCO extends JSONClauseObject, IQ extends IQEntity>(
-		values: (T | Appliable<JCO, IQ>)[]
-	): JO;
+	isNotNull(): JRO;
 
+	isNull(): JRO;
 
-	isNotNull(): JO;
-
-	isNull(): JO;
-
-	TODO: work here next
 	notEquals(
-		value: T | PHRawFlatSQLQuery
-	): JO;
+		value: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JRO;
 
 	notIn(
-		values: T[]
-	): JO;
+		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
+	): JRO;
 
 
 }
 
-export abstract class Operation<T, JO extends JSONBaseOperation> implements IOperation<T, JO> {
+export abstract class Operation<T, JRO extends JSONBaseOperation> implements IOperation<T, JRO> {
 
 	constructor(
-		public type: FieldType
+		public category: OperationCategory
 	) {
 	}
 
 }
 
-export abstract class ValueOperation<T, JO extends JSONValueOperation> extends Operation<T, JO> implements IValueOperation<T, JO> {
+export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<IQF>, IQ extends IQEntity, IQF extends IQField<any, T, JRO, any, any>> extends Operation<T, JRO> implements IValueOperation<T, JRO, IQ, IQF> {
 
 	constructor(
-		public type: FieldType
+		public category: OperationCategory
 	) {
-		super(type);
+		super(category);
 	}
 
 	equals(
-		value: T
-	): JO {
+		value: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JRO {
 		return <any>{
-			$eq: value
+			operator: "$eq",
+			category: this.category,
+			rValue: value
 		};
 	}
 
-	exists(
-		exists: boolean
-	): JO {
+	isNotNull(): JRO {
 		return <any>{
-			$exists: exists
+			operator: "$isNotNull",
+			category: this.category
 		};
 	}
 
-	isNotNull(): JO {
-		return this.exists(false);
-	}
-
-	isNull(): JO {
-		return this.exists(true);
+	isNull(): JRO {
+		return <any>{
+			operator: "$isNull",
+			category: this.category
+		};
 	}
 
 	isIn(
-		values: T[]
-	): JO {
+		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
+	): JRO {
 		return <any>{
-			$in: values
+			operator: "$in",
+			category: this.category,
+			rValue: values
 		};
 	}
 
 	notEquals(
-		value: T
-	): JO {
+		value: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JRO {
 		return <any>{
-			$ne: value
+			operator: "$ne",
+			category: this.category,
+			rValue: value
 		};
 	}
 
 	notIn(
-		values: T[]
-	): JO {
+		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
+	): JRO {
 		return <any>{
-			$nin: values
+			operator: "$nin",
+			category: this.category,
+			rValue: values
 		};
 	}
 

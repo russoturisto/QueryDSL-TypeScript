@@ -1,18 +1,23 @@
 import {IEntity, QEntity, IQEntity} from "../../core/entity/Entity";
 import {RelationRecord, JSONRelation, QManyToOneRelation, IQManyToOneRelation} from "../../core/entity/Relation";
 import {JSONLogicalOperation} from "../../core/operation/LogicalOperation";
-import {JSONBaseOperation, JSONValueOperation} from "../../core/operation/Operation";
+import {JSONBaseOperation, JSONRawValueOperation} from "../../core/operation/Operation";
 import {PHQuery, PHRawQuery} from "../PHQuery";
 import {JSONFieldInOrderBy} from "../../core/field/FieldInOrderBy";
 import {Orderable, QField, IQField} from "../../core/field/Field";
-import {Appliable, JSONClauseObject} from "../../core/field/Appliable";
+import {Appliable, JSONClauseObject, JSONClauseField} from "../../core/field/Appliable";
 import {FunctionAppliable} from "../../core/field/Functions";
+import {isAppliable} from "../../core/utils/EntityUtils";
 /**
  * Created by Papa on 8/12/2016.
  */
 
 /*
- export function select<PHSQ extends PHSQLQuery, PHRSQ extends PHRawSQLQuery>(
+
+whereQuery()
+fromQuery()<QEntity>
+selectQuery<T>():T
+ export function query<PHSQ extends PHSQLQuery, PHRSQ extends PHRawSQLQuery>(
  rawSqlQuery:PHRSQ
  ):PHSQ {
  return getPHSQLQuery(raqSqlQuery, ...);
@@ -25,15 +30,28 @@ export interface PHRawSQLQuery extends PHRawQuery {
 	orderBy?: JSONFieldInOrderBy[]
 }
 
-export interface PHRawObjectSQLQuery<IE extends IEntity> extends PHRawSQLQuery {
+export interface PHRawEntitySQLQuery<IE extends IEntity> extends PHRawSQLQuery {
 	select: IE;
 }
 
-export interface PHRawFlatSQLQuery extends PHRawSQLQuery {
+export interface PHRawNonEntitySQLQuery extends PHRawSQLQuery {
 	from: IQEntity[];
-	select: Appliable<any, any> | Appliable<any, any>[];
-	groupBy: (IQField<any, any, any, any> | IQManyToOneRelation<any, any, any>)[];
-	having: JSONValueOperation<any>[];
+	groupBy?: (IQField<any, any, any, any> | IQManyToOneRelation<any, any, any>)[];
+	having?: JSONRawValueOperation<any>[],
+	limit?: number;
+	offset?: number;
+}
+
+export interface PHRawFieldSQLQuery<IQF extends IQField<any, any, any, any>> extends PHRawNonEntitySQLQuery {
+	select: IQF;
+}
+
+export interface PHRawMappedSQLQuery<IE> extends PHRawNonEntitySQLQuery {
+	select: IE;
+}
+
+export interface PHRawFlatSQLQuery extends PHRawNonEntitySQLQuery {
+	select: Appliable<any, any>[];
 }
 
 export interface PHJsonCommonSQLQuery {
@@ -74,11 +92,8 @@ export function getPHSQLQuery<PHSQ extends PHSQLQuery, PHRSQ extends PHRawSQLQue
 	entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}}
 ): PHSQ {
 	let selectClause = phRawQuery.select;
-	if (selectClause instanceof FunctionAppliable
-		|| selectClause instanceof QField
-		|| selectClause instanceof QManyToOneRelation
-		|| selectClause instanceof Array) {
-		return <any>new PHFlatSQLQuery(<PHRawFlatSQLQuery><any>phRawQuery, qEntity, qEntityMap, entitiesRelationPropertyMap, entitiesPropertyTypeMap);
+	if (isAppliable(selectClause) || selectClause instanceof Array) {
+		return <any>new PHFlatSQLQuery(<PHRawNonEntitySQLQuery><any>phRawQuery, qEntity, qEntityMap, entitiesRelationPropertyMap, entitiesPropertyTypeMap);
 	} else {
 		return <any>new PHObjectSQLQuery(phRawQuery, qEntity, qEntityMap, entitiesRelationPropertyMap, entitiesPropertyTypeMap);
 	}
@@ -126,9 +141,7 @@ function convertSelects(
 				throw `Object sub-select statements not allowed in Flat SQL select statements`;
 			}
 			selectClause[property] = value.toSQL();
-		} else if (value instanceof FunctionAppliable
-			|| value instanceof QField
-			|| value instanceof QManyToOneRelation) {
+		} else if (isAppliable(value)) {
 			// Flat sub-queries are allowed in as sub-selectes in Object queries for a given field
 			selectClause[property] = selectClause.toJSON();
 		} else if (value instanceof Array) {
@@ -144,7 +157,7 @@ function convertSelects(
 export class PHObjectSQLQuery<IE extends IEntity> implements PHSQLQuery {
 
 	constructor(
-		public phRawQuery: PHRawObjectSQLQuery<IE>,
+		public phRawQuery: PHRawEntitySQLQuery<IE>,
 		public qEntity: QEntity<any>,
 		public qEntityMap: {[entityName: string]: QEntity<any>},
 		public entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
@@ -164,7 +177,7 @@ export class PHObjectSQLQuery<IE extends IEntity> implements PHSQLQuery {
 export class PHFlatSQLQuery implements PHSQLQuery {
 
 	constructor(
-		public phRawQuery: PHRawFlatSQLQuery,
+		public phRawQuery: PHRawNonEntitySQLQuery,
 		public qEntity: QEntity<any>,
 		public qEntityMap: {[entityName: string]: QEntity<any>},
 		public entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},

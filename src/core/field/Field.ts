@@ -2,24 +2,21 @@
  * Created by Papa on 4/21/2016.
  */
 import {IQEntity} from "../entity/Entity";
-import {JSONBaseOperation, IOperation} from "../operation/Operation";
+import {JSONBaseOperation, IOperation, JSONRawValueOperation, IValueOperation} from "../operation/Operation";
 import {QRelation} from "../entity/Relation";
 import {FieldInOrderBy, SortOrder, JSONFieldInOrderBy} from "./FieldInOrderBy";
 import {JSONSqlFunctionCall} from "./Functions";
 import {Appliable, JSONClauseField, JSONClauseObjectType} from "./Appliable";
+import {PHRawFieldSQLQuery} from "../../query/sql/PHSQLQuery";
 
 export enum FieldType {
 	BOOLEAN,
-	BOOLEAN_ARRAY,
 	DATE,
-	DATE_ARRAY,
 	NUMBER,
-	NUMBER_ARRAY,
-	STRING,
-	STRING_ARRAY
+	STRING
 }
 
-export interface Orderable<IQ extends IQEntity> extends Appliable<JSONClauseField, IQ> {
+export interface Orderable<IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, any>> {
 
 	asc(): JSONFieldInOrderBy;
 
@@ -27,8 +24,8 @@ export interface Orderable<IQ extends IQEntity> extends Appliable<JSONClauseFiel
 
 }
 
-export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>>
-extends Orderable<IQ> {
+export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>, IQF extends IQField<IQ, T, JO, IO, any>>
+extends Orderable<IQ, IQF> {
 
 	entityName: string;
 	fieldName: string;
@@ -38,15 +35,11 @@ extends Orderable<IQ> {
 	qConstructor: new() => IQ;
 
 	equals(
-		value: T
-	): JO;
-
-	exists(
-		exists: boolean
+		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JO;
 
 	isIn(
-		values: T[]
+		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JO;
 
 
@@ -55,19 +48,19 @@ extends Orderable<IQ> {
 	isNull(): JO;
 
 	notEquals(
-		value: T
+		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JO;
 
 	notIn(
-		values: T[]
+		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JO;
 
 }
 
-export abstract class QField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>>
-implements IQField<IQ, T, JO, IO> {
+export abstract class QField<IQ extends IQEntity, T, JO extends JSONRawValueOperation<IQF>, IO extends IValueOperation<T, JO, IQ, IQF>, IQF extends IQField<any, T, JO, IO, any>>
+implements IQField<IQ, T, JO, IO, IQF>, Appliable<JSONClauseField, IQ, IQF> {
 
-	appliedFunctions: JSONSqlFunctionCall[] = [];
+	__appliedFunctions__: JSONSqlFunctionCall[] = [];
 
 	constructor(
 		// All child field constructors must have the following signature (4 parameters):
@@ -75,8 +68,9 @@ implements IQField<IQ, T, JO, IO> {
 			q: IQ,
 			qConstructor: new() => IQ,
 			entityName: string,
-			fieldName: string
-		) => IQField<IQ, T, JO, IO>,
+			fieldName: string,
+			fieldType: FieldType
+		) => IQField<IQ, T, JO, IO, IQF>,
 		public q: IQ,
 		public qConstructor: new() => IQ,
 		public entityName: string,
@@ -84,7 +78,9 @@ implements IQField<IQ, T, JO, IO> {
 		public fieldType: FieldType,
 		public operation: IO
 	) {
-		q.addEntityField(fieldName, this);
+		if (q) {
+			q.addEntityField(fieldName, this);
+		}
 	}
 
 	protected getFieldKey() {
@@ -96,13 +92,12 @@ implements IQField<IQ, T, JO, IO> {
 	setOperation(
 		jsonOperation: JO
 	): JO {
-		let operation = <any>{};
-		operation[this.getFieldKey()] = jsonOperation;
+		jsonOperation.lValue = <any>this;
 
-		return operation;
+		return jsonOperation;
 	}
 
-	objectEquals<IQF extends IQField<any, any, JOE, IOE>, JOE extends JSONBaseOperation, IOE extends IOperation<any, JOE>>(
+	objectEquals<IQF extends IQField<any, any, JOE, IOE, IQF>, JOE extends JSONBaseOperation, IOE extends IOperation<any, JOE>>(
 		otherField: IQF,
 		checkValue?: boolean
 	): boolean {
@@ -124,39 +119,34 @@ implements IQField<IQ, T, JO, IO> {
 	}
 
 	equals(
-		value: T
+		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JO {
 		return this.setOperation(this.operation.equals(value));
 	}
 
-	exists(
-		exists: boolean
-	): JO {
-		return this.setOperation(this.operation.exists(exists));
-	}
 
 	isNotNull(): JO {
-		return this.exists(false);
+		return this.setOperation(this.operation.isNotNull());
 	}
 
 	isNull(): JO {
-		return this.exists(true);
+		return this.setOperation(this.operation.isNull());
 	}
 
 	isIn(
-		values: T[]
+		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JO {
 		return this.setOperation(this.operation.isIn(values));
 	}
 
 	notEquals(
-		value: T
+		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JO {
 		return this.setOperation(this.operation.notEquals(value));
 	}
 
 	notIn(
-		values: T[]
+		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JO {
 		return this.setOperation(this.operation.notIn(values));
 	}
@@ -169,17 +159,18 @@ implements IQField<IQ, T, JO, IO> {
 		return new FieldInOrderBy<IQ>(this, SortOrder.DESCENDING).toJSON();
 	}
 
-	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQField<IQ, T, JO, IO> {
-		let appliedField = new this.childConstructor(this.q, this.qConstructor, this.entityName, this.fieldName);
-		appliedField.appliedFunctions = appliedField.appliedFunctions.concat(this.appliedFunctions);
-		appliedField.appliedFunctions.push(sqlFunctionCall);
+	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQField<IQ, T, JO, IO, IQF> {
+		let appliedIField = new this.childConstructor(this.q, this.qConstructor, this.entityName, this.fieldName, this.fieldType);
+		let appliedField = <QField<IQ, T, JO, IO, IQF>><any>appliedIField;
+		appliedField.__appliedFunctions__ = appliedField.__appliedFunctions__.concat(this.__appliedFunctions__);
+		appliedField.__appliedFunctions__.push(sqlFunctionCall);
 
-		return appliedField;
+		return appliedIField;
 	}
 
 	toJSON(): JSONClauseField {
 		return {
-			appliedFunctions: this.appliedFunctions,
+			__appliedFunctions__: this.__appliedFunctions__,
 			propertyName: this.fieldName,
 			tableAlias: QRelation.getPositionAlias(this.q.rootEntityPrefix, this.q.fromClausePosition),
 			type: JSONClauseObjectType.FIELD

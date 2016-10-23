@@ -7,3 +7,4 @@ export declare class EntityUtils {
     static exists(object: any): boolean;
     static isBlank(object: any): boolean;
 }
+export declare function isAppliable(object: any): boolean;

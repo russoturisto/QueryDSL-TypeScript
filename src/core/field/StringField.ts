@@ -1,37 +1,59 @@
 import {IQEntity} from "../entity/Entity";
 import {IQField, QField, FieldType} from "./Field";
-import {StringOperation, IStringOperation, JSONStringOperation} from "../operation/StringOperation";
+import {StringOperation, IStringOperation, JSONRawStringOperation} from "../operation/StringOperation";
+import {PHRawFieldSQLQuery} from "../../query/sql/PHSQLQuery";
+import {JSONSqlFunctionCall} from "./Functions";
+import {JSONClauseField, JSONClauseObjectType} from "./Appliable";
 /**
  * Created by Papa on 8/11/2016.
  */
 
+export interface IQStringField<IQ extends IQEntity>
+extends IQField<IQ, string, JSONRawStringOperation<IQ>, IStringOperation<IQ>, IQStringField<IQ>> {
 
-export interface JSONStringFieldOperation extends JSONStringOperation {
-}
-
-export interface IQStringField<IQ extends IQEntity> extends IQField<IQ, string, JSONStringFieldOperation, IStringOperation> {
-
-    like(
-        like:string | RegExp
-    ):JSONStringFieldOperation;
+	like(
+		like: string | IQStringField<IQ> | PHRawFieldSQLQuery<IQStringField<IQ>>
+	): JSONRawStringOperation<IQ>;
 
 }
 
-export class QStringField<IQ extends IQEntity> extends QField<IQ, string, JSONStringFieldOperation, IStringOperation> implements IQStringField<IQ> {
+export class QStringField<IQ extends IQEntity>
+extends QField<IQ, string, JSONRawStringOperation<IQ>, IStringOperation<IQ>, IQStringField<IQ>> implements IQStringField<IQ> {
 
-    constructor(
-        q:IQ,
-        qConstructor:new() => IQ,
-        entityName:string,
-        fieldName:string
-    ) {
-        super(QStringField, q, qConstructor, entityName, fieldName, FieldType.STRING, new StringOperation());
-    }
+	constructor(
+		q: IQ,
+		qConstructor: new() => IQ,
+		entityName: string,
+		fieldName: string
+	) {
+		super(QStringField, q, qConstructor, entityName, fieldName, FieldType.STRING, new StringOperation<IQ>());
+	}
 
-    like(
-        like:string | RegExp
-    ):JSONStringFieldOperation{
-        return this.setOperation(this.operation.like(like));
-    }
+	like(
+		like: string | IQStringField<IQ> | PHRawFieldSQLQuery<IQStringField<IQ>>
+	): JSONRawStringOperation<IQ> {
+		return this.setOperation(this.operation.like(like));
+	}
 
+}
+
+export class QStringFunction extends QStringField<any> {
+	constructor() {
+		super(null, null, null, null);
+	}
+
+	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQStringField<any> {
+		let functionApplicable = new QStringFunction();
+		functionApplicable.__appliedFunctions__ = functionApplicable.__appliedFunctions__.concat(this.__appliedFunctions__);
+		functionApplicable.__appliedFunctions__.push(sqlFunctionCall);
+
+		return functionApplicable;
+	}
+
+	toJSON(): JSONClauseField {
+		return {
+			__appliedFunctions__: this.__appliedFunctions__,
+			type: JSONClauseObjectType.FIELD_FUNCTION
+		};
+	}
 }

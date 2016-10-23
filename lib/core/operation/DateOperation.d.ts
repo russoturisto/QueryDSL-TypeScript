@@ -1,23 +1,25 @@
-import { JSONBaseOperation, IOperation, Operation } from "./Operation";
-import { JSONClauseObject } from "../field/Appliable";
+import { JSONRawValueOperation, IValueOperation, ValueOperation } from "./Operation";
+import { IQEntity } from "../entity/Entity";
+import { IQDateField } from "../field/DateField";
+import { PHRawFieldSQLQuery } from "../../query/sql/PHSQLQuery";
 /**
  * Created by Papa on 6/20/2016.
  */
-export interface JSONDateOperation extends JSONBaseOperation {
+export interface JSONRawDateOperation<IQ extends IQEntity> extends JSONRawValueOperation<IQDateField<IQ>> {
     operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin" | "$gt" | "$gte" | "$lt" | "$lte";
-    lValue: JSONClauseObject;
-    rValue: JSONClauseObject | JSONClauseObject[] | Date | Date[];
+    lValue: IQDateField<IQ>;
+    rValue: Date | Date[] | IQDateField<any> | IQDateField<any>[] | PHRawFieldSQLQuery<IQDateField<any>> | PHRawFieldSQLQuery<IQDateField<any>>[];
 }
-export interface IDateOperation extends IOperation<Date, JSONDateOperation> {
-    greaterThan(greaterThan: Date): JSONDateOperation;
-    greaterThanOrEquals(greaterThanOrEquals: Date): JSONDateOperation;
-    lessThan(lessThan: Date): JSONDateOperation;
-    lessThanOrEquals(lessThanOrEquals: Date): JSONDateOperation;
+export interface IDateOperation<IQ extends IQEntity> extends IValueOperation<Date, JSONRawDateOperation<IQ>, IQ, IQDateField<any>> {
+    greaterThan(value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>): JSONRawDateOperation<IQ>;
+    greaterThanOrEquals(value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>): JSONRawDateOperation<IQ>;
+    lessThan(value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>): JSONRawDateOperation<IQ>;
+    lessThanOrEquals(value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>): JSONRawDateOperation<IQ>;
 }
-export declare class DateOperation extends Operation<Date, JSONDateOperation> implements IDateOperation {
+export declare class DateOperation<IQ extends IQEntity> extends ValueOperation<Date, JSONRawDateOperation<IQ>, IQ, IQDateField<any>> implements IDateOperation<IQ> {
     constructor();
-    greaterThan(greaterThan: Date): JSONDateOperation;
-    greaterThanOrEquals(greaterThanOrEquals: Date): JSONDateOperation;
-    lessThan(lessThan: Date): JSONDateOperation;
-    lessThanOrEquals(lessThanOrEquals: Date): JSONDateOperation;
+    greaterThan(value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>): JSONRawDateOperation<IQ>;
+    greaterThanOrEquals(value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>): JSONRawDateOperation<IQ>;
+    lessThan(value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>): JSONRawDateOperation<IQ>;
+    lessThanOrEquals(value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>): JSONRawDateOperation<IQ>;
 }

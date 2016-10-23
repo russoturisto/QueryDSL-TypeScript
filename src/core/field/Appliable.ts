@@ -1,6 +1,6 @@
 import {JSONSqlFunctionCall, SqlFunction} from "./Functions";
 import {IQEntity} from "../entity/Entity";
-import {QField} from "./Field";
+import {QField, IQField} from "./Field";
 import {QManyToOneRelation, QRelation} from "../entity/Relation";
 import {EntityMetadata} from "../entity/EntityMetadata";
 import {MetadataUtils} from "../entity/metadata/MetadataUtils";
@@ -9,33 +9,35 @@ import {MetadataUtils} from "../entity/metadata/MetadataUtils";
  */
 
 export enum JSONClauseObjectType {
+	DISTINCT_FUNCTION,
+	EXISTS_FUNCTION,
 	FIELD,
-	FUNCTION,
+	FIELD_FUNCTION,
 	MANY_TO_ONE_RELATION
 }
 
 export interface JSONClauseObject {
-	appliedFunctions: JSONSqlFunctionCall[];
+	__appliedFunctions__: JSONSqlFunctionCall[];
 	type: JSONClauseObjectType;
 }
 
 export interface JSONClauseField extends JSONClauseObject {
-	propertyName: string,
-	tableAlias: string
+	propertyName?: string,
+	tableAlias?: string
 }
 
-export interface Appliable<JCO extends JSONClauseObject, IQ extends IQEntity> {
-	fieldName: string;
-	appliedFunctions: JSONSqlFunctionCall[];
-	q: IQ;
+export interface Appliable<JCO extends JSONClauseObject, IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, any>> {
+	// fieldName: string;
+	__appliedFunctions__: JSONSqlFunctionCall[];
+	// q: IQ;
 
-	applySqlFunction<A extends Appliable<JCO, IQ>>( sqlFunctionCall: JSONSqlFunctionCall ): A;
+	applySqlFunction<A extends Appliable<JCO, IQ, IQF>>( sqlFunctionCall: JSONSqlFunctionCall ): A;
 	toJSON(): JCO;
 }
 
 export interface ISQLFunctionAdaptor {
 
-	getFunctionCalls<A extends Appliable<any, any>>(
+	getFunctionCalls<A extends Appliable<any, any, any>>(
 		appliable: A,
 		qEntityMapByAlias: {[entityName: string]: IQEntity}
 	): string ;
@@ -50,20 +52,13 @@ export interface ISQLFunctionAdaptor {
 
 export abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
 
-	getFunctionCalls<A extends Appliable<any, any>>(
+	getFunctionCalls<A extends Appliable<any, any, any>>(
 		clause: JSONClauseObject,
 		qEntityMapByAlias: {[alias: string]: IQEntity}
 	): string {
 		let stringValue;
-		switch(clause.type) {
-			case JSONClauseObjectType.FUNCTION:
-				break;
-			case JSONClauseObjectType.FIELD:
-			case JSONClauseObjectType.MANY_TO_ONE_RELATION:
-				break;
-		}
 		if (clause.type === JSONClauseObjectType.FIELD || clause.type === JSONClauseObjectType.MANY_TO_ONE_RELATION) {
-			let fieldClause:JSONClauseField = <JSONClauseField>clause;
+			let fieldClause: JSONClauseField = <JSONClauseField>clause;
 			let alias = fieldClause.tableAlias;
 			let qEntity = qEntityMapByAlias[alias];
 			let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
@@ -75,7 +70,7 @@ export abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
 			}
 			stringValue = `${alias}.${columnName}`;
 		}
-		clause.appliedFunctions.forEach(( appliedFunction ) => {
+		clause.__appliedFunctions__.forEach(( appliedFunction ) => {
 			stringValue = this.getFunctionCall(appliedFunction, stringValue, qEntityMapByAlias);
 		});
 

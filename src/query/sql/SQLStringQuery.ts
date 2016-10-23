@@ -7,7 +7,7 @@ import {SQLStringWhereBase} from "./SQLStringWhereBase";
 import {JSONFieldInOrderBy} from "../../core/field/FieldInOrderBy";
 import {IOrderByParser, getOrderByParser} from "./query/orderBy/IOrderByParser";
 import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
-import {ColumnAliases} from "../../core/entity/ColumnAliases";
+import {ColumnAliases} from "../../core/entity/Aliases";
 import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
 /**
  * Created by Papa on 8/20/2016.
@@ -47,6 +47,8 @@ export enum QueryResultType {
 	FLATTENED,
 		// Ordered query result, with objects grouped hierarchically by entity
 	HIERARCHICAL,
+		// A mapped array of values, returned by a regular join
+	MAPPED,
 		// Plain query result, with no forced ordering or grouping
 	PLAIN,
 		// Raw result, returned by a SQL string query

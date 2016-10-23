@@ -2,10 +2,10 @@
  * Created by Papa on 4/23/2016.
  */
 
-import {JSONBooleanOperation, IBooleanOperation, BooleanOperation} from "./core/operation/BooleanOperation";
-import {JSONDateOperation, IDateOperation, DateOperation} from "./core/operation/DateOperation";
-import {JSONNumberOperation, INumberOperation, NumberOperation} from "./core/operation/NumberOperation";
-import {JSONStringOperation, IStringOperation, StringOperation} from "./core/operation/StringOperation";
+import {JSONRawBooleanOperation, IBooleanOperation, BooleanOperation} from "./core/operation/BooleanOperation";
+import {JSONRawDateOperation, IDateOperation, DateOperation} from "./core/operation/DateOperation";
+import {JSONRawNumberOperation, INumberOperation, NumberOperation} from "./core/operation/NumberOperation";
+import {JSONRawStringOperation, IStringOperation, StringOperation} from "./core/operation/StringOperation";
 import {IEntity, IQEntity, QEntity} from "./core/entity/Entity";
 import {
 	JSONBooleanFieldOperation,
@@ -69,7 +69,7 @@ import {SQLStringWhereBase} from "./query/sql/SQLStringWhereBase";
 import {SQLStringNoJoinQuery} from "./query/sql/SQLStringNoJoinQuery";
 import {PHRawSQLUpdate, PHJsonSQLUpdate, PHSQLUpdate} from "./query/sql/PHSQLUpdate";
 import {SQLStringUpdate} from "./query/sql/SQLStringUpdate";
-import {ColumnAliases} from "./core/entity/ColumnAliases";
+import {ColumnAliases} from "./core/entity/Aliases";
 import {JoinTreeNode} from "./core/entity/JoinTreeNode";
 import {FlatSQLStringQuery} from "./query/sql/query/FlatSQLStringQuery";
 import {ExactOrderByParser} from "./query/sql/query/orderBy/ExactOrderByParser";
@@ -175,13 +175,13 @@ export {
 	IQBooleanField,
 	QBooleanField,
 	JSONBooleanFieldOperation,
-	JSONBooleanOperation,
+	JSONRawBooleanOperation,
 	IBooleanOperation,
 	BooleanOperation,
 	IQDateField,
 	QDateField,
 	JSONDateFieldOperation,
-	JSONDateOperation,
+	JSONRawDateOperation,
 	IDateOperation,
 	DateOperation,
 	IQField,
@@ -189,13 +189,13 @@ export {
 	IQNumberField,
 	QNumberField,
 	JSONNumberFieldOperation,
-	JSONNumberOperation,
+	JSONRawNumberOperation,
 	INumberOperation,
 	NumberOperation,
 	IQStringField,
 	QStringField,
 	JSONStringFieldOperation,
-	JSONStringOperation,
+	JSONRawStringOperation,
 	IStringOperation,
 	StringOperation,
 	and,
