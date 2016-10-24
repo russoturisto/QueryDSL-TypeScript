@@ -1,5 +1,7 @@
-import {IQEntity} from "./Entity";
-import {JoinType} from "../../query/sql/PHSQLQuery";
+import {IQEntity, QEntity, IFrom, IJoinParent} from "./Entity";
+import {JSONBaseOperation} from "../operation/Operation";
+import {getNextRootEntityName} from "./Aliases";
+import {PHRawMappedSQLQuery} from "../../query/sql/query/ph/PHMappedSQLQuery";
 /**
  * Created by Papa on 4/26/2016.
  */
@@ -15,6 +17,13 @@ export interface RelationRecord {
 export enum RelationType {
 	ONE_TO_MANY,
 	MANY_TO_ONE
+}
+
+export enum JoinType {
+	FULL_JOIN,
+	INNER_JOIN,
+	LEFT_JOIN,
+	RIGHT_JOIN
 }
 
 export interface JSONRelation {
@@ -89,7 +98,7 @@ implements IQRelation<IQR, R, IQ> {
 	}
 
 	private getNewQEntity( joinType: JoinType ): IQR {
-		return new this.relationQEntityConstructor(this.relationQEntityConstructor, this.relationEntityConstructor, this.entityName, this.q.getNextChildJoinPosition(), this.propertyName, joinType);
+		return new this.relationQEntityConstructor(this.relationQEntityConstructor, this.relationEntityConstructor, this.entityName, QRelation.getNextChildJoinPosition(this.q), this.propertyName, joinType);
 	}
 
 	static createRelatedQEntity<IQ extends IQEntity>(
@@ -104,6 +113,13 @@ implements IQRelation<IQR, R, IQ> {
 			joinRelation.fromClausePosition,
 			joinRelation.relationPropertyName,
 			joinRelation.joinType);
+	}
+
+	static getNextChildJoinPosition( joinParent: IJoinParent ): number[] {
+		let nextChildJoinPosition = joinParent.fromClausePosition.slice();
+		nextChildJoinPosition.push(++joinParent.currentChildIndex);
+
+		return nextChildJoinPosition;
 	}
 
 }
@@ -124,10 +140,84 @@ extends QRelation<IQR, R, IQ> {
 
 }
 
-export class JoinFields {
+export interface JoinOperation<IF extends IFrom, EMap> {
+	( entity: IF | EMap ): JSONBaseOperation;
+}
 
-	on() {
+export class JoinFields<IF extends IFrom, EMap> {
 
+	constructor(
+		private joinTo: IF | PHRawMappedSQLQuery<EMap>
+	) {
 	}
 
+	on( joinOperation: JoinOperation<IF, EMap> ): IF | EMap {
+		let entity;
+		let joinChild:IJoinParent;
+		if (this.joinTo instanceof QEntity) {
+			entity = this.joinTo;
+			joinChild = <IJoinParent><any>this.joinTo;
+		} else {
+			let joinChild = <PHRawMappedSQLQuery<EMap>>this.joinTo;
+			entity = joinChild.select;
+		}
+		joinChild.joinWhereClause = joinOperation(entity);
+
+		return entity;
+	}
+}
+
+function join<IF extends IFrom, EMap>(
+	left: IF | PHRawMappedSQLQuery<EMap>,
+	right: IF | PHRawMappedSQLQuery<EMap>,
+  joinType:JoinType
+): JoinFields<IF, EMap> {
+	let nextChildPosition;
+	let joinParent: IJoinParent = <IJoinParent><any>left;
+	// If left is a Raw Mapped Query
+	if (!(left instanceof QEntity)) {
+		// If this is a root entity
+		if (!joinParent.currentChildIndex) {
+			joinParent.currentChildIndex = 0;
+			joinParent.fromClausePosition = [];
+			joinParent.rootEntityPrefix = getNextRootEntityName()
+		}
+	}
+	nextChildPosition = QRelation.getNextChildJoinPosition(joinParent);
+
+	let joinChild: IJoinParent = <IJoinParent><any>right;
+	joinParent.currentChildIndex = 0;
+	joinChild.fromClausePosition = nextChildPosition;
+	joinChild.joinType = joinType;
+	joinChild.rootEntityPrefix = joinParent.rootEntityPrefix;
+
+	return new JoinFields<IF, EMap>(right);
+}
+
+export function fullJoin<IF extends IFrom, EMap>(
+	left: IF | PHRawMappedSQLQuery<EMap>,
+	right: IF | PHRawMappedSQLQuery<EMap>
+): JoinFields<IF, EMap> {
+	return join<IF, EMap>(left, right, JoinType.FULL_JOIN);
+}
+
+export function innerJoin<IF extends IFrom, EMap>(
+	left: IF | PHRawMappedSQLQuery<EMap>,
+	right: IF | PHRawMappedSQLQuery<EMap>
+): JoinFields<IF, EMap> {
+	return join<IF, EMap>(left, right, JoinType.INNER_JOIN);
+}
+
+export function leftJoin<IF extends IFrom, EMap>(
+	left: IF | PHRawMappedSQLQuery<EMap>,
+	right: IF | PHRawMappedSQLQuery<EMap>
+): JoinFields<IF, EMap> {
+	return join<IF, EMap>(left, right, JoinType.LEFT_JOIN);
+}
+
+export function rightJoin<IF extends IFrom, EMap>(
+	left: IF | PHRawMappedSQLQuery<EMap>,
+	right: IF | PHRawMappedSQLQuery<EMap>
+): JoinFields<IF, EMap> {
+	return join<IF, EMap>(left, right, JoinType.RIGHT_JOIN);
 }

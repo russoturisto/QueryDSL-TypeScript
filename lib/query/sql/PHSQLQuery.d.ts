@@ -1,10 +1,9 @@
 import { IEntity, QEntity, IQEntity } from "../../core/entity/Entity";
 import { RelationRecord, JSONRelation } from "../../core/entity/Relation";
-import { JSONBaseOperation, JSONRawValueOperation } from "../../core/operation/Operation";
+import { JSONBaseOperation } from "../../core/operation/Operation";
 import { PHQuery, PHRawQuery } from "../PHQuery";
 import { JSONFieldInOrderBy } from "../../core/field/FieldInOrderBy";
-import { IQField } from "../../core/field/Field";
-import { Appliable, JSONClauseObject } from "../../core/field/Appliable";
+import { JSONClauseObject } from "../../core/field/Appliable";
 /**
  * Created by Papa on 8/12/2016.
  */
@@ -13,25 +12,6 @@ export interface PHRawSQLQuery extends PHRawQuery {
     from?: IQEntity[];
     where?: JSONBaseOperation;
     orderBy?: JSONFieldInOrderBy[];
-}
-export interface PHRawEntitySQLQuery<IE extends IEntity> extends PHRawSQLQuery {
-    select: IE;
-}
-export interface PHRawNonEntitySQLQuery extends PHRawSQLQuery {
-    from: IQEntity[];
-    groupBy?: IQField<any, any, any, any, any>[];
-    having?: JSONRawValueOperation<any>[];
-    limit?: number;
-    offset?: number;
-}
-export interface PHRawFieldSQLQuery<IQF extends IQField<any, any, any, any>> extends PHRawNonEntitySQLQuery {
-    select: IQF;
-}
-export interface PHRawMappedSQLQuery<IE> extends PHRawNonEntitySQLQuery {
-    select: IE;
-}
-export interface PHRawFlatSQLQuery extends PHRawNonEntitySQLQuery {
-    select: Appliable<any, any>[];
 }
 export interface PHJsonCommonSQLQuery {
     rootEntityPrefix: string;
@@ -48,12 +28,6 @@ export interface PHJsonFlatSQLQuery extends PHJsonCommonSQLQuery {
 export interface PHJsonObjectSQLQuery<IE extends IEntity> extends PHJsonCommonSQLQuery {
     select: IE;
 }
-export declare enum JoinType {
-    FULL_JOIN = 0,
-    INNER_JOIN = 1,
-    LEFT_JOIN = 2,
-    RIGHT_JOIN = 3,
-}
 export interface PHSQLQuery extends PHQuery {
     toSQL(): PHJsonCommonSQLQuery;
 }
@@ -69,32 +43,3 @@ export declare function getPHSQLQuery<PHSQ extends PHSQLQuery, PHRSQ extends PHR
     };
 }): PHSQ;
 export declare const QUERY_MARKER_FIELD: string;
-export declare class PHObjectSQLQuery<IE extends IEntity> implements PHSQLQuery {
-    phRawQuery: PHRawEntitySQLQuery<IE>;
-    qEntity: QEntity<any>;
-    qEntityMap: {
-        [entityName: string]: QEntity<any>;
-    };
-    entitiesRelationPropertyMap: {
-        [entityName: string]: {
-            [propertyName: string]: RelationRecord;
-        };
-    };
-    entitiesPropertyTypeMap: {
-        [entityName: string]: {
-            [propertyName: string]: boolean;
-        };
-    };
-    constructor(phRawQuery: PHRawEntitySQLQuery<IE>, qEntity: QEntity<any>, qEntityMap: {
-        [entityName: string]: QEntity<any>;
-    }, entitiesRelationPropertyMap: {
-        [entityName: string]: {
-            [propertyName: string]: RelationRecord;
-        };
-    }, entitiesPropertyTypeMap: {
-        [entityName: string]: {
-            [propertyName: string]: boolean;
-        };
-    });
-    toSQL(): PHJsonObjectSQLQuery<IE>;
-}

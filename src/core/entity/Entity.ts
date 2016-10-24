@@ -18,30 +18,42 @@ export interface IEntity {
 	'*'?: null | undefined;
 }
 
-export interface IQEntity {
+export interface IFrom {
+
+}
+
+export interface IJoinParent {
+
+	currentChildIndex;
+	fromClausePosition: number[];
+	joinType: JoinType;
+	joinWhereClause?:JSONBaseOperation;
+	relationPropertyName?:string;
+	rootEntityPrefix: string;
+
+}
+
+export interface IQEntity extends IJoinParent {
 
 	__qEntityConstructor__: {new ( ...args: any[] ): any};
 	__entityConstructor__: {new (): any};
-	__entityFieldMap__: {[propertyName: string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>};
+	__entityFieldMap__: {[propertyName: string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>};
 	__entityName__: string;
 	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any, IQEntity>};
 
-	rootEntityPrefix: string;
-	fromClausePosition: number[];
-	joinType: JoinType;
 
 	addEntityRelation<IQR extends IQEntity, R>(
 		propertyName: string,
 		relation: IQRelation<IQR, R, IQEntity>
 	): void;
 
-	addEntityField<IQF extends IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>>(
+	addEntityField<IQF extends IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>>(
 		propertyName: string,
 		field: IQF
 	): void;
 
 	fields(
-		fields: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>[]
+		fields: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]
 	): IQEntity;
 
 	/*
@@ -56,14 +68,14 @@ export interface IQEntity {
 
 }
 
-export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
+export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 
-	__entityFieldMap__: {[propertyName: string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>} = {};
+	__entityFieldMap__: {[propertyName: string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>} = {};
 	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any, IQEntity>} = {};
 
 	// rootOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(<any>this, OperationType.AND, []);
 
-	private currentChildIndex = 0;
+	currentChildIndex = 0;
 
 	constructor(
 		public __qEntityConstructor__: {new( ...args: any[] ): any},
@@ -83,7 +95,7 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 		this.__entityRelationMap__[propertyName] = relation;
 	}
 
-	addEntityField<T, IQF extends IQField<IQ, T, JSONBaseOperation, IOperation<T, JSONBaseOperation>>>(
+	addEntityField<T, IQF extends IQField<IQ, T, JSONBaseOperation, IOperation<T, JSONBaseOperation>, any>>(
 		propertyName: string,
 		field: IQF
 	): void {
@@ -100,89 +112,15 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity {
 		};
 	}
 
-	innerJoin<IQ extends IQEntity, IE>(
-	    entity:IQ | PHRawMappedSQLQuery<IE>
-    ):JoinFields {
-
-    }
-
-    fullJoin() {
-
-    }
-
-	leftJoin() {
-
-    }
-
-    rightJoin() {
-
-    }
-
-	/*
-	 addOperation<O extends IOperation<IQ>>(
-	 op:O
-	 ):void {
-	 this.rootOperation.getChildOps().push(op);
-	 }
-	 */
-
 	getQ(): IQ {
 		return <any>this;
 	}
 
 	fields(
-		fields: IQField<IQ, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>>[]
+		fields: IQField<IQ, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]
 	): IQ {
 		throw `Not implemented`;
 	}
-
-	getNextChildJoinPosition(): number[] {
-		let nextChildJoinPosition = this.fromClausePosition.slice();
-		nextChildJoinPosition.push(++this.currentChildIndex);
-
-		return nextChildJoinPosition;
-	}
-
-	/*
-	 joinOn<T, C extends IQField<IQ>>(
-	 comparisonOp:IQField<IQ>
-	 ) {
-	 throw `Not Implemented`;
-	 }
-	 */
-
-	/*
-	 and(
-	 ...ops:IOperation<IQ>[]
-	 ):IOperation<IQ> {
-	 return this.rootOperation.and.apply(this.rootOperation, ops);
-	 }
-
-	 or(
-	 ...ops:IOperation<IQ>[]
-	 ):IOperation<IQ> {
-	 return this.rootOperation.or.apply(this.rootOperation, ops);
-	 }
-
-	 not(
-	 op:IOperation<IQ>
-	 ):IOperation<IQ> {
-	 return this.rootOperation.not(op);
-	 }
-	 */
-
-	/*
-	 objectEquals<OP extends IOperation<IQ>>(
-	 otherOp:OP,
-	 checkValues?:boolean
-	 ):boolean {
-	 if (this.constructor !== otherOp.constructor) {
-	 return false;
-	 }
-	 let otherQ:QEntity<IQ> = <QEntity<IQ>><any>otherOp;
-	 return this.rootOperation.objectEquals(otherQ.rootOperation, checkValues);
-	 }
-	 */
 
 	abstract toJSON();
 

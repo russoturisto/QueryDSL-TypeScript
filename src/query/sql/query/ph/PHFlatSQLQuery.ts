@@ -1,10 +1,16 @@
-import {PHSQLQuery, PHRawNonEntitySQLQuery, PHJsonFlatSQLQuery} from "../../PHSQLQuery";
+import {PHSQLQuery, PHJsonFlatSQLQuery} from "../../PHSQLQuery";
 import {QEntity} from "../../../../core/entity/Entity";
 import {JSONClauseObject} from "../../../../core/field/Appliable";
 import {RelationRecord} from "../../../../core/entity/Relation";
+import {IQField} from "../../../../core/field/Field";
 /**
  * Created by Papa on 10/23/2016.
  */
+
+export interface PHRawFlatSQLQuery<IQF extends IQField<any, any, any, any, any>>
+extends PHRawNonEntitySQLQuery {
+    select: IQF[];
+}
 
 export class PHFlatSQLQuery implements PHSQLQuery {
 
