@@ -1,11 +1,10 @@
-import {FieldType} from "../field/Field";
 import {
 	ValueOperation, IValueOperation,
 	JSONRawValueOperation, OperationCategory
 } from "./Operation";
 import {IQBooleanField} from "../field/BooleanField";
 import {IQEntity} from "../entity/Entity";
-import {PHRawFieldSQLQuery} from "../../query/sql/PHSQLQuery";
+import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
 /**
  * Created by Papa on 6/20/2016.
  */

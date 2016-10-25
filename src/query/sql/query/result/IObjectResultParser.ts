@@ -6,7 +6,7 @@ import {SQLDataType, QueryResultType} from "../../SQLStringQuery";
 import {IQEntity} from "../../../../core/entity/Entity";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
 import {MappedEntityArray} from "../../../../core/MappedEntityArray";
-import {RelationRecord} from "../../../../core/entity/Relation";
+import {EntityRelationRecord} from "../../../../core/entity/Relation";
 import {FlattenedResultParser} from "./FlattenedResultParser";
 import {PlainResultParser} from "./PlainResultParser";
 import {HierarchicalResultParser} from "./HierarchicalResultParser";
@@ -105,7 +105,7 @@ export interface IObjectResultParser {
 		entityMetadata: EntityMetadata,
 		selectClauseFragment: any,
 		entityPropertyTypeMap: {[propertyName: string]: boolean},
-		entityRelationMap: {[propertyName: string]: RelationRecord},
+		entityRelationMap: {[propertyName: string]: EntityRelationRecord},
 		entityId: any,
 		resultObject: any
 	): any;

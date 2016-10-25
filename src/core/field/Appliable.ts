@@ -1,9 +1,9 @@
-import {JSONSqlFunctionCall, SqlFunction} from "./Functions";
+import {JSONSqlFunctionCall} from "./Functions";
 import {IQEntity} from "../entity/Entity";
-import {QField, IQField} from "./Field";
-import {QManyToOneRelation, QRelation} from "../entity/Relation";
+import {IQField} from "./Field";
 import {EntityMetadata} from "../entity/EntityMetadata";
 import {MetadataUtils} from "../entity/metadata/MetadataUtils";
+import {JSONFunctionOperation} from "../operation/Operation";
 /**
  * Created by Papa on 10/19/2016.
  */
@@ -13,6 +13,7 @@ export enum JSONClauseObjectType {
 	EXISTS_FUNCTION,
 	FIELD,
 	FIELD_FUNCTION,
+	FIELD_QUERY,
 	MANY_TO_ONE_RELATION
 }
 
@@ -32,7 +33,7 @@ export interface Appliable<JCO extends JSONClauseObject, IQ extends IQEntity, IQ
 	// q: IQ;
 
 	applySqlFunction<A extends Appliable<JCO, IQ, IQF>>( sqlFunctionCall: JSONSqlFunctionCall ): A;
-	toJSON(): JCO;
+	toJSON(): JCO | JSONFunctionOperation;
 }
 
 export interface ISQLFunctionAdaptor {

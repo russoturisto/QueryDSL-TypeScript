@@ -5,6 +5,7 @@ import { PHRawNonEntitySQLQuery } from "../../query/sql/PHSQLQuery";
 import { IQNumberField } from "./NumberField";
 import { IQDateField } from "./DateField";
 import { IQField } from "./Field";
+import { JSONBaseOperation, OperationCategory, JSONFunctionOperation } from "../operation/Operation";
 /**
  * Created by Papa on 10/18/2016.
  */
@@ -50,19 +51,24 @@ export declare function now(): IQDateField<any>;
 export declare function format(format: string, ...formatParameters: any[]): IQStringField<any>;
 export declare function replace<IQ extends IQEntity>(stringField: IQStringField<IQ> | string, toReplace: string, replaceWith: string): IQStringField<IQ>;
 export declare function trim<IQ extends IQEntity>(stringField: IQStringField<IQ> | string): IQStringField<IQ>;
+export declare abstract class StandAloneFunction {
+}
 export declare function distinct(selectClause: any): IQDistinctFunction;
 export interface IQDistinctFunction {
 }
-export declare class QDistinctFunction implements IQDistinctFunction, Appliable<JSONClauseObject, any, any> {
+export declare class QDistinctFunction extends StandAloneFunction implements IQDistinctFunction, Appliable<JSONClauseObject, any, any> {
     __appliedFunctions__: JSONSqlFunctionCall[];
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): any;
     toJSON(): JSONClauseField;
+    static getSelect(distinct: QDistinctFunction): any;
 }
 export declare function exists(phRawQuery: PHRawNonEntitySQLQuery): IQExistsFunction;
-export interface IQExistsFunction {
+export interface IQExistsFunction extends JSONBaseOperation {
 }
-export declare class QExistsFunction implements IQDistinctFunction, Appliable<JSONClauseObject, any, any> {
+export declare class QExistsFunction extends StandAloneFunction implements IQExistsFunction, Appliable<JSONClauseObject, any, any> {
     __appliedFunctions__: JSONSqlFunctionCall[];
+    operator: string;
+    category: OperationCategory;
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): any;
-    toJSON(): JSONClauseField;
+    toJSON(): JSONFunctionOperation;
 }

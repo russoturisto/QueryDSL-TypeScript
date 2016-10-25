@@ -1,4 +1,4 @@
-import {RelationRecord, RelationType} from "../../../core/entity/Relation";
+import {EntityRelationRecord, EntityRelationType} from "../../../core/entity/Relation";
 import {PHJsonGraphQuery} from "../PHGraphQuery";
 import {IEntity} from "../../../core/entity/Entity";
 import {JSONBaseOperation} from "../../../core/operation/Operation";
@@ -38,7 +38,7 @@ export class PouchDbGraphQuery<IE extends IEntity> {
 	constructor(
 		private entityName: string,
 		private queryKey:string,
-		private entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
+		private entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		private entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		queryJson: PHJsonGraphQuery<IE>
 	) {
@@ -100,10 +100,10 @@ export class PouchDbGraphQuery<IE extends IEntity> {
 			let relationRecord = entityRelationPropertyMap[propertyName];
 			if (relationRecord) {
 				switch (relationRecord.relationType) {
-					case RelationType.MANY_TO_ONE:
+					case EntityRelationType.MANY_TO_ONE:
 						this.addField(propertyName);
 						break;
-					case RelationType.ONE_TO_MANY:
+					case EntityRelationType.ONE_TO_MANY:
 						break;
 				}
 				let fragmentJson = this.queryJson[propertyName];

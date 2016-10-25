@@ -1,6 +1,6 @@
 import {SQLStringWhereBase} from "./SQLStringWhereBase";
 import {IEntity} from "../../core/entity/Entity";
-import {JSONRelation, QRelation} from "../../core/entity/Relation";
+import {JSONEntityRelation, QRelation} from "../../core/entity/Relation";
 import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
 /**
  * Created by Papa on 10/2/2016.
@@ -9,7 +9,7 @@ import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
 export abstract class SQLStringNoJoinQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
 
 	getJoinNodeMap(): {[alias: string]: JoinTreeNode} {
-		let rootRelation: JSONRelation = {
+		let rootRelation: JSONEntityRelation = {
 			fromClausePosition: [],
 			entityName: this.rootQEntity.__entityName__,
 			joinType: null,
@@ -25,7 +25,7 @@ export abstract class SQLStringNoJoinQuery<IE extends IEntity> extends SQLString
 	}
 
 	protected getTableFragment(
-		fromRelation: JSONRelation
+		fromRelation: JSONEntityRelation
 	): string {
 		if (!fromRelation) {
 			throw `Expecting exactly one table in FROM clause`;

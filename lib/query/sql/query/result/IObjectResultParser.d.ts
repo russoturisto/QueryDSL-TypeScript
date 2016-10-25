@@ -5,7 +5,7 @@ import { SQLDataType, QueryResultType } from "../../SQLStringQuery";
 import { IQEntity } from "../../../../core/entity/Entity";
 import { EntityMetadata } from "../../../../core/entity/EntityMetadata";
 import { MappedEntityArray } from "../../../../core/MappedEntityArray";
-import { RelationRecord } from "../../../../core/entity/Relation";
+import { EntityRelationRecord } from "../../../../core/entity/Relation";
 export declare class BridgedQueryConfiguration {
     strict: boolean;
     mapped: boolean;
@@ -23,7 +23,7 @@ export interface IObjectResultParser {
     flushEntity(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, selectClauseFragment: any, entityPropertyTypeMap: {
         [propertyName: string]: boolean;
     }, entityRelationMap: {
-        [propertyName: string]: RelationRecord;
+        [propertyName: string]: EntityRelationRecord;
     }, entityId: any, resultObject: any): any;
     flushRow(): void;
     bridge(parsedResults: any[], selectClauseFragment: any): any[] | MappedEntityArray<any>;

@@ -1,7 +1,7 @@
 import {PHSQLQuery, PHJsonFlatSQLQuery} from "../../PHSQLQuery";
 import {QEntity} from "../../../../core/entity/Entity";
 import {JSONClauseObject} from "../../../../core/field/Appliable";
-import {RelationRecord} from "../../../../core/entity/Relation";
+import {EntityRelationRecord} from "../../../../core/entity/Relation";
 import {IQField} from "../../../../core/field/Field";
 /**
  * Created by Papa on 10/23/2016.
@@ -18,7 +18,7 @@ export class PHFlatSQLQuery implements PHSQLQuery {
         public phRawQuery: PHRawNonEntitySQLQuery,
         public qEntity: QEntity<any>,
         public qEntityMap: {[entityName: string]: QEntity<any>},
-        public entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
+        public entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
         public entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}}
     ) {
     }

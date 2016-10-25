@@ -1,7 +1,7 @@
 import { IEntity, IQEntity } from "../../core/entity/Entity";
 import { PHJsonSQLUpdate } from "./PHSQLUpdate";
 import { SQLDialect } from "./SQLStringQuery";
-import { RelationRecord } from "../../core/entity/Relation";
+import { EntityRelationRecord } from "../../core/entity/Relation";
 import { SQLStringNoJoinQuery } from "./SQLStringNoJoinQuery";
 /**
  * Created by Papa on 10/2/2016.
@@ -12,7 +12,7 @@ export declare class SQLStringUpdate<IE extends IEntity> extends SQLStringNoJoin
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: RelationRecord;
+            [propertyName: string]: EntityRelationRecord;
         };
     }, entitiesPropertyTypeMap: {
         [entityName: string]: {

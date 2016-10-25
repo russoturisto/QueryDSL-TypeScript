@@ -2,7 +2,7 @@ import { IObjectResultParser, AbstractObjectResultParser } from "./IObjectResult
 import { IQEntity } from "../../../../core/entity/Entity";
 import { SQLDataType } from "../../SQLStringQuery";
 import { EntityMetadata } from "../../../../core/entity/EntityMetadata";
-import { RelationRecord } from "../../../../core/entity/Relation";
+import { EntityRelationRecord } from "../../../../core/entity/Relation";
 /**
  * Created by Papa on 10/16/2016.
  */
@@ -38,7 +38,7 @@ export declare class HierarchicalResultParser extends AbstractObjectResultParser
     flushEntity(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, selectClauseFragment: any, entityPropertyTypeMap: {
         [propertyName: string]: boolean;
     }, entityRelationMap: {
-        [propertyName: string]: RelationRecord;
+        [propertyName: string]: EntityRelationRecord;
     }, entityId: any, resultObject: any): any;
     mergeEntity(entityAlias: string, resultObject: any): any;
     flushRow(): void;

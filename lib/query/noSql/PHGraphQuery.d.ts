@@ -1,5 +1,5 @@
 import { IEntity, QEntity } from "../../core/entity/Entity";
-import { RelationRecord } from "../../core/entity/Relation";
+import { EntityRelationRecord } from "../../core/entity/Relation";
 import { JSONBaseOperation } from "../../core/operation/Operation";
 import { PHQuery, PHRawQuery } from "../PHQuery";
 /**
@@ -23,7 +23,7 @@ export declare class PHGraphQuery<IE extends IEntity> implements PHQuery<IE> {
     };
     entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: RelationRecord;
+            [propertyName: string]: EntityRelationRecord;
         };
     };
     entitiesPropertyTypeMap: {
@@ -38,7 +38,7 @@ export declare class PHGraphQuery<IE extends IEntity> implements PHQuery<IE> {
         [entityName: string]: QEntity<any>;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: RelationRecord;
+            [propertyName: string]: EntityRelationRecord;
         };
     }, entitiesPropertyTypeMap: {
         [entityName: string]: {

@@ -2,7 +2,7 @@ import {IEntity, IQEntity} from "../../core/entity/Entity";
 import {SQLStringWhereBase} from "./SQLStringWhereBase";
 import {PHJsonSQLUpdate} from "./PHSQLUpdate";
 import {SQLDialect} from "./SQLStringQuery";
-import {RelationRecord, QRelation} from "../../core/entity/Relation";
+import {EntityRelationRecord, QRelation} from "../../core/entity/Relation";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
 import {SQLStringNoJoinQuery} from "./SQLStringNoJoinQuery";
 import {QBooleanField} from "../../core/field/BooleanField";
@@ -20,7 +20,7 @@ export class SQLStringUpdate<IE extends IEntity> extends SQLStringNoJoinQuery<IE
 		public phJsonUpdate: PHJsonSQLUpdate<IE>,
 		qEntity: IQEntity,
 		qEntityMap: {[entityName: string]: IQEntity},
-		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
+		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		dialect: SQLDialect
 	) {

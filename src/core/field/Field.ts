@@ -7,7 +7,7 @@ import {QRelation} from "../entity/Relation";
 import {FieldInOrderBy, SortOrder, JSONFieldInOrderBy} from "./FieldInOrderBy";
 import {JSONSqlFunctionCall} from "./Functions";
 import {Appliable, JSONClauseField, JSONClauseObjectType} from "./Appliable";
-import {PHRawFieldSQLQuery} from "../../query/sql/PHSQLQuery";
+import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
 
 export enum FieldType {
 	BOOLEAN,
@@ -26,13 +26,6 @@ export interface Orderable<IQ extends IQEntity, IQF extends IQField<IQ, any, any
 
 export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>, IQF extends IQField<IQ, T, JO, IO, any>>
 extends Orderable<IQ, IQF> {
-
-	entityName: string;
-	fieldName: string;
-	fieldType: FieldType;
-	operation: IO;
-	q: IQ;
-	qConstructor: new() => IQ;
 
 	equals(
 		value: T | IQF | PHRawFieldSQLQuery<IQF>
@@ -58,7 +51,7 @@ extends Orderable<IQ, IQF> {
 }
 
 export abstract class QField<IQ extends IQEntity, T, JO extends JSONRawValueOperation<IQF>, IO extends IValueOperation<T, JO, IQ, IQF>, IQF extends IQField<any, T, JO, IO, any>>
-implements IQField<IQ, T, JO, IO, IQF>, Appliable<JSONClauseField, IQ, IQF> {
+implements IQField<IQ, T, JO, IO, IQF>, Appliable<JSONClauseField, IQ, IQF> {0
 
 	__appliedFunctions__: JSONSqlFunctionCall[] = [];
 
@@ -97,8 +90,8 @@ implements IQField<IQ, T, JO, IO, IQF>, Appliable<JSONClauseField, IQ, IQF> {
 		return jsonOperation;
 	}
 
-	objectEquals<IQF extends IQField<any, any, JOE, IOE, IQF>, JOE extends JSONBaseOperation, IOE extends IOperation<any, JOE>>(
-		otherField: IQF,
+	objectEquals<QF extends QField<any, any, any, any, any>>(
+		otherField: QF,
 		checkValue?: boolean
 	): boolean {
 

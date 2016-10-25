@@ -2,14 +2,10 @@
  * Created by Papa on 4/21/2016.
  */
 import {IQField} from "../field/Field";
-import {IQRelation, JSONRelation, JoinFields} from "./Relation";
-import {JoinType, PHRawMappedSQLQuery} from "../../query/sql/PHSQLQuery";
+import {IQRelation, JSONEntityRelation, JSONRelationType, JSONRelation, JSONJoinRelation} from "./Relation";
 import {JSONBaseOperation, IOperation} from "../operation/Operation";
 import {getNextRootEntityName} from "./Aliases";
-import {IQNumberField} from "../field/NumberField";
-import {IQBooleanField} from "../field/BooleanField";
-import {IQDateField} from "../field/DateField";
-import {IQStringField} from "../field/StringField";
+import {JoinType} from "./Joins";
 
 /**
  * Marker interface for all query interfaces
@@ -22,24 +18,19 @@ export interface IFrom {
 
 }
 
-export interface IJoinParent {
 
-	currentChildIndex;
-	fromClausePosition: number[];
-	joinType: JoinType;
-	joinWhereClause?:JSONBaseOperation;
-	relationPropertyName?:string;
-	rootEntityPrefix: string;
-
-}
-
-export interface IQEntity extends IJoinParent {
+export interface IQEntity {
 
 	__qEntityConstructor__: {new ( ...args: any[] ): any};
 	__entityConstructor__: {new (): any};
 	__entityFieldMap__: {[propertyName: string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>};
 	__entityName__: string;
 	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any, IQEntity>};
+	currentChildIndex:number;
+	rootEntityPrefix: string;
+	fromClausePosition: number[];
+	relationPropertyName: string;
+	joinType: JoinType;
 
 
 	addEntityRelation<IQR extends IQEntity, R>(
@@ -64,8 +55,6 @@ export interface IQEntity extends IJoinParent {
 
 	getRelationJson(): JSONRelation;
 
-	getNextChildJoinPosition(): number[];
-
 }
 
 export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
@@ -76,6 +65,7 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 	// rootOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(<any>this, OperationType.AND, []);
 
 	currentChildIndex = 0;
+	joinWhereClause: JSONBaseOperation;
 
 	constructor(
 		public __qEntityConstructor__: {new( ...args: any[] ): any},
@@ -103,14 +93,38 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 	}
 
 	getRelationJson(): JSONRelation {
-		return {
-			rootEntityName: this.rootEntityPrefix,
-			fromClausePosition: this.fromClausePosition,
+		let jsonRelation: JSONRelation = {
+			currentChildIndex: this.currentChildIndex,
 			entityName: this.__entityName__,
+			fromClausePosition: this.fromClausePosition,
 			joinType: this.joinType,
-			relationPropertyName: this.relationPropertyName
+			relationType: null,
+			rootEntityPrefix: this.rootEntityPrefix
 		};
+		if (this.joinWhereClause) {
+			this.getJoinRelationJson(<JSONJoinRelation>jsonRelation);
+		} else if (this.relationPropertyName) {
+			this.getEntityRelationJson(<JSONEntityRelation>jsonRelation);
+		} else {
+			this.getRootRelationJson(jsonRelation);
+		}
+		return jsonRelation;
 	}
+
+	getJoinRelationJson( jsonRelation: JSONJoinRelation ): void {
+		jsonRelation.relationType = JSONRelationType.ENTITY_JOIN;
+		jsonRelation.joinWhereClause = this.joinWhereClause;
+	}
+
+	getEntityRelationJson( jsonRelation: JSONEntityRelation ): void {
+		jsonRelation.relationType = JSONRelationType.ENTITY_RELATION;
+		jsonRelation.relationPropertyName = this.relationPropertyName;
+	}
+
+	getRootRelationJson( jsonRelation: JSONRelation ): void {
+		jsonRelation.relationType = JSONRelationType.ENTITY_ROOT;
+	}
+
 
 	getQ(): IQ {
 		return <any>this;

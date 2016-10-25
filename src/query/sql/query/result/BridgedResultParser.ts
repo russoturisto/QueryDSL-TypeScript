@@ -4,7 +4,7 @@ import {BridgedMtoMapper, ManyToOneStubReference} from "./BridgedMtoMapper";
 import {IQEntity} from "../../../../core/entity/Entity";
 import {SQLDataType} from "../../SQLStringQuery";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
-import {RelationType, RelationRecord} from "../../../../core/entity/Relation";
+import {EntityRelationType, EntityRelationRecord} from "../../../../core/entity/Relation";
 import {MappedEntityArray} from "../../../../core/MappedEntityArray";
 /**
  * Created by Papa on 10/16/2016.
@@ -101,7 +101,7 @@ export class BridgedResultParser extends AbstractObjectResultParser implements I
 		let otmEntityField;
 		for (let otmRelationProperty in relationGenericQEntity.__entityRelationMap__) {
 			let otmRelation = relationGenericQEntity.__entityRelationMap__[otmRelationProperty];
-			if (otmRelation.relationType === RelationType.ONE_TO_MANY) {
+			if (otmRelation.relationType === EntityRelationType.ONE_TO_MANY) {
 				let otmElements = relationEntityMetadata.oneToManyMap[otmRelationProperty];
 				if (otmElements.mappedBy === propertyName) {
 					otmEntityField = otmRelationProperty;
@@ -181,7 +181,7 @@ export class BridgedResultParser extends AbstractObjectResultParser implements I
 		entityMetadata: EntityMetadata,
 		selectClauseFragment: any,
 		entityPropertyTypeMap: {[propertyName: string]: boolean},
-		entityRelationMap: {[propertyName: string]: RelationRecord},
+		entityRelationMap: {[propertyName: string]: EntityRelationRecord},
 		entityId: any,
 		resultObject: any
 	): any {
@@ -198,7 +198,7 @@ export class BridgedResultParser extends AbstractObjectResultParser implements I
 		qEntity: IQEntity,
 		selectClauseFragment: any,
 		entityPropertyTypeMap: {[propertyName: string]: boolean},
-		entityRelationMap: {[propertyName: string]: RelationRecord},
+		entityRelationMap: {[propertyName: string]: EntityRelationRecord},
 		entityId: any,
 		resultObject: any
 	): any {
@@ -236,7 +236,7 @@ export class BridgedResultParser extends AbstractObjectResultParser implements I
 		qEntity: IQEntity,
 		selectClauseFragment: any,
 		entityPropertyTypeMap: {[propertyName: string]: boolean},
-		entityRelationMap: {[propertyName: string]: RelationRecord}
+		entityRelationMap: {[propertyName: string]: EntityRelationRecord}
 	): any {
 		if (!source || target === source) {
 			return target;

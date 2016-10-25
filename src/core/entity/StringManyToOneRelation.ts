@@ -1,9 +1,9 @@
 import {QStringField, IQStringField} from "../field/StringField";
 import {IQEntity} from "./Entity";
 import {JSONSqlFunctionCall} from "../field/Functions";
-import {IQRelation, RelationType, QRelation} from "./Relation";
-import {JoinType} from "../../query/sql/PHSQLQuery";
+import {IQRelation, EntityRelationType, QRelation} from "./Relation";
 import {JSONClauseField, JSONClauseObjectType} from "../field/Appliable";
+import {JoinType} from "./Joins";
 /**
  * Created by Papa on 10/23/2016.
  */
@@ -13,9 +13,9 @@ extends IQRelation<IQR, R, IQ>, IQStringField<IQR> {
 }
 
 export class QStringManyToOneRelation<IQR extends IQEntity, R, IQ extends IQEntity>
-extends QStringField<IQR> {
+extends QStringField<IQR> implements IQRelation<IQR, R, IQ> {
 
-	relationType = RelationType.MANY_TO_ONE;
+	relationType = EntityRelationType.MANY_TO_ONE;
 
 	constructor(
 		public q: IQR,

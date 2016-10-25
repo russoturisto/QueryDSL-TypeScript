@@ -1,7 +1,7 @@
 /**
  * Created by Papa on 10/16/2016.
  */
-import { RelationRecord } from "../../../core/entity/Relation";
+import { EntityRelationRecord } from "../../../core/entity/Relation";
 import { EntityDefaults, SQLStringQuery, QueryResultType, SQLDialect } from "../SQLStringQuery";
 import { IEntity, IQEntity } from "../../../core/entity/Entity";
 import { BridgedQueryConfiguration } from "./result/IObjectResultParser";
@@ -18,7 +18,7 @@ export declare class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQ
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: RelationRecord;
+            [propertyName: string]: EntityRelationRecord;
         };
     }, entitiesPropertyTypeMap: {
         [entityName: string]: {

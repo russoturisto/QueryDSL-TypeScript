@@ -2,15 +2,26 @@
  * Created by Papa on 4/21/2016.
  */
 import {IQEntity} from "../entity/Entity";
-import {PHRawFieldSQLQuery} from "../../query/sql/PHSQLQuery";
 import {IQField} from "../field/Field";
+import {PHRawFieldSQLQuery, PHJsonFieldQSLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
+import {JSONClauseField, JSONClauseObject} from "../field/Appliable";
 
 export enum OperationCategory {
 	BOOLEAN,
 	DATE,
+	FUNCTION,
 	LOGICAL,
 	NUMBER,
 	STRING
+}
+
+export interface JSONFunctionOperation extends JSONBaseOperation {
+	object: JSONClauseObject;
+}
+
+export interface JSONValueOperation extends JSONBaseOperation {
+	lValue: JSONClauseField;
+	rValue?: boolean | boolean[] | Date | Date[] | number | number[] | string | string[] | JSONClauseField | JSONClauseField[] | PHJsonFieldQSLQuery;
 }
 
 export interface JSONBaseOperation {

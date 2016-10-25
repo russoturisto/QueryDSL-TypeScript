@@ -1,5 +1,5 @@
 import { PHJsonCommonSQLQuery } from "./PHSQLQuery";
-import { RelationRecord, JSONRelation } from "../../core/entity/Relation";
+import { EntityRelationRecord, JSONEntityRelation } from "../../core/entity/Relation";
 import { IEntity, IQEntity } from "../../core/entity/Entity";
 import { FieldMap } from "./FieldMap";
 import { SQLStringWhereBase } from "./SQLStringWhereBase";
@@ -53,7 +53,7 @@ export declare abstract class SQLStringQuery<IE extends IEntity> extends SQLStri
         [alias: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: RelationRecord;
+            [propertyName: string]: EntityRelationRecord;
         };
     }, entitiesPropertyTypeMap: {
         [entityName: string]: {
@@ -67,7 +67,7 @@ export declare abstract class SQLStringQuery<IE extends IEntity> extends SQLStri
      */
     buildJoinTree(): void;
     toSQL(embedParameters?: boolean, parameters?: any[]): string;
-    buildFromJoinTree(entityName: string, joinRelations: JSONRelation[], joinNodeMap: {
+    buildFromJoinTree(entityName: string, joinRelations: JSONEntityRelation[], joinNodeMap: {
         [alias: string]: JoinTreeNode;
     }): JoinTreeNode;
     protected abstract getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults, embedParameters?: boolean, parameters?: any[]): string;

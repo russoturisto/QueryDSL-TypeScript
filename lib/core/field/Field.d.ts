@@ -6,7 +6,7 @@ import { JSONBaseOperation, IOperation, JSONRawValueOperation, IValueOperation }
 import { JSONFieldInOrderBy } from "./FieldInOrderBy";
 import { JSONSqlFunctionCall } from "./Functions";
 import { Appliable, JSONClauseField } from "./Appliable";
-import { PHRawFieldSQLQuery } from "../../query/sql/PHSQLQuery";
+import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 export declare enum FieldType {
     BOOLEAN = 0,
     DATE = 1,
@@ -18,12 +18,6 @@ export interface Orderable<IQ extends IQEntity, IQF extends IQField<IQ, any, any
     desc(): JSONFieldInOrderBy;
 }
 export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>, IQF extends IQField<IQ, T, JO, IO, any>> extends Orderable<IQ, IQF> {
-    entityName: string;
-    fieldName: string;
-    fieldType: FieldType;
-    operation: IO;
-    q: IQ;
-    qConstructor: new () => IQ;
     equals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
     isIn(values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]): JO;
     isNotNull(): JO;
@@ -39,11 +33,12 @@ export declare abstract class QField<IQ extends IQEntity, T, JO extends JSONRawV
     fieldName: string;
     fieldType: FieldType;
     operation: IO;
+    0: any;
     __appliedFunctions__: JSONSqlFunctionCall[];
     constructor(childConstructor: new (q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string, fieldType: FieldType) => IQField<IQ, T, JO, IO, IQF>, q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string, fieldType: FieldType, operation: IO);
     protected getFieldKey(): string;
     setOperation(jsonOperation: JO): JO;
-    objectEquals<IQF extends IQField<any, any, JOE, IOE, IQF>, JOE extends JSONBaseOperation, IOE extends IOperation<any, JOE>>(otherField: IQF, checkValue?: boolean): boolean;
+    objectEquals<QF extends QField<any, any, any, any, any>>(otherField: QF, checkValue?: boolean): boolean;
     equals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
     isNotNull(): JO;
     isNull(): JO;

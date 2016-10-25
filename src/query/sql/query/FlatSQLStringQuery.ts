@@ -4,7 +4,7 @@
 import {IEntity, IQEntity} from "../../../core/entity/Entity";
 import {SQLStringQuery, SQLDialect, QueryResultType} from "../SQLStringQuery";
 import {JSONFieldInOrderBy} from "../../../core/field/FieldInOrderBy";
-import {RelationRecord} from "../../../core/entity/Relation";
+import {EntityRelationRecord} from "../../../core/entity/Relation";
 /**
  * Represents SQL String query with flat (aka traditional) Select clause.
  */
@@ -14,7 +14,7 @@ export class FlatSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE> {
 		phJsonQuery: PHJsonSQLQuery<IE>,
 		qEntity: IQEntity,
 		qEntityMapByName: {[entityName: string]: IQEntity},
-		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
+		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		dialect: SQLDialect
 	) {

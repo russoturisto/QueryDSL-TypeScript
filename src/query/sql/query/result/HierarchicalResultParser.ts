@@ -2,7 +2,7 @@ import {IObjectResultParser, AbstractObjectResultParser} from "./IObjectResultPa
 import {IQEntity} from "../../../../core/entity/Entity";
 import {SQLDataType} from "../../SQLStringQuery";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
-import {RelationRecord} from "../../../../core/entity/Relation";
+import {EntityRelationRecord} from "../../../../core/entity/Relation";
 /**
  * Created by Papa on 10/16/2016.
  */
@@ -220,7 +220,7 @@ export class HierarchicalResultParser extends AbstractObjectResultParser impleme
 		entityMetadata: EntityMetadata,
 		selectClauseFragment: any,
 		entityPropertyTypeMap: {[propertyName: string]: boolean},
-		entityRelationMap: {[propertyName: string]: RelationRecord},
+		entityRelationMap: {[propertyName: string]: EntityRelationRecord},
 		entityId: any,
 		resultObject: any
 	): any {

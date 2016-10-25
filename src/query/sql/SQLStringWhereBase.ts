@@ -1,7 +1,7 @@
 import {IEntity, IQEntity} from "../../core/entity/Entity";
 import {ISQLAdaptor, getSQLAdaptor} from "./adaptor/SQLAdaptor";
 import {SQLDialect} from "./SQLStringQuery";
-import {RelationRecord} from "../../core/entity/Relation";
+import {EntityRelationRecord} from "../../core/entity/Relation";
 import {QBooleanField} from "../../core/field/BooleanField";
 import {QDateField} from "../../core/field/DateField";
 import {QNumberField} from "../../core/field/NumberField";
@@ -25,7 +25,7 @@ export abstract class SQLStringWhereBase<IE extends IEntity> {
 	constructor(
 		protected rootQEntity: IQEntity,
 		protected qEntityMapByName: {[entityName: string]: IQEntity},
-		protected entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
+		protected entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		protected entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		protected dialect: SQLDialect
 	) {

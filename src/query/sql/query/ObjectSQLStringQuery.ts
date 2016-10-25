@@ -1,7 +1,7 @@
 /**
  * Created by Papa on 10/16/2016.
  */
-import {QRelation, RelationRecord} from "../../../core/entity/Relation";
+import {QRelation, EntityRelationRecord} from "../../../core/entity/Relation";
 import {EntityDefaults, SQLStringQuery, SQLDataType, QueryResultType, SQLDialect} from "../SQLStringQuery";
 import {IEntity, IQEntity} from "../../../core/entity/Entity";
 import {EntityMetadata} from "../../../core/entity/EntityMetadata";
@@ -25,7 +25,7 @@ export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE>
 		phJsonQuery: PHJsonCommonSQLQuery<IE>,
 		qEntity: IQEntity,
 		qEntityMapByName: {[entityName: string]: IQEntity},
-		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
+		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		dialect: SQLDialect,
 		queryResultType: QueryResultType,

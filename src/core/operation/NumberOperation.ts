@@ -4,7 +4,7 @@ import {
 } from "./Operation";
 import {IQEntity} from "../entity/Entity";
 import {IQNumberField} from "../field/NumberField";
-import {PHRawFieldSQLQuery} from "../../query/sql/PHSQLQuery";
+import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
 /**
  * Created by Papa on 6/20/2016.
  */

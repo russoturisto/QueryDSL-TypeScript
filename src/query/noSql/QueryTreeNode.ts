@@ -1,5 +1,5 @@
 import {QEntity} from "../../core/entity/Entity";
-import {JSONRelation} from "../../core/entity/Relation";
+import {JSONEntityRelation} from "../../core/entity/Relation";
 /**
  * Created by Papa on 8/23/2016.
  */
@@ -15,7 +15,7 @@ export class QueryTreeNode {
 
 	constructor(
 		public qEntity:QEntity<any>,
-	  public relationToParent:JSONRelation,
+	  public relationToParent:JSONEntityRelation,
 	  public relationToParentType:RelationType
 	) {
 	}

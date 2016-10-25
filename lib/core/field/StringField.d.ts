@@ -1,9 +1,9 @@
 import { IQEntity } from "../entity/Entity";
 import { IQField, QField } from "./Field";
 import { IStringOperation, JSONRawStringOperation } from "../operation/StringOperation";
-import { PHRawFieldSQLQuery } from "../../query/sql/PHSQLQuery";
 import { JSONSqlFunctionCall } from "./Functions";
 import { JSONClauseField } from "./Appliable";
+import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 /**
  * Created by Papa on 8/11/2016.
  */

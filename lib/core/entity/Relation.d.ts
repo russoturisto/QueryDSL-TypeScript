@@ -1,77 +1,53 @@
-import { IQEntity, IFrom, IJoinParent } from "./Entity";
+import { IQEntity } from "./Entity";
 import { JSONBaseOperation } from "../operation/Operation";
-import { PHRawMappedSQLQuery } from "../../query/sql/query/ph/PHMappedSQLQuery";
+import { JoinType } from "./Joins";
 /**
  * Created by Papa on 4/26/2016.
  */
-export interface RelationRecord {
+export interface EntityRelationRecord {
     entityName: string;
     propertyName: string;
-    relationType: RelationType;
+    relationType: EntityRelationType;
 }
-export declare enum RelationType {
+export declare enum EntityRelationType {
     ONE_TO_MANY = 0,
     MANY_TO_ONE = 1,
 }
-export declare enum JoinType {
-    FULL_JOIN = 0,
-    INNER_JOIN = 1,
-    LEFT_JOIN = 2,
-    RIGHT_JOIN = 3,
+export declare enum JSONRelationType {
+    ENTITY_JOIN = 0,
+    ENTITY_RELATION = 1,
+    ENTITY_ROOT = 2,
+    SUB_QUERY_JOIN = 3,
+    SUB_QUERY_ROOT = 4,
 }
 export interface JSONRelation {
-    rootEntityName: string;
+    currentChildIndex: number;
+    entityName?: string;
     fromClausePosition: number[];
-    entityName: string;
     joinType: JoinType;
+    relationType: JSONRelationType;
+    rootEntityPrefix: string;
+}
+export interface JSONJoinRelation extends JSONRelation {
+    joinWhereClause?: JSONBaseOperation;
+}
+export interface JSONEntityRelation extends JSONRelation {
     relationPropertyName: string;
 }
 export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
-    relationType: RelationType;
+    relationType: EntityRelationType;
     relationEntityConstructor: new () => R;
     relationQEntityConstructor: new () => IQR;
     innerJoin(): any;
     leftJoin(): any;
 }
 export declare const IS_ENTITY_PROPERTY_NAME: string;
-export declare abstract class QRelation<IQR extends IQEntity, R, IQ extends IQEntity> implements IQRelation<IQR, R, IQ> {
-    q: IQ;
-    qConstructor: new () => IQ;
-    relationType: RelationType;
-    entityName: string;
-    propertyName: string;
-    relationEntityConstructor: new () => R;
-    relationQEntityConstructor: new (...args: any[]) => IQR;
-    static getPositionAlias(rootEntityName: string, fromClausePosition: number[]): string;
-    static getAlias(jsonRelation: JSONRelation): string;
-    static getParentAlias(jsonRelation: JSONRelation): string;
-    constructor(q: IQ, qConstructor: new () => IQ, relationType: RelationType, entityName: string, propertyName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR);
-    innerJoin(): IQR;
-    leftJoin(): IQR;
-    private getNewQEntity(joinType);
-    static createRelatedQEntity<IQ extends IQEntity>(joinRelation: JSONRelation, entityMapByName: {
+export declare abstract class QRelation {
+    static getPositionAlias(rootEntityPrefix: string, fromClausePosition: number[]): string;
+    static getAlias(jsonRelation: JSONEntityRelation): string;
+    static getParentAlias(jsonRelation: JSONEntityRelation): string;
+    static createRelatedQEntity<IQ extends IQEntity>(joinRelation: JSONEntityRelation, entityMapByName: {
         [entityName: string]: IQEntity;
     }): IQ;
-    static getNextChildJoinPosition(joinParent: IJoinParent): number[];
+    static getNextChildJoinPosition(joinParent: JSONJoinRelation | IQEntity): number[];
 }
-export declare class QOneToManyRelation<IQR extends IQEntity, R, IQ extends IQEntity> extends QRelation<IQR, R, IQ> {
-    q: IQ;
-    qConstructor: new () => IQ;
-    entityName: string;
-    propertyName: string;
-    relationEntityConstructor: new () => R;
-    relationQEntityConstructor: new (...args: any[]) => IQR;
-    constructor(q: IQ, qConstructor: new () => IQ, entityName: string, propertyName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR);
-}
-export interface JoinOperation<IF extends IFrom, EMap> {
-    (entity: IF | EMap): JSONBaseOperation;
-}
-export declare class JoinFields<IF extends IFrom, EMap> {
-    private joinTo;
-    constructor(joinTo: IF | PHRawMappedSQLQuery<EMap>);
-    on(joinOperation: JoinOperation<IF, EMap>): IF | EMap;
-}
-export declare function fullJoin<IF extends IFrom, EMap>(left: IF | PHRawMappedSQLQuery<EMap>, right: IF | PHRawMappedSQLQuery<EMap>): JoinFields<IF, EMap>;
-export declare function innerJoin<IF extends IFrom, EMap>(left: IF | PHRawMappedSQLQuery<EMap>, right: IF | PHRawMappedSQLQuery<EMap>): JoinFields<IF, EMap>;
-export declare function leftJoin<IF extends IFrom, EMap>(left: IF | PHRawMappedSQLQuery<EMap>, right: IF | PHRawMappedSQLQuery<EMap>): JoinFields<IF, EMap>;
-export declare function rightJoin<IF extends IFrom, EMap>(left: IF | PHRawMappedSQLQuery<EMap>, right: IF | PHRawMappedSQLQuery<EMap>): JoinFields<IF, EMap>;

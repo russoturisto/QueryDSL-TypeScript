@@ -4,7 +4,7 @@ import { BridgedMtoMapper, ManyToOneStubReference } from "./BridgedMtoMapper";
 import { IQEntity } from "../../../../core/entity/Entity";
 import { SQLDataType } from "../../SQLStringQuery";
 import { EntityMetadata } from "../../../../core/entity/EntityMetadata";
-import { RelationRecord } from "../../../../core/entity/Relation";
+import { EntityRelationRecord } from "../../../../core/entity/Relation";
 /**
  * Created by Papa on 10/16/2016.
  */
@@ -42,7 +42,7 @@ export declare class BridgedResultParser extends AbstractObjectResultParser impl
     flushEntity(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, selectClauseFragment: any, entityPropertyTypeMap: {
         [propertyName: string]: boolean;
     }, entityRelationMap: {
-        [propertyName: string]: RelationRecord;
+        [propertyName: string]: EntityRelationRecord;
     }, entityId: any, resultObject: any): any;
     private getEntityToFlush(qEntity, selectClauseFragment, entityPropertyTypeMap, entityRelationMap, entityId, resultObject);
     /**

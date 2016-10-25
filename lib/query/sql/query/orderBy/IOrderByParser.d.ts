@@ -1,7 +1,7 @@
 import { QueryResultType } from "../../SQLStringQuery";
 import { JSONFieldInOrderBy } from "../../../../core/field/FieldInOrderBy";
 import { IQEntity } from "../../../../core/entity/Entity";
-import { RelationRecord } from "../../../../core/entity/Relation";
+import { EntityRelationRecord } from "../../../../core/entity/Relation";
 import { JoinTreeNode } from "../../../../core/entity/JoinTreeNode";
 /**
  * Created by Papa on 10/16/2016.
@@ -19,7 +19,7 @@ export declare abstract class AbstractOrderByParser {
     };
     protected entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: RelationRecord;
+            [propertyName: string]: EntityRelationRecord;
         };
     };
     protected entitiesPropertyTypeMap: {
@@ -32,7 +32,7 @@ export declare abstract class AbstractOrderByParser {
         [alias: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: RelationRecord;
+            [propertyName: string]: EntityRelationRecord;
         };
     }, entitiesPropertyTypeMap: {
         [entityName: string]: {
@@ -47,7 +47,7 @@ export declare function getOrderByParser(queryResultType: QueryResultType, rootQ
     [entityName: string]: IQEntity;
 }, entitiesRelationPropertyMap: {
     [entityName: string]: {
-        [propertyName: string]: RelationRecord;
+        [propertyName: string]: EntityRelationRecord;
     };
 }, entitiesPropertyTypeMap: {
     [entityName: string]: {

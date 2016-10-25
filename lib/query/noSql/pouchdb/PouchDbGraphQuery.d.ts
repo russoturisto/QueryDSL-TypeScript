@@ -1,4 +1,4 @@
-import { RelationRecord } from "../../../core/entity/Relation";
+import { EntityRelationRecord } from "../../../core/entity/Relation";
 import { PHJsonGraphQuery } from "../PHGraphQuery";
 import { IEntity } from "../../../core/entity/Entity";
 import { JSONBaseOperation } from "../../../core/operation/Operation";
@@ -29,7 +29,7 @@ export declare class PouchDbGraphQuery<IE extends IEntity> {
     };
     constructor(entityName: string, queryKey: string, entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: RelationRecord;
+            [propertyName: string]: EntityRelationRecord;
         };
     }, entitiesPropertyTypeMap: {
         [entityName: string]: {

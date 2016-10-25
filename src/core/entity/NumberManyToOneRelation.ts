@@ -1,9 +1,9 @@
 import {QNumberField, IQNumberField} from "../field/NumberField";
 import {IQEntity} from "./Entity";
 import {JSONSqlFunctionCall} from "../field/Functions";
-import {IQRelation, RelationType, QRelation} from "./Relation";
-import {JoinType} from "../../query/sql/PHSQLQuery";
+import {IQRelation, EntityRelationType, QRelation} from "./Relation";
 import {JSONClauseField, JSONClauseObjectType} from "../field/Appliable";
+import {JoinType} from "./Joins";
 /**
  * Created by Papa on 10/23/2016.
  */
@@ -13,9 +13,9 @@ extends IQRelation<IQR, R, IQ>, IQNumberField<IQR> {
 }
 
 export class QNumberManyToOneRelation<IQR extends IQEntity, R, IQ extends IQEntity>
-extends QNumberField<IQR> {
+extends QNumberField<IQR> implements IQRelation<IQR, R, IQ> {
 
-	relationType = RelationType.MANY_TO_ONE;
+	relationType = EntityRelationType.MANY_TO_ONE;
 
 	constructor(
 		public q: IQR,
@@ -37,7 +37,7 @@ extends QNumberField<IQR> {
 	}
 
 	private getNewQEntity( joinType: JoinType ): IQR {
-		return new this.relationQEntityConstructor(this.relationQEntityConstructor, this.relationEntityConstructor, this.entityName, QRelation.getNextChildJoinPosition(this.q), this.fieldName, joinType);
+		return new this.relationQEntityConstructor(this.relationQEntityConstructor, this.relationEntityConstructor, this.entityName, this.q.rootEntityPrefix, QRelation.getNextChildJoinPosition(this.q), this.fieldName, joinType);
 	}
 
 	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQNumberManyToOneRelation <IQR, R, IQ> {

@@ -1,5 +1,5 @@
 import { IEntity, IQEntity } from "../../core/entity/Entity";
-import { RelationRecord } from "../../core/entity/Relation";
+import { EntityRelationRecord } from "../../core/entity/Relation";
 import { SQLDialect } from "./SQLStringQuery";
 import { PHJsonSQLDelete } from "./PHSQLDelete";
 import { SQLStringNoJoinQuery } from "./SQLStringNoJoinQuery";
@@ -12,7 +12,7 @@ export declare class SQLStringDelete<IE extends IEntity> extends SQLStringNoJoin
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: RelationRecord;
+            [propertyName: string]: EntityRelationRecord;
         };
     }, entitiesPropertyTypeMap: {
         [entityName: string]: {

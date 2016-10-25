@@ -3,7 +3,7 @@ import {ExactOrderByParser} from "./ExactOrderByParser";
 import {ForcedOrderByParser} from "./ForcedOrderByParser";
 import {JSONFieldInOrderBy, SortOrder} from "../../../../core/field/FieldInOrderBy";
 import {IQEntity} from "../../../../core/entity/Entity";
-import {RelationRecord} from "../../../../core/entity/Relation";
+import {EntityRelationRecord} from "../../../../core/entity/Relation";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
 import {MetadataUtils} from "../../../../core/entity/metadata/MetadataUtils";
 import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
@@ -27,7 +27,7 @@ export abstract class AbstractOrderByParser {
 		protected rootQEntity: IQEntity,
 		protected rootSelectClauseFragment: any,
 		protected qEntityMapByName: {[alias: string]: IQEntity},
-		protected entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
+		protected entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		protected entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		protected orderBy?: JSONFieldInOrderBy[]
 	) {
@@ -68,7 +68,7 @@ export function getOrderByParser(
 	rootQEntity: IQEntity,
 	selectClauseFragment: any,
 	qEntityMapByName: {[entityName: string]: IQEntity},
-	entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
+	entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 	entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 	orderBy?: JSONFieldInOrderBy[]
 ): IOrderByParser {

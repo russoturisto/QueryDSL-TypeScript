@@ -38,7 +38,7 @@ import {
 import {IOperation, Operation, JSONBaseOperation} from "./core/operation/Operation";
 import {OperationType} from "./core/operation/OperationType";
 import {
-	RelationRecord, RelationType, IQRelation, QRelation, JSONRelation,
+	EntityRelationRecord, EntityRelationType, IQRelation, QRelation, JSONEntityRelation,
 	IQManyToOneRelation, QManyToOneRelation, QOneToManyRelation
 } from "./core/entity/Relation";
 import {IEntityQuery} from "./query/IEntityQuery";
@@ -210,11 +210,11 @@ export {
 	OperationType,
 	ColumnAliases,
 	JoinTreeNode,
-	JSONRelation,
-	RelationType,
+	JSONEntityRelation,
+	EntityRelationType,
 	IQRelation,
 	QRelation,
-	RelationRecord,
+	EntityRelationRecord,
 	OneToManyConfigAndProperty,
 	MetadataUtils
 };

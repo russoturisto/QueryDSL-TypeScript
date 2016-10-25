@@ -1,7 +1,7 @@
 import { IEntity, IQEntity } from "../../core/entity/Entity";
 import { ISQLAdaptor } from "./adaptor/SQLAdaptor";
 import { SQLDialect } from "./SQLStringQuery";
-import { RelationRecord } from "../../core/entity/Relation";
+import { EntityRelationRecord } from "../../core/entity/Relation";
 import { JSONBaseOperation } from "../../core/operation/Operation";
 import { FieldMap } from "./FieldMap";
 import { JoinTreeNode } from "../../core/entity/JoinTreeNode";
@@ -15,7 +15,7 @@ export declare abstract class SQLStringWhereBase<IE extends IEntity> {
     };
     protected entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: RelationRecord;
+            [propertyName: string]: EntityRelationRecord;
         };
     };
     protected entitiesPropertyTypeMap: {
@@ -33,7 +33,7 @@ export declare abstract class SQLStringWhereBase<IE extends IEntity> {
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
-            [propertyName: string]: RelationRecord;
+            [propertyName: string]: EntityRelationRecord;
         };
     }, entitiesPropertyTypeMap: {
         [entityName: string]: {

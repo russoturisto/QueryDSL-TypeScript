@@ -1,5 +1,5 @@
 import {PHJsonCommonSQLQuery, JoinType} from "./PHSQLQuery";
-import {RelationRecord, JSONRelation, QRelation} from "../../core/entity/Relation";
+import {EntityRelationRecord, JSONEntityRelation, QRelation} from "../../core/entity/Relation";
 import {IEntity, IQEntity} from "../../core/entity/Entity";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
 import {FieldMap} from "./FieldMap";
@@ -69,7 +69,7 @@ export abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereB
 		protected phJsonQuery: PHJsonCommonSQLQuery<IE>,
 		rootQEntity: IQEntity,
 		qEntityMapByName: {[alias: string]: IQEntity},
-		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: RelationRecord}},
+		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		dialect: SQLDialect,
 		protected queryResultType: QueryResultType
@@ -118,12 +118,12 @@ ORDER BY
 
 	buildFromJoinTree(
 		entityName: string,
-		joinRelations: JSONRelation[],
+		joinRelations: JSONEntityRelation[],
 		joinNodeMap: {[alias: string]: JoinTreeNode}
 	): JoinTreeNode {
 		let jsonTree: JoinTreeNode;
 		if (joinRelations.length < 1) {
-			let onlyJsonRelation: JSONRelation = {
+			let onlyJsonRelation: JSONEntityRelation = {
 				fromClausePosition: [],
 				entityName: entityName,
 				joinType: null,

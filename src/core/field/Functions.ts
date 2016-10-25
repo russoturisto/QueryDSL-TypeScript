@@ -4,7 +4,8 @@ import {IQEntity} from "../entity/Entity";
 import {PHRawNonEntitySQLQuery} from "../../query/sql/PHSQLQuery";
 import {QNumberFunction, IQNumberField} from "./NumberField";
 import {QDateFunction, IQDateField} from "./DateField";
-import {IQField} from "./Field";
+import {IQField, QField} from "./Field";
+import {JSONBaseOperation, OperationCategory, JSONFunctionOperation} from "../operation/Operation";
 /**
  * Created by Papa on 10/18/2016.
  */
@@ -181,6 +182,9 @@ export function trim<IQ extends IQEntity>( stringField: IQStringField<IQ> | stri
 	}
 }
 
+export abstract class StandAloneFunction {
+}
+
 export function distinct(
 	selectClause: any
 ): IQDistinctFunction {
@@ -193,7 +197,7 @@ export interface IQDistinctFunction {
 
 }
 
-export class QDistinctFunction implements IQDistinctFunction, Appliable<JSONClauseObject, any, any> {
+export class QDistinctFunction extends StandAloneFunction implements IQDistinctFunction, Appliable<JSONClauseObject, any, any> {
 
 	__appliedFunctions__: JSONSqlFunctionCall[] = [];
 
@@ -208,6 +212,10 @@ export class QDistinctFunction implements IQDistinctFunction, Appliable<JSONClau
 			type: JSONClauseObjectType.DISTINCT_FUNCTION
 		};
 	}
+
+	static getSelect(distinct:QDistinctFunction):any {
+		return distinct.__appliedFunctions__[0].parameters[0];
+	}
 }
 
 export function exists( phRawQuery: PHRawNonEntitySQLQuery ): IQExistsFunction {
@@ -215,28 +223,52 @@ export function exists( phRawQuery: PHRawNonEntitySQLQuery ): IQExistsFunction {
 	if (!selectClause) {
 		throw `Sub-Query must have SELECT clause defined to be used in EXITS function`;
 	}
-	let existsFunction = new QDistinctFunction();
+	let existsFunction = new QExistsFunction();
 	existsFunction.applySqlFunction(getSqlFunctionCall(SqlFunction.EXISTS, false, [phRawQuery]));
 	return existsFunction;
 }
 
-export interface IQExistsFunction {
+export interface IQExistsFunction extends JSONBaseOperation {
 
 }
 
-export class QExistsFunction implements IQDistinctFunction, Appliable<JSONClauseObject, any, any> {
+export class QExistsFunction extends StandAloneFunction implements IQExistsFunction, Appliable<JSONClauseObject, any, any> {
 
 	__appliedFunctions__: JSONSqlFunctionCall[] = [];
+	operator = "$exists";
+	category = OperationCategory.FUNCTION;
 
 	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): any {
 		this.__appliedFunctions__.push(sqlFunctionCall);
 		return this;
 	}
 
-	toJSON(): JSONClauseField {
+	toJSON(): JSONFunctionOperation {
+		if(this.__appliedFunctions__.length != 1) {
+			throw `Not expecting and parent or child functions on exists`;
+		}
+		let query:PHRawNonEntitySQLQuery = this.__appliedFunctions__[0].parameters[0];
+		let select = query.select;
+		if(query.select instanceof QDistinctFunction) {
+			select = QDistinctFunction.getSelect(query.select);
+		}
+		if(select instanceof Array) {
+
+			this.__appliedFunctions__[0].parameters[0] =
+		} else if (select instanceof QField) {
+
+		} // Must be a mapped query
+		else {
+
+		}
+
 		return {
-			__appliedFunctions__: this.__appliedFunctions__,
-			type: JSONClauseObjectType.EXISTS_FUNCTION
+			category: this.category,
+			object: {
+				__appliedFunctions__: this.__appliedFunctions__,
+				type: JSONClauseObjectType.EXISTS_FUNCTION
+			},
+			operator: this.operator
 		};
 	}
 }

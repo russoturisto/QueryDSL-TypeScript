@@ -1,4 +1,4 @@
-import {JSONRelation} from "./Relation";
+import {JSONEntityRelation} from "./Relation";
 import {JoinType} from "../../query/sql/PHSQLQuery";
 /**
  * Created by Papa on 10/18/2016.
@@ -6,7 +6,7 @@ import {JoinType} from "../../query/sql/PHSQLQuery";
 
 export class JoinTreeNode {
 	constructor(
-		public jsonRelation: JSONRelation,
+		public jsonRelation: JSONEntityRelation,
 		public childNodes: JoinTreeNode[],
 		public parentNode: JoinTreeNode
 	) {

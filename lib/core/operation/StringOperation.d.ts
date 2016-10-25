@@ -1,7 +1,7 @@
 import { IValueOperation, ValueOperation, JSONRawValueOperation } from "./Operation";
 import { IQStringField } from "../field/StringField";
 import { IQEntity } from "../entity/Entity";
-import { PHRawFieldSQLQuery } from "../../query/sql/PHSQLQuery";
+import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 /**
  * Created by Papa on 6/20/2016.
  */
