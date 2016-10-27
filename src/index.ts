@@ -19,8 +19,8 @@ import {
 } from "./core/field/DateField";
 import {
 	FieldType,
-	IQField,
-	QField, Orderable,
+	IQOperableField,
+	QOperableField, Orderable,
 } from "./core/field/Field";
 import {
 	JSONNumberFieldOperation,
@@ -59,7 +59,7 @@ import {OracleAdaptor} from "./query/sql/adaptor/OracleAdaptor";
 import {SqLiteAdaptor} from "./query/sql/adaptor/SqLiteAdaptor";
 import {ISQLAdaptor, getSQLAdaptor} from "./query/sql/adaptor/SQLAdaptor";
 import {EntityDefaults, SQLDialect, SQLDataType, SQLStringQuery} from "./query/sql/SQLStringQuery";
-import {PHRawSQLQuery, PHJsonCommonSQLQuery, JoinType, PHSQLQuery} from "./query/sql/PHSQLQuery";
+import {PHRawSQLQuery, PHJsonCommonNonEntitySQLQuery, JoinType, PHSQLQuery} from "./query/sql/PHSQLQuery";
 import {PHQuery, PHRawQuery} from "./query/PHQuery";
 import {FieldMap, EntityFieldMap, PropertyFieldEntry} from "./query/sql/FieldMap";
 import {MetadataUtils, OneToManyConfigAndProperty} from "./core/entity/metadata/MetadataUtils";
@@ -120,7 +120,7 @@ export {
 	PHQuery,
 	PHRawQuery,
 	PHSQLQuery,
-	PHJsonCommonSQLQuery,
+	PHJsonCommonNonEntitySQLQuery,
 	PHRawSQLQuery,
 	JoinType,
 	SQLStringWhereBase,
@@ -184,8 +184,8 @@ export {
 	JSONRawDateOperation,
 	IDateOperation,
 	DateOperation,
-	IQField,
-	QField,
+	IQOperableField,
+	QOperableField,
 	IQNumberField,
 	QNumberField,
 	JSONNumberFieldOperation,

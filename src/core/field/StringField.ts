@@ -1,15 +1,16 @@
 import {IQEntity} from "../entity/Entity";
-import {IQField, QField, FieldType} from "./Field";
+import {FieldType} from "./Field";
 import {StringOperation, IStringOperation, JSONRawStringOperation} from "../operation/StringOperation";
 import {JSONSqlFunctionCall} from "./Functions";
 import {JSONClauseField, JSONClauseObjectType} from "./Appliable";
 import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
+import {IQOperableField, QOperableField} from "./OperableField";
 /**
  * Created by Papa on 8/11/2016.
  */
 
 export interface IQStringField<IQ extends IQEntity>
-extends IQField<IQ, string, JSONRawStringOperation<IQ>, IStringOperation<IQ>, IQStringField<IQ>> {
+extends IQOperableField<IQ, string, JSONRawStringOperation<IQ>, IStringOperation<IQ>, IQStringField<IQ>> {
 
 	like(
 		like: string | IQStringField<IQ> | PHRawFieldSQLQuery<IQStringField<IQ>>
@@ -18,7 +19,7 @@ extends IQField<IQ, string, JSONRawStringOperation<IQ>, IStringOperation<IQ>, IQ
 }
 
 export class QStringField<IQ extends IQEntity>
-extends QField<IQ, string, JSONRawStringOperation<IQ>, IStringOperation<IQ>, IQStringField<IQ>> implements IQStringField<IQ> {
+extends QOperableField<IQ, string, JSONRawStringOperation<IQ>, IStringOperation<IQ>, IQStringField<IQ>> implements IQStringField<IQ> {
 
 	constructor(
 		q: IQ,
@@ -38,12 +39,15 @@ extends QField<IQ, string, JSONRawStringOperation<IQ>, IStringOperation<IQ>, IQS
 }
 
 export class QStringFunction extends QStringField<any> {
-	constructor() {
+
+	constructor(
+		private value?:string
+	) {
 		super(null, null, null, null);
 	}
 
 	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQStringField<any> {
-		let functionApplicable = new QStringFunction();
+		let functionApplicable = new QStringFunction(this.value);
 		functionApplicable.__appliedFunctions__ = functionApplicable.__appliedFunctions__.concat(this.__appliedFunctions__);
 		functionApplicable.__appliedFunctions__.push(sqlFunctionCall);
 
@@ -53,7 +57,8 @@ export class QStringFunction extends QStringField<any> {
 	toJSON(): JSONClauseField {
 		return {
 			__appliedFunctions__: this.__appliedFunctions__,
-			type: JSONClauseObjectType.FIELD_FUNCTION
+			type: JSONClauseObjectType.STRING_FIELD_FUNCTION,
+			value: this.value
 		};
 	}
 }

@@ -4,10 +4,10 @@
 import {IQEntity} from "../entity/Entity";
 import {JSONBaseOperation, IOperation, JSONRawValueOperation, IValueOperation} from "../operation/Operation";
 import {QRelation} from "../entity/Relation";
-import {FieldInOrderBy, SortOrder, JSONFieldInOrderBy} from "./FieldInOrderBy";
+import {FieldInOrderBy, SortOrder, JSONFieldInOrderBy, IFieldInOrderBy} from "./FieldInOrderBy";
 import {JSONSqlFunctionCall} from "./Functions";
 import {Appliable, JSONClauseField, JSONClauseObjectType} from "./Appliable";
-import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
+import {PHRawFieldSQLQuery, PHFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
 
 export enum FieldType {
 	BOOLEAN,
@@ -16,64 +16,36 @@ export enum FieldType {
 	STRING
 }
 
-export interface Orderable<IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, any>> {
+export interface Orderable<IQ extends IQEntity, IQF extends IQField<IQ, any>> {
 
-	asc(): JSONFieldInOrderBy;
+	asc(): IFieldInOrderBy<IQ, IQF>;
 
-	desc(): JSONFieldInOrderBy;
+	desc(): IFieldInOrderBy<IQ, IQF>;
 
 }
 
-export interface IQField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>, IQF extends IQField<IQ, T, JO, IO, any>>
+export interface IQField<IQ extends IQEntity, IQF extends IQField<IQ, any>>
 extends Orderable<IQ, IQF> {
 
-	equals(
-		value: T | IQF | PHRawFieldSQLQuery<IQF>
-	): JO;
-
-	isIn(
-		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
-	): JO;
-
-
-	isNotNull(): JO;
-
-	isNull(): JO;
-
-	notEquals(
-		value: T | IQF | PHRawFieldSQLQuery<IQF>
-	): JO;
-
-	notIn(
-		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
-	): JO;
-
 }
 
-export abstract class QField<IQ extends IQEntity, T, JO extends JSONRawValueOperation<IQF>, IO extends IValueOperation<T, JO, IQ, IQF>, IQF extends IQField<any, T, JO, IO, any>>
-implements IQField<IQ, T, JO, IO, IQF>, Appliable<JSONClauseField, IQ, IQF> {0
+export abstract class QField<IQ extends IQEntity, IQF extends IQField<any, any>>
+implements IQField<IQ, IQF>, Appliable<JSONClauseField, IQ, IQF> {
 
 	__appliedFunctions__: JSONSqlFunctionCall[] = [];
+	__subQuery__: PHRawFieldSQLQuery<IQF>;
 
 	constructor(
 		// All child field constructors must have the following signature (4 parameters):
 		public childConstructor: new(
-			q: IQ,
-			qConstructor: new() => IQ,
-			entityName: string,
-			fieldName: string,
-			fieldType: FieldType
-		) => IQField<IQ, T, JO, IO, IQF>,
+			...args: any[]
+		) => IQField<IQ, IQF>,
 		public q: IQ,
 		public qConstructor: new() => IQ,
 		public entityName: string,
 		public fieldName: string,
 		public fieldType: FieldType,
-		public operation: IO
 	) {
-		if (q) {
-			q.addEntityField(fieldName, this);
-		}
 	}
 
 	protected getFieldKey() {
@@ -82,15 +54,8 @@ implements IQField<IQ, T, JO, IO, IQF>, Appliable<JSONClauseField, IQ, IQF> {0
 		return key;
 	}
 
-	setOperation(
-		jsonOperation: JO
-	): JO {
-		jsonOperation.lValue = <any>this;
 
-		return jsonOperation;
-	}
-
-	objectEquals<QF extends QField<any, any, any, any, any>>(
+	objectEquals<QF extends QField<any, any>>(
 		otherField: QF,
 		checkValue?: boolean
 	): boolean {
@@ -111,63 +76,46 @@ implements IQField<IQ, T, JO, IO, IQF>, Appliable<JSONClauseField, IQ, IQF> {0
 		return true;
 	}
 
-	equals(
-		value: T | IQF | PHRawFieldSQLQuery<IQF>
-	): JO {
-		return this.setOperation(this.operation.equals(value));
+	asc(): IFieldInOrderBy<IQ, IQF> {
+		return new FieldInOrderBy<IQ, IQF>(this, SortOrder.ASCENDING);
 	}
 
-
-	isNotNull(): JO {
-		return this.setOperation(this.operation.isNotNull());
+	desc(): IFieldInOrderBy<IQ, IQF> {
+		return new FieldInOrderBy<IQ, IQF>(this, SortOrder.DESCENDING);
 	}
 
-	isNull(): JO {
-		return this.setOperation(this.operation.isNull());
+	getInstance(): QField<IQ, IQF> {
+		return <QField<IQ, IQF>><any>new this.childConstructor(this.q, this.qConstructor, this.entityName, this.fieldName, this.fieldType);
 	}
 
-	isIn(
-		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
-	): JO {
-		return this.setOperation(this.operation.isIn(values));
-	}
-
-	notEquals(
-		value: T | IQF | PHRawFieldSQLQuery<IQF>
-	): JO {
-		return this.setOperation(this.operation.notEquals(value));
-	}
-
-	notIn(
-		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
-	): JO {
-		return this.setOperation(this.operation.notIn(values));
-	}
-
-	asc(): JSONFieldInOrderBy {
-		return new FieldInOrderBy<IQ>(this, SortOrder.ASCENDING).toJSON();
-	}
-
-	desc(): JSONFieldInOrderBy {
-		return new FieldInOrderBy<IQ>(this, SortOrder.DESCENDING).toJSON();
-	}
-
-	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQField<IQ, T, JO, IO, IQF> {
-		let appliedIField = new this.childConstructor(this.q, this.qConstructor, this.entityName, this.fieldName, this.fieldType);
-		let appliedField = <QField<IQ, T, JO, IO, IQF>><any>appliedIField;
+	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQF {
+		let appliedField = this.getInstance();
 		appliedField.__appliedFunctions__ = appliedField.__appliedFunctions__.concat(this.__appliedFunctions__);
 		appliedField.__appliedFunctions__.push(sqlFunctionCall);
 
-		return appliedIField;
+		return <IQF><any>appliedField;
+	}
+
+	addSubQuery( subQuery: PHRawFieldSQLQuery<IQF> ): IQF {
+		let appliedField = this.getInstance();
+		appliedField.__subQuery__ = subQuery;
+
+		return <IQF><any>appliedField;
 	}
 
 	toJSON(): JSONClauseField {
-		return {
+		let jsonField: JSONClauseField = {
 			__appliedFunctions__: this.__appliedFunctions__,
 			propertyName: this.fieldName,
 			tableAlias: QRelation.getPositionAlias(this.q.rootEntityPrefix, this.q.fromClausePosition),
 			type: JSONClauseObjectType.FIELD
 		};
+		if (this.__subQuery__) {
+			let subSelectQuery = new PHFieldSQLQuery<IQF>(this.__subQuery__).toJSON();
+			jsonField.subQuery = subSelectQuery;
+		}
+
+		return jsonField;
 	}
 
 }

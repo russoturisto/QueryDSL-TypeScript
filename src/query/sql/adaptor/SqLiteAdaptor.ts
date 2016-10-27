@@ -5,7 +5,7 @@ import {
 	Appliable, ISQLFunctionAdaptor, AbstractFunctionAdaptor, JSONClauseObject,
 	JSONClauseObjectType
 } from "../../../core/field/Appliable";
-import {QField} from "../../../core/field/Field";
+import {QOperableField} from "../../../core/field/Field";
 import {IQEntity} from "../../../core/entity/Entity";
 import {QRelation, QManyToOneRelation} from "../../../core/entity/Relation";
 import {MetadataUtils} from "../../../core/entity/metadata/MetadataUtils";

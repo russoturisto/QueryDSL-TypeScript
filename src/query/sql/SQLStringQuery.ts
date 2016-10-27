@@ -1,4 +1,4 @@
-import {PHJsonCommonSQLQuery, JoinType} from "./PHSQLQuery";
+import {PHJsonCommonNonEntitySQLQuery, JoinType} from "./PHSQLQuery";
 import {EntityRelationRecord, JSONEntityRelation, QRelation} from "../../core/entity/Relation";
 import {IEntity, IQEntity} from "../../core/entity/Entity";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
@@ -66,7 +66,7 @@ export abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereB
 	protected orderByParser: IOrderByParser;
 
 	constructor(
-		protected phJsonQuery: PHJsonCommonSQLQuery<IE>,
+		protected phJsonQuery: PHJsonCommonNonEntitySQLQuery<IE>,
 		rootQEntity: IQEntity,
 		qEntityMapByName: {[alias: string]: IQEntity},
 		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},

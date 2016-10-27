@@ -1,20 +1,25 @@
 import {JSONSqlFunctionCall} from "./Functions";
 import {IQEntity} from "../entity/Entity";
-import {IQField} from "./Field";
 import {EntityMetadata} from "../entity/EntityMetadata";
 import {MetadataUtils} from "../entity/metadata/MetadataUtils";
 import {JSONFunctionOperation} from "../operation/Operation";
+import {PHJsonFieldQSLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
+import {IQOperableField} from "./OperableField";
+import {IQField} from "./Field";
 /**
  * Created by Papa on 10/19/2016.
  */
 
 export enum JSONClauseObjectType {
+	BOOLEAN_FIELD_FUNCTION,
+	DATE_FIELD_FUNCTION,
 	DISTINCT_FUNCTION,
 	EXISTS_FUNCTION,
 	FIELD,
-	FIELD_FUNCTION,
 	FIELD_QUERY,
-	MANY_TO_ONE_RELATION
+	NUMBER_FIELD_FUNCTION,
+	MANY_TO_ONE_RELATION,
+	STRING_FIELD_FUNCTION
 }
 
 export interface JSONClauseObject {
@@ -24,10 +29,12 @@ export interface JSONClauseObject {
 
 export interface JSONClauseField extends JSONClauseObject {
 	propertyName?: string,
-	tableAlias?: string
+	subQuery?:PHJsonFieldQSLQuery;
+	tableAlias?: string,
+	value?:boolean | Date | number | string;
 }
 
-export interface Appliable<JCO extends JSONClauseObject, IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, any>> {
+export interface Appliable<JCO extends JSONClauseObject, IQ extends IQEntity, IQF extends IQField<IQ, any>> {
 	// fieldName: string;
 	__appliedFunctions__: JSONSqlFunctionCall[];
 	// q: IQ;

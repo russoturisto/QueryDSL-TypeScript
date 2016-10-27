@@ -6,7 +6,7 @@ import { EntityDefaults, SQLStringQuery, QueryResultType, SQLDialect } from "../
 import { IEntity, IQEntity } from "../../../core/entity/Entity";
 import { BridgedQueryConfiguration } from "./result/IObjectResultParser";
 import { JSONFieldInOrderBy } from "../../../core/field/FieldInOrderBy";
-import { PHJsonCommonSQLQuery } from "../PHSQLQuery";
+import { PHJsonCommonNonEntitySQLQuery } from "../PHSQLQuery";
 import { JoinTreeNode } from "../../../core/entity/JoinTreeNode";
 /**
  * Represents SQL String query with object tree Select clause.
@@ -14,7 +14,7 @@ import { JoinTreeNode } from "../../../core/entity/JoinTreeNode";
 export declare class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE> {
     protected bridgedQueryConfiguration: BridgedQueryConfiguration;
     private queryParser;
-    constructor(phJsonQuery: PHJsonCommonSQLQuery<IE>, qEntity: IQEntity, qEntityMapByName: {
+    constructor(phJsonQuery: PHJsonCommonNonEntitySQLQuery<IE>, qEntity: IQEntity, qEntityMapByName: {
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {

@@ -1,44 +1,49 @@
-import {PHSQLQuery, PHJsonFlatSQLQuery} from "../../PHSQLQuery";
-import {QEntity} from "../../../../core/entity/Entity";
-import {JSONClauseObject} from "../../../../core/field/Appliable";
-import {EntityRelationRecord} from "../../../../core/entity/Relation";
-import {IQField} from "../../../../core/field/Field";
+import {PHSQLQuery, PHJsonCommonNonEntitySQLQuery, PHJsonGroupedSQLQuery} from "../../PHSQLQuery";
+import {JSONClauseField} from "../../../../core/field/Appliable";
+import {PHRawNonEntitySQLQuery, PHNonEntitySQLQuery, SELECT_ERROR_MESSAGE} from "./PHNonEntitySQLQuery";
+import {IQField, QField} from "../../../../core/field/Field";
 /**
  * Created by Papa on 10/23/2016.
  */
 
-export interface PHRawFlatSQLQuery<IQF extends IQField<any, any, any, any, any>>
-extends PHRawNonEntitySQLQuery {
-    select: IQF[];
+export interface PHJsonFlatQSLQuery extends PHJsonCommonNonEntitySQLQuery, PHJsonGroupedSQLQuery {
+	select: JSONClauseField[];
 }
 
-export class PHFlatSQLQuery implements PHSQLQuery {
+export interface PHRawFlatSQLQuery<IQF extends IQField<any, IQF>>
+extends PHRawNonEntitySQLQuery {
+	select: IQF[];
+}
 
-    constructor(
-        public phRawQuery: PHRawNonEntitySQLQuery,
-        public qEntity: QEntity<any>,
-        public qEntityMap: {[entityName: string]: QEntity<any>},
-        public entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
-        public entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}}
-    ) {
-    }
+export class PHFlatSQLQuery extends PHNonEntitySQLQuery implements PHSQLQuery {
 
-    toSQL(): PHJsonFlatSQLQuery {
+	constructor(
+		public phRawQuery: PHRawFlatSQLQuery<any>,
+	) {
+		super();
+	}
 
-        let jsonObjectSqlQuery: PHJsonFlatSQLQuery = <PHJsonFlatSQLQuery>getCommonJsonQuery(this.phRawQuery, true);
+	nonDistinctSelectClauseToJSON( rawSelect: any[] ): any {
+		if (!(rawSelect instanceof Array)) {
+			throw `Flat Queries an array of fields in SELECT clause.`;
+		}
+		return rawSelect.map(( selectField ) => {
+			if (!(selectField instanceof QField)) {
+				throw SELECT_ERROR_MESSAGE;
+			}
+			return selectField.toJSON();
+		});
+	}
 
-        let groupBy: JSONClauseObject[] = [];
-        if (this.phRawQuery.groupBy) {
-            groupBy = this.phRawQuery.groupBy.map(( appliable ) => {
-                return appliable.toJSON();
-            });
-        }
+	toJSON(): PHJsonFlatQSLQuery {
 
-        jsonObjectSqlQuery.groupBy = groupBy;
-        jsonObjectSqlQuery.having = this.phRawQuery.having;
+		let select = this.selectClauseToJSON(this.phRawQuery.select);
 
-        return jsonObjectSqlQuery;
+		let jsonFieldQuery: PHJsonFlatQSLQuery = {
+			select: select
+		};
 
-    }
+		return <PHJsonFlatQSLQuery>this.getNonEntitySqlQuery(this.phRawQuery, jsonFieldQuery);
+	}
 
 }

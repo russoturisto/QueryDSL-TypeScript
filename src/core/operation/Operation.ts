@@ -2,9 +2,9 @@
  * Created by Papa on 4/21/2016.
  */
 import {IQEntity} from "../entity/Entity";
-import {IQField} from "../field/Field";
 import {PHRawFieldSQLQuery, PHJsonFieldQSLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
 import {JSONClauseField, JSONClauseObject} from "../field/Appliable";
+import {IQOperableField} from "../field/OperableField";
 
 export enum OperationCategory {
 	BOOLEAN,
@@ -29,7 +29,7 @@ export interface JSONBaseOperation {
 	category: OperationCategory;
 }
 
-export interface JSONRawValueOperation<IQF extends IQField<any, any, any, any, any>> extends JSONBaseOperation {
+export interface JSONRawValueOperation<IQF extends IQOperableField<any, any, any, any, any>> extends JSONBaseOperation {
 	lValue?: IQF;
 	rValue?: any;
 }
@@ -37,7 +37,7 @@ export interface JSONRawValueOperation<IQF extends IQField<any, any, any, any, a
 export interface IOperation<T, JO extends JSONBaseOperation> {
 }
 
-export interface IValueOperation<T, JRO extends JSONBaseOperation, IQ extends IQEntity, IQF extends IQField<any, T, JRO, any, any>> extends IOperation<T, JRO> {
+export interface IValueOperation<T, JRO extends JSONBaseOperation, IQ extends IQEntity, IQF extends IQOperableField<any, T, JRO, any, any>> extends IOperation<T, JRO> {
 
 	category: OperationCategory;
 
@@ -73,7 +73,7 @@ export abstract class Operation<T, JRO extends JSONBaseOperation> implements IOp
 
 }
 
-export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<IQF>, IQ extends IQEntity, IQF extends IQField<any, T, JRO, any, any>> extends Operation<T, JRO> implements IValueOperation<T, JRO, IQ, IQF> {
+export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<IQF>, IQ extends IQEntity, IQF extends IQOperableField<any, T, JRO, any, any>> extends Operation<T, JRO> implements IValueOperation<T, JRO, IQ, IQF> {
 
 	constructor(
 		public category: OperationCategory

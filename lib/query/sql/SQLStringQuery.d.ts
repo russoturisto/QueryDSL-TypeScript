@@ -1,4 +1,4 @@
-import { PHJsonCommonSQLQuery } from "./PHSQLQuery";
+import { PHJsonCommonNonEntitySQLQuery } from "./PHSQLQuery";
 import { EntityRelationRecord, JSONEntityRelation } from "../../core/entity/Relation";
 import { IEntity, IQEntity } from "../../core/entity/Entity";
 import { FieldMap } from "./FieldMap";
@@ -43,13 +43,13 @@ export declare enum QueryResultType {
  * String based SQL query.
  */
 export declare abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
-    protected phJsonQuery: PHJsonCommonSQLQuery<IE>;
+    protected phJsonQuery: PHJsonCommonNonEntitySQLQuery<IE>;
     protected queryResultType: QueryResultType;
     protected columnAliases: ColumnAliases;
     protected entityDefaults: EntityDefaults;
     protected joinTree: JoinTreeNode;
     protected orderByParser: IOrderByParser;
-    constructor(phJsonQuery: PHJsonCommonSQLQuery<IE>, rootQEntity: IQEntity, qEntityMapByName: {
+    constructor(phJsonQuery: PHJsonCommonNonEntitySQLQuery<IE>, rootQEntity: IQEntity, qEntityMapByName: {
         [alias: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {

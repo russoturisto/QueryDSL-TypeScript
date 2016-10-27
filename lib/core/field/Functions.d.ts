@@ -1,11 +1,12 @@
 import { IQStringField } from "./StringField";
 import { Appliable, JSONClauseObject, JSONClauseField } from "./Appliable";
 import { IQEntity } from "../entity/Entity";
-import { PHRawNonEntitySQLQuery } from "../../query/sql/PHSQLQuery";
 import { IQNumberField } from "./NumberField";
 import { IQDateField } from "./DateField";
-import { IQField } from "./Field";
 import { JSONBaseOperation, OperationCategory, JSONFunctionOperation } from "../operation/Operation";
+import { IQOperableField } from "./OperableField";
+import { IQBooleanField } from "./BooleanField";
+import { PHRawMappedSQLQuery, PHJsonMappedQSLQuery } from "../../query/sql/query/ph/PHMappedSQLQuery";
 /**
  * Created by Papa on 10/18/2016.
  */
@@ -36,11 +37,11 @@ export declare enum SqlFunction {
     DISTINCT = 15,
     EXISTS = 16,
 }
-export declare function abs<A extends Appliable<any, any, any>>(appliable: A | number): A;
-export declare function avg<A extends Appliable<any, any, any>>(appliable: A): A;
-export declare function count<IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, IQF>>(field: IQF): IQF;
-export declare function max<IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, IQF>>(field: IQF): IQF;
-export declare function min<IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, IQF>>(field: IQF): IQF;
+export declare function abs<IQ extends IQEntity, IQF extends IQNumberField<IQ>>(numberField: IQF | number): IQF;
+export declare function avg<IQ extends IQEntity, IQF extends IQNumberField<IQ>>(numberField: IQF): IQF;
+export declare function count<IQ extends IQEntity, IQF extends IQOperableField<IQ, any, any, any, IQF>>(field: IQF): IQF;
+export declare function max<IQ extends IQEntity, IQF extends IQOperableField<IQ, any, any, any, IQF>>(field: IQF): IQF;
+export declare function min<IQ extends IQEntity, IQF extends IQOperableField<IQ, any, any, any, IQF>>(field: IQF): IQF;
 export declare function sum<IQ extends IQEntity>(numberField: IQNumberField<IQ>): IQNumberField<IQ>;
 export declare function ucase<IQ extends IQEntity>(stringField: IQStringField<IQ> | string): IQStringField<IQ>;
 export declare function lcase<IQ extends IQEntity>(stringField: IQStringField<IQ> | string): IQStringField<IQ>;
@@ -59,10 +60,11 @@ export interface IQDistinctFunction {
 export declare class QDistinctFunction extends StandAloneFunction implements IQDistinctFunction, Appliable<JSONClauseObject, any, any> {
     __appliedFunctions__: JSONSqlFunctionCall[];
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): any;
-    toJSON(): JSONClauseField;
+    getSelectClause(): any;
+    toJSON(parsedSelectClause?: any): JSONClauseField;
     static getSelect(distinct: QDistinctFunction): any;
 }
-export declare function exists(phRawQuery: PHRawNonEntitySQLQuery): IQExistsFunction;
+export declare function exists<IE>(phRawQuery: PHRawMappedSQLQuery<IE>): IQExistsFunction;
 export interface IQExistsFunction extends JSONBaseOperation {
 }
 export declare class QExistsFunction extends StandAloneFunction implements IQExistsFunction, Appliable<JSONClauseObject, any, any> {
@@ -70,5 +72,10 @@ export declare class QExistsFunction extends StandAloneFunction implements IQExi
     operator: string;
     category: OperationCategory;
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): any;
-    toJSON(): JSONFunctionOperation;
+    getQuery(): PHRawMappedSQLQuery<any>;
+    toJSON(parsedQuery?: PHJsonMappedQSLQuery): JSONFunctionOperation;
 }
+export declare function bool(primitive: boolean): IQBooleanField<any>;
+export declare function date(primitive: Date): IQDateField<any>;
+export declare function num(primitive: number): IQNumberField<any>;
+export declare function str(primitive: string): IQStringField<any>;

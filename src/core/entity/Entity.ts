@@ -1,11 +1,11 @@
 /**
  * Created by Papa on 4/21/2016.
  */
-import {IQField} from "../field/Field";
 import {IQRelation, JSONEntityRelation, JSONRelationType, JSONRelation, JSONJoinRelation} from "./Relation";
 import {JSONBaseOperation, IOperation} from "../operation/Operation";
 import {getNextRootEntityName} from "./Aliases";
 import {JoinType} from "./Joins";
+import {IQOperableField} from "../field/OperableField";
 
 /**
  * Marker interface for all query interfaces
@@ -23,7 +23,7 @@ export interface IQEntity {
 
 	__qEntityConstructor__: {new ( ...args: any[] ): any};
 	__entityConstructor__: {new (): any};
-	__entityFieldMap__: {[propertyName: string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>};
+	__entityFieldMap__: {[propertyName: string]: IQOperableField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>};
 	__entityName__: string;
 	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any, IQEntity>};
 	currentChildIndex:number;
@@ -38,18 +38,18 @@ export interface IQEntity {
 		relation: IQRelation<IQR, R, IQEntity>
 	): void;
 
-	addEntityField<IQF extends IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>>(
+	addEntityField<IQF extends IQOperableField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>>(
 		propertyName: string,
 		field: IQF
 	): void;
 
 	fields(
-		fields: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]
+		fields: IQOperableField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]
 	): IQEntity;
 
 	/*
-	 joinOn<T, C extends IQField<IQ>>(
-	 comparisonOp:IQField<IQ>
+	 joinOn<T, C extends IQOperableField<IQ>>(
+	 comparisonOp:IQOperableField<IQ>
 	 );
 	 */
 
@@ -59,7 +59,7 @@ export interface IQEntity {
 
 export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 
-	__entityFieldMap__: {[propertyName: string]: IQField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>} = {};
+	__entityFieldMap__: {[propertyName: string]: IQOperableField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>} = {};
 	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any, IQEntity>} = {};
 
 	// rootOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(<any>this, OperationType.AND, []);
@@ -85,7 +85,7 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 		this.__entityRelationMap__[propertyName] = relation;
 	}
 
-	addEntityField<T, IQF extends IQField<IQ, T, JSONBaseOperation, IOperation<T, JSONBaseOperation>, any>>(
+	addEntityField<T, IQF extends IQOperableField<IQ, T, JSONBaseOperation, IOperation<T, JSONBaseOperation>, any>>(
 		propertyName: string,
 		field: IQF
 	): void {
@@ -131,7 +131,7 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 	}
 
 	fields(
-		fields: IQField<IQ, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]
+		fields: IQOperableField<IQ, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]
 	): IQ {
 		throw `Not implemented`;
 	}

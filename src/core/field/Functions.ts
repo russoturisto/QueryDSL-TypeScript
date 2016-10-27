@@ -1,11 +1,13 @@
 import {IQStringField, QStringFunction} from "./StringField";
 import {Appliable, JSONClauseObjectType, JSONClauseObject, JSONClauseField} from "./Appliable";
 import {IQEntity} from "../entity/Entity";
-import {PHRawNonEntitySQLQuery} from "../../query/sql/PHSQLQuery";
 import {QNumberFunction, IQNumberField} from "./NumberField";
 import {QDateFunction, IQDateField} from "./DateField";
-import {IQField, QField} from "./Field";
 import {JSONBaseOperation, OperationCategory, JSONFunctionOperation} from "../operation/Operation";
+import {PHRawNonEntitySQLQuery} from "../../query/sql/query/ph/PHNonEntitySQLQuery";
+import {QOperableField, IQOperableField} from "./OperableField";
+import {IQBooleanField, QBooleanFunction} from "./BooleanField";
+import {PHRawMappedSQLQuery, PHJsonMappedQSLQuery} from "../../query/sql/query/ph/PHMappedSQLQuery";
 /**
  * Created by Papa on 10/18/2016.
  */
@@ -52,16 +54,18 @@ export enum SqlFunction {
 
 var strFld: IQStringField<any>;
 
-export function abs<A extends Appliable<any, any, any>>( appliable: A | number ): A {
-	if (typeof appliable === "number") {
-		return <any>new QNumberFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.ABS, true, [appliable]));
+export function abs<IQ extends IQEntity, IQF extends IQNumberField<IQ>>( numberField: IQF | number ): IQF {
+	if (typeof numberField === "number") {
+		return <any>new QNumberFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.ABS, true, [numberField]));
 	} else {
-		return <any>appliable.applySqlFunction(getSqlFunctionCall(SqlFunction.AVG));
+		(<Appliable<any, any, any>><any>numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.AVG));
+		return numberField;
 	}
 }
 
-export function avg<A extends Appliable<any, any, any>>( appliable: A ): A {
-	return <any>appliable.applySqlFunction(getSqlFunctionCall(SqlFunction.AVG));
+export function avg<IQ extends IQEntity, IQF extends IQNumberField<IQ>>( numberField: IQF ): IQF {
+	(<Appliable<any, any, any>><any>numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.AVG));
+	return numberField;
 }
 
 function getSqlFunctionCall(
@@ -76,17 +80,17 @@ function getSqlFunctionCall(
 	};
 }
 
-export function count<IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, IQF>>( field: IQF ): IQF {
+export function count<IQ extends IQEntity, IQF extends IQOperableField<IQ, any, any, any, IQF>>( field: IQF ): IQF {
 	(<Appliable<any, any, any>><any>field).applySqlFunction(getSqlFunctionCall(SqlFunction.COUNT));
 	return field;
 }
 
-export function max<IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, IQF>>( field: IQF ): IQF {
+export function max<IQ extends IQEntity, IQF extends IQOperableField<IQ, any, any, any, IQF>>( field: IQF ): IQF {
 	(<Appliable<any, any, any>><any>field).applySqlFunction(getSqlFunctionCall(SqlFunction.MAX));
 	return field;
 }
 
-export function min<IQ extends IQEntity, IQF extends IQField<IQ, any, any, any, IQF>>( field: IQF ): IQF {
+export function min<IQ extends IQEntity, IQF extends IQOperableField<IQ, any, any, any, IQF>>( field: IQF ): IQF {
 	(<Appliable<any, any, any>><any>field).applySqlFunction(getSqlFunctionCall(SqlFunction.MIN));
 	return field;
 }
@@ -183,6 +187,7 @@ export function trim<IQ extends IQEntity>( stringField: IQStringField<IQ> | stri
 }
 
 export abstract class StandAloneFunction {
+
 }
 
 export function distinct(
@@ -206,19 +211,32 @@ export class QDistinctFunction extends StandAloneFunction implements IQDistinctF
 		return this;
 	}
 
-	toJSON(): JSONClauseField {
+	getSelectClause(): any {
+		return this.__appliedFunctions__[0].parameters[0];
+	}
+
+	toJSON( parsedSelectClause?: any ): JSONClauseField {
+		if (this.__appliedFunctions__.length != 1) {
+			throw `Not expecting and parent or child functions on "distinct"`;
+		}
+		if (this.__appliedFunctions__[0].parameters.length != 1) {
+			throw `Expecting only 1 parameter on "distinct" function.`;
+		}
+		let appliedFunctions = [
+			getSqlFunctionCall(SqlFunction.DISTINCT, false, [parsedSelectClause])
+		];
 		return {
-			__appliedFunctions__: this.__appliedFunctions__,
+			__appliedFunctions__: appliedFunctions,
 			type: JSONClauseObjectType.DISTINCT_FUNCTION
 		};
 	}
 
-	static getSelect(distinct:QDistinctFunction):any {
+	static getSelect( distinct: QDistinctFunction ): any {
 		return distinct.__appliedFunctions__[0].parameters[0];
 	}
 }
 
-export function exists( phRawQuery: PHRawNonEntitySQLQuery ): IQExistsFunction {
+export function exists<IE>( phRawQuery: PHRawMappedSQLQuery<IE> ): IQExistsFunction {
 	let selectClause = phRawQuery.select;
 	if (!selectClause) {
 		throw `Sub-Query must have SELECT clause defined to be used in EXITS function`;
@@ -243,32 +261,51 @@ export class QExistsFunction extends StandAloneFunction implements IQExistsFunct
 		return this;
 	}
 
-	toJSON(): JSONFunctionOperation {
-		if(this.__appliedFunctions__.length != 1) {
-			throw `Not expecting and parent or child functions on exists`;
+	getQuery(): PHRawMappedSQLQuery<any> {
+		return this.__appliedFunctions__[0].parameters[0];
+	}
+
+	toJSON( parsedQuery?: PHJsonMappedQSLQuery ): JSONFunctionOperation {
+		if (this.__appliedFunctions__.length != 1) {
+			throw `Not expecting and parent or child functions on "exists"`;
 		}
-		let query:PHRawNonEntitySQLQuery = this.__appliedFunctions__[0].parameters[0];
-		let select = query.select;
-		if(query.select instanceof QDistinctFunction) {
-			select = QDistinctFunction.getSelect(query.select);
+		if (this.__appliedFunctions__[0].parameters.length != 1) {
+			throw `Expecting only 1 parameter on "exists" function.`;
 		}
-		if(select instanceof Array) {
-
-			this.__appliedFunctions__[0].parameters[0] =
-		} else if (select instanceof QField) {
-
-		} // Must be a mapped query
-		else {
-
-		}
-
+		let appliedFunctions = [
+			getSqlFunctionCall(SqlFunction.EXISTS, false, [parsedQuery])
+		];
 		return {
 			category: this.category,
 			object: {
-				__appliedFunctions__: this.__appliedFunctions__,
+				__appliedFunctions__: appliedFunctions,
 				type: JSONClauseObjectType.EXISTS_FUNCTION
 			},
 			operator: this.operator
 		};
 	}
+}
+
+export function bool(
+	primitive: boolean
+): IQBooleanField<any> {
+	return new QBooleanFunction(primitive);
+}
+
+export function date(
+	primitive: Date
+): IQDateField<any> {
+	return new QDateFunction(primitive);
+}
+
+export function num(
+	primitive: number
+): IQNumberField<any> {
+	return new QNumberFunction(primitive);
+}
+
+export function str(
+	primitive: string
+): IQStringField<any> {
+	return new QStringFunction(primitive);
 }

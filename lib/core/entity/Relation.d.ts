@@ -17,8 +17,7 @@ export declare enum JSONRelationType {
     ENTITY_JOIN = 0,
     ENTITY_RELATION = 1,
     ENTITY_ROOT = 2,
-    SUB_QUERY_JOIN = 3,
-    SUB_QUERY_ROOT = 4,
+    SUB_QUERY = 3,
 }
 export interface JSONRelation {
     currentChildIndex: number;

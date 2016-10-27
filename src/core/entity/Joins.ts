@@ -3,21 +3,54 @@ import {JSONRelation, JSONJoinRelation, QRelation} from "./Relation";
 import {getNextRootEntityName} from "./Aliases";
 import {IFrom, QEntity} from "./Entity";
 import {JSONBaseOperation} from "../operation/Operation";
+import {IQField, QField} from "../field/Field";
+import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
+import {IQOperableField} from "../field/OperableField";
 /**
  * Created by Papa on 10/25/2016.
  */
 
 export const SUB_SELECT_QUERY = '.subSelect';
 
-export function fromQuery<EMap>( query: PHRawMappedSQLQuery<EMap> ): EMap {
-	let customEntity: EMap = query.select;
-	let rootQuery = <JSONRelation><any>query;
+export function view<EMap>(
+	query: ( ...args: any[] )=> PHRawMappedSQLQuery<EMap>| PHRawMappedSQLQuery<EMap>
+): EMap {
+	let queryDefinition: PHRawMappedSQLQuery<EMap>;
+	if (query instanceof Function) {
+		queryDefinition = query();
+	} else {
+		queryDefinition = query;
+	}
+	let customEntity: EMap = <EMap>queryDefinition.select;
+	// When retrieved via the view() function the query is the first one in the list
+	let rootQuery = <JSONRelation><any>queryDefinition;
 	rootQuery.currentChildIndex = 0;
 	rootQuery.fromClausePosition = [];
 	rootQuery.rootEntityPrefix = getNextRootEntityName();
-	customEntity[SUB_SELECT_QUERY] = query;
+	customEntity[SUB_SELECT_QUERY] = queryDefinition;
 
 	return customEntity;
+}
+
+/**
+ * Sub-queries in select clause
+ * @param query
+ * @returns {IQF}
+ */
+export function field<IQF extends IQField<any, any>>(
+	query: ( ...args: any[] ) => PHRawFieldSQLQuery<IQF> | PHRawFieldSQLQuery<IQF>
+): IQField<any, IQF> {
+	let queryDefinition: PHRawFieldSQLQuery<IQF>;
+	if (query instanceof Function) {
+		queryDefinition = query();
+	} else {
+		queryDefinition = query;
+	}
+	let customField: IQF = <IQF>queryDefinition.select;
+	customField = (<QField<any, IQF>><any>customField).addSubQuery(queryDefinition);
+	// Field query cannot be joined to any other query so don't have set the positional fields
+	return customField;
+
 }
 
 export enum JoinType {

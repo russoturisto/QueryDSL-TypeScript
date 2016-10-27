@@ -20,8 +20,7 @@ export enum JSONRelationType {
 	ENTITY_JOIN,
 	ENTITY_RELATION,
 	ENTITY_ROOT,
-	SUB_QUERY_JOIN,
-	SUB_QUERY_ROOT
+	SUB_QUERY
 }
 
 export interface JSONRelation {

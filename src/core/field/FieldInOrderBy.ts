@@ -3,7 +3,7 @@
  */
 
 import {IQEntity} from "../entity/Entity";
-import {Orderable} from "./Field";
+import {Orderable, IQField, QField} from "./Field";
 import {JSONClauseField} from "./Appliable";
 
 export interface JSONFieldInOrderBy {
@@ -16,22 +16,21 @@ export enum SortOrder {
 	DESCENDING
 }
 
-export interface IFieldInOrderBy<IQ extends IQEntity> {
-	field: Orderable<IQ>;
-	sortOrder: SortOrder;
+export interface IFieldInOrderBy<IQ extends IQEntity, IQF extends IQField<IQ, IQF>> {
 }
 
-export class FieldInOrderBy<IQ extends IQEntity> implements IFieldInOrderBy<IQ> {
+export class FieldInOrderBy<IQ extends IQEntity, IQF extends IQField<IQ, IQF>>
+implements IFieldInOrderBy<IQ, IQF> {
 
 	constructor(
-		public field: Orderable<IQ>,
+		public field: Orderable<IQ, IQF>,
 		public sortOrder: SortOrder
 	) {
 	}
 
 	toJSON(): JSONFieldInOrderBy {
 		return {
-			field: this.field.toJSON(),
+			field: (<QField<any,any>>this.field).toJSON(),
 			sortOrder: this.sortOrder
 		};
 	}
