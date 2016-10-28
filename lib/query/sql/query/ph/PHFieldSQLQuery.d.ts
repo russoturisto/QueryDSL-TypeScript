@@ -1,19 +1,19 @@
-import { PHRawNonEntitySQLQuery, PHNonEntitySQLQuery } from "./PHNonEntitySQLQuery";
-import { PHJsonCommonNonEntitySQLQuery, PHSQLQuery, PHJsonGroupedSQLQuery } from "../../PHSQLQuery";
+import { PHRawNonEntitySQLQuery, PHDistinguishableSQLQuery, PHJsonNonEntitySqlQuery } from "./PHNonEntitySQLQuery";
+import { PHSQLQuery } from "../../PHSQLQuery";
 import { JSONClauseField, JSONClauseObjectType } from "../../../../core/field/Appliable";
 import { IQField } from "../../../../core/field/Field";
 import { IQDistinctFunction } from "../../../../core/field/Functions";
 /**
  * Created by Papa on 10/24/2016.
  */
-export interface PHJsonFieldQSLQuery extends PHJsonCommonNonEntitySQLQuery, PHJsonGroupedSQLQuery {
+export interface PHJsonFieldQSLQuery extends PHJsonNonEntitySqlQuery {
     select: JSONClauseField;
     type: JSONClauseObjectType;
 }
 export interface PHRawFieldSQLQuery<IQF extends IQField<any, IQF>> extends PHRawNonEntitySQLQuery {
-    select: IQF | IQDistinctFunction;
+    select: IQF | IQDistinctFunction<IQF>;
 }
-export declare class PHFieldSQLQuery<IQF extends IQField<any, IQF>> extends PHNonEntitySQLQuery implements PHSQLQuery {
+export declare class PHFieldSQLQuery<IQF extends IQField<any, IQF>> extends PHDistinguishableSQLQuery implements PHSQLQuery {
     private phRawQuery;
     constructor(phRawQuery: PHRawFieldSQLQuery<IQF>);
     nonDistinctSelectClauseToJSON(rawSelect: any): any;

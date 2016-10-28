@@ -14,10 +14,12 @@ export interface PHRawSQLQuery extends PHRawQuery {
 export interface PHJsonCommonSQLQuery {
     from?: JSONRelation[];
     orderBy?: JSONFieldInOrderBy[];
-    limit?: number;
-    offset?: number;
     select: any;
     where?: JSONBaseOperation;
+}
+export interface PHJsonLimitedSQLQuery {
+    limit?: number;
+    offset?: number;
 }
 export interface PHSQLQuery extends PHQuery {
     toJSON(): PHJsonCommonSQLQuery;

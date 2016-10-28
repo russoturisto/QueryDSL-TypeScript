@@ -65,9 +65,9 @@ export declare abstract class QEntity<IQ extends IQEntity> implements IQEntity, 
     addEntityRelation<IQR extends IQEntity, R>(propertyName: string, relation: IQRelation<IQR, R, IQ>): void;
     addEntityField<T, IQF extends IQOperableField<IQ, T, JSONBaseOperation, IOperation<T, JSONBaseOperation>, any>>(propertyName: string, field: IQF): void;
     getRelationJson(): JSONRelation;
-    getJoinRelationJson(jsonRelation: JSONJoinRelation): void;
-    getEntityRelationJson(jsonRelation: JSONEntityRelation): void;
-    getRootRelationJson(jsonRelation: JSONRelation): void;
+    getJoinRelationJson(jsonRelation: JSONJoinRelation): JSONJoinRelation;
+    getEntityRelationJson(jsonRelation: JSONEntityRelation): JSONEntityRelation;
+    getRootRelationJson(jsonRelation: JSONRelation): JSONJoinRelation;
     getQ(): IQ;
     fields(fields: IQOperableField<IQ, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]): IQ;
     abstract toJSON(): any;

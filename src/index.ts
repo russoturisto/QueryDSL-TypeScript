@@ -8,27 +8,21 @@ import {JSONRawNumberOperation, INumberOperation, NumberOperation} from "./core/
 import {JSONRawStringOperation, IStringOperation, StringOperation} from "./core/operation/StringOperation";
 import {IEntity, IQEntity, QEntity} from "./core/entity/Entity";
 import {
-	JSONBooleanFieldOperation,
 	IQBooleanField,
 	QBooleanField
 } from "./core/field/BooleanField";
 import {
-	JSONDateFieldOperation,
 	IQDateField,
 	QDateField
 } from "./core/field/DateField";
 import {
-	FieldType,
-	IQOperableField,
-	QOperableField, Orderable,
+	FieldType, Orderable,
 } from "./core/field/Field";
 import {
-	JSONNumberFieldOperation,
 	IQNumberField,
 	QNumberField
 } from "./core/field/NumberField";
 import {
-	JSONStringFieldOperation,
 	IQStringField,
 	QStringField
 } from "./core/field/StringField";
@@ -38,11 +32,9 @@ import {
 import {IOperation, Operation, JSONBaseOperation} from "./core/operation/Operation";
 import {OperationType} from "./core/operation/OperationType";
 import {
-	EntityRelationRecord, EntityRelationType, IQRelation, QRelation, JSONEntityRelation,
-	IQManyToOneRelation, QManyToOneRelation, QOneToManyRelation
+	EntityRelationRecord, EntityRelationType, IQRelation, QRelation, JSONEntityRelation
 } from "./core/entity/Relation";
 import {IEntityQuery} from "./query/IEntityQuery";
-import {PouchDbGraphQuery, PouchDbFindQuery} from "./query/noSql/pouchdb/PouchDbGraphQuery";
 import {
 	Id, ColumnConfiguration, Column, JoinColumnConfiguration,
 	JoinColumn, Transient, ManyToOneElements, ManyToOne, OneToManyElements, OneToMany
@@ -53,13 +45,11 @@ import {
 } from "./core/entity/metadata/EntityDecorators";
 import {CascadeType, FetchType, GenerationType, AccessType} from "./core/entity/metadata/Types";
 import {EntityMetadata} from "./core/entity/EntityMetadata";
-import {PHGraphQuery, PHJsonGraphQuery, GraphFilter} from "./query/noSql/PHGraphQuery";
-import {QueryTreeNode} from "./query/noSql/QueryTreeNode";
 import {OracleAdaptor} from "./query/sql/adaptor/OracleAdaptor";
 import {SqLiteAdaptor} from "./query/sql/adaptor/SqLiteAdaptor";
 import {ISQLAdaptor, getSQLAdaptor} from "./query/sql/adaptor/SQLAdaptor";
 import {EntityDefaults, SQLDialect, SQLDataType, SQLStringQuery} from "./query/sql/SQLStringQuery";
-import {PHRawSQLQuery, PHJsonCommonNonEntitySQLQuery, JoinType, PHSQLQuery} from "./query/sql/PHSQLQuery";
+import {PHRawSQLQuery, PHSQLQuery} from "./query/sql/PHSQLQuery";
 import {PHQuery, PHRawQuery} from "./query/PHQuery";
 import {FieldMap, EntityFieldMap, PropertyFieldEntry} from "./query/sql/FieldMap";
 import {MetadataUtils, OneToManyConfigAndProperty} from "./core/entity/metadata/MetadataUtils";
@@ -87,8 +77,6 @@ import {
 import {PlainResultParser} from "./query/sql/query/result/PlainResultParser";
 import {FlattenedResultParser} from "./query/sql/query/result/FlattenedResultParser";
 import {ObjectSQLStringQuery} from "./query/sql/query/ObjectSQLStringQuery";
-
-
 
 export {
 	JSONFieldInOrderBy,
@@ -120,9 +108,7 @@ export {
 	PHQuery,
 	PHRawQuery,
 	PHSQLQuery,
-	PHJsonCommonNonEntitySQLQuery,
 	PHRawSQLQuery,
-	JoinType,
 	SQLStringWhereBase,
 	SQLStringQuery,
 	SQLStringNoJoinQuery,
@@ -141,12 +127,6 @@ export {
 	ISQLAdaptor,
 	SqLiteAdaptor,
 	OracleAdaptor,
-	PHGraphQuery,
-	PHJsonGraphQuery,
-	GraphFilter,
-	QueryTreeNode,
-	PouchDbFindQuery,
-	PouchDbGraphQuery,
 	EntityMetadata,
 	CascadeType,
 	FetchType,
@@ -174,27 +154,21 @@ export {
 	FieldType,
 	IQBooleanField,
 	QBooleanField,
-	JSONBooleanFieldOperation,
 	JSONRawBooleanOperation,
 	IBooleanOperation,
 	BooleanOperation,
 	IQDateField,
 	QDateField,
-	JSONDateFieldOperation,
 	JSONRawDateOperation,
 	IDateOperation,
 	DateOperation,
-	IQOperableField,
-	QOperableField,
 	IQNumberField,
 	QNumberField,
-	JSONNumberFieldOperation,
 	JSONRawNumberOperation,
 	INumberOperation,
 	NumberOperation,
 	IQStringField,
 	QStringField,
-	JSONStringFieldOperation,
 	JSONRawStringOperation,
 	IStringOperation,
 	StringOperation,

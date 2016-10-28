@@ -1,5 +1,5 @@
 import {JSONEntityRelation} from "./Relation";
-import {JoinType} from "../../query/sql/PHSQLQuery";
+import {JoinType} from "./Joins";
 /**
  * Created by Papa on 10/18/2016.
  */

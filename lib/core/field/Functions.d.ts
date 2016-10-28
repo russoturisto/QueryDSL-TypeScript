@@ -6,7 +6,7 @@ import { IQDateField } from "./DateField";
 import { JSONBaseOperation, OperationCategory, JSONFunctionOperation } from "../operation/Operation";
 import { IQOperableField } from "./OperableField";
 import { IQBooleanField } from "./BooleanField";
-import { PHRawMappedSQLQuery, PHJsonMappedQSLQuery } from "../../query/sql/query/ph/PHMappedSQLQuery";
+import { PHRawMappedSQLQuery, PHJsonMappedQSLQuery, IMappedEntity } from "../../query/sql/query/ph/PHMappedSQLQuery";
 /**
  * Created by Papa on 10/18/2016.
  */
@@ -54,17 +54,17 @@ export declare function replace<IQ extends IQEntity>(stringField: IQStringField<
 export declare function trim<IQ extends IQEntity>(stringField: IQStringField<IQ> | string): IQStringField<IQ>;
 export declare abstract class StandAloneFunction {
 }
-export declare function distinct(selectClause: any): IQDistinctFunction;
-export interface IQDistinctFunction {
+export declare function distinct<ISelect>(selectClause: ISelect): IQDistinctFunction<ISelect>;
+export interface IQDistinctFunction<ISelect> {
 }
-export declare class QDistinctFunction extends StandAloneFunction implements IQDistinctFunction, Appliable<JSONClauseObject, any, any> {
+export declare class QDistinctFunction<ISelect> extends StandAloneFunction implements IQDistinctFunction<ISelect>, Appliable<JSONClauseObject, any, any> {
     __appliedFunctions__: JSONSqlFunctionCall[];
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): any;
     getSelectClause(): any;
     toJSON(parsedSelectClause?: any): JSONClauseField;
-    static getSelect(distinct: QDistinctFunction): any;
+    static getSelect(distinct: QDistinctFunction<any>): any;
 }
-export declare function exists<IE>(phRawQuery: PHRawMappedSQLQuery<IE>): IQExistsFunction;
+export declare function exists<IME extends IMappedEntity>(phRawQuery: PHRawMappedSQLQuery<IME>): IQExistsFunction;
 export interface IQExistsFunction extends JSONBaseOperation {
 }
 export declare class QExistsFunction extends StandAloneFunction implements IQExistsFunction, Appliable<JSONClauseObject, any, any> {

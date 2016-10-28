@@ -1,9 +1,9 @@
 import { IEntity } from "../../../../core/entity/Entity";
-import { PHRawSQLQuery, PHSQLQuery } from "../../PHSQLQuery";
+import { PHRawSQLQuery, PHSQLQuery, PHJsonCommonSQLQuery } from "../../PHSQLQuery";
 /**
  * Created by Papa on 10/24/2016.
  */
-export interface PHJsonEntitySQLQuery<IE extends IEntity> extends PHRawSQLQuery {
+export interface PHJsonEntitySQLQuery<IE extends IEntity> extends PHJsonCommonSQLQuery {
     select: IE;
 }
 export interface PHRawEntitySQLQuery<IE extends IEntity> extends PHRawSQLQuery {

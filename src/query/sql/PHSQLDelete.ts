@@ -1,34 +1,34 @@
-import {IEntity, IQEntity, QEntity} from "../../core/entity/Entity";
-import {PHRawUpdate, PHRawDelete, PHDelete} from "../PHQuery";
+import {IQEntity} from "../../core/entity/Entity";
+import {PHRawDelete, PHDelete} from "../PHQuery";
 import {JSONBaseOperation} from "../../core/operation/Operation";
-import {JSONEntityRelation, EntityRelationRecord} from "../../core/entity/Relation";
+import {JSONEntityRelation} from "../../core/entity/Relation";
+import {PHAbstractSQLQuery} from "./query/ph/PHAbstractSQLQuery";
 /**
  * Created by Papa on 10/2/2016.
  */
 
-export interface PHRawSQLDelete<IE extends IEntity> extends PHRawDelete<IE> {
-    deleteFrom: IQEntity;
-    where?: JSONBaseOperation;
+export interface PHRawSQLDelete<IQE extends IQEntity> extends PHRawDelete<IQE> {
+	deleteFrom: IQE;
+	where?: JSONBaseOperation;
 }
 
-export interface PHJsonSQLDelete<IE extends IEntity> {
-    deleteFrom: JSONEntityRelation;
-    where?: JSONBaseOperation;
+export interface PHJsonSQLDelete {
+	deleteFrom: JSONEntityRelation;
+	where?: JSONBaseOperation;
 }
 
-export class PHSQLDelete<IE extends IEntity> implements PHDelete<IE> {
+export class PHSQLDelete<IQE extends IQEntity> extends PHAbstractSQLQuery implements PHDelete<IQE> {
 
-    constructor(public phRawQuery:PHRawSQLDelete<IE>,
-                public qEntity:QEntity<any>,
-                public qEntityMap:{[entityName:string]:QEntity<any>},
-                public entitiesRelationPropertyMap:{[entityName:string]:{[propertyName:string]:EntityRelationRecord}},
-                public entitiesPropertyTypeMap:{[entityName:string]:{[propertyName:string]:boolean}}) {
-    }
+	constructor(
+		public phRawQuery: PHRawSQLDelete<IQE>
+	) {
+		super();
+	}
 
-    toSQL():PHJsonSQLDelete<IE> {
-        return {
-            deleteFrom: this.phRawQuery.deleteFrom.getEntityRelationJson(),
-            where: this.phRawQuery.where
-        };
-    }
+	toSQL(): PHJsonSQLDelete {
+		return {
+			deleteFrom: <JSONEntityRelation>this.phRawQuery.deleteFrom.getRelationJson(),
+			where: this.whereClauseToJSON(this.phRawQuery.where)
+		};
+	}
 }

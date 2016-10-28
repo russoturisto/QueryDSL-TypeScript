@@ -1,4 +1,4 @@
-import {PHRawMappedSQLQuery} from "../../query/sql/query/ph/PHMappedSQLQuery";
+import {PHRawMappedSQLQuery, IMappedEntity} from "../../query/sql/query/ph/PHMappedSQLQuery";
 import {JSONRelation, JSONJoinRelation, QRelation} from "./Relation";
 import {getNextRootEntityName} from "./Aliases";
 import {IFrom, QEntity} from "./Entity";
@@ -12,16 +12,16 @@ import {IQOperableField} from "../field/OperableField";
 
 export const SUB_SELECT_QUERY = '.subSelect';
 
-export function view<EMap>(
-	query: ( ...args: any[] )=> PHRawMappedSQLQuery<EMap>| PHRawMappedSQLQuery<EMap>
-): EMap {
-	let queryDefinition: PHRawMappedSQLQuery<EMap>;
+export function view<IME extends IMappedEntity>(
+	query: ( ...args: any[] )=> PHRawMappedSQLQuery<IME>| PHRawMappedSQLQuery<IME>
+): IME {
+	let queryDefinition: PHRawMappedSQLQuery<IME>;
 	if (query instanceof Function) {
 		queryDefinition = query();
 	} else {
 		queryDefinition = query;
 	}
-	let customEntity: EMap = <EMap>queryDefinition.select;
+	let customEntity: IME = <IME>queryDefinition.select;
 	// When retrieved via the view() function the query is the first one in the list
 	let rootQuery = <JSONRelation><any>queryDefinition;
 	rootQuery.currentChildIndex = 0;
@@ -60,24 +60,24 @@ export enum JoinType {
 	RIGHT_JOIN
 }
 
-export interface JoinOperation<IF extends IFrom, EMap> {
-	( entity: IF | EMap ): JSONBaseOperation;
+export interface JoinOperation<IF extends IFrom, IME extends IMappedEntity> {
+	( entity: IF | IME ): JSONBaseOperation;
 }
 
-export class JoinFields<IF extends IFrom, EMap> {
+export class JoinFields<IF extends IFrom, IME extends IMappedEntity> {
 
 	constructor(
-		private joinTo: IF | PHRawMappedSQLQuery<EMap>
+		private joinTo: IF | PHRawMappedSQLQuery<IME>
 	) {
 	}
 
-	on( joinOperation: JoinOperation<IF, EMap> ): IF | EMap {
+	on( joinOperation: JoinOperation<IF, IME> ): IF | IME {
 		let entity;
 		let joinChild: JSONJoinRelation = <JSONJoinRelation><any>this.joinTo;
 		if (this.joinTo instanceof QEntity) {
 			entity = this.joinTo;
 		} else {
-			entity = (<PHRawMappedSQLQuery<EMap>>this.joinTo).select;
+			entity = (<PHRawMappedSQLQuery<IME>>this.joinTo).select;
 			entity[SUB_SELECT_QUERY] = joinChild;
 		}
 		joinChild.joinWhereClause = joinOperation(entity);
@@ -86,11 +86,11 @@ export class JoinFields<IF extends IFrom, EMap> {
 	}
 }
 
-function join<IF extends IFrom, EMap>(
-	left: IF | EMap,
-	right: IF | PHRawMappedSQLQuery<EMap>,
+function join<IF extends IFrom, IME extends IMappedEntity>(
+	left: IF | IME,
+	right: IF | PHRawMappedSQLQuery<IME>,
 	joinType: JoinType
-): JoinFields<IF, EMap> {
+): JoinFields<IF, IME> {
 	let nextChildPosition;
 	let joinParent: JSONJoinRelation;
 	// If left is a Raw Mapped Query
@@ -107,33 +107,33 @@ function join<IF extends IFrom, EMap>(
 	joinChild.joinType = joinType;
 	joinChild.rootEntityPrefix = joinParent.rootEntityPrefix;
 
-	return new JoinFields<IF, EMap>(right);
+	return new JoinFields<IF, IME>(right);
 }
 
-export function fullJoin<IF extends IFrom, EMap>(
-	left: IF | EMap,
-	right: IF | PHRawMappedSQLQuery<EMap>
-): JoinFields<IF, EMap> {
-	return join<IF, EMap>(left, right, JoinType.FULL_JOIN);
+export function fullJoin<IF extends IFrom, IME extends IMappedEntity>(
+	left: IF | IME,
+	right: IF | PHRawMappedSQLQuery<IME>
+): JoinFields<IF, IME> {
+	return join<IF, IME>(left, right, JoinType.FULL_JOIN);
 }
 
-export function innerJoin<IF extends IFrom, EMap>(
-	left: IF | EMap,
-	right: IF | PHRawMappedSQLQuery<EMap>
-): JoinFields<IF, EMap> {
-	return join<IF, EMap>(left, right, JoinType.INNER_JOIN);
+export function innerJoin<IF extends IFrom, IME extends IMappedEntity>(
+	left: IF | IME,
+	right: IF | PHRawMappedSQLQuery<IME>
+): JoinFields<IF, IME> {
+	return join<IF, IME>(left, right, JoinType.INNER_JOIN);
 }
 
-export function leftJoin<IF extends IFrom, EMap>(
-	left: IF | EMap,
-	right: IF | PHRawMappedSQLQuery<EMap>
-): JoinFields<IF, EMap> {
-	return join<IF, EMap>(left, right, JoinType.LEFT_JOIN);
+export function leftJoin<IF extends IFrom, IME extends IMappedEntity>(
+	left: IF | IME,
+	right: IF | PHRawMappedSQLQuery<IME>
+): JoinFields<IF, IME> {
+	return join<IF, IME>(left, right, JoinType.LEFT_JOIN);
 }
 
-export function rightJoin<IF extends IFrom, EMap>(
-	left: IF | EMap,
-	right: IF | PHRawMappedSQLQuery<EMap>
-): JoinFields<IF, EMap> {
-	return join<IF, EMap>(left, right, JoinType.RIGHT_JOIN);
+export function rightJoin<IF extends IFrom, IME extends IMappedEntity>(
+	left: IF | IME,
+	right: IF | PHRawMappedSQLQuery<IME>
+): JoinFields<IF, IME> {
+	return join<IF, IME>(left, right, JoinType.RIGHT_JOIN);
 }

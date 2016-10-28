@@ -9,13 +9,13 @@ export declare enum GraphFilter {
     ALL = 0,
     CHILDREN = 1,
 }
-export interface PHJsonGraphQuery<IE extends IEntity> extends PHRawQuery<IE> {
+export interface PHJsonGraphQuery<IE extends IEntity> extends PHRawQuery {
     filter: GraphFilter;
     fields: IE;
     selector: JSONBaseOperation;
     execOrder: number;
 }
-export declare class PHGraphQuery<IE extends IEntity> implements PHQuery<IE> {
+export declare class PHGraphQuery<IE extends IEntity> implements PHQuery {
     phJsonQuery: PHJsonGraphQuery<IE>;
     qEntity: QEntity<any>;
     qEntityMap: {

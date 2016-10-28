@@ -1,5 +1,4 @@
-import {QOperableField} from "../field/Field";
-import {QManyToOneRelation} from "../entity/Relation";
+import {QOperableField} from "../field/OperableField";
 /**
  * Created by Papa on 6/14/2016.
  */
@@ -53,7 +52,6 @@ export class EntityUtils {
 
 export function isAppliable( object: any ): boolean {
 
-	return object instanceof QOperableField
-		|| object instanceof QManyToOneRelation;
+	return object instanceof QOperableField;
 
 }

@@ -7,7 +7,7 @@ import {JSONBaseOperation, OperationCategory, JSONFunctionOperation} from "../op
 import {PHRawNonEntitySQLQuery} from "../../query/sql/query/ph/PHNonEntitySQLQuery";
 import {QOperableField, IQOperableField} from "./OperableField";
 import {IQBooleanField, QBooleanFunction} from "./BooleanField";
-import {PHRawMappedSQLQuery, PHJsonMappedQSLQuery} from "../../query/sql/query/ph/PHMappedSQLQuery";
+import {PHRawMappedSQLQuery, PHJsonMappedQSLQuery, IMappedEntity} from "../../query/sql/query/ph/PHMappedSQLQuery";
 /**
  * Created by Papa on 10/18/2016.
  */
@@ -190,19 +190,19 @@ export abstract class StandAloneFunction {
 
 }
 
-export function distinct(
-	selectClause: any
-): IQDistinctFunction {
-	let distinctFunction = new QDistinctFunction();
+export function distinct<ISelect>(
+	selectClause: ISelect
+): IQDistinctFunction<ISelect> {
+	let distinctFunction = new QDistinctFunction<ISelect>();
 	distinctFunction.applySqlFunction(getSqlFunctionCall(SqlFunction.DISTINCT, false, [selectClause]));
 	return distinctFunction;
 }
 
-export interface IQDistinctFunction {
+export interface IQDistinctFunction<ISelect> {
 
 }
 
-export class QDistinctFunction extends StandAloneFunction implements IQDistinctFunction, Appliable<JSONClauseObject, any, any> {
+export class QDistinctFunction<ISelect> extends StandAloneFunction implements IQDistinctFunction<ISelect>, Appliable<JSONClauseObject, any, any> {
 
 	__appliedFunctions__: JSONSqlFunctionCall[] = [];
 
@@ -231,12 +231,12 @@ export class QDistinctFunction extends StandAloneFunction implements IQDistinctF
 		};
 	}
 
-	static getSelect( distinct: QDistinctFunction ): any {
+	static getSelect( distinct: QDistinctFunction<any> ): any {
 		return distinct.__appliedFunctions__[0].parameters[0];
 	}
 }
 
-export function exists<IE>( phRawQuery: PHRawMappedSQLQuery<IE> ): IQExistsFunction {
+export function exists<IME extends IMappedEntity>( phRawQuery: PHRawMappedSQLQuery<IME> ): IQExistsFunction {
 	let selectClause = phRawQuery.select;
 	if (!selectClause) {
 		throw `Sub-Query must have SELECT clause defined to be used in EXITS function`;

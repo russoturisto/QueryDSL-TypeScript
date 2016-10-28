@@ -1,18 +1,30 @@
-import { PHRawNonEntitySQLQuery, PHNonEntitySQLQuery } from "./PHNonEntitySQLQuery";
-import { PHSQLQuery, PHJsonCommonNonEntitySQLQuery, PHJsonGroupedSQLQuery } from "../../PHSQLQuery";
+import { PHRawNonEntitySQLQuery, PHDistinguishableSQLQuery, PHJsonNonEntitySqlQuery } from "./PHNonEntitySQLQuery";
+import { PHSQLQuery } from "../../PHSQLQuery";
 import { JSONJoinRelation } from "../../../../core/entity/Relation";
 import { IQDistinctFunction } from "../../../../core/field/Functions";
 /**
  * Created by Papa on 10/24/2016.
  */
-export interface PHJsonMappedQSLQuery extends PHJsonCommonNonEntitySQLQuery, PHJsonGroupedSQLQuery, JSONJoinRelation {
+export interface PHJsonMappedQSLQuery extends PHJsonNonEntitySqlQuery, JSONJoinRelation {
 }
-export interface PHRawMappedSQLQuery<IE> extends PHRawNonEntitySQLQuery {
-    select: IE | IQDistinctFunction;
+/**
+ * Marker interface for entities in the select clause of a PHRawMappedSQLQuery,
+ * as returned by a view or join functions.
+ */
+export interface IMappedEntity {
 }
-export declare class PHMappedSQLQuery<IE> extends PHNonEntitySQLQuery implements PHSQLQuery {
-    phRawQuery: PHRawMappedSQLQuery<IE>;
-    constructor(phRawQuery: PHRawMappedSQLQuery<IE>);
+export interface PHRawMappedSQLQuery<IME extends IMappedEntity> extends PHRawNonEntitySQLQuery {
+    select: IME | IQDistinctFunction<IME>;
+}
+export declare const FIELD_IN_SELECT_CLAUSE_ERROR_MESSAGE: string;
+/**
+ * A query whose select object is a collection of properties.
+ */
+export declare abstract class PHMappableSQLQuery extends PHDistinguishableSQLQuery {
     nonDistinctSelectClauseToJSON(rawSelect: any): any;
+}
+export declare class PHMappedSQLQuery<IME extends IMappedEntity> extends PHMappableSQLQuery implements PHSQLQuery {
+    phRawQuery: PHRawMappedSQLQuery<IME>;
+    constructor(phRawQuery: PHRawMappedSQLQuery<IME>);
     toJSON(): PHJsonMappedQSLQuery;
 }

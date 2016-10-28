@@ -1,21 +1,25 @@
-import {PHSQLQuery, PHJsonCommonNonEntitySQLQuery, PHJsonGroupedSQLQuery} from "../../PHSQLQuery";
+import {PHSQLQuery} from "../../PHSQLQuery";
 import {JSONClauseField} from "../../../../core/field/Appliable";
-import {PHRawNonEntitySQLQuery, PHNonEntitySQLQuery, SELECT_ERROR_MESSAGE} from "./PHNonEntitySQLQuery";
+import {
+	PHRawNonEntitySQLQuery, PHDistinguishableSQLQuery, NON_ENTITY_SELECT_ERROR_MESSAGE,
+	PHJsonNonEntitySqlQuery
+} from "./PHNonEntitySQLQuery";
 import {IQField, QField} from "../../../../core/field/Field";
+import {IQDistinctFunction} from "../../../../core/field/Functions";
 /**
  * Created by Papa on 10/23/2016.
  */
 
-export interface PHJsonFlatQSLQuery extends PHJsonCommonNonEntitySQLQuery, PHJsonGroupedSQLQuery {
+export interface PHJsonFlatQSLQuery extends PHJsonNonEntitySqlQuery {
 	select: JSONClauseField[];
 }
 
 export interface PHRawFlatSQLQuery<IQF extends IQField<any, IQF>>
 extends PHRawNonEntitySQLQuery {
-	select: IQF[];
+	select: IQF[] | IQDistinctFunction<IQF[]>;
 }
 
-export class PHFlatSQLQuery extends PHNonEntitySQLQuery implements PHSQLQuery {
+export class PHFlatSQLQuery extends PHDistinguishableSQLQuery implements PHSQLQuery {
 
 	constructor(
 		public phRawQuery: PHRawFlatSQLQuery<any>,
@@ -29,7 +33,7 @@ export class PHFlatSQLQuery extends PHNonEntitySQLQuery implements PHSQLQuery {
 		}
 		return rawSelect.map(( selectField ) => {
 			if (!(selectField instanceof QField)) {
-				throw SELECT_ERROR_MESSAGE;
+				throw NON_ENTITY_SELECT_ERROR_MESSAGE;
 			}
 			return selectField.toJSON();
 		});

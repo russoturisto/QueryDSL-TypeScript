@@ -12,8 +12,7 @@ import {
 import {JSONLogicalOperation} from "../../../../core/operation/LogicalOperation";
 import {IFrom, QEntity} from "../../../../core/entity/Entity";
 import {JSONRelation, JSONJoinRelation, JSONRelationType} from "../../../../core/entity/Relation";
-import {PHRawNonEntitySQLQuery} from "./PHNonEntitySQLQuery";
-import {PHJsonCommonNonEntitySQLQuery, PHJsonGroupedSQLQuery} from "../../PHSQLQuery";
+import {PHRawNonEntitySQLQuery, PHJsonGroupedSQLQuery, PHJsonNonEntitySqlQuery} from "./PHNonEntitySQLQuery";
 import {QExistsFunction} from "../../../../core/field/Functions";
 /**
  * Created by Papa on 10/27/2016.
@@ -21,10 +20,12 @@ import {QExistsFunction} from "../../../../core/field/Functions";
 
 export abstract class PHAbstractSQLQuery {
 
+	protected isEntityQuery:boolean = false;
+
 	protected getNonEntitySqlQuery(
 		rawQuery: PHRawNonEntitySQLQuery,
-		jsonQuery:PHJsonCommonNonEntitySQLQuery & PHJsonGroupedSQLQuery
-	): PHJsonCommonNonEntitySQLQuery & PHJsonGroupedSQLQuery {
+		jsonQuery:PHJsonNonEntitySqlQuery
+	): PHJsonNonEntitySqlQuery {
 		let from = this.fromClauseToJSON(rawQuery.from);
 
 		jsonQuery.from = from;
@@ -38,7 +39,7 @@ export abstract class PHAbstractSQLQuery {
 		return jsonQuery;
 	}
 
-	private fromClauseToJSON(
+	protected fromClauseToJSON(
 		fromClause: (IFrom | PHRawMappedSQLQuery<any>)[]
 	): (JSONRelation | PHJsonMappedQSLQuery)[] {
 		return fromClause.map(( fromEntity ) => {
@@ -47,6 +48,9 @@ export abstract class PHAbstractSQLQuery {
 			}
 			// Must be a sub-query
 			else {
+				if(this.isEntityQuery) {
+					throw `Entity FROM clauses can only contain QEntities`;
+				}
 				return this.getSubSelectInFromClause(fromEntity);
 			}
 		});

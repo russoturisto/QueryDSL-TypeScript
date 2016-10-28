@@ -1,4 +1,4 @@
-import { PHRawMappedSQLQuery } from "../../query/sql/query/ph/PHMappedSQLQuery";
+import { PHRawMappedSQLQuery, IMappedEntity } from "../../query/sql/query/ph/PHMappedSQLQuery";
 import { IFrom } from "./Entity";
 import { JSONBaseOperation } from "../operation/Operation";
 import { IQField } from "../field/Field";
@@ -7,7 +7,7 @@ import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
  * Created by Papa on 10/25/2016.
  */
 export declare const SUB_SELECT_QUERY: string;
-export declare function view<EMap>(query: (...args: any[]) => PHRawMappedSQLQuery<EMap> | PHRawMappedSQLQuery<EMap>): EMap;
+export declare function view<IME extends IMappedEntity>(query: (...args: any[]) => PHRawMappedSQLQuery<IME> | PHRawMappedSQLQuery<IME>): IME;
 /**
  * Sub-queries in select clause
  * @param query
@@ -20,15 +20,15 @@ export declare enum JoinType {
     LEFT_JOIN = 2,
     RIGHT_JOIN = 3,
 }
-export interface JoinOperation<IF extends IFrom, EMap> {
-    (entity: IF | EMap): JSONBaseOperation;
+export interface JoinOperation<IF extends IFrom, IME extends IMappedEntity> {
+    (entity: IF | IME): JSONBaseOperation;
 }
-export declare class JoinFields<IF extends IFrom, EMap> {
+export declare class JoinFields<IF extends IFrom, IME extends IMappedEntity> {
     private joinTo;
-    constructor(joinTo: IF | PHRawMappedSQLQuery<EMap>);
-    on(joinOperation: JoinOperation<IF, EMap>): IF | EMap;
+    constructor(joinTo: IF | PHRawMappedSQLQuery<IME>);
+    on(joinOperation: JoinOperation<IF, IME>): IF | IME;
 }
-export declare function fullJoin<IF extends IFrom, EMap>(left: IF | EMap, right: IF | PHRawMappedSQLQuery<EMap>): JoinFields<IF, EMap>;
-export declare function innerJoin<IF extends IFrom, EMap>(left: IF | EMap, right: IF | PHRawMappedSQLQuery<EMap>): JoinFields<IF, EMap>;
-export declare function leftJoin<IF extends IFrom, EMap>(left: IF | EMap, right: IF | PHRawMappedSQLQuery<EMap>): JoinFields<IF, EMap>;
-export declare function rightJoin<IF extends IFrom, EMap>(left: IF | EMap, right: IF | PHRawMappedSQLQuery<EMap>): JoinFields<IF, EMap>;
+export declare function fullJoin<IF extends IFrom, IME extends IMappedEntity>(left: IF | IME, right: IF | PHRawMappedSQLQuery<IME>): JoinFields<IF, IME>;
+export declare function innerJoin<IF extends IFrom, IME extends IMappedEntity>(left: IF | IME, right: IF | PHRawMappedSQLQuery<IME>): JoinFields<IF, IME>;
+export declare function leftJoin<IF extends IFrom, IME extends IMappedEntity>(left: IF | IME, right: IF | PHRawMappedSQLQuery<IME>): JoinFields<IF, IME>;
+export declare function rightJoin<IF extends IFrom, IME extends IMappedEntity>(left: IF | IME, right: IF | PHRawMappedSQLQuery<IME>): JoinFields<IF, IME>;
