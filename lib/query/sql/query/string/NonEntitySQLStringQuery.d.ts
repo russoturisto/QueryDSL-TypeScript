@@ -12,7 +12,7 @@ export declare abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEnti
      * Used in remote execution to parse the result set and to validate a join.
      */
     buildJoinTree(): void;
-    copyQEntityMapByAlias(sourceMap: any, targetMap: any): void;
+    addQEntityMapByAlias(sourceMap: any): void;
     buildFromJoinTree(joinRelations: (JSONRelation | PHJsonMappedQSLQuery)[], joinNodeMap: {
         [alias: string]: JoinTreeNode;
     }): JoinTreeNode;

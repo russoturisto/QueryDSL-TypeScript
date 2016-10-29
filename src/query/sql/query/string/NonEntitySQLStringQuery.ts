@@ -7,6 +7,8 @@ import {PHJsonMappedQSLQuery} from "../ph/PHMappedSQLQuery";
 import {SQLStringQuery} from "../../SQLStringQuery";
 import {PHJsonNonEntitySqlQuery} from "../ph/PHNonEntitySQLQuery";
 import {JSONClauseField, JSONClauseObjectType} from "../../../../core/field/Appliable";
+import {PHJsonFieldQSLQuery} from "../ph/PHFieldSQLQuery";
+import {FieldSQLStringQuery} from "./FieldSQLStringQuery";
 /**
  * Created by Papa on 10/28/2016.
  */
@@ -24,9 +26,9 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 		this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, false, []);
 	}
 
-	copyQEntityMapByAlias(sourceMap, targetMap) {
+	addQEntityMapByAlias( sourceMap) {
 		for(let alias in sourceMap) {
-			targetMap[alias] = sourceMap[alias];
+			this.qEntityMapByAlias[alias] = sourceMap[alias];
 		}
 	}
 
@@ -128,7 +130,10 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 				selectSqlFragment += this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(value, columnSelect, this.qEntityMapByAlias, true);
 				break;
 			case JSONClauseObjectType.FIELD_QUERY:
-
+				let jsonFieldSqlQuery:PHJsonFieldQSLQuery = <PHJsonFieldQSLQuery><any>value;
+				let fieldSqlQuery = new FieldSQLStringQuery(jsonFieldSqlQuery, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect);
+				fieldSqlQuery.addQEntityMapByAlias(this.qEntityMapByAlias);
+				selectSqlFragment += `(${fieldSqlQuery.toSQL()})`;
 			case JSONClauseObjectType.MANY_TO_ONE_RELATION:
 				columnName = this.getEntityManyToOneColumnName(qEntity, value.propertyName, value.tableAlias);
 				columnSelect = this.getColumnSelectFragment(value.propertyName, value.tableAlias, columnName, selectSqlFragment);
