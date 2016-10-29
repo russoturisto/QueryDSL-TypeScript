@@ -1,12 +1,12 @@
-import { JSONEntityRelation } from "./Relation";
+import { JSONRelation } from "./Relation";
 /**
  * Created by Papa on 10/18/2016.
  */
 export declare class JoinTreeNode {
-    jsonRelation: JSONEntityRelation;
+    jsonRelation: JSONRelation;
     childNodes: JoinTreeNode[];
     parentNode: JoinTreeNode;
-    constructor(jsonRelation: JSONEntityRelation, childNodes: JoinTreeNode[], parentNode: JoinTreeNode);
+    constructor(jsonRelation: JSONRelation, childNodes: JoinTreeNode[], parentNode: JoinTreeNode);
     addChildNode(joinTreeNode: JoinTreeNode): void;
-    getChildNode(entityName: string, relationName: string): JoinTreeNode;
+    getEntityRelationChildNode(entityName: string, relationName: string): JoinTreeNode;
 }

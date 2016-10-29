@@ -1,22 +1,23 @@
-import {ISQLAdaptor} from "./SQLAdaptor";
+import {ISQLAdaptor, ISQLFunctionAdaptor, SqlValueProvider} from "./SQLAdaptor";
 import {SQLDataType} from "../SQLStringQuery";
-import {JSONSqlFunctionCall, SqlFunction, FunctionAppliable} from "../../../core/field/Functions";
+import {JSONSqlFunctionCall, SqlFunction} from "../../../core/field/Functions";
 import {
-	Appliable, ISQLFunctionAdaptor, AbstractFunctionAdaptor, JSONClauseObject,
-	JSONClauseObjectType
+	AbstractFunctionAdaptor, JSONClauseObject, JSONClauseObjectType
 } from "../../../core/field/Appliable";
-import {QOperableField} from "../../../core/field/Field";
 import {IQEntity} from "../../../core/entity/Entity";
-import {QRelation, QManyToOneRelation} from "../../../core/entity/Relation";
-import {MetadataUtils} from "../../../core/entity/metadata/MetadataUtils";
-import {EntityMetadata} from "../../../core/entity/EntityMetadata";
 /**
  * Created by Papa on 8/27/2016.
  */
 
 export class SqLiteAdaptor implements ISQLAdaptor {
 
-	private functionAdaptor: ISQLFunctionAdaptor = new SqlLiteFunctionAdaptor();
+	private functionAdaptor: ISQLFunctionAdaptor;
+
+	constructor(
+		protected sqlValueProvider: SqlValueProvider
+	) {
+		this.functionAdaptor = new SqlLiteFunctionAdaptor(sqlValueProvider);
+	}
 
 	dateToDbQuery(
 		date: Date,
@@ -48,14 +49,29 @@ export class SqLiteAdaptor implements ISQLAdaptor {
 		return this.functionAdaptor;
 	}
 
+	applyFunction(
+		value: string,
+		functionCall: JSONSqlFunctionCall,
+		isField: boolean
+	): string {
+		throw `Not implemented applyFunction`;
+	}
+
 }
 
 export class SqlLiteFunctionAdaptor extends AbstractFunctionAdaptor {
 
+	constructor(
+		protected sqlValueProvider: SqlValueProvider
+	) {
+		super(sqlValueProvider);
+	}
+
 	getFunctionCall(
 		jsonFunctionCall: JSONSqlFunctionCall,
 		value: string,
-		qEntityMapByAlias: {[entityName: string]: IQEntity}
+		qEntityMapByAlias: {[entityName: string]: IQEntity},
+		forField: boolean
 	): string {
 		switch (jsonFunctionCall.functionType) {
 			case SqlFunction.ABS:
@@ -108,42 +124,30 @@ export class SqlLiteFunctionAdaptor extends AbstractFunctionAdaptor {
 				return `DATE('now')`;
 			case SqlFunction.FORMAT:
 				let formatString = jsonFunctionCall.parameters[0];
+				formatString = this.sqlValueProvider.getValue(formatString, true, false);
 				let formatCall = `FORMAT('${formatString}', `;
 				for (let i = 1; i < jsonFunctionCall.parameters.length; i++) {
 					let formatParam = jsonFunctionCall.parameters[i];
-					switch ((<JSONClauseObject>formatParam).type) {
-						case JSONClauseObjectType.FIELD:
-						case JSONClauseObjectType.FIELD_FUNCTION:
-						case JSONClauseObjectType.MANY_TO_ONE_RELATION:
-							formatParam = this.getFunctionCalls(formatParam, qEntityMapByAlias);
-							break;
-						default:
-							switch (typeof formatParam) {
-								case "boolean":
-									formatParam = (formatParam) ? 'true' : 'false';
-									break;
-								case "number":
-									break;
-								case "string":
-									formatParam = `'${formatParam}'`;
-									break;
-								default:
-									`Unsupported parameter for Format function, can either be a boolean, number, string, property name, or a function call`;
-							}
-					}
+					formatParam = this.sqlValueProvider.getValue(formatParam, true, true);
 					formatCall = `${formatCall}, ${formatParam}`;
 				}
 				formatCall += ')';
 				return formatCall;
 			case SqlFunction.REPLACE:
 				if (jsonFunctionCall.valueIsPrimitive) {
-					return `REPLACE('${jsonFunctionCall.parameters[0]}', ${jsonFunctionCall.parameters[1]}, ${jsonFunctionCall.parameters[2]})`;
+					let param1 = this.sqlValueProvider.getValue(jsonFunctionCall.parameters[0], true, false);
+					let param2 = this.sqlValueProvider.getValue(jsonFunctionCall.parameters[1], true, false);
+					let param3 = this.sqlValueProvider.getValue(jsonFunctionCall.parameters[2], true, false);
+					return `REPLACE('${param1}', ${param2}, ${param3})`;
 				} else {
-					return `REPLACE('${value}', ${jsonFunctionCall[0]}, ${jsonFunctionCall[1]})`;
+					let param1 = this.sqlValueProvider.getValue(jsonFunctionCall.parameters[0], true, false);
+					let param2 = this.sqlValueProvider.getValue(jsonFunctionCall.parameters[1], true, false);
+					return `REPLACE('${value}', ${param1}, ${param2})`;
 				}
 			case SqlFunction.TRIM:
 				if (jsonFunctionCall.valueIsPrimitive) {
-					return `TRIM('${jsonFunctionCall.parameters[0]}')`;
+					let param1 = this.sqlValueProvider.getValue(jsonFunctionCall.parameters[0], true, false);
+					return `TRIM('${param1}')`;
 				} else {
 					return `TRIM(${value})`;
 				}

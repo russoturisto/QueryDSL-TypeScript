@@ -73,12 +73,16 @@ export function getOrderByParser(
 	orderBy?: JSONFieldInOrderBy[]
 ): IOrderByParser {
 	switch (queryResultType) {
-		case QueryResultType.BRIDGED:
-		case QueryResultType.HIERARCHICAL:
+		case QueryResultType.ENTITY_BRIDGED:
+		case QueryResultType.ENTITY_HIERARCHICAL:
+		case QueryResultType.MAPPED_HIERARCHICAL:
 			return new ForcedOrderByParser(rootQEntity, selectClauseFragment, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, orderBy);
-		case QueryResultType.PLAIN:
+		case QueryResultType.ENTITY_PLAIN:
 		case QueryResultType.FLAT:
-		case QueryResultType.FLATTENED:
+		case QueryResultType.ENTITY_FLATTENED:
+		case QueryResultType.FLAT:
+		case QueryResultType.FIELD:
+		case QueryResultType.MAPPED_PLAIN:
 			return new ExactOrderByParser(rootQEntity, selectClauseFragment, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, orderBy);
 		case QueryResultType.RAW:
 			throw `Query parsing not supported for raw queries`;

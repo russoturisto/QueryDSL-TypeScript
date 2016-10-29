@@ -1,4 +1,4 @@
-import { IObjectResultParser } from "./IObjectResultParser";
+import { IEntityResultParser } from "./IEntityResultParser";
 import { IQEntity } from "../../../../core/entity/Entity";
 import { SQLDataType } from "../../SQLStringQuery";
 import { EntityMetadata } from "../../../../core/entity/EntityMetadata";
@@ -6,7 +6,7 @@ import { EntityRelationRecord } from "../../../../core/entity/Relation";
 /**
  * Created by Papa on 10/16/2016.
  */
-export declare class FlattenedResultParser implements IObjectResultParser {
+export declare class FlattenedResultParser implements IEntityResultParser {
     currentResultRow: any[];
     addEntity(entityAlias: string, qEntity: IQEntity): any;
     addProperty(entityAlias: string, resultObject: any, dataType: SQLDataType, propertyName: string, propertyValue: any): void;

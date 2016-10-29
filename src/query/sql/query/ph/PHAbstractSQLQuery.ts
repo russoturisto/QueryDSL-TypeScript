@@ -12,7 +12,7 @@ import {
 import {JSONLogicalOperation} from "../../../../core/operation/LogicalOperation";
 import {IFrom, QEntity} from "../../../../core/entity/Entity";
 import {JSONRelation, JSONJoinRelation, JSONRelationType} from "../../../../core/entity/Relation";
-import {PHRawNonEntitySQLQuery, PHJsonGroupedSQLQuery, PHJsonNonEntitySqlQuery} from "./PHNonEntitySQLQuery";
+import {PHRawNonEntitySQLQuery, PHJsonNonEntitySqlQuery} from "./PHNonEntitySQLQuery";
 import {QExistsFunction} from "../../../../core/field/Functions";
 /**
  * Created by Papa on 10/27/2016.
@@ -20,11 +20,11 @@ import {QExistsFunction} from "../../../../core/field/Functions";
 
 export abstract class PHAbstractSQLQuery {
 
-	protected isEntityQuery:boolean = false;
+	protected isEntityQuery: boolean = false;
 
 	protected getNonEntitySqlQuery(
 		rawQuery: PHRawNonEntitySQLQuery,
-		jsonQuery:PHJsonNonEntitySqlQuery
+		jsonQuery: PHJsonNonEntitySqlQuery
 	): PHJsonNonEntitySqlQuery {
 		let from = this.fromClauseToJSON(rawQuery.from);
 
@@ -48,7 +48,7 @@ export abstract class PHAbstractSQLQuery {
 			}
 			// Must be a sub-query
 			else {
-				if(this.isEntityQuery) {
+				if (this.isEntityQuery) {
 					throw `Entity FROM clauses can only contain QEntities`;
 				}
 				return this.getSubSelectInFromClause(fromEntity);
@@ -159,8 +159,13 @@ export abstract class PHAbstractSQLQuery {
 		let jsonMappedQuery = new PHMappedSQLQuery(rawQuery).toJSON();
 
 
-		jsonMappedQuery.relationType = JSONRelationType.SUB_QUERY;
-		jsonMappedQuery.joinWhereClause = this.whereClauseToJSON(joinRelation.joinWhereClause);
+		if (joinRelation.joinWhereClause) {
+			jsonMappedQuery.relationType = JSONRelationType.SUB_QUERY_JOIN_ON;
+			jsonMappedQuery.joinWhereClause = this.whereClauseToJSON(joinRelation.joinWhereClause);
+		} else {
+			jsonMappedQuery.relationType = JSONRelationType.SUB_QUERY_ROOT;
+
+		}
 
 		return jsonMappedQuery;
 	}

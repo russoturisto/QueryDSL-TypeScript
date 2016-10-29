@@ -6,6 +6,7 @@ import {JSONFunctionOperation} from "../operation/Operation";
 import {PHJsonFieldQSLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
 import {IQOperableField} from "./OperableField";
 import {IQField} from "./Field";
+import {ISQLFunctionAdaptor, SqlValueProvider} from "../../query/sql/adaptor/SQLAdaptor";
 /**
  * Created by Papa on 10/19/2016.
  */
@@ -29,9 +30,9 @@ export interface JSONClauseObject {
 
 export interface JSONClauseField extends JSONClauseObject {
 	propertyName?: string,
-	subQuery?:PHJsonFieldQSLQuery;
+	subQuery?: PHJsonFieldQSLQuery;
 	tableAlias?: string,
-	value?:boolean | Date | number | string;
+	value?: boolean | Date | number | string;
 }
 
 export interface Appliable<JCO extends JSONClauseObject, IQ extends IQEntity, IQF extends IQField<IQ, any>> {
@@ -43,52 +44,31 @@ export interface Appliable<JCO extends JSONClauseObject, IQ extends IQEntity, IQ
 	toJSON(): JCO | JSONFunctionOperation;
 }
 
-export interface ISQLFunctionAdaptor {
-
-	getFunctionCalls<A extends Appliable<any, any, any>>(
-		appliable: A,
-		qEntityMapByAlias: {[entityName: string]: IQEntity}
-	): string ;
-
-	getFunctionCall(
-		jsonFunctionCall: JSONSqlFunctionCall,
-		value: string,
-		qEntityMapByAlias: {[entityName: string]: IQEntity}
-	): string;
-
-}
-
 export abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
 
-	getFunctionCalls<A extends Appliable<any, any, any>>(
-		clause: JSONClauseObject,
-		qEntityMapByAlias: {[alias: string]: IQEntity}
+	constructor(
+		protected sqlValueProvider: SqlValueProvider
+	) {
+	}
+
+	getFunctionCalls(
+		clause:JSONClauseObject,
+		innerValue: string,
+		qEntityMapByAlias: {[alias: string]: IQEntity},
+	  forField:boolean
 	): string {
-		let stringValue;
-		if (clause.type === JSONClauseObjectType.FIELD || clause.type === JSONClauseObjectType.MANY_TO_ONE_RELATION) {
-			let fieldClause: JSONClauseField = <JSONClauseField>clause;
-			let alias = fieldClause.tableAlias;
-			let qEntity = qEntityMapByAlias[alias];
-			let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
-			let columnName;
-			if (clause.type === JSONClauseObjectType.FIELD) {
-				columnName = MetadataUtils.getPropertyColumnName(fieldClause.propertyName, entityMetadata, alias);
-			} else {
-				columnName = MetadataUtils.getJoinColumnName(fieldClause.propertyName, entityMetadata, alias);
-			}
-			stringValue = `${alias}.${columnName}`;
-		}
 		clause.__appliedFunctions__.forEach(( appliedFunction ) => {
-			stringValue = this.getFunctionCall(appliedFunction, stringValue, qEntityMapByAlias);
+			innerValue = this.getFunctionCall(appliedFunction, innerValue, qEntityMapByAlias, forField);
 		});
 
-		return stringValue;
+		return innerValue;
 	}
 
 	abstract getFunctionCall(
 		jsonFunctionCall: JSONSqlFunctionCall,
 		value: string,
-		qEntityMapByAlias: {[entityName: string]: IQEntity}
+		qEntityMapByAlias: {[entityName: string]: IQEntity},
+		forField: boolean
 	): string;
 
 }

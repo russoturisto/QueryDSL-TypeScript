@@ -7,6 +7,7 @@ import { JSONBaseOperation, OperationCategory, JSONFunctionOperation } from "../
 import { IQOperableField } from "./OperableField";
 import { IQBooleanField } from "./BooleanField";
 import { PHRawMappedSQLQuery, PHJsonMappedQSLQuery, IMappedEntity } from "../../query/sql/query/ph/PHMappedSQLQuery";
+import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 /**
  * Created by Papa on 10/18/2016.
  */
@@ -49,9 +50,9 @@ export declare function mid<IQ extends IQEntity>(stringField: IQStringField<IQ> 
 export declare function len<IQ extends IQEntity>(stringField: IQStringField<IQ> | string): IQStringField<IQ>;
 export declare function round<IQ extends IQEntity>(numberField: IQNumberField<IQ> | number, digits?: number): IQNumberField<IQ>;
 export declare function now(): IQDateField<any>;
-export declare function format(format: string, ...formatParameters: any[]): IQStringField<any>;
-export declare function replace<IQ extends IQEntity>(stringField: IQStringField<IQ> | string, toReplace: string, replaceWith: string): IQStringField<IQ>;
-export declare function trim<IQ extends IQEntity>(stringField: IQStringField<IQ> | string): IQStringField<IQ>;
+export declare function format(format: string | IQStringField<any>, ...formatParameters: any[]): IQStringField<any>;
+export declare function replace<IQ extends IQEntity>(stringField: IQStringField<IQ> | string, toReplace: IQStringField<IQ> | string, replaceWith: IQStringField<IQ> | string): IQStringField<IQ>;
+export declare function trim<IQ extends IQEntity>(stringField: IQStringField<IQ> | string | PHRawFieldSQLQuery<any>): IQStringField<IQ>;
 export declare abstract class StandAloneFunction {
 }
 export declare function distinct<ISelect>(selectClause: ISelect): IQDistinctFunction<ISelect>;

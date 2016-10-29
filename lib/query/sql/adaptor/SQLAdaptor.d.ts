@@ -1,5 +1,7 @@
 import { SQLDialect, SQLDataType } from "../SQLStringQuery";
-import { ISQLFunctionAdaptor } from "../../../core/field/Appliable";
+import { JSONSqlFunctionCall } from "../../../core/field/Functions";
+import { JSONClauseObject } from "../../../core/field/Appliable";
+import { IQEntity } from "../../../core/entity/Entity";
 /**
  * Created by Papa on 8/27/2016.
  */
@@ -17,4 +19,15 @@ export interface ISQLAdaptor {
     getResultCellValue(resultRow: any, columnName: string, index: number, dataType: SQLDataType, defaultValue: any): any;
     getFunctionAdaptor(): ISQLFunctionAdaptor;
 }
-export declare function getSQLAdaptor(sqlDialect: SQLDialect): ISQLAdaptor;
+export interface SqlValueProvider {
+    getValue(rawValue: any, allowField: boolean, allowSubqueries: boolean): string;
+}
+export interface ISQLFunctionAdaptor {
+    getFunctionCalls(clause: JSONClauseObject, innerValue: string, qEntityMapByAlias: {
+        [alias: string]: IQEntity;
+    }, forField: boolean): string;
+    getFunctionCall(jsonFunctionCall: JSONSqlFunctionCall, value: string, qEntityMapByAlias: {
+        [entityName: string]: IQEntity;
+    }, forField: boolean): string;
+}
+export declare function getSQLAdaptor(sqlValueProvider: SqlValueProvider, sqlDialect: SQLDialect): ISQLAdaptor;

@@ -1,12 +1,12 @@
-import { PHJsonCommonNonEntitySQLQuery } from "./PHSQLQuery";
-import { EntityRelationRecord, JSONEntityRelation } from "../../core/entity/Relation";
-import { IEntity, IQEntity } from "../../core/entity/Entity";
+import { EntityRelationRecord, JSONRelation } from "../../core/entity/Relation";
+import { IQEntity } from "../../core/entity/Entity";
 import { FieldMap } from "./FieldMap";
 import { SQLStringWhereBase } from "./SQLStringWhereBase";
 import { JSONFieldInOrderBy } from "../../core/field/FieldInOrderBy";
 import { IOrderByParser } from "./query/orderBy/IOrderByParser";
 import { ColumnAliases } from "../../core/entity/Aliases";
 import { JoinTreeNode } from "../../core/entity/JoinTreeNode";
+import { PHJsonCommonSQLQuery } from "./PHSQLQuery";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -31,25 +31,27 @@ export declare class EntityDefaults {
     };
 }
 export declare enum QueryResultType {
-    BRIDGED = 0,
-    FLAT = 1,
-    FLATTENED = 2,
-    HIERARCHICAL = 3,
-    MAPPED = 4,
-    PLAIN = 5,
-    RAW = 6,
+    ENTITY_BRIDGED = 0,
+    ENTITY_FLATTENED = 1,
+    ENTITY_HIERARCHICAL = 2,
+    ENTITY_PLAIN = 3,
+    MAPPED_HIERARCHICAL = 4,
+    MAPPED_PLAIN = 5,
+    FLAT = 6,
+    FIELD = 7,
+    RAW = 8,
 }
 /**
  * String based SQL query.
  */
-export declare abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
-    protected phJsonQuery: PHJsonCommonNonEntitySQLQuery<IE>;
+export declare abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> extends SQLStringWhereBase {
+    protected phJsonQuery: PHJsonCommonSQLQuery;
     protected queryResultType: QueryResultType;
     protected columnAliases: ColumnAliases;
     protected entityDefaults: EntityDefaults;
     protected joinTree: JoinTreeNode;
     protected orderByParser: IOrderByParser;
-    constructor(phJsonQuery: PHJsonCommonNonEntitySQLQuery<IE>, rootQEntity: IQEntity, qEntityMapByName: {
+    constructor(phJsonQuery: PHJsonCommonSQLQuery, qEntityMapByName: {
         [alias: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
@@ -61,15 +63,10 @@ export declare abstract class SQLStringQuery<IE extends IEntity> extends SQLStri
         };
     }, dialect: SQLDialect, queryResultType: QueryResultType);
     getFieldMap(): FieldMap;
-    /**
-     * Useful when a query is executed remotely and a flat result set is returned.  JoinTree is needed to parse that
-     * result set.
-     */
-    buildJoinTree(): void;
-    toSQL(embedParameters?: boolean, parameters?: any[]): string;
-    buildFromJoinTree(entityName: string, joinRelations: JSONEntityRelation[], joinNodeMap: {
+    protected abstract buildFromJoinTree<JR extends JSONRelation>(joinRelations: JR[], joinNodeMap: {
         [alias: string]: JoinTreeNode;
-    }): JoinTreeNode;
+    }, entityName?: string): any;
+    toSQL(embedParameters?: boolean, parameters?: any[]): string;
     protected abstract getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults, embedParameters?: boolean, parameters?: any[]): string;
     protected getColumnSelectFragment(propertyName: string, tableAlias: string, columnName: string, existingSelectFragment: string): string;
     private getFROMFragment(parentTree, currentTree, embedParameters?, parameters?);

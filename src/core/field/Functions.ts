@@ -1,4 +1,4 @@
-import {IQStringField, QStringFunction} from "./StringField";
+import {IQStringField, QStringFunction, QStringField} from "./StringField";
 import {Appliable, JSONClauseObjectType, JSONClauseObject, JSONClauseField} from "./Appliable";
 import {IQEntity} from "../entity/Entity";
 import {QNumberFunction, IQNumberField} from "./NumberField";
@@ -8,6 +8,7 @@ import {PHRawNonEntitySQLQuery} from "../../query/sql/query/ph/PHNonEntitySQLQue
 import {QOperableField, IQOperableField} from "./OperableField";
 import {IQBooleanField, QBooleanFunction} from "./BooleanField";
 import {PHRawMappedSQLQuery, PHJsonMappedQSLQuery, IMappedEntity} from "../../query/sql/query/ph/PHMappedSQLQuery";
+import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
 /**
  * Created by Papa on 10/18/2016.
  */
@@ -157,16 +158,18 @@ export function now(): IQDateField<any> {
 }
 
 export function format(
-	format: string,
+	format: string | IQStringField<any>,
 	...formatParameters: any[]
 ): IQStringField<any> {
-	return <any>new QStringFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.FORMAT, true, formatParameters));
+	let allParams = formatParameters.slice();
+	allParams.unshift(format);
+	return <any>new QStringFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.FORMAT, true, allParams));
 }
 
 export function replace<IQ extends IQEntity>(
 	stringField: IQStringField<IQ> | string,
-	toReplace: string,
-	replaceWith: string
+	toReplace: IQStringField<IQ> | string,
+	replaceWith: IQStringField<IQ> | string
 ): IQStringField<IQ> {
 	if (typeof stringField === "string") {
 		return <any>new QStringFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.REPLACE, true, [stringField, toReplace, replaceWith]));
@@ -177,12 +180,12 @@ export function replace<IQ extends IQEntity>(
 }
 
 
-export function trim<IQ extends IQEntity>( stringField: IQStringField<IQ> | string ): IQStringField<IQ> {
-	if (typeof stringField === "string") {
-		return <any>new QStringFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.TRIM, true, [stringField]));
-	} else {
+export function trim<IQ extends IQEntity>( stringField: IQStringField<IQ> | string | PHRawFieldSQLQuery<any>): IQStringField<IQ> {
+	if (stringField instanceof QStringField) {
 		(<Appliable<any, any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.TRIM));
 		return stringField;
+	} else {
+		return <any>new QStringFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.TRIM, true, [stringField]));
 	}
 }
 

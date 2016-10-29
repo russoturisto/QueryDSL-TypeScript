@@ -1,5 +1,5 @@
-import { IEntity, IQEntity } from "../../core/entity/Entity";
-import { ISQLAdaptor } from "./adaptor/SQLAdaptor";
+import { IQEntity } from "../../core/entity/Entity";
+import { ISQLAdaptor, SqlValueProvider } from "./adaptor/SQLAdaptor";
 import { SQLDialect } from "./SQLStringQuery";
 import { EntityRelationRecord } from "../../core/entity/Relation";
 import { JSONBaseOperation } from "../../core/operation/Operation";
@@ -8,8 +8,7 @@ import { JoinTreeNode } from "../../core/entity/JoinTreeNode";
 /**
  * Created by Papa on 10/2/2016.
  */
-export declare abstract class SQLStringWhereBase<IE extends IEntity> {
-    protected rootQEntity: IQEntity;
+export declare abstract class SQLStringWhereBase implements SqlValueProvider {
     protected qEntityMapByName: {
         [entityName: string]: IQEntity;
     };
@@ -29,7 +28,7 @@ export declare abstract class SQLStringWhereBase<IE extends IEntity> {
     protected qEntityMapByAlias: {
         [entityName: string]: IQEntity;
     };
-    constructor(rootQEntity: IQEntity, qEntityMapByName: {
+    constructor(qEntityMapByName: {
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
@@ -40,6 +39,7 @@ export declare abstract class SQLStringWhereBase<IE extends IEntity> {
             [propertyName: string]: boolean;
         };
     }, dialect: SQLDialect);
+    abstract getValue(rawValue: any, allowField: boolean, allowSubqueries: boolean): string;
     protected getWHEREFragment(operation: JSONBaseOperation, nestingPrefix: string, joinNodeMap: {
         [alias: string]: JoinTreeNode;
     }, embedParameters?: boolean, parameters?: any[]): string;

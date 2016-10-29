@@ -14,10 +14,11 @@ export declare enum EntityRelationType {
     MANY_TO_ONE = 1,
 }
 export declare enum JSONRelationType {
-    ENTITY_JOIN = 0,
-    ENTITY_RELATION = 1,
+    ENTITY_JOIN_ON = 0,
+    ENTITY_SCHEMA_RELATION = 1,
     ENTITY_ROOT = 2,
-    SUB_QUERY = 3,
+    SUB_QUERY_JOIN_ON = 3,
+    SUB_QUERY_ROOT = 4,
 }
 export interface JSONRelation {
     currentChildIndex: number;
@@ -43,9 +44,9 @@ export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
 export declare const IS_ENTITY_PROPERTY_NAME: string;
 export declare abstract class QRelation {
     static getPositionAlias(rootEntityPrefix: string, fromClausePosition: number[]): string;
-    static getAlias(jsonRelation: JSONEntityRelation): string;
-    static getParentAlias(jsonRelation: JSONEntityRelation): string;
-    static createRelatedQEntity<IQ extends IQEntity>(joinRelation: JSONEntityRelation, entityMapByName: {
+    static getAlias(jsonRelation: JSONRelation): string;
+    static getParentAlias(jsonRelation: JSONRelation): string;
+    static createRelatedQEntity<IQ extends IQEntity>(joinRelation: JSONRelation, entityMapByName: {
         [entityName: string]: IQEntity;
     }): IQ;
     static getNextChildJoinPosition(joinParent: JSONJoinRelation | IQEntity): number[];

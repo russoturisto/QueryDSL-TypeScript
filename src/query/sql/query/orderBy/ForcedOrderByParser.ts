@@ -103,7 +103,7 @@ export class ForcedOrderByParser extends AbstractOrderByParser implements IOrder
 					} else if (subSelectClauseFragment) {
 						selectFragmentQueue.push(subSelectClauseFragment);
 						let childEntityName = entityRelationMap[propertyName].entityName;
-						let childJoinNode = currentJoinNode.getChildNode(childEntityName, propertyName);
+						let childJoinNode = currentJoinNode.getEntityRelationChildNode(childEntityName, propertyName);
 						joinNodeQueue.push(childJoinNode);
 					}
 				}

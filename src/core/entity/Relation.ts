@@ -17,10 +17,16 @@ export enum EntityRelationType {
 }
 
 export enum JSONRelationType {
-	ENTITY_JOIN,
-	ENTITY_RELATION,
+	// Join of an entity with the ON clause
+	ENTITY_JOIN_ON,
+		// Join of an entity via a schema relation
+	ENTITY_SCHEMA_RELATION,
+		// The root entity in a join
 	ENTITY_ROOT,
-	SUB_QUERY
+		// Join of a sub-query (with the ON clause)
+	SUB_QUERY_JOIN_ON,
+		// The root sub-query in a join
+	SUB_QUERY_ROOT
 }
 
 export interface JSONRelation {
@@ -70,11 +76,11 @@ export abstract class QRelation {
 		return `${rootEntityPrefix}_${fromClausePosition.join('_')}`;
 	}
 
-	static getAlias( jsonRelation: JSONEntityRelation ): string {
+	static getAlias( jsonRelation: JSONRelation ): string {
 		return this.getPositionAlias(jsonRelation.rootEntityPrefix, jsonRelation.fromClausePosition);
 	}
 
-	static getParentAlias( jsonRelation: JSONEntityRelation ): string {
+	static getParentAlias( jsonRelation: JSONRelation ): string {
 		let position = jsonRelation.fromClausePosition;
 		if (position.length === 0) {
 			throw `Cannot find alias of a parent entity for the root entity`;
@@ -83,7 +89,7 @@ export abstract class QRelation {
 	}
 
 	static createRelatedQEntity<IQ extends IQEntity>(
-		joinRelation: JSONEntityRelation,
+		joinRelation: JSONRelation,
 		entityMapByName: {[entityName: string]: IQEntity}
 	): IQ {
 		let genericIQEntity = entityMapByName[joinRelation.entityName];
@@ -92,11 +98,12 @@ export abstract class QRelation {
 			genericIQEntity.__entityConstructor__,
 			joinRelation.entityName,
 			joinRelation.fromClausePosition,
-			joinRelation.relationPropertyName,
+			// always attempt to graph relationPropertyName
+			(<JSONEntityRelation>joinRelation).relationPropertyName,
 			joinRelation.joinType);
 	}
 
-	static getNextChildJoinPosition( joinParent: JSONJoinRelation | IQEntity): number[] {
+	static getNextChildJoinPosition( joinParent: JSONJoinRelation | IQEntity ): number[] {
 		let nextChildJoinPosition = joinParent.fromClausePosition.slice();
 		nextChildJoinPosition.push(++joinParent.currentChildIndex);
 

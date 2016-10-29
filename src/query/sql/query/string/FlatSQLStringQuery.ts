@@ -1,10 +1,10 @@
 /**
  * Created by Papa on 10/16/2016.
  */
-import {IEntity, IQEntity} from "../../../core/entity/Entity";
-import {SQLStringQuery, SQLDialect, QueryResultType} from "../SQLStringQuery";
-import {JSONFieldInOrderBy} from "../../../core/field/FieldInOrderBy";
-import {EntityRelationRecord} from "../../../core/entity/Relation";
+import {IEntity, IQEntity} from "../../../../core/entity/Entity";
+import {SQLStringQuery, SQLDialect, QueryResultType} from "../../SQLStringQuery";
+import {JSONFieldInOrderBy} from "../../../../core/field/FieldInOrderBy";
+import {EntityRelationRecord} from "../../../../core/entity/Relation";
 /**
  * Represents SQL String query with flat (aka traditional) Select clause.
  */

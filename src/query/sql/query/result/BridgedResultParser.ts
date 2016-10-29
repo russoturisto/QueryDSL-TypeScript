@@ -1,4 +1,4 @@
-import {IObjectResultParser, BridgedQueryConfiguration, AbstractObjectResultParser} from "./IObjectResultParser";
+import {IEntityResultParser, BridgedQueryConfiguration, AbstractObjectResultParser} from "./IEntityResultParser";
 import {BridgedOtmMapper, OneToManyStubReference} from "./BridgedOtmMapper";
 import {BridgedMtoMapper, ManyToOneStubReference} from "./BridgedMtoMapper";
 import {IQEntity} from "../../../../core/entity/Entity";
@@ -13,7 +13,7 @@ import {MappedEntityArray} from "../../../../core/MappedEntityArray";
 /**
  * The goal of this parser to to bridge all entity references and arrive at an inter-connected graph (where possible).
  */
-export class BridgedResultParser extends AbstractObjectResultParser implements IObjectResultParser {
+export class BridgedResultParser extends AbstractObjectResultParser implements IEntityResultParser {
 
 	// Keys can only be strings or numbers | TODO: change to JS Maps, if needed
 	entityMapByName: {[entityName: string]: {[entityId: string]: any}} = {};
@@ -25,7 +25,7 @@ export class BridgedResultParser extends AbstractObjectResultParser implements I
 	otmStubBuffer: OneToManyStubReference[] = [];
 	mtoStubBuffer: ManyToOneStubReference[] = [];
 
-	// Used in FLATTENED queries
+	// Used in ENTITY_FLATTENED queries
 	currentResultRow: any[] = [];
 
 	constructor(

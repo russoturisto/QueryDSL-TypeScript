@@ -1,4 +1,4 @@
-import { IObjectResultParser, AbstractObjectResultParser } from "./IObjectResultParser";
+import { IEntityResultParser, AbstractObjectResultParser } from "./IEntityResultParser";
 import { IQEntity } from "../../../../core/entity/Entity";
 import { SQLDataType } from "../../SQLStringQuery";
 import { EntityMetadata } from "../../../../core/entity/EntityMetadata";
@@ -9,7 +9,7 @@ import { EntityRelationRecord } from "../../../../core/entity/Relation";
 /**
  * The goal of this parser is to split a flat row of result set cells into an object graph (just for that row).
  */
-export declare class PlainResultParser extends AbstractObjectResultParser implements IObjectResultParser {
+export declare class PlainResultParser extends AbstractObjectResultParser implements IEntityResultParser {
     addEntity(entityAlias: string, qEntity: IQEntity): any;
     addProperty(entityAlias: string, resultObject: any, dataType: SQLDataType, propertyName: string, propertyValue: any): void;
     bufferManyToOneStub(entityAlias: string, qEntity: IQEntity, entityMetadata: EntityMetadata, resultObject: any, propertyName: string, relationGenericQEntity: IQEntity, relationEntityMetadata: EntityMetadata, relatedEntityId: any): void;

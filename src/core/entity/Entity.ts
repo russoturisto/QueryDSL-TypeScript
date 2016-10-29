@@ -112,14 +112,14 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 	}
 
 	getJoinRelationJson( jsonRelation: JSONJoinRelation ): JSONJoinRelation {
-		jsonRelation.relationType = JSONRelationType.ENTITY_JOIN;
+		jsonRelation.relationType = JSONRelationType.ENTITY_JOIN_ON;
 		jsonRelation.joinWhereClause = this.joinWhereClause;
 
 		return jsonRelation;
 	}
 
 	getEntityRelationJson( jsonRelation: JSONEntityRelation ): JSONEntityRelation {
-		jsonRelation.relationType = JSONRelationType.ENTITY_RELATION;
+		jsonRelation.relationType = JSONRelationType.ENTITY_SCHEMA_RELATION;
 		jsonRelation.relationPropertyName = this.relationPropertyName;
 
 		return jsonRelation;

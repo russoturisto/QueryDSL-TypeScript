@@ -22,7 +22,7 @@ export class BridgedQueryConfiguration {
 	//failOnManyToOneConflicts: boolean = true;
 }
 
-export interface IObjectResultParser {
+export interface IEntityResultParser {
 
 	addEntity(
 		entityAlias: string,
@@ -124,15 +124,15 @@ export function getObjectResultParser(
 	config: BridgedQueryConfiguration,
 	rootQEntity: IQEntity,
 	qEntityMapByName: {[entityName: string]: IQEntity}
-): IObjectResultParser {
+): IEntityResultParser {
 	switch (queryResultType) {
-		case QueryResultType.BRIDGED:
+		case QueryResultType.ENTITY_BRIDGED:
 			return new BridgedResultParser(config, rootQEntity, qEntityMapByName);
-		case QueryResultType.HIERARCHICAL:
+		case QueryResultType.ENTITY_HIERARCHICAL:
 			return new HierarchicalResultParser();
-		case QueryResultType.PLAIN:
+		case QueryResultType.ENTITY_PLAIN:
 			return new PlainResultParser();
-		case QueryResultType.FLATTENED:
+		case QueryResultType.ENTITY_FLATTENED:
 			return new FlattenedResultParser();
 		default:
 			throw `ObjectQueryParser not supported for QueryResultType: ${queryResultType}`;

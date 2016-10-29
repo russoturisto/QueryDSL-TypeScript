@@ -1,5 +1,7 @@
-import {PHJsonCommonNonEntitySQLQuery, JoinType} from "./PHSQLQuery";
-import {EntityRelationRecord, JSONEntityRelation, QRelation} from "../../core/entity/Relation";
+import {
+	EntityRelationRecord, JSONEntityRelation, QRelation, JSONRelationType,
+	JSONRelation
+} from "../../core/entity/Relation";
 import {IEntity, IQEntity} from "../../core/entity/Entity";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
 import {FieldMap} from "./FieldMap";
@@ -7,8 +9,10 @@ import {SQLStringWhereBase} from "./SQLStringWhereBase";
 import {JSONFieldInOrderBy} from "../../core/field/FieldInOrderBy";
 import {IOrderByParser, getOrderByParser} from "./query/orderBy/IOrderByParser";
 import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
-import {ColumnAliases} from "../../core/entity/Aliases";
+import {ColumnAliases, getNextRootEntityName} from "../../core/entity/Aliases";
 import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
+import {PHJsonCommonSQLQuery} from "./PHSQLQuery";
+import {PHJsonMappedQSLQuery} from "./query/ph/PHMappedSQLQuery";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -40,17 +44,21 @@ export class EntityDefaults {
 
 export enum QueryResultType {
 	// Ordered query result with bridging for all MtOs and OtM
-	BRIDGED,
-		// A flat array of values, returned by a regular join
-	FLAT,
+	ENTITY_BRIDGED,
 		// A flat array of values, returned by a on object select
-	FLATTENED,
+	ENTITY_FLATTENED,
 		// Ordered query result, with objects grouped hierarchically by entity
-	HIERARCHICAL,
-		// A mapped array of values, returned by a regular join
-	MAPPED,
-		// Plain query result, with no forced ordering or grouping
-	PLAIN,
+	ENTITY_HIERARCHICAL,
+		// A flat array of objects, returned by a regular join
+	ENTITY_PLAIN,
+		// Ordered query result, with objects grouped hierarchically by mapping
+	MAPPED_HIERARCHICAL,
+		// A flat array of objects, returned by a mapped query
+	MAPPED_PLAIN,
+		// Flat array query result, with no forced ordering or grouping
+	FLAT,
+		// A single field query result, with no forced ordering or grouping
+	FIELD,
 		// Raw result, returned by a SQL string query
 	RAW
 }
@@ -58,7 +66,7 @@ export enum QueryResultType {
 /**
  * String based SQL query.
  */
-export abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
+export abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> extends SQLStringWhereBase {
 
 	protected columnAliases: ColumnAliases = new ColumnAliases();
 	protected entityDefaults: EntityDefaults = new EntityDefaults();
@@ -66,15 +74,14 @@ export abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereB
 	protected orderByParser: IOrderByParser;
 
 	constructor(
-		protected phJsonQuery: PHJsonCommonNonEntitySQLQuery<IE>,
-		rootQEntity: IQEntity,
+		protected phJsonQuery: PHJsonCommonSQLQuery,
 		qEntityMapByName: {[alias: string]: IQEntity},
 		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		dialect: SQLDialect,
 		protected queryResultType: QueryResultType
 	) {
-		super(rootQEntity, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
+		super(qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
 		this.orderByParser = getOrderByParser(queryResultType, rootQEntity, phJsonQuery.select, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, phJsonQuery.orderBy);
 	}
 
@@ -82,16 +89,11 @@ export abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereB
 		return this.fieldMap;
 	}
 
-	/**
-	 * Useful when a query is executed remotely and a flat result set is returned.  JoinTree is needed to parse that
-	 * result set.
-	 */
-	buildJoinTree(): void {
-		let entityName = this.rootQEntity.__entityName__;
-		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
-		this.joinTree = this.buildFromJoinTree(entityName, this.phJsonQuery.from, joinNodeMap);
-		this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, false, []);
-	}
+	protected abstract buildFromJoinTree<JR extends JSONRelation>(
+		joinRelations: JR[],
+		joinNodeMap: {[alias: string]: JoinTreeNode},
+		entityName?: string
+	);
 
 	toSQL(
 		embedParameters: boolean = true,
@@ -100,7 +102,7 @@ export abstract class SQLStringQuery<IE extends IEntity> extends SQLStringWhereB
 		let entityName = this.rootQEntity.__entityName__;
 
 		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
-		this.joinTree = this.buildFromJoinTree(entityName, this.phJsonQuery.from, joinNodeMap);
+		this.joinTree = this.buildFromJoinTree(this.phJsonQuery.from, joinNodeMap, entityName);
 		let selectFragment = this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, embedParameters, parameters);
 		let fromFragment = this.getFROMFragment(null, this.joinTree, embedParameters, parameters);
 		let whereFragment = this.getWHEREFragment(this.phJsonQuery.where, 0, joinNodeMap, embedParameters, parameters);
@@ -114,69 +116,6 @@ WHERE
 ${whereFragment}
 ORDER BY
   ${orderByFragment}`;
-	}
-
-	buildFromJoinTree(
-		entityName: string,
-		joinRelations: JSONEntityRelation[],
-		joinNodeMap: {[alias: string]: JoinTreeNode}
-	): JoinTreeNode {
-		let jsonTree: JoinTreeNode;
-		if (joinRelations.length < 1) {
-			let onlyJsonRelation: JSONEntityRelation = {
-				fromClausePosition: [],
-				entityName: entityName,
-				joinType: null,
-				relationPropertyName: null
-			};
-			joinRelations.push(onlyJsonRelation);
-		}
-
-		let firstRelation = joinRelations[0];
-
-		if (firstRelation.relationPropertyName || firstRelation.joinType || firstRelation.fromClausePosition.length > 0) {
-			throw `First table in FROM clause cannot be joined`;
-		}
-
-		let alias = QRelation.getAlias(firstRelation);
-		let firstEntity = QRelation.createRelatedQEntity(firstRelation, this.qEntityMapByName);
-		this.qEntityMapByAlias[alias] = firstEntity;
-		if (firstEntity != this.rootQEntity) {
-			throw `Unexpected first table in FROM clause: ${firstRelation.entityName}, expecting: ${this.rootQEntity.__entityName__}`;
-		}
-		jsonTree = new JoinTreeNode(firstRelation, [], null);
-
-		joinNodeMap[alias] = jsonTree;
-
-		for (let i = 1; i < joinRelations.length; i++) {
-			let joinRelation = joinRelations[i];
-			if (!joinRelation.relationPropertyName) {
-				throw `Table ${i + 1} in FROM clause is missing relationPropertyName`;
-			}
-			if (!joinRelation.joinType) {
-				throw `Table ${i + 1} in FROM clause is missing joinType`;
-			}
-			let parentAlias = QRelation.getParentAlias(joinRelation);
-			if (!joinNodeMap[parentAlias]) {
-				throw `Missing parent entity for alias ${parentAlias}, on table ${i + 1} in FROM clause`;
-			}
-			let leftNode = joinNodeMap[parentAlias];
-			let rightNode = new JoinTreeNode(joinRelation, [], leftNode);
-			leftNode.addChildNode(rightNode);
-
-			alias = QRelation.getAlias(joinRelation);
-			let rightEntity = QRelation.createRelatedQEntity(joinRelation, this.qEntityMapByName);
-			this.qEntityMapByAlias[alias] = rightEntity;
-			if (!rightEntity) {
-				throw `Could not find entity ${joinRelation.entityName} for table ${i + 1} in FROM clause`;
-			}
-			if (joinNodeMap[alias]) {
-				throw `Alias '${alias}' used more than once in the FROM clause.`;
-			}
-			joinNodeMap[alias] = rightNode;
-		}
-
-		return jsonTree;
 	}
 
 	protected abstract getSELECTFragment(

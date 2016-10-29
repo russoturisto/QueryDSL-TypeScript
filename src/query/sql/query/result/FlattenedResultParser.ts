@@ -1,4 +1,4 @@
-import {IObjectResultParser} from "./IObjectResultParser";
+import {IEntityResultParser} from "./IEntityResultParser";
 import {IQEntity} from "../../../../core/entity/Entity";
 import {SQLDataType} from "../../SQLStringQuery";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
@@ -7,7 +7,7 @@ import {EntityRelationRecord} from "../../../../core/entity/Relation";
  * Created by Papa on 10/16/2016.
  */
 
-export class FlattenedResultParser implements IObjectResultParser {
+export class FlattenedResultParser implements IEntityResultParser {
 
 	currentResultRow: any[] = [];
 
@@ -126,7 +126,7 @@ export class FlattenedResultParser implements IObjectResultParser {
 		parsedResults: any[],
 		selectClauseFragment: any
 	): any[] {
-		// No bridging needed for FLATTENED Object queries
+		// No bridging needed for ENTITY_FLATTENED Object queries
 		return parsedResults;
 
 	}

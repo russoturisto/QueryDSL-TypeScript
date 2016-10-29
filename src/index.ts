@@ -61,7 +61,7 @@ import {PHRawSQLUpdate, PHJsonSQLUpdate, PHSQLUpdate} from "./query/sql/PHSQLUpd
 import {SQLStringUpdate} from "./query/sql/SQLStringUpdate";
 import {ColumnAliases} from "./core/entity/Aliases";
 import {JoinTreeNode} from "./core/entity/JoinTreeNode";
-import {FlatSQLStringQuery} from "./query/sql/query/FlatSQLStringQuery";
+import {FlatSQLStringQuery} from "./query/sql/query/string/FlatSQLStringQuery";
 import {ExactOrderByParser} from "./query/sql/query/orderBy/ExactOrderByParser";
 import {ForcedOrderByParser} from "./query/sql/query/orderBy/ForcedOrderByParser";
 import {IOrderByParser, AbstractOrderByParser} from "./query/sql/query/orderBy/IOrderByParser";
@@ -71,12 +71,12 @@ import {BridgedResultParser} from "./query/sql/query/result/BridgedResultParser"
 import {HierarchicalResultParser} from "./query/sql/query/result/HierarchicalResultParser";
 import {JSONFieldInOrderBy, SortOrder, IFieldInOrderBy, FieldInOrderBy} from "./core/field/FieldInOrderBy";
 import {
-	BridgedQueryConfiguration, IObjectResultParser,
+	BridgedQueryConfiguration, IEntityResultParser,
 	getObjectResultParser, AbstractObjectResultParser
-} from "./query/sql/query/result/IObjectResultParser";
+} from "./query/sql/query/result/IEntityResultParser";
 import {PlainResultParser} from "./query/sql/query/result/PlainResultParser";
 import {FlattenedResultParser} from "./query/sql/query/result/FlattenedResultParser";
-import {ObjectSQLStringQuery} from "./query/sql/query/ObjectSQLStringQuery";
+import {EntitySQLStringQuery} from "./query/sql/query/string/EntitySQLStringQuery";
 
 export {
 	JSONFieldInOrderBy,
@@ -96,12 +96,12 @@ export {
 	BridgedResultParser,
 	HierarchicalResultParser,
 	BridgedQueryConfiguration,
-	IObjectResultParser,
+	IEntityResultParser,
 	getObjectResultParser,
 	AbstractObjectResultParser,
 	PlainResultParser,
 	FlattenedResultParser,
-	ObjectSQLStringQuery,
+	EntitySQLStringQuery,
 	FieldMap,
 	EntityFieldMap,
 	PropertyFieldEntry,

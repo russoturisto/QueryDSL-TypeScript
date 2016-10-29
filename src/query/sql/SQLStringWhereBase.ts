@@ -1,5 +1,5 @@
-import {IEntity, IQEntity} from "../../core/entity/Entity";
-import {ISQLAdaptor, getSQLAdaptor} from "./adaptor/SQLAdaptor";
+import {IQEntity} from "../../core/entity/Entity";
+import {ISQLAdaptor, getSQLAdaptor, SqlValueProvider} from "./adaptor/SQLAdaptor";
 import {SQLDialect} from "./SQLStringQuery";
 import {EntityRelationRecord} from "../../core/entity/Relation";
 import {QBooleanField} from "../../core/field/BooleanField";
@@ -16,21 +16,22 @@ import {JSONLogicalOperation} from "../../core/operation/LogicalOperation";
  * Created by Papa on 10/2/2016.
  */
 
-export abstract class SQLStringWhereBase<IE extends IEntity> {
+export abstract class SQLStringWhereBase implements SqlValueProvider {
 
 	protected fieldMap: FieldMap = new FieldMap();
 	protected sqlAdaptor: ISQLAdaptor;
 	protected qEntityMapByAlias: {[entityName: string]: IQEntity} = {};
 
 	constructor(
-		protected rootQEntity: IQEntity,
 		protected qEntityMapByName: {[entityName: string]: IQEntity},
 		protected entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		protected entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		protected dialect: SQLDialect
 	) {
-		this.sqlAdaptor = getSQLAdaptor(dialect);
+		this.sqlAdaptor = getSQLAdaptor(this, dialect);
 	}
+
+	abstract getValue(rawValue:any, allowField:boolean, allowSubqueries:boolean):string;
 
 	protected getWHEREFragment(
 		operation: JSONBaseOperation,

@@ -1,29 +1,30 @@
 /**
  * Created by Papa on 10/16/2016.
  */
-import {QRelation, EntityRelationRecord} from "../../../core/entity/Relation";
-import {EntityDefaults, SQLStringQuery, SQLDataType, QueryResultType, SQLDialect} from "../SQLStringQuery";
-import {IEntity, IQEntity} from "../../../core/entity/Entity";
-import {EntityMetadata} from "../../../core/entity/EntityMetadata";
-import {getObjectResultParser, BridgedQueryConfiguration, IObjectResultParser} from "./result/IObjectResultParser";
-import {QBooleanField} from "../../../core/field/BooleanField";
-import {QDateField} from "../../../core/field/DateField";
-import {QNumberField} from "../../../core/field/NumberField";
-import {QStringField} from "../../../core/field/StringField";
-import {EntityUtils} from "../../../core/utils/EntityUtils";
-import {JSONFieldInOrderBy} from "../../../core/field/FieldInOrderBy";
-import {PHJsonCommonNonEntitySQLQuery} from "../PHSQLQuery";
-import {JoinTreeNode} from "../../../core/entity/JoinTreeNode";
+import {QRelation, EntityRelationRecord, JSONEntityRelation, JSONRelationType} from "../../../../core/entity/Relation";
+import {EntityDefaults, SQLStringQuery, SQLDataType, QueryResultType, SQLDialect} from "../../SQLStringQuery";
+import {IEntity, IQEntity} from "../../../../core/entity/Entity";
+import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
+import {getObjectResultParser, BridgedQueryConfiguration, IEntityResultParser} from "../result/IEntityResultParser";
+import {QBooleanField} from "../../../../core/field/BooleanField";
+import {QDateField} from "../../../../core/field/DateField";
+import {QNumberField} from "../../../../core/field/NumberField";
+import {QStringField} from "../../../../core/field/StringField";
+import {EntityUtils} from "../../../../core/utils/EntityUtils";
+import {JSONFieldInOrderBy} from "../../../../core/field/FieldInOrderBy";
+import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
+import {PHJsonEntitySQLQuery} from "../ph/PHEntitySQLQuery";
+import {getNextRootEntityName} from "../../../../core/entity/Aliases";
 /**
- * Represents SQL String query with object tree Select clause.
+ * Represents SQL String query with Entity tree Select clause.
  */
-export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE> {
+export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJsonEntitySQLQuery<IE>> {
 
-	private queryParser: IObjectResultParser;
+	private queryParser: IEntityResultParser;
 
 	constructor(
-		phJsonQuery: PHJsonCommonNonEntitySQLQuery<IE>,
-		qEntity: IQEntity,
+		protected rootQEntity: IQEntity,
+		phJsonQuery: PHJsonEntitySQLQuery<IE>,
 		qEntityMapByName: {[entityName: string]: IQEntity},
 		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
@@ -31,10 +32,111 @@ export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE>
 		queryResultType: QueryResultType,
 		protected bridgedQueryConfiguration?: BridgedQueryConfiguration
 	) {
-		super(phJsonQuery, qEntity, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect, queryResultType);
+		super(phJsonQuery, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect, queryResultType);
 		if (bridgedQueryConfiguration && this.bridgedQueryConfiguration.strict !== undefined) {
 			throw `"strict" configuration is not yet implemented for QueryResultType.BRIDGED`;
 		}
+	}
+
+	/**
+	 * Useful when a query is executed remotely and a flat result set is returned.  JoinTree is needed to parse that
+	 * result set.
+	 */
+	buildJoinTree(): void {
+		let entityName = this.rootQEntity.__entityName__;
+		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
+		this.joinTree = this.buildFromJoinTree(<JSONEntityRelation[]>this.phJsonQuery.from, joinNodeMap, entityName);
+		this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, false, []);
+	}
+
+	buildFromJoinTree(
+		joinRelations: JSONEntityRelation[],
+		joinNodeMap: {[alias: string]: JoinTreeNode},
+		entityName: string
+	): JoinTreeNode {
+		let jsonTree: JoinTreeNode;
+		// For entity queries it is possible to have a query with no from clause, in this case
+		// make the query entity the root tree node
+		if (joinRelations.length < 1) {
+			let onlyJsonRelation: JSONEntityRelation = {
+				currentChildIndex: 0,
+				entityName: entityName,
+				fromClausePosition: [],
+				joinType: null,
+				relationPropertyName: null,
+				relationType: JSONRelationType.ENTITY_ROOT,
+				rootEntityPrefix: getNextRootEntityName()
+			};
+			joinRelations.push(onlyJsonRelation);
+		}
+
+		let firstRelation = joinRelations[0];
+
+		switch (firstRelation.relationType) {
+			case JSONRelationType.ENTITY_ROOT:
+				break;
+			case JSONRelationType.SUB_QUERY_ROOT:
+			case JSONRelationType.SUB_QUERY_JOIN_ON:
+				throw `Entity queries FROM clause cannot contain sub-queries`;
+			case JSONRelationType.ENTITY_JOIN_ON:
+				throw `Entity queries cannot use JOIN ON`;
+			default:
+				throw `First table in FROM clause cannot be joined`;
+		}
+
+		if (firstRelation.relationType !== JSONRelationType.ENTITY_ROOT) {
+			throw `First table in FROM clause cannot be joined`;
+		}
+
+		let alias = QRelation.getAlias(firstRelation);
+		let firstEntity = QRelation.createRelatedQEntity(firstRelation, this.qEntityMapByName);
+		this.qEntityMapByAlias[alias] = firstEntity;
+		// In entity queries the first entity must always be the same as the query entity
+		if (firstEntity != this.rootQEntity) {
+			throw `Unexpected first table in FROM clause: ${firstRelation.entityName}, expecting: ${this.rootQEntity.__entityName__}`;
+		}
+		jsonTree = new JoinTreeNode(firstRelation, [], null);
+
+		joinNodeMap[alias] = jsonTree;
+
+		for (let i = 1; i < joinRelations.length; i++) {
+
+			let joinRelation = joinRelations[i];
+			switch (joinRelation.relationType) {
+				case JSONRelationType.ENTITY_ROOT:
+					throw `All tables after the first must be joined`;
+				case JSONRelationType.SUB_QUERY_ROOT:
+				case JSONRelationType.SUB_QUERY_JOIN_ON:
+					throw `Entity queries FROM clause cannot contain sub-queries`;
+				case JSONRelationType.ENTITY_JOIN_ON:
+					throw `Entity queries cannot use JOIN ON`;
+				default:
+					break;
+			}
+			if (!joinRelation.relationPropertyName) {
+				throw `Table ${i + 1} in FROM clause is missing relationPropertyName`;
+			}
+			let parentAlias = QRelation.getParentAlias(joinRelation);
+			if (!joinNodeMap[parentAlias]) {
+				throw `Missing parent entity for alias ${parentAlias}, on table ${i + 1} in FROM clause`;
+			}
+			let leftNode = joinNodeMap[parentAlias];
+			let rightNode = new JoinTreeNode(joinRelation, [], leftNode);
+			leftNode.addChildNode(rightNode);
+
+			alias = QRelation.getAlias(joinRelation);
+			let rightEntity = QRelation.createRelatedQEntity(joinRelation, this.qEntityMapByName);
+			this.qEntityMapByAlias[alias] = rightEntity;
+			if (!rightEntity) {
+				throw `Could not find entity ${joinRelation.entityName} for table ${i + 1} in FROM clause`;
+			}
+			if (joinNodeMap[alias]) {
+				throw `Alias '${alias}' used more than once in the FROM clause.`;
+			}
+			joinNodeMap[alias] = rightNode;
+		}
+
+		return jsonTree;
 	}
 
 	protected getSELECTFragment(
@@ -100,7 +202,7 @@ export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE>
 				}
 				let childEntityName = entityRelationMap[propertyName].entityName;
 				selectSqlFragment += this.getSELECTFragment(entityRelationMap[propertyName].entityName,
-					selectSqlFragment, selectClauseFragment[propertyName], joinTree.getChildNode(childEntityName, propertyName), entityDefaults, embedParameters, parameters);
+					selectSqlFragment, selectClauseFragment[propertyName], joinTree.getEntityRelationChildNode(childEntityName, propertyName), entityDefaults, embedParameters, parameters);
 			} else {
 				throw `Unexpected property '${propertyName}' on entity '${entityName}' (alias '${tableAlias}') in SELECT clause.`;
 			}
@@ -218,7 +320,7 @@ export class ObjectSQLStringQuery<IE extends IEntity> extends SQLStringQuery<IE>
 					}
 				} else {
 					let childEntityName = entityRelationMap[propertyName].entityName;
-					let childJoinNode = currentJoinNode.getChildNode(childEntityName, propertyName);
+					let childJoinNode = currentJoinNode.getEntityRelationChildNode(childEntityName, propertyName);
 					let childEntityAlias = QRelation.getAlias(currentJoinNode.jsonRelation);
 					let relationQEntity = this.qEntityMapByAlias[childEntityAlias];
 					let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>relationQEntity.__entityConstructor__;
