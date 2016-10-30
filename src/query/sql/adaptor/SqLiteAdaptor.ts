@@ -1,9 +1,6 @@
-import {ISQLAdaptor, ISQLFunctionAdaptor, SqlValueProvider} from "./SQLAdaptor";
+import {ISQLAdaptor, ISQLFunctionAdaptor, SqlValueProvider, AbstractFunctionAdaptor} from "./SQLAdaptor";
 import {SQLDataType} from "../SQLStringQuery";
 import {JSONSqlFunctionCall, SqlFunction} from "../../../core/field/Functions";
-import {
-	AbstractFunctionAdaptor, JSONClauseObject, JSONClauseObjectType
-} from "../../../core/field/Appliable";
 import {IQEntity} from "../../../core/entity/Entity";
 /**
  * Created by Papa on 8/27/2016.
@@ -118,6 +115,8 @@ export class SqlLiteFunctionAdaptor extends AbstractFunctionAdaptor {
 				if (jsonFunctionCall.valueIsPrimitive) {
 					return `ROUND(${jsonFunctionCall.parameters[0]}, ${jsonFunctionCall.parameters[1]})`;
 				} else {
+
+					let param1 = this.sqlValueProvider.getValue(jsonFunctionCall.parameters[0], true, false);
 					return `ROUND(${value}, ${jsonFunctionCall[0]})`;
 				}
 			case SqlFunction.NOW:

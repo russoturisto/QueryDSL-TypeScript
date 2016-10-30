@@ -1,4 +1,4 @@
-import {SQLDialect, SQLDataType} from "../SQLStringQuery";
+import {SQLDataType} from "../SQLStringQuery";
 import {ISQLAdaptor, ISQLFunctionAdaptor, SqlValueProvider} from "./SQLAdaptor";
 /**
  * Created by Papa on 8/27/2016.

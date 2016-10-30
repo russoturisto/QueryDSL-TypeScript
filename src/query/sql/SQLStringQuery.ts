@@ -13,6 +13,7 @@ import {ColumnAliases, getNextRootEntityName} from "../../core/entity/Aliases";
 import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
 import {PHJsonCommonSQLQuery} from "./PHSQLQuery";
 import {PHJsonMappedQSLQuery} from "./query/ph/PHMappedSQLQuery";
+import {JSONClauseField} from "../../core/field/Appliable";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -128,7 +129,7 @@ ORDER BY
 		parameters?: any[]
 	): string;
 
-	protected getColumnSelectFragment(
+	protected getSimpleColumnSelectFragment(
 		propertyName: string,
 		tableAlias: string,
 		columnName: string,
@@ -137,6 +138,25 @@ ORDER BY
 		let columnAlias = this.columnAliases.addAlias(tableAlias, propertyName);
 		let columnSelect = `${tableAlias}.${columnName} as ${columnAlias}\n`;
 
+
+		if (existingSelectFragment) {
+			columnSelect = `\t, ${columnSelect}`;
+		} else {
+			columnSelect = `\t${columnSelect}`;
+		}
+
+		return columnSelect;
+	}
+
+	protected getComplexColumnSelectFragment(
+		value: JSONClauseField,
+		columnName: string,
+		existingSelectFragment: string
+	): string {
+		let columnAlias = this.columnAliases.addAlias(value.tableAlias, value.propertyName);
+		let selectSqlFragment = `${value.tableAlias}.${columnName}`;
+		selectSqlFragment = this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(value, selectSqlFragment, this.qEntityMapByAlias, true);
+		let columnSelect = `${selectSqlFragment} as ${columnAlias}\n`;
 		if (existingSelectFragment) {
 			columnSelect = `\t, ${columnSelect}`;
 		} else {

@@ -73,3 +73,32 @@ export function getSQLAdaptor(
 	}
 
 }
+
+export abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
+
+	constructor(
+		protected sqlValueProvider: SqlValueProvider
+	) {
+	}
+
+	getFunctionCalls(
+		clause:JSONClauseObject,
+		innerValue: string,
+		qEntityMapByAlias: {[alias: string]: IQEntity},
+		forField:boolean
+	): string {
+		clause.__appliedFunctions__.forEach(( appliedFunction ) => {
+			innerValue = this.getFunctionCall(appliedFunction, innerValue, qEntityMapByAlias, forField);
+		});
+
+		return innerValue;
+	}
+
+	abstract getFunctionCall(
+		jsonFunctionCall: JSONSqlFunctionCall,
+		value: string,
+		qEntityMapByAlias: {[entityName: string]: IQEntity},
+		forField: boolean
+	): string;
+
+}

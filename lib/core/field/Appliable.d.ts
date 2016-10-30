@@ -3,7 +3,6 @@ import { IQEntity } from "../entity/Entity";
 import { JSONFunctionOperation } from "../operation/Operation";
 import { PHJsonFieldQSLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 import { IQField } from "./Field";
-import { ISQLFunctionAdaptor, SqlValueProvider } from "../../query/sql/adaptor/SQLAdaptor";
 /**
  * Created by Papa on 10/19/2016.
  */
@@ -32,14 +31,4 @@ export interface Appliable<JCO extends JSONClauseObject, IQ extends IQEntity, IQ
     __appliedFunctions__: JSONSqlFunctionCall[];
     applySqlFunction<A extends Appliable<JCO, IQ, IQF>>(sqlFunctionCall: JSONSqlFunctionCall): A;
     toJSON(): JCO | JSONFunctionOperation;
-}
-export declare abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
-    protected sqlValueProvider: SqlValueProvider;
-    constructor(sqlValueProvider: SqlValueProvider);
-    getFunctionCalls(clause: JSONClauseObject, innerValue: string, qEntityMapByAlias: {
-        [alias: string]: IQEntity;
-    }, forField: boolean): string;
-    abstract getFunctionCall(jsonFunctionCall: JSONSqlFunctionCall, value: string, qEntityMapByAlias: {
-        [entityName: string]: IQEntity;
-    }, forField: boolean): string;
 }

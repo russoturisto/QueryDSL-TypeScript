@@ -16,7 +16,7 @@ export declare class QStringField<IQ extends IQEntity> extends QOperableField<IQ
 }
 export declare class QStringFunction extends QStringField<any> {
     private value;
-    constructor(value?: string);
+    constructor(value?: string | PHRawFieldSQLQuery<any>);
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQStringField<any>;
     toJSON(): JSONClauseField;
 }

@@ -4,6 +4,7 @@ export declare class ColumnAliases {
     private lastAlias;
     private columnAliasMap;
     addAlias(tableAlias: string, propertyName: string): string;
+    resetReadIndexes(): void;
     getAlias(tableAlias: string, propertyName: string): string;
     private getAliasKey(tableAlias, propertyName);
     private getNextAlias();

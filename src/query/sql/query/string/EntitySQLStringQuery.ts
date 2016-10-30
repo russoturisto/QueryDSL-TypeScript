@@ -20,17 +20,17 @@ import {getNextRootEntityName} from "../../../../core/entity/Aliases";
  */
 export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJsonEntitySQLQuery<IE>> {
 
-	private queryParser: IEntityResultParser;
+	private queryParser:IEntityResultParser;
 
 	constructor(
-		protected rootQEntity: IQEntity,
-		phJsonQuery: PHJsonEntitySQLQuery<IE>,
-		qEntityMapByName: {[entityName: string]: IQEntity},
-		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
-		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
-		dialect: SQLDialect,
-		queryResultType: QueryResultType,
-		protected bridgedQueryConfiguration?: BridgedQueryConfiguration
+		protected rootQEntity:IQEntity,
+		phJsonQuery:PHJsonEntitySQLQuery<IE>,
+		qEntityMapByName:{[entityName:string]:IQEntity},
+		entitiesRelationPropertyMap:{[entityName:string]:{[propertyName:string]:EntityRelationRecord}},
+		entitiesPropertyTypeMap:{[entityName:string]:{[propertyName:string]:boolean}},
+		dialect:SQLDialect,
+		queryResultType:QueryResultType,
+		protected bridgedQueryConfiguration?:BridgedQueryConfiguration
 	) {
 		super(phJsonQuery, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect, queryResultType);
 		if (bridgedQueryConfiguration && this.bridgedQueryConfiguration.strict !== undefined) {
@@ -42,23 +42,23 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 	 * Useful when a query is executed remotely and a flat result set is returned.  JoinTree is needed to parse that
 	 * result set.
 	 */
-	buildJoinTree(): void {
+	buildJoinTree():void {
 		let entityName = this.rootQEntity.__entityName__;
-		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
+		let joinNodeMap:{[alias:string]:JoinTreeNode} = {};
 		this.joinTree = this.buildFromJoinTree(<JSONEntityRelation[]>this.phJsonQuery.from, joinNodeMap, entityName);
 		this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, false, []);
 	}
 
 	buildFromJoinTree(
-		joinRelations: JSONEntityRelation[],
-		joinNodeMap: {[alias: string]: JoinTreeNode},
-		entityName: string
-	): JoinTreeNode {
-		let jsonTree: JoinTreeNode;
+		joinRelations:JSONEntityRelation[],
+		joinNodeMap:{[alias:string]:JoinTreeNode},
+		entityName:string
+	):JoinTreeNode {
+		let jsonTree:JoinTreeNode;
 		// For entity queries it is possible to have a query with no from clause, in this case
 		// make the query entity the root tree node
 		if (joinRelations.length < 1) {
-			let onlyJsonRelation: JSONEntityRelation = {
+			let onlyJsonRelation:JSONEntityRelation = {
 				currentChildIndex: 0,
 				entityName: entityName,
 				fromClausePosition: [],
@@ -140,22 +140,22 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 	}
 
 	protected getSELECTFragment(
-		entityName: string,
-		selectSqlFragment: string,
-		selectClauseFragment: any,
-		joinTree: JoinTreeNode,
-		entityDefaults: EntityDefaults,
-		embedParameters: boolean = true,
-		parameters: any[] = null
-	): string {
+		entityName:string,
+		selectSqlFragment:string,
+		selectClauseFragment:any,
+		joinTree:JoinTreeNode,
+		entityDefaults:EntityDefaults,
+		embedParameters:boolean = true,
+		parameters:any[] = null
+	):string {
 		let tableAlias = QRelation.getAlias(joinTree.jsonRelation);
 		let qEntity = this.qEntityMapByAlias[tableAlias];
-		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
+		let entityMetadata:EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
 		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
 		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
 
 
-		let retrieveAllOwnFields: boolean = false;
+		let retrieveAllOwnFields:boolean = false;
 		let numProperties = 0;
 		for (let propertyName in selectClauseFragment) {
 			if (propertyName === '*') {
@@ -184,7 +184,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 			let fieldKey = `${tableAlias}.${propertyName}`;
 			if (entityPropertyTypeMap[propertyName]) {
 				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
-				let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
+				let columnSelect = this.getSimpleColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
 				selectSqlFragment += columnSelect;
 			} else if (entityRelationMap[propertyName]) {
 				let subSelectClauseFragment = selectClauseFragment[propertyName];
@@ -192,7 +192,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 					// For null entity reference, retrieve just the id
 					if (entityMetadata.manyToOneMap[propertyName]) {
 						let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
-						let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
+						let columnSelect = this.getSimpleColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
 						selectSqlFragment += columnSelect;
 						continue;
 					} else {
@@ -212,8 +212,8 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 	}
 
 	protected getOrderByFragment(
-		orderBy?: JSONFieldInOrderBy[]
-	): string {
+		orderBy?:JSONFieldInOrderBy[]
+	):string {
 		return this.orderByParser.getOrderByFragment(this.joinTree, this.qEntityMapByAlias);
 	}
 
@@ -230,15 +230,16 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 	 * @returns {any[]}
 	 */
 	parseQueryResults(
-		results: any[]
-	): any[] {
+		results:any[]
+	):any[] {
 		this.queryParser = getObjectResultParser(this.queryResultType, this.bridgedQueryConfiguration, this.rootQEntity, this.qEntityMapByName);
-		let parsedResults: any[] = [];
+		let parsedResults:any[] = [];
 		if (!results || !results.length) {
 			return parsedResults;
 		}
 		parsedResults = [];
 		let lastResult;
+		this.columnAliases.resetReadIndexes();
 		results.forEach(( result ) => {
 			let entityAlias = QRelation.getAlias(this.joinTree.jsonRelation);
 			let parsedResult = this.parseQueryResult(this.rootQEntity.__entityName__, this.phJsonQuery.select, entityAlias, this.joinTree, result, [0]);
@@ -255,20 +256,20 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 	}
 
 	protected parseQueryResult(
-		entityName: string,
-		selectClauseFragment: any,
-		entityAlias: string,
-		currentJoinNode: JoinTreeNode,
-		resultRow: any,
-		nextFieldIndex: number[]
-	): any {
+		entityName:string,
+		selectClauseFragment:any,
+		entityAlias:string,
+		currentJoinNode:JoinTreeNode,
+		resultRow:any,
+		nextFieldIndex:number[]
+	):any {
 		// Return blanks, primitives and Dates directly
 		if (!resultRow || !(resultRow instanceof Object) || resultRow instanceof Date) {
 			return resultRow;
 		}
 
 		let qEntity = this.qEntityMapByAlias[entityAlias];
-		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
+		let entityMetadata:EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
 		let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
 		let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
 
@@ -281,7 +282,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 			}
 			if (entityPropertyTypeMap[propertyName]) {
 				let field = qEntity.__entityFieldMap__[propertyName];
-				let dataType: SQLDataType;
+				let dataType:SQLDataType;
 				if (field instanceof QBooleanField) {
 					dataType = SQLDataType.BOOLEAN;
 				} else if (field instanceof QDateField) {
@@ -307,7 +308,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 				if (childSelectClauseFragment === null) {
 					if (entityMetadata.manyToOneMap[propertyName]) {
 						let relationGenericQEntity = this.qEntityMapByName[relation.entityName];
-						let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>relationGenericQEntity.__entityConstructor__;
+						let relationEntityMetadata:EntityMetadata = <EntityMetadata><any>relationGenericQEntity.__entityConstructor__;
 						let columnAlias = this.columnAliases.getAlias(entityAlias, propertyName);
 						let relatedEntityId = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], SQLDataType.NUMBER, null);
 						if (EntityUtils.exists(relatedEntityId)) {
@@ -323,7 +324,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 					let childJoinNode = currentJoinNode.getEntityRelationChildNode(childEntityName, propertyName);
 					let childEntityAlias = QRelation.getAlias(currentJoinNode.jsonRelation);
 					let relationQEntity = this.qEntityMapByAlias[childEntityAlias];
-					let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>relationQEntity.__entityConstructor__;
+					let relationEntityMetadata:EntityMetadata = <EntityMetadata><any>relationQEntity.__entityConstructor__;
 
 					let childResultObject = this.parseQueryResult(
 						childEntityName,

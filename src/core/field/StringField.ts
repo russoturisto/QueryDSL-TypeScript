@@ -41,7 +41,7 @@ extends QOperableField<IQ, string, JSONRawStringOperation<IQ>, IStringOperation<
 export class QStringFunction extends QStringField<any> {
 
 	constructor(
-		private value?:string
+		private value?:string | PHRawFieldSQLQuery<any>
 	) {
 		super(null, null, null, null);
 	}

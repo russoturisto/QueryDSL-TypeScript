@@ -1,12 +1,8 @@
 import {JSONSqlFunctionCall} from "./Functions";
 import {IQEntity} from "../entity/Entity";
-import {EntityMetadata} from "../entity/EntityMetadata";
-import {MetadataUtils} from "../entity/metadata/MetadataUtils";
 import {JSONFunctionOperation} from "../operation/Operation";
 import {PHJsonFieldQSLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
-import {IQOperableField} from "./OperableField";
 import {IQField} from "./Field";
-import {ISQLFunctionAdaptor, SqlValueProvider} from "../../query/sql/adaptor/SQLAdaptor";
 /**
  * Created by Papa on 10/19/2016.
  */
@@ -42,33 +38,4 @@ export interface Appliable<JCO extends JSONClauseObject, IQ extends IQEntity, IQ
 
 	applySqlFunction<A extends Appliable<JCO, IQ, IQF>>( sqlFunctionCall: JSONSqlFunctionCall ): A;
 	toJSON(): JCO | JSONFunctionOperation;
-}
-
-export abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
-
-	constructor(
-		protected sqlValueProvider: SqlValueProvider
-	) {
-	}
-
-	getFunctionCalls(
-		clause:JSONClauseObject,
-		innerValue: string,
-		qEntityMapByAlias: {[alias: string]: IQEntity},
-	  forField:boolean
-	): string {
-		clause.__appliedFunctions__.forEach(( appliedFunction ) => {
-			innerValue = this.getFunctionCall(appliedFunction, innerValue, qEntityMapByAlias, forField);
-		});
-
-		return innerValue;
-	}
-
-	abstract getFunctionCall(
-		jsonFunctionCall: JSONSqlFunctionCall,
-		value: string,
-		qEntityMapByAlias: {[entityName: string]: IQEntity},
-		forField: boolean
-	): string;
-
 }

@@ -14,9 +14,9 @@ import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
  */
 
 export interface JSONSqlFunctionCall {
-	functionType: SqlFunction,
-	parameters: any[];
-	valueIsPrimitive: boolean;
+	functionType:SqlFunction,
+	parameters:any[];
+	valueIsPrimitive:boolean;
 }
 
 /**
@@ -53,26 +53,26 @@ export enum SqlFunction {
 	EXISTS // used in where clauses
 }
 
-var strFld: IQStringField<any>;
+var strFld:IQStringField<any>;
 
-export function abs<IQ extends IQEntity, IQF extends IQNumberField<IQ>>( numberField: IQF | number ): IQF {
+export function abs<IQ extends IQEntity, IQF extends IQNumberField<IQ>>( numberField:IQF | number ):IQF {
 	if (typeof numberField === "number") {
-		return <any>new QNumberFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.ABS, true, [numberField]));
+		return <any>new QNumberFunction(numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.ABS, true, []));
 	} else {
 		(<Appliable<any, any, any>><any>numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.AVG));
 		return numberField;
 	}
 }
 
-export function avg<IQ extends IQEntity, IQF extends IQNumberField<IQ>>( numberField: IQF ): IQF {
+export function avg<IQ extends IQEntity, IQF extends IQNumberField<IQ>>( numberField:IQF ):IQF {
 	(<Appliable<any, any, any>><any>numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.AVG));
 	return numberField;
 }
 
 function getSqlFunctionCall(
-	sqlFunction: SqlFunction,
-	valueIsPrimitive: boolean = false,
-	parameters?: any[]
+	sqlFunction:SqlFunction,
+	valueIsPrimitive:boolean = false,
+	parameters?:any[]
 ) {
 	return {
 		functionType: sqlFunction,
@@ -81,38 +81,38 @@ function getSqlFunctionCall(
 	};
 }
 
-export function count<IQ extends IQEntity, IQF extends IQOperableField<IQ, any, any, any, IQF>>( field: IQF ): IQF {
+export function count<IQ extends IQEntity, IQF extends IQOperableField<IQ, any, any, any, IQF>>( field:IQF ):IQF {
 	(<Appliable<any, any, any>><any>field).applySqlFunction(getSqlFunctionCall(SqlFunction.COUNT));
 	return field;
 }
 
-export function max<IQ extends IQEntity, IQF extends IQOperableField<IQ, any, any, any, IQF>>( field: IQF ): IQF {
+export function max<IQ extends IQEntity, IQF extends IQOperableField<IQ, any, any, any, IQF>>( field:IQF ):IQF {
 	(<Appliable<any, any, any>><any>field).applySqlFunction(getSqlFunctionCall(SqlFunction.MAX));
 	return field;
 }
 
-export function min<IQ extends IQEntity, IQF extends IQOperableField<IQ, any, any, any, IQF>>( field: IQF ): IQF {
+export function min<IQ extends IQEntity, IQF extends IQOperableField<IQ, any, any, any, IQF>>( field:IQF ):IQF {
 	(<Appliable<any, any, any>><any>field).applySqlFunction(getSqlFunctionCall(SqlFunction.MIN));
 	return field;
 }
 
-export function sum<IQ extends IQEntity>( numberField: IQNumberField<IQ> ): IQNumberField<IQ> {
+export function sum<IQ extends IQEntity>( numberField:IQNumberField<IQ> ):IQNumberField<IQ> {
 	(<Appliable<any, any, any>><any>numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.SUM));
 	return numberField;
 }
 
-export function ucase<IQ extends IQEntity>( stringField: IQStringField<IQ> | string ): IQStringField<IQ> {
+export function ucase<IQ extends IQEntity>( stringField:IQStringField<IQ> | string ):IQStringField<IQ> {
 	if (typeof stringField === "string") {
-		return <any>new QStringFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.UCASE, true, [stringField]));
+		return <any>new QStringFunction(stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.UCASE, true, []));
 	} else {
 		(<Appliable<any, any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.UCASE));
 		return stringField;
 	}
 }
 
-export function lcase<IQ extends IQEntity>( stringField: IQStringField<IQ> | string ): IQStringField<IQ> {
+export function lcase<IQ extends IQEntity>( stringField:IQStringField<IQ> | string ):IQStringField<IQ> {
 	if (typeof stringField === "string") {
-		return <any>new QStringFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.LCASE, true, [stringField]));
+		return <any>new QStringFunction(stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.LCASE, true, []));
 	} else {
 		(<Appliable<any, any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.LCASE));
 		return stringField;
@@ -120,10 +120,10 @@ export function lcase<IQ extends IQEntity>( stringField: IQStringField<IQ> | str
 }
 
 export function mid<IQ extends IQEntity>(
-	stringField: IQStringField<IQ> | string,
-	start: number,
-	length: number
-): IQStringField<IQ> {
+	stringField:IQStringField<IQ> | string,
+	start:number,
+	length:number
+):IQStringField<IQ> {
 	if (typeof stringField === "string") {
 		return <any>new QStringFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.MID, true, [stringField, start, length]));
 	} else {
@@ -132,9 +132,9 @@ export function mid<IQ extends IQEntity>(
 	}
 }
 
-export function len<IQ extends IQEntity>( stringField: IQStringField<IQ> | string ): IQStringField<IQ> {
+export function len<IQ extends IQEntity>( stringField:IQStringField<IQ> | string ):IQStringField<IQ> {
 	if (typeof stringField === "string") {
-		return <any>new QStringFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.LEN, true, [stringField]));
+		return <any>new QStringFunction(stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.LEN, true, []));
 	} else {
 		(<Appliable<any, any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.LEN));
 		return stringField;
@@ -142,50 +142,51 @@ export function len<IQ extends IQEntity>( stringField: IQStringField<IQ> | strin
 }
 
 export function round<IQ extends IQEntity>(
-	numberField: IQNumberField<IQ> | number,
-	digits: number = 0
-): IQNumberField<IQ> {
+	numberField:IQNumberField<IQ> | number,
+	digits:number = 0
+):IQNumberField<IQ> {
 	if (typeof numberField === "number") {
-		return <any>new QNumberFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.ROUND, true, [numberField, digits]));
+		return <any>new QNumberFunction(numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.ROUND, true, [digits]));
 	} else {
 		(<Appliable<any, any, any>><any>numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.ROUND, false, [digits]));
 		return numberField;
 	}
 }
 
-export function now(): IQDateField<any> {
+export function now():IQDateField<any> {
 	return new QDateFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.NOW));
 }
 
 export function format(
-	format: string | IQStringField<any>,
-	...formatParameters: any[]
-): IQStringField<any> {
+	format:string | IQStringField<any>,
+	...formatParameters:any[]
+):IQStringField<any> {
 	let allParams = formatParameters.slice();
 	allParams.unshift(format);
 	return <any>new QStringFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.FORMAT, true, allParams));
 }
 
 export function replace<IQ extends IQEntity>(
-	stringField: IQStringField<IQ> | string,
-	toReplace: IQStringField<IQ> | string,
-	replaceWith: IQStringField<IQ> | string
-): IQStringField<IQ> {
+	stringField:IQStringField<IQ> | string,
+	toReplace:IQStringField<IQ> | string,
+	replaceWith:IQStringField<IQ> | string
+):IQStringField<IQ> {
 	if (typeof stringField === "string") {
-		return <any>new QStringFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.REPLACE, true, [stringField, toReplace, replaceWith]));
+		return <any>new QStringFunction(stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.REPLACE, true, [toReplace, replaceWith]));
 	} else {
 		(<Appliable<any, any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.REPLACE, false, [toReplace, replaceWith]));
 		return stringField;
 	}
 }
 
-
-export function trim<IQ extends IQEntity>( stringField: IQStringField<IQ> | string | PHRawFieldSQLQuery<any>): IQStringField<IQ> {
+export function trim<IQ extends IQEntity>(
+	stringField:IQStringField<IQ> | string | PHRawFieldSQLQuery<any>
+):IQStringField<IQ> {
 	if (stringField instanceof QStringField) {
 		(<Appliable<any, any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.TRIM));
 		return stringField;
 	} else {
-		return <any>new QStringFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.TRIM, true, [stringField]));
+		return <any>new QStringFunction(<string | PHRawFieldSQLQuery<any>>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.TRIM, true, []));
 	}
 }
 
@@ -194,8 +195,8 @@ export abstract class StandAloneFunction {
 }
 
 export function distinct<ISelect>(
-	selectClause: ISelect
-): IQDistinctFunction<ISelect> {
+	selectClause:ISelect
+):IQDistinctFunction<ISelect> {
 	let distinctFunction = new QDistinctFunction<ISelect>();
 	distinctFunction.applySqlFunction(getSqlFunctionCall(SqlFunction.DISTINCT, false, [selectClause]));
 	return distinctFunction;
@@ -207,18 +208,18 @@ export interface IQDistinctFunction<ISelect> {
 
 export class QDistinctFunction<ISelect> extends StandAloneFunction implements IQDistinctFunction<ISelect>, Appliable<JSONClauseObject, any, any> {
 
-	__appliedFunctions__: JSONSqlFunctionCall[] = [];
+	__appliedFunctions__:JSONSqlFunctionCall[] = [];
 
-	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): any {
+	applySqlFunction( sqlFunctionCall:JSONSqlFunctionCall ):any {
 		this.__appliedFunctions__.push(sqlFunctionCall);
 		return this;
 	}
 
-	getSelectClause(): any {
+	getSelectClause():any {
 		return this.__appliedFunctions__[0].parameters[0];
 	}
 
-	toJSON( parsedSelectClause?: any ): JSONClauseField {
+	toJSON( parsedSelectClause?:any ):JSONClauseField {
 		if (this.__appliedFunctions__.length != 1) {
 			throw `Not expecting and parent or child functions on "distinct"`;
 		}
@@ -234,12 +235,12 @@ export class QDistinctFunction<ISelect> extends StandAloneFunction implements IQ
 		};
 	}
 
-	static getSelect( distinct: QDistinctFunction<any> ): any {
+	static getSelect( distinct:QDistinctFunction<any> ):any {
 		return distinct.__appliedFunctions__[0].parameters[0];
 	}
 }
 
-export function exists<IME extends IMappedEntity>( phRawQuery: PHRawMappedSQLQuery<IME> ): IQExistsFunction {
+export function exists<IME extends IMappedEntity>( phRawQuery:PHRawMappedSQLQuery<IME> ):IQExistsFunction {
 	let selectClause = phRawQuery.select;
 	if (!selectClause) {
 		throw `Sub-Query must have SELECT clause defined to be used in EXITS function`;
@@ -255,20 +256,20 @@ export interface IQExistsFunction extends JSONBaseOperation {
 
 export class QExistsFunction extends StandAloneFunction implements IQExistsFunction, Appliable<JSONClauseObject, any, any> {
 
-	__appliedFunctions__: JSONSqlFunctionCall[] = [];
+	__appliedFunctions__:JSONSqlFunctionCall[] = [];
 	operator = "$exists";
 	category = OperationCategory.FUNCTION;
 
-	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): any {
+	applySqlFunction( sqlFunctionCall:JSONSqlFunctionCall ):any {
 		this.__appliedFunctions__.push(sqlFunctionCall);
 		return this;
 	}
 
-	getQuery(): PHRawMappedSQLQuery<any> {
+	getQuery():PHRawMappedSQLQuery<any> {
 		return this.__appliedFunctions__[0].parameters[0];
 	}
 
-	toJSON( parsedQuery?: PHJsonMappedQSLQuery ): JSONFunctionOperation {
+	toJSON( parsedQuery?:PHJsonMappedQSLQuery ):JSONFunctionOperation {
 		if (this.__appliedFunctions__.length != 1) {
 			throw `Not expecting and parent or child functions on "exists"`;
 		}
@@ -290,25 +291,25 @@ export class QExistsFunction extends StandAloneFunction implements IQExistsFunct
 }
 
 export function bool(
-	primitive: boolean
-): IQBooleanField<any> {
+	primitive:boolean
+):IQBooleanField<any> {
 	return new QBooleanFunction(primitive);
 }
 
 export function date(
-	primitive: Date
-): IQDateField<any> {
+	primitive:Date
+):IQDateField<any> {
 	return new QDateFunction(primitive);
 }
 
 export function num(
-	primitive: number
-): IQNumberField<any> {
+	primitive:number
+):IQNumberField<any> {
 	return new QNumberFunction(primitive);
 }
 
 export function str(
-	primitive: string
-): IQStringField<any> {
+	primitive:string
+):IQStringField<any> {
 	return new QStringFunction(primitive);
 }

@@ -1,7 +1,6 @@
-import { ISQLAdaptor, ISQLFunctionAdaptor, SqlValueProvider } from "./SQLAdaptor";
+import { ISQLAdaptor, ISQLFunctionAdaptor, SqlValueProvider, AbstractFunctionAdaptor } from "./SQLAdaptor";
 import { SQLDataType } from "../SQLStringQuery";
 import { JSONSqlFunctionCall } from "../../../core/field/Functions";
-import { AbstractFunctionAdaptor } from "../../../core/field/Appliable";
 import { IQEntity } from "../../../core/entity/Entity";
 /**
  * Created by Papa on 8/27/2016.

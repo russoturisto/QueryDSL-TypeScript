@@ -2,7 +2,7 @@
  * Created by Papa on 10/18/2016.
  */
 
-function test<A>(a:A):A {
+function test<A>( a:A ):A {
 	return a;
 }
 
@@ -20,7 +20,7 @@ const ALIASES = ['a', 'b', 'c', 'd', 'e',
 
 const lastRootEntityName = [-1, -1, -1];
 
-export function getNextRootEntityName(): string {
+export function getNextRootEntityName():string {
 	let currentName = this.lastRootEntityName;
 	for (var i = 2; i >= 0; i--) {
 		let currentIndex = currentName[i];
@@ -38,40 +38,83 @@ export function getNextRootEntityName(): string {
 	return nameString;
 }
 
-export class ColumnAliases {
-	numFields: number = 0;
-	private lastAlias = [-1, -1, -1];
-	private columnAliasMap: {[aliasPropertyCombo: string]: string} = {};
+class SpecificColumnAliases {
+
+	private aliasEntries:string[] = [];
+	private readIndex = 0;
+
+	constructor(
+		private aliasKey:string
+	) {
+	}
 
 	addAlias(
-		tableAlias: string,
-		propertyName: string
-	): string {
+		columnAlias:string
+	):void {
+		this.aliasEntries.push(columnAlias);
+	}
+
+	resetReadIndex():void {
+		this.readIndex = 0;
+	}
+
+	readNextAlias():string {
+		if (this.readIndex >= this.aliasEntries.length) {
+			throw `Too many read references for column ${this.aliasKey}`;
+		}
+		return this.aliasEntries[this.readIndex++];
+	}
+}
+
+export class ColumnAliases {
+	numFields:number = 0;
+	private lastAlias = [-1, -1, -1];
+	private columnAliasMap:{[aliasPropertyCombo:string]:SpecificColumnAliases} = {};
+
+	addAlias(
+		tableAlias:string,
+		propertyName:string
+	):string {
 		let aliasKey = this.getAliasKey(tableAlias, propertyName);
 		let columnAlias = this.getNextAlias();
-		this.columnAliasMap[aliasKey] = columnAlias;
+		let specificColumnAliases = this.columnAliasMap[aliasKey];
+		if (!specificColumnAliases) {
+			specificColumnAliases = new SpecificColumnAliases(aliasKey);
+			this.columnAliasMap[aliasKey] = specificColumnAliases;
+		}
+		specificColumnAliases.addAlias(columnAlias);
 		this.numFields++;
 
 		return columnAlias;
 	}
 
+	resetReadIndexes() {
+		for (let aliasKey in this.columnAliasMap) {
+			this.columnAliasMap[aliasKey].resetReadIndex();
+		}
+	}
+
 	getAlias(
-		tableAlias: string,
-		propertyName: string
-	): string {
+		tableAlias:string,
+		propertyName:string
+	):string {
 		let aliasKey = this.getAliasKey(tableAlias, propertyName);
-		return this.columnAliasMap[aliasKey];
+		let specificColumnAliases = this.columnAliasMap[aliasKey];
+		if (!specificColumnAliases) {
+			throw `No columns added for ${aliasKey}`;
+		}
+		return specificColumnAliases.readNextAlias();
 	}
 
 	private getAliasKey(
-		tableAlias: string,
-		propertyName: string
-	): string {
+		tableAlias:string,
+		propertyName:string
+	):string {
 		let aliasKey = `${tableAlias}.${propertyName}`;
 		return aliasKey;
 	}
 
-	private getNextAlias(): string {
+	private getNextAlias():string {
 		let currentAlias = this.lastAlias;
 		for (var i = 2; i >= 0; i--) {
 			let currentIndex = currentAlias[i];

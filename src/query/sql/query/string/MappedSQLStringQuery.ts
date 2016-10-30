@@ -3,7 +3,7 @@
  */
 
 import {PHJsonMappedQSLQuery} from "../ph/PHMappedSQLQuery";
-import {SQLStringQuery, SQLDialect, QueryResultType, EntityDefaults} from "../../SQLStringQuery";
+import {SQLDialect, QueryResultType, EntityDefaults} from "../../SQLStringQuery";
 import {IQEntity} from "../../../../core/entity/Entity";
 import {EntityRelationRecord, QRelation} from "../../../../core/entity/Relation";
 import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
@@ -93,7 +93,7 @@ export class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJsonMappedQS
 			let fieldKey = `${tableAlias}.${propertyName}`;
 			if (entityPropertyTypeMap[propertyName]) {
 				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
-				let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
+				let columnSelect = this.getSimpleColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
 				selectSqlFragment += columnSelect;
 			} else if (entityRelationMap[propertyName]) {
 				let subSelectClauseFragment = selectClauseFragment[propertyName];
@@ -101,7 +101,7 @@ export class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJsonMappedQS
 					// For null entity reference, retrieve just the id
 					if (entityMetadata.manyToOneMap[propertyName]) {
 						let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
-						let columnSelect = this.getColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
+						let columnSelect = this.getSimpleColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
 						selectSqlFragment += columnSelect;
 						continue;
 					} else {

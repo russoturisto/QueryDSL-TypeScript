@@ -31,3 +31,13 @@ export interface ISQLFunctionAdaptor {
     }, forField: boolean): string;
 }
 export declare function getSQLAdaptor(sqlValueProvider: SqlValueProvider, sqlDialect: SQLDialect): ISQLAdaptor;
+export declare abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
+    protected sqlValueProvider: SqlValueProvider;
+    constructor(sqlValueProvider: SqlValueProvider);
+    getFunctionCalls(clause: JSONClauseObject, innerValue: string, qEntityMapByAlias: {
+        [alias: string]: IQEntity;
+    }, forField: boolean): string;
+    abstract getFunctionCall(jsonFunctionCall: JSONSqlFunctionCall, value: string, qEntityMapByAlias: {
+        [entityName: string]: IQEntity;
+    }, forField: boolean): string;
+}

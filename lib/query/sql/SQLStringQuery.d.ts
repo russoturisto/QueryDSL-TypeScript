@@ -7,6 +7,7 @@ import { IOrderByParser } from "./query/orderBy/IOrderByParser";
 import { ColumnAliases } from "../../core/entity/Aliases";
 import { JoinTreeNode } from "../../core/entity/JoinTreeNode";
 import { PHJsonCommonSQLQuery } from "./PHSQLQuery";
+import { JSONClauseField } from "../../core/field/Appliable";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -68,7 +69,8 @@ export declare abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> 
     }, entityName?: string): any;
     toSQL(embedParameters?: boolean, parameters?: any[]): string;
     protected abstract getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults, embedParameters?: boolean, parameters?: any[]): string;
-    protected getColumnSelectFragment(propertyName: string, tableAlias: string, columnName: string, existingSelectFragment: string): string;
+    protected getSimpleColumnSelectFragment(propertyName: string, tableAlias: string, columnName: string, existingSelectFragment: string): string;
+    protected getComplexColumnSelectFragment(value: JSONClauseField, columnName: string, existingSelectFragment: string): string;
     private getFROMFragment(parentTree, currentTree, embedParameters?, parameters?);
     protected getEntityManyToOneColumnName(qEntity: IQEntity, propertyName: string, tableAlias: string): string;
     /**

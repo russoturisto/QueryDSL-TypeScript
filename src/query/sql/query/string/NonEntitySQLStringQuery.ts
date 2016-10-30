@@ -121,23 +121,23 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 			case JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION:
 			case JSONClauseObjectType.DATE_FIELD_FUNCTION:
 			case JSONClauseObjectType.DISTINCT_FUNCTION:
+				throw `Distinct function cannot be nested inside the SELECT clause`;
 			case JSONClauseObjectType.EXISTS_FUNCTION:
 				throw `Exists function cannot be used in SELECT clause`;
 			case JSONClauseObjectType.FIELD:
 				let qEntity = this.qEntityMapByAlias[value.tableAlias];
 				columnName = this.getEntityPropertyColumnName(qEntity, value.propertyName, value.tableAlias);
-				columnSelect = this.getColumnSelectFragment(value.propertyName, value.tableAlias, columnName, selectSqlFragment);
-				selectSqlFragment += this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(value, columnSelect, this.qEntityMapByAlias, true);
+				columnSelect = this.getComplexColumnSelectFragment(value, columnName, selectSqlFragment);
 				break;
 			case JSONClauseObjectType.FIELD_QUERY:
+				// TODO: figure out if functions can be applied to sub-queries
 				let jsonFieldSqlQuery:PHJsonFieldQSLQuery = <PHJsonFieldQSLQuery><any>value;
 				let fieldSqlQuery = new FieldSQLStringQuery(jsonFieldSqlQuery, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect);
 				fieldSqlQuery.addQEntityMapByAlias(this.qEntityMapByAlias);
 				selectSqlFragment += `(${fieldSqlQuery.toSQL()})`;
 			case JSONClauseObjectType.MANY_TO_ONE_RELATION:
 				columnName = this.getEntityManyToOneColumnName(qEntity, value.propertyName, value.tableAlias);
-				columnSelect = this.getColumnSelectFragment(value.propertyName, value.tableAlias, columnName, selectSqlFragment);
-				selectSqlFragment += this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(value, columnSelect, this.qEntityMapByAlias, true);
+				columnSelect = this.getComplexColumnSelectFragment(value, columnName, selectSqlFragment);
 				break;
 			case JSONClauseObjectType.NUMBER_FIELD_FUNCTION:
 			case JSONClauseObjectType.STRING_FIELD_FUNCTION:
@@ -145,9 +145,10 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 			// must be a nested object
 			default:
 				if(!allowNestedObjects) {
-					`Nested objects not allowed in Flat and Field queries`;
+					`Nested objects not allowed in the SELECT clause of Flat and Field queries.`;
 				}
 				selectSqlFragment += defaultCallback();
 		}
+		return selectSqlFragment;
 	}
 }
