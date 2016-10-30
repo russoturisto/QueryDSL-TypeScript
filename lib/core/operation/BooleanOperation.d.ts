@@ -5,8 +5,8 @@ import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 /**
  * Created by Papa on 6/20/2016.
  */
-export interface JSONRawBooleanOperation extends JSONRawValueOperation<IQBooleanField> {
-    operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin";
+export interface JSONRawBooleanOperation extends JSONRawValueOperation<boolean, IQBooleanField> {
+    operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin" | "$gt" | "$gte" | "$lt" | "$lte";
     lValue: IQBooleanField;
     rValue: boolean | boolean[] | IQBooleanField | IQBooleanField[] | PHRawFieldSQLQuery<IQBooleanField> | PHRawFieldSQLQuery<IQBooleanField>[];
 }

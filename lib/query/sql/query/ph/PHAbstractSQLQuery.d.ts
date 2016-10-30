@@ -14,8 +14,8 @@ export declare abstract class PHAbstractSQLQuery {
     protected getNonEntitySqlQuery(rawQuery: PHRawNonEntitySQLQuery, jsonQuery: PHJsonNonEntitySqlQuery): PHJsonNonEntitySqlQuery;
     protected fromClauseToJSON(fromClause: (IFrom | PHRawMappedSQLQuery<any>)[]): (JSONRelation | PHJsonMappedQSLQuery)[];
     protected whereClauseToJSON(whereClause: JSONBaseOperation): JSONBaseOperation;
-    private convertRValue(rValue);
-    protected groupByClauseToJSON(groupBy: IQOperableField<any, any, any, any, any>[]): JSONClauseField[];
-    protected orderByClauseToJSON(orderBy: IFieldInOrderBy<any, any>[]): JSONFieldInOrderBy[];
+    private convertLRValue(rValue);
+    protected groupByClauseToJSON(groupBy: IQOperableField<any, any, any, any>[]): JSONClauseField[];
+    protected orderByClauseToJSON(orderBy: IFieldInOrderBy<any>[]): JSONFieldInOrderBy[];
     private getSubSelectInFromClause(subSelectEntity);
 }

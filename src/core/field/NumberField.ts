@@ -41,30 +41,6 @@ export class QNumberField extends QOperableField<number, JSONRawNumberOperation,
 		super(QNumberField, q, qConstructor, entityName, fieldName, FieldType.DATE, new NumberOperation());
 	}
 
-	greaterThan(
-		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
-	): JSONRawNumberOperation {
-		return this.setOperation(this.operation.greaterThan(value));
-	}
-
-	greaterThanOrEquals(
-		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
-	): JSONRawNumberOperation {
-		return this.setOperation(this.operation.greaterThanOrEquals(value));
-	}
-
-	lessThan(
-		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
-	): JSONRawNumberOperation {
-		return this.setOperation(this.operation.lessThan(value));
-	}
-
-	lessThanOrEquals(
-		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
-	): JSONRawNumberOperation {
-		return this.setOperation(this.operation.lessThanOrEquals(value));
-	}
-
 }
 
 export class QNumberFunction extends QNumberField {

@@ -2,6 +2,7 @@ import { JSONRawBooleanOperation, IBooleanOperation } from "../operation/Boolean
 import { IQEntity } from "../entity/Entity";
 import { IQOperableField, QOperableField } from "./OperableField";
 import { JSONClauseField } from "./Appliable";
+import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 /**
  * Created by Papa on 8/10/2016.
  */
@@ -12,6 +13,6 @@ export declare class QBooleanField extends QOperableField<boolean, JSONRawBoolea
 }
 export declare class QBooleanFunction extends QBooleanField {
     private value;
-    constructor(value: boolean);
+    constructor(value: boolean | PHRawFieldSQLQuery<QBooleanField>);
     toJSON(): JSONClauseField;
 }

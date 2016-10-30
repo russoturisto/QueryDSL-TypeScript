@@ -13,15 +13,18 @@ export interface IQOperableField<T, JO extends JSONBaseOperation, IO extends IOp
     notEquals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
     notIn(values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]): JO;
 }
-export declare abstract class QOperableField<T, JO extends JSONRawValueOperation<IQF>, IO extends IValueOperation<T, JO, IQF>, IQF extends IQOperableField<T, JO, IO, IQF>> extends QField<IQF> implements IQOperableField<T, JO, IO, IQF> {
+export declare abstract class QOperableField<T, JO extends JSONRawValueOperation<T, IQF>, IO extends IValueOperation<T, JO, IQF>, IQF extends IQOperableField<T, JO, IO, IQF>> extends QField<IQF> implements IQOperableField<T, JO, IO, IQF> {
     operation: IO;
     constructor(childConstructor: new (...args: any[]) => IQOperableField<T, JO, IO, IQF>, q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string, fieldType: FieldType, operation: IO);
     getInstance(): any;
-    setOperation(jsonOperation: JO): JO;
     equals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
+    greaterThan(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
+    greaterThanOrEquals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
     isNotNull(): JO;
     isNull(): JO;
     isIn(values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]): JO;
+    lessThan(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
+    lessThanOrEquals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
     notEquals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
     notIn(values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]): JO;
 }

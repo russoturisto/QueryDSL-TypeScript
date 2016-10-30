@@ -33,7 +33,7 @@ extends QOperableField<string, JSONRawStringOperation, IStringOperation, IQStrin
 	like(
 		like: string | IQStringField | PHRawFieldSQLQuery<IQStringField>
 	): JSONRawStringOperation {
-		return this.setOperation(this.operation.like(like));
+		return this.operation.like(<any>this, like);
 	}
 
 }
@@ -55,6 +55,13 @@ export class QStringFunction extends QStringField {
 	}
 
 	toJSON(): JSONClauseField {
+		let value;
+		if(typeof this.value === "string") {
+			value = this.value;
+		} else {
+			va
+		}
+
 		return {
 			__appliedFunctions__: this.__appliedFunctions__,
 			type: JSONClauseObjectType.STRING_FIELD_FUNCTION,

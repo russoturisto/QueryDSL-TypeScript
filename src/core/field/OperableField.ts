@@ -32,7 +32,7 @@ extends IQField<IQF> {
 
 }
 
-export abstract class QOperableField<T, JO extends JSONRawValueOperation<IQF>, IO extends IValueOperation<T, JO, IQF>, IQF extends IQOperableField<T, JO, IO, IQF>>
+export abstract class QOperableField<T, JO extends JSONRawValueOperation<T, IQF>, IO extends IValueOperation<T, JO, IQF>, IQF extends IQOperableField<T, JO, IO, IQF>>
 extends QField<IQF> implements IQOperableField<T, JO, IO, IQF>  {
 
 	constructor(
@@ -57,45 +57,60 @@ extends QField<IQF> implements IQOperableField<T, JO, IO, IQF>  {
 		return new this.childConstructor(this.q, this.qConstructor, this.entityName, this.fieldName, this.fieldType, this.operation);
 	}
 
-	setOperation(
-		jsonOperation: JO
-	): JO {
-		jsonOperation.lValue = <any>this;
-
-		return jsonOperation;
-	}
-
 	equals(
 		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JO {
-		return this.setOperation(this.operation.equals(value));
+		return this.operation.equals(<any>this, value);
 	}
 
+	greaterThan(
+		value: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JO {
+		return this.operation.greaterThan(<any>this, value);
+	}
+
+	greaterThanOrEquals(
+		value: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JO {
+		return this.operation.greaterThanOrEquals(<any>this, value);
+	}
 
 	isNotNull(): JO {
-		return this.setOperation(this.operation.isNotNull());
+		return this.operation.isNotNull(<any>this);
 	}
 
 	isNull(): JO {
-		return this.setOperation(this.operation.isNull());
+		return this.operation.isNull(<any>this);
 	}
 
 	isIn(
 		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JO {
-		return this.setOperation(this.operation.isIn(values));
+		return this.operation.isIn(<any>this, values);
+	}
+
+	lessThan(
+		value: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JO {
+		return this.operation.lessThan(<any>this, value);
+	}
+
+	lessThanOrEquals(
+		value: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JO {
+		return this.operation.lessThanOrEquals(<any>this, value);
 	}
 
 	notEquals(
 		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JO {
-		return this.setOperation(this.operation.notEquals(value));
+		return this.operation.notEquals(<any>this, value);
 	}
 
 	notIn(
 		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JO {
-		return this.setOperation(this.operation.notIn(values));
+		return this.operation.notIn(<any>this, values);
 	}
 
 }

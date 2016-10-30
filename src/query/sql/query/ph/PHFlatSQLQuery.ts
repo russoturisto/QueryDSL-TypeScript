@@ -14,7 +14,7 @@ export interface PHJsonFlatQSLQuery extends PHJsonNonEntitySqlQuery {
 	select: JSONClauseField[];
 }
 
-export interface PHRawFlatSQLQuery<IQF extends IQField<any, IQF>>
+export interface PHRawFlatSQLQuery<IQF extends IQField<IQF>>
 extends PHRawNonEntitySQLQuery {
 	select: IQF[] | IQDistinctFunction<IQF[]>;
 }

@@ -6,7 +6,7 @@ export declare function and(...ops: JSONBaseOperation[]): JSONLogicalOperation;
 export declare function or(...ops: JSONBaseOperation[]): JSONLogicalOperation;
 export declare function not(op: JSONBaseOperation): JSONLogicalOperation;
 export interface JSONLogicalOperation extends JSONBaseOperation {
-    operator: "$and" | "$not" | "$or";
+    operation: "$and" | "$not" | "$or";
     value: JSONBaseOperation | JSONBaseOperation[];
 }
 export interface ILogicalOperation extends IOperation<any, JSONLogicalOperation> {

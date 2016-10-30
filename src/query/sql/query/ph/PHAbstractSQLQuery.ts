@@ -63,13 +63,13 @@ export abstract class PHAbstractSQLQuery {
 		let operation: JSONBaseOperation = whereClause;
 		let jsonOperation: JSONBaseOperation = {
 			category: operation.category,
-			operator: operation.operator
+			operation: operation.operation
 		};
 		switch (operation.category) {
 			case OperationCategory.LOGICAL:
 				let logicalOperation = <JSONLogicalOperation>operation;
 				let jsonLogicalOperation = <JSONLogicalOperation>jsonOperation;
-				switch (operation.operator) {
+				switch (operation.operation) {
 					case '$not':
 						jsonLogicalOperation.value = this.whereClauseToJSON(<JSONBaseOperation>logicalOperation.value);
 						break;
@@ -80,11 +80,11 @@ export abstract class PHAbstractSQLQuery {
 						);
 						break;
 					default:
-						throw `Unsupported logical operator '${operation.operator}'`;
+						throw `Unsupported logical operation '${operation.operation}'`;
 				}
 				break;
 			case OperationCategory.FUNCTION:
-				let functionOperation: QExistsFunction = <QExistsFunction><any>operation;
+				let functionOperation: QExistsFunction<any> = <QExistsFunction<any>>operation;
 				let query = functionOperation.getQuery();
 				let jsonQuery = new PHMappedSQLQuery(query).toJSON();
 				jsonOperation = functionOperation.toJSON(jsonQuery);
@@ -93,16 +93,17 @@ export abstract class PHAbstractSQLQuery {
 			case OperationCategory.DATE:
 			case OperationCategory.NUMBER:
 			case OperationCategory.STRING:
-				let valueOperation: JSONRawValueOperation<any> = <JSONRawValueOperation<any>>operation;
-				let jsonValueOperation: JSONValueOperation = <JSONValueOperation>operation;
-				jsonValueOperation.lValue = valueOperation.lValue.toJSON();
+				let valueOperation: JSONRawValueOperation<any, any> = <JSONRawValueOperation<any, any>>operation;
+				// All Non logical or exists operations are value operations (eq, isNull, like, etc.)
+				let jsonValueOperation: JSONValueOperation = <JSONValueOperation>jsonOperation;
+				jsonValueOperation.lValue = this.convertLRValue(valueOperation.lValue);
 				let rValue = valueOperation.rValue;
 				if (rValue instanceof Array) {
 					jsonValueOperation.rValue = rValue.map(( anRValue ) => {
-						return this.convertRValue(anRValue);
+						return this.convertLRValue(anRValue);
 					})
 				} else {
-					jsonValueOperation.rValue = this.convertRValue(rValue);
+					jsonValueOperation.rValue = this.convertLRValue(rValue);
 				}
 				break;
 		}
@@ -110,7 +111,7 @@ export abstract class PHAbstractSQLQuery {
 		return jsonOperation;
 	}
 
-	private convertRValue( rValue ): any {
+	private convertLRValue( rValue ): any {
 		switch (typeof rValue) {
 			case "boolean":
 			case "number":
@@ -130,21 +131,21 @@ export abstract class PHAbstractSQLQuery {
 		}
 	}
 
-	protected groupByClauseToJSON( groupBy: IQOperableField<any, any, any, any, any>[] ): JSONClauseField[] {
+	protected groupByClauseToJSON( groupBy: IQOperableField<any, any, any, any>[] ): JSONClauseField[] {
 		if (!groupBy || !groupBy.length) {
 			return null;
 		}
 		return groupBy.map(( field ) => {
-			return (<QField<any, any>><any>field).toJSON();
+			return (<QField<any>><any>field).toJSON();
 		});
 	}
 
-	protected orderByClauseToJSON( orderBy: IFieldInOrderBy<any, any>[] ): JSONFieldInOrderBy[] {
+	protected orderByClauseToJSON( orderBy: IFieldInOrderBy<any>[] ): JSONFieldInOrderBy[] {
 		if (!orderBy || !orderBy.length) {
 			return null;
 		}
 		return orderBy.map(( field ) => {
-			return (<FieldInOrderBy<any, any>><any>field).toJSON();
+			return (<FieldInOrderBy<any>><any>field).toJSON();
 		});
 	}
 

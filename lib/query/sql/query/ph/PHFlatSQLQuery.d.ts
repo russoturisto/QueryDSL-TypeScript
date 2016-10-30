@@ -9,7 +9,7 @@ import { IQDistinctFunction } from "../../../../core/field/Functions";
 export interface PHJsonFlatQSLQuery extends PHJsonNonEntitySqlQuery {
     select: JSONClauseField[];
 }
-export interface PHRawFlatSQLQuery<IQF extends IQField<any, IQF>> extends PHRawNonEntitySQLQuery {
+export interface PHRawFlatSQLQuery<IQF extends IQField<IQF>> extends PHRawNonEntitySQLQuery {
     select: IQF[] | IQDistinctFunction<IQF[]>;
 }
 export declare class PHFlatSQLQuery extends PHDistinguishableSQLQuery implements PHSQLQuery {

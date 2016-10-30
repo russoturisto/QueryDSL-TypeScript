@@ -16,7 +16,7 @@ export interface PHJsonNonEntitySqlQuery extends PHJsonCommonSQLQuery, PHJsonGro
 }
 export interface PHRawNonEntitySQLQuery extends PHRawSQLQuery {
     from: (IFrom | IMappedEntity)[];
-    groupBy?: IQOperableField<any, any, any, any, any>[];
+    groupBy?: IQOperableField<any, any, any, any>[];
     having?: JSONBaseOperation;
     limit?: number;
     offset?: number;

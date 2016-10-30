@@ -2,9 +2,8 @@
  * Created by Papa on 4/21/2016.
  */
 import {IQEntity} from "../entity/Entity";
-import {JSONBaseOperation, IOperation, JSONRawValueOperation, IValueOperation} from "../operation/Operation";
 import {QRelation} from "../entity/Relation";
-import {FieldInOrderBy, SortOrder, JSONFieldInOrderBy, IFieldInOrderBy} from "./FieldInOrderBy";
+import {FieldInOrderBy, SortOrder, IFieldInOrderBy} from "./FieldInOrderBy";
 import {JSONSqlFunctionCall} from "./Functions";
 import {Appliable, JSONClauseField, JSONClauseObjectType} from "./Appliable";
 import {PHRawFieldSQLQuery, PHFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";

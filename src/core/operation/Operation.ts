@@ -25,13 +25,13 @@ export interface JSONValueOperation extends JSONBaseOperation {
 }
 
 export interface JSONBaseOperation {
-	operation: string;
 	category: OperationCategory;
+	operation: string;
 }
 
 export interface JSONRawValueOperation<T, IQF extends IQOperableField<any, any, any, any>> extends JSONBaseOperation {
-	lValue?: T | IQF | PHRawFieldSQLQuery<IQF>;
-	rValue?: T | IQF | PHRawFieldSQLQuery<IQF>;
+	lValue?: T | IQF;
+	rValue?: T | T[] | IQF | IQF[] | PHRawFieldSQLQuery<IQF> | PHRawFieldSQLQuery<IQF>[];
 }
 
 export interface IOperation<T, JO extends JSONBaseOperation> {
@@ -42,23 +42,47 @@ export interface IValueOperation<T, JRO extends JSONBaseOperation, IQF extends I
 	category: OperationCategory;
 
 	equals(
-		value: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: T | IQF,
+		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JRO;
+
+	greaterThan(
+		lValue: T | IQF,
+		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JRO;
+
+	greaterThanOrEquals(
+		lValue: T | IQF,
+		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JRO;
 
 	isIn(
-		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
+		lValue: T | IQF,
+		rValue: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JRO;
 
-	isNotNull(): JRO;
+	lessThan(
+		lValue: T | IQF,
+		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JRO;
 
-	isNull(): JRO;
+	lessThanOrEquals(
+		lValue: T | IQF,
+		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JRO;
+
+	isNotNull( lValue: T | IQF ): JRO;
+
+	isNull( lValue: T | IQF ): JRO;
 
 	notEquals(
-		value: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: T | IQF,
+		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JRO;
 
 	notIn(
-		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
+		lValue: T | IQF,
+		rValue: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JRO;
 
 
@@ -76,64 +100,122 @@ export abstract class Operation<T, JRO extends JSONBaseOperation> implements IOp
 export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF>, IQF extends IQOperableField<T, JRO, any, any>> extends Operation<T, JRO> implements IValueOperation<T, JRO, IQF> {
 
 	constructor(
-		private category: OperationCategory,
-	  private lValue: T | IQF | PHRawFieldSQLQuery<IQF>
+		public category: OperationCategory
 	) {
 		super(category);
 	}
 
 	equals(
-		value: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: T | IQF,
+		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JRO {
-		return {
+		return <any>{
 			category: this.category,
-			lValue: this.lValue,
+			lValue: lValue,
 			operation: "$eq",
-			rValue: value
+			rValue: rValue
 		};
 	}
 
-	isNotNull(): JRO {
+	greaterThan(
+		lValue: T | IQF,
+		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JRO {
 		return <any>{
-			operation: "$isNotNull",
-			category: this.category
+			category: this.category,
+			lValue: lValue,
+			operation: "gt",
+			rValue: rValue
 		};
 	}
 
-	isNull(): JRO {
+	greaterThanOrEquals(
+		lValue: T | IQF,
+		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JRO {
 		return <any>{
-			operation: "$isNull",
-			category: this.category
+			category: this.category,
+			lValue: lValue,
+			operation: "$gte",
+			rValue: rValue
+		};
+	}
+
+	isNotNull(lValue: T | IQF): JRO {
+		return <any>{
+			category: this.category,
+			lValue: lValue,
+			operation: "$isNotNull"
+		};
+	}
+
+	isNull(
+		lValue: T | IQF
+	): JRO {
+		return <any>{
+			category: this.category,
+			lValue: lValue,
+			operation: "$isNull"
 		};
 	}
 
 	isIn(
-		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
+		lValue: T | IQF,
+		rValue: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JRO {
 		return <any>{
-			operation: "$in",
 			category: this.category,
-			rValue: values
+			lValue: lValue,
+			operation: "$in",
+			rValue: rValue
+		};
+	}
+
+	lessThan(
+		lValue: T | IQF,
+		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JRO{
+		return <any>{
+			category: this.category,
+			lValue: lValue,
+			operation: "$lt",
+			rValue: rValue
+		};
+	}
+
+	lessThanOrEquals(
+		lValue: T | IQF,
+		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+	): JRO {
+		return <any>{
+			category: this.category,
+			lValue: lValue,
+			operation: "$lte",
+			rValue: rValue
 		};
 	}
 
 	notEquals(
-		value: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: T | IQF,
+		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JRO {
 		return <any>{
-			operation: "$ne",
 			category: this.category,
-			rValue: value
+			lValue: lValue,
+			operation: "$ne",
+			rValue: lValue
 		};
 	}
 
 	notIn(
-		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
+		lValue: T | IQF,
+		rValue: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JRO {
 		return <any>{
-			operation: "$nin",
 			category: this.category,
-			rValue: values
+			lValue: lValue,
+			operation: "$nin",
+			rValue: rValue
 		};
 	}
 

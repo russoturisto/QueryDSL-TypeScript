@@ -10,23 +10,6 @@ import {IQOperableField, QOperableField} from "./OperableField";
  */
 
 export interface IQDateField extends IQOperableField<Date, JSONRawDateOperation, IDateOperation, IQDateField> {
-
-	greaterThan(
-		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
-	): JSONRawDateOperation;
-
-	greaterThanOrEquals(
-		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
-	): JSONRawDateOperation;
-
-	lessThan(
-		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
-	): JSONRawDateOperation;
-
-	lessThanOrEquals(
-		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
-	): JSONRawDateOperation;
-
 }
 
 export class QDateField extends QOperableField<Date, JSONRawDateOperation, IDateOperation, IQDateField> implements IQDateField {
@@ -38,30 +21,6 @@ export class QDateField extends QOperableField<Date, JSONRawDateOperation, IDate
 		fieldName: string
 	) {
 		super(QDateField, q, qConstructor, entityName, fieldName, FieldType.DATE, new DateOperation());
-	}
-
-	greaterThan(
-		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
-	): JSONRawDateOperation {
-		return this.setOperation(this.operation.greaterThan(value));
-	}
-
-	greaterThanOrEquals(
-		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
-	): JSONRawDateOperation {
-		return this.setOperation(this.operation.greaterThanOrEquals(value));
-	}
-
-	lessThan(
-		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
-	): JSONRawDateOperation {
-		return this.setOperation(this.operation.lessThan(value));
-	}
-
-	lessThanOrEquals(
-		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
-	): JSONRawDateOperation {
-		return this.setOperation(this.operation.lessThanOrEquals(value));
 	}
 
 }

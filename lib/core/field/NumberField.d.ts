@@ -15,10 +15,6 @@ export interface IQNumberField extends IQOperableField<number, JSONRawNumberOper
 }
 export declare class QNumberField extends QOperableField<number, JSONRawNumberOperation, INumberOperation, IQNumberField> implements IQNumberField {
     constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string);
-    greaterThan(value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>): JSONRawNumberOperation;
-    greaterThanOrEquals(value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>): JSONRawNumberOperation;
-    lessThan(value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>): JSONRawNumberOperation;
-    lessThanOrEquals(value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>): JSONRawNumberOperation;
 }
 export declare class QNumberFunction extends QNumberField {
     private value;
