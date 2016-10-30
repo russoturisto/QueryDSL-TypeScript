@@ -10,27 +10,27 @@ import {IQOperableField, QOperableField} from "./OperableField";
  */
 
 
-export interface IQNumberField<IQ extends IQEntity> extends IQOperableField<IQ, number, JSONRawNumberOperation<IQ>, INumberOperation<IQ>, IQNumberField<IQ>> {
+export interface IQNumberField extends IQOperableField<number, JSONRawNumberOperation, INumberOperation, IQNumberField> {
 
 	greaterThan(
-		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
-	): JSONRawNumberOperation<IQ>;
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation;
 
 	greaterThanOrEquals(
-		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
-	): JSONRawNumberOperation<IQ>;
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation;
 
 	lessThan(
-		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
-	): JSONRawNumberOperation<IQ>;
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation;
 
 	lessThanOrEquals(
-		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
-	): JSONRawNumberOperation<IQ>;
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation;
 
 }
 
-export class QNumberField<IQ extends IQEntity> extends QOperableField<IQ, number, JSONRawNumberOperation<IQ>, INumberOperation<IQ>, IQNumberField<IQ>> implements IQNumberField<IQ> {
+export class QNumberField<IQ extends IQEntity> extends QOperableField<IQ, number, JSONRawNumberOperation, INumberOperation<IQ>, IQNumberField> implements IQNumberField {
 
 	constructor(
 		q: IQ,
@@ -42,26 +42,26 @@ export class QNumberField<IQ extends IQEntity> extends QOperableField<IQ, number
 	}
 
 	greaterThan(
-		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
-	): JSONRawNumberOperation<IQ> {
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation {
 		return this.setOperation(this.operation.greaterThan(value));
 	}
 
 	greaterThanOrEquals(
-		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
-	): JSONRawNumberOperation<IQ> {
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation {
 		return this.setOperation(this.operation.greaterThanOrEquals(value));
 	}
 
 	lessThan(
-		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
-	): JSONRawNumberOperation<IQ> {
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation {
 		return this.setOperation(this.operation.lessThan(value));
 	}
 
 	lessThanOrEquals(
-		value: number | IQNumberField<IQ> | PHRawFieldSQLQuery<IQNumberField<IQ>>
-	): JSONRawNumberOperation<IQ> {
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation {
 		return this.setOperation(this.operation.lessThanOrEquals(value));
 	}
 
@@ -70,12 +70,12 @@ export class QNumberField<IQ extends IQEntity> extends QOperableField<IQ, number
 export class QNumberFunction extends QNumberField<any> {
 
 	constructor(
-		private value?:number
+		private value?: number| PHRawFieldSQLQuery<IQNumberField>
 	) {
 		super(null, null, null, null);
 	}
 
-	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQNumberField<any> {
+	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQNumberField {
 		let functionApplicable = new QNumberFunction(this.value);
 		functionApplicable.__appliedFunctions__ = functionApplicable.__appliedFunctions__.concat(this.__appliedFunctions__);
 		functionApplicable.__appliedFunctions__.push(sqlFunctionCall);

@@ -16,14 +16,14 @@ export enum SortOrder {
 	DESCENDING
 }
 
-export interface IFieldInOrderBy<IQ extends IQEntity, IQF extends IQField<IQ, IQF>> {
+export interface IFieldInOrderBy<IQF extends IQField<IQF>> {
 }
 
-export class FieldInOrderBy<IQ extends IQEntity, IQF extends IQField<IQ, IQF>>
-implements IFieldInOrderBy<IQ, IQF> {
+export class FieldInOrderBy<IQF extends IQField<IQF>>
+implements IFieldInOrderBy<IQF> {
 
 	constructor(
-		public field: Orderable<IQ, IQF>,
+		public field: Orderable<IQF>,
 		public sortOrder: SortOrder
 	) {
 	}

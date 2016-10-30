@@ -12,13 +12,13 @@ export declare enum FieldType {
     NUMBER = 2,
     STRING = 3,
 }
-export interface Orderable<IQ extends IQEntity, IQF extends IQField<IQ, any>> {
-    asc(): IFieldInOrderBy<IQ, IQF>;
-    desc(): IFieldInOrderBy<IQ, IQF>;
+export interface Orderable<IQF extends IQField<IQF>> {
+    asc(): IFieldInOrderBy<IQF>;
+    desc(): IFieldInOrderBy<IQF>;
 }
-export interface IQField<IQ extends IQEntity, IQF extends IQField<IQ, any>> extends Orderable<IQ, IQF> {
+export interface IQField<IQF extends IQField<IQF>> extends Orderable<IQF> {
 }
-export declare abstract class QField<IQ extends IQEntity, IQF extends IQField<any, any>> implements IQField<IQ, IQF>, Appliable<JSONClauseField, IQ, IQF> {
+export declare abstract class QField<IQ extends IQEntity, IQF extends IQField<IQF>> implements IQField<IQF>, Appliable<JSONClauseField, IQ, IQF> {
     childConstructor: new (...args: any[]) => IQField<IQ, IQF>;
     q: IQ;
     qConstructor: new () => IQ;

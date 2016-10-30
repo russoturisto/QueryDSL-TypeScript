@@ -31,11 +31,11 @@ export interface JSONClauseField extends JSONClauseObject {
 	value?: boolean | Date | number | string;
 }
 
-export interface Appliable<JCO extends JSONClauseObject, IQ extends IQEntity, IQF extends IQField<IQ, any>> {
+export interface Appliable<JCO extends JSONClauseObject, IQF extends IQField<IQF>> {
 	// fieldName: string;
 	__appliedFunctions__: JSONSqlFunctionCall[];
 	// q: IQ;
 
-	applySqlFunction<A extends Appliable<JCO, IQ, IQF>>( sqlFunctionCall: JSONSqlFunctionCall ): A;
+	applySqlFunction<A extends Appliable<JCO, IQF>>( sqlFunctionCall: JSONSqlFunctionCall ): A;
 	toJSON(): JCO | JSONFunctionOperation;
 }

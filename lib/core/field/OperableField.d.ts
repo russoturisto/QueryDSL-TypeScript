@@ -5,7 +5,7 @@ import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 /**
  * Created by Papa on 10/25/2016.
  */
-export interface IQOperableField<IQ extends IQEntity, T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>, IQF extends IQOperableField<IQ, T, JO, IO, any>> extends IQField<IQ, IQF> {
+export interface IQOperableField<T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>, IQF extends IQOperableField<T, JO, IO, any>> extends IQField<any, IQF> {
     equals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
     isIn(values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]): JO;
     isNotNull(): JO;

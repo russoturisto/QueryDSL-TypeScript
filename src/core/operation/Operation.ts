@@ -29,7 +29,7 @@ export interface JSONBaseOperation {
 	category: OperationCategory;
 }
 
-export interface JSONRawValueOperation<IQF extends IQOperableField<any, any, any, any, any>> extends JSONBaseOperation {
+export interface JSONRawValueOperation<IQF extends IQOperableField<any, any, any, any>> extends JSONBaseOperation {
 	lValue?: IQF;
 	rValue?: any;
 }
@@ -37,7 +37,7 @@ export interface JSONRawValueOperation<IQF extends IQOperableField<any, any, any
 export interface IOperation<T, JO extends JSONBaseOperation> {
 }
 
-export interface IValueOperation<T, JRO extends JSONBaseOperation, IQ extends IQEntity, IQF extends IQOperableField<any, T, JRO, any, any>> extends IOperation<T, JRO> {
+export interface IValueOperation<T, JRO extends JSONBaseOperation, IQF extends IQOperableField<T, JRO, any, any>> extends IOperation<T, JRO> {
 
 	category: OperationCategory;
 
@@ -73,7 +73,7 @@ export abstract class Operation<T, JRO extends JSONBaseOperation> implements IOp
 
 }
 
-export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<IQF>, IQ extends IQEntity, IQF extends IQOperableField<any, T, JRO, any, any>> extends Operation<T, JRO> implements IValueOperation<T, JRO, IQ, IQF> {
+export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<IQF>, IQF extends IQOperableField<T, JRO, any, any>> extends Operation<T, JRO> implements IValueOperation<T, JRO, IQF> {
 
 	constructor(
 		public category: OperationCategory

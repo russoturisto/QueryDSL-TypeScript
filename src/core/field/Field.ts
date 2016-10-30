@@ -16,21 +16,21 @@ export enum FieldType {
 	STRING
 }
 
-export interface Orderable<IQ extends IQEntity, IQF extends IQField<IQ, any>> {
+export interface Orderable<IQF extends IQField<IQF>> {
 
-	asc(): IFieldInOrderBy<IQ, IQF>;
+	asc(): IFieldInOrderBy<IQF>;
 
-	desc(): IFieldInOrderBy<IQ, IQF>;
-
-}
-
-export interface IQField<IQ extends IQEntity, IQF extends IQField<IQ, any>>
-extends Orderable<IQ, IQF> {
+	desc(): IFieldInOrderBy<IQF>;
 
 }
 
-export abstract class QField<IQ extends IQEntity, IQF extends IQField<any, any>>
-implements IQField<IQ, IQF>, Appliable<JSONClauseField, IQ, IQF> {
+export interface IQField<IQF extends IQField<IQF>>
+extends Orderable<IQF> {
+
+}
+
+export abstract class QField<IQ extends IQEntity, IQF extends IQField<IQF>>
+implements IQField<IQF>, Appliable<JSONClauseField, IQ, IQF> {
 
 	__appliedFunctions__: JSONSqlFunctionCall[] = [];
 	__subQuery__: PHRawFieldSQLQuery<IQF>;

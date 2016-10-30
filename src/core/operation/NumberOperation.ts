@@ -10,43 +10,43 @@ import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
  */
 
 
-export interface JSONRawNumberOperation<IQ extends IQEntity> extends JSONRawValueOperation<IQNumberField<IQ>> {
+export interface JSONRawNumberOperation extends JSONRawValueOperation<IQNumberField> {
 	operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin" | "$gt" | "$gte" | "$lt" | "$lte";
-	lValue: IQNumberField<IQ>;
-	rValue: number | number[] | IQNumberField<any> | IQNumberField<any>[] | PHRawFieldSQLQuery<IQNumberField<any>> | PHRawFieldSQLQuery<IQNumberField<any>>[];
+	lValue: IQNumberField;
+	rValue: number | number[] | IQNumberField | IQNumberField[] | PHRawFieldSQLQuery<IQNumberField> | PHRawFieldSQLQuery<IQNumberField>[];
 }
 
-export interface INumberOperation<IQ extends IQEntity>
-extends IValueOperation<number, JSONRawNumberOperation<IQ>, IQ, IQNumberField<any>> {
+export interface INumberOperation
+extends IValueOperation<number, JSONRawNumberOperation, IQNumberField> {
 
 	greaterThan(
-		value: number | IQNumberField<any> | PHRawFieldSQLQuery<IQNumberField<any>>
-	): JSONRawNumberOperation<IQ>;
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation;
 
 	greaterThanOrEquals(
-		value: number | IQNumberField<any> | PHRawFieldSQLQuery<IQNumberField<any>>
-	): JSONRawNumberOperation<IQ>;
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation;
 
 	lessThan(
-		value: number | IQNumberField<any> | PHRawFieldSQLQuery<IQNumberField<any>>
-	): JSONRawNumberOperation<IQ>;
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation;
 
 	lessThanOrEquals(
-		value: number | IQNumberField<any> | PHRawFieldSQLQuery<IQNumberField<any>>
-	): JSONRawNumberOperation<IQ>;
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation;
 
 }
 
 export class NumberOperation<IQ extends IQEntity>
-extends ValueOperation<number, JSONRawNumberOperation<IQ>, IQ, IQNumberField<any>> implements INumberOperation<IQ> {
+extends ValueOperation<number, JSONRawNumberOperation, IQNumberField> implements INumberOperation {
 
 	constructor() {
 		super(OperationCategory.NUMBER);
 	}
 
 	greaterThan(
-		value: number | IQNumberField<any> | PHRawFieldSQLQuery<IQNumberField<any>>
-	): JSONRawNumberOperation<IQ> {
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation {
 		return <any>{
 			operator: "$gt",
 			category: this.category,
@@ -55,8 +55,8 @@ extends ValueOperation<number, JSONRawNumberOperation<IQ>, IQ, IQNumberField<any
 	}
 
 	greaterThanOrEquals(
-		value: number | IQNumberField<any> | PHRawFieldSQLQuery<IQNumberField<any>>
-	): JSONRawNumberOperation<IQ> {
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation {
 		return <any>{
 			operator: "$gte",
 			category: this.category,
@@ -65,8 +65,8 @@ extends ValueOperation<number, JSONRawNumberOperation<IQ>, IQ, IQNumberField<any
 	}
 
 	lessThan(
-		value: number | IQNumberField<any> | PHRawFieldSQLQuery<IQNumberField<any>>
-	): JSONRawNumberOperation<IQ> {
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation {
 		return <any>{
 			operator: "$lt",
 			category: this.category,
@@ -75,8 +75,8 @@ extends ValueOperation<number, JSONRawNumberOperation<IQ>, IQ, IQNumberField<any
 	}
 
 	lessThanOrEquals(
-		value: number | IQNumberField<any> | PHRawFieldSQLQuery<IQNumberField<any>>
-	): JSONRawNumberOperation<IQ> {
+		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
+	): JSONRawNumberOperation {
 		return <any>{
 			operator: "$lte",
 			category: this.category,
