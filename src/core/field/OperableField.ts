@@ -1,15 +1,13 @@
 import {IQField, QField, FieldType} from "./Field";
-import {IQEntity} from "../entity/Entity";
 import {JSONBaseOperation, IOperation, JSONRawValueOperation, IValueOperation} from "../operation/Operation";
 import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
-import {Appliable} from "./Appliable";
+import {IQEntity} from "../entity/Entity";
 /**
  * Created by Papa on 10/25/2016.
  */
 
-
 export interface IQOperableField<T, JO extends JSONBaseOperation, IO extends IOperation<T, JO>, IQF extends IQOperableField<T, JO, IO, any>>
-extends IQField<any, IQF> {
+extends IQField<IQF> {
 
 	equals(
 		value: T | IQF | PHRawFieldSQLQuery<IQF>
@@ -34,16 +32,16 @@ extends IQField<any, IQF> {
 
 }
 
-export abstract class QOperableField<IQ extends IQEntity, T, JO extends JSONRawValueOperation<IQF>, IO extends IValueOperation<T, JO, IQ, IQF>, IQF extends IQOperableField<any, T, JO, IO, any>>
-extends QField<IQ, IQF> implements IQOperableField<IQ, T, JO, IO, IQF>  {
+export abstract class QOperableField<T, JO extends JSONRawValueOperation<IQF>, IO extends IValueOperation<T, JO, IQF>, IQF extends IQOperableField<T, JO, IO, IQF>>
+extends QField<IQF> implements IQOperableField<T, JO, IO, IQF>  {
 
 	constructor(
 		// All child field constructors must have the following signature (4 parameters):
 		childConstructor: new(
 			...args:any[]
-		) => IQOperableField<IQ, T, JO, IO, IQF>,
-		q: IQ,
-		qConstructor: new() => IQ,
+		) => IQOperableField<T, JO, IO, IQF>,
+		q: IQEntity,
+		qConstructor: new() => IQEntity,
 		entityName: string,
 		fieldName: string,
 		fieldType: FieldType,

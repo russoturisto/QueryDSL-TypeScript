@@ -25,13 +25,13 @@ export interface JSONValueOperation extends JSONBaseOperation {
 }
 
 export interface JSONBaseOperation {
-	operator: string;
+	operation: string;
 	category: OperationCategory;
 }
 
-export interface JSONRawValueOperation<IQF extends IQOperableField<any, any, any, any>> extends JSONBaseOperation {
-	lValue?: IQF;
-	rValue?: any;
+export interface JSONRawValueOperation<T, IQF extends IQOperableField<any, any, any, any>> extends JSONBaseOperation {
+	lValue?: T | IQF | PHRawFieldSQLQuery<IQF>;
+	rValue?: T | IQF | PHRawFieldSQLQuery<IQF>;
 }
 
 export interface IOperation<T, JO extends JSONBaseOperation> {
@@ -73,10 +73,11 @@ export abstract class Operation<T, JRO extends JSONBaseOperation> implements IOp
 
 }
 
-export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<IQF>, IQF extends IQOperableField<T, JRO, any, any>> extends Operation<T, JRO> implements IValueOperation<T, JRO, IQF> {
+export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF>, IQF extends IQOperableField<T, JRO, any, any>> extends Operation<T, JRO> implements IValueOperation<T, JRO, IQF> {
 
 	constructor(
-		public category: OperationCategory
+		private category: OperationCategory,
+	  private lValue: T | IQF | PHRawFieldSQLQuery<IQF>
 	) {
 		super(category);
 	}
@@ -84,23 +85,24 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<IQF>, 
 	equals(
 		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JRO {
-		return <any>{
-			operator: "$eq",
+		return {
 			category: this.category,
+			lValue: this.lValue,
+			operation: "$eq",
 			rValue: value
 		};
 	}
 
 	isNotNull(): JRO {
 		return <any>{
-			operator: "$isNotNull",
+			operation: "$isNotNull",
 			category: this.category
 		};
 	}
 
 	isNull(): JRO {
 		return <any>{
-			operator: "$isNull",
+			operation: "$isNull",
 			category: this.category
 		};
 	}
@@ -109,7 +111,7 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<IQF>, 
 		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JRO {
 		return <any>{
-			operator: "$in",
+			operation: "$in",
 			category: this.category,
 			rValue: values
 		};
@@ -119,7 +121,7 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<IQF>, 
 		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JRO {
 		return <any>{
-			operator: "$ne",
+			operation: "$ne",
 			category: this.category,
 			rValue: value
 		};
@@ -129,7 +131,7 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<IQF>, 
 		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JRO {
 		return <any>{
-			operator: "$nin",
+			operation: "$nin",
 			category: this.category,
 			rValue: values
 		};

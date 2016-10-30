@@ -30,7 +30,7 @@ implements IFieldInOrderBy<IQF> {
 
 	toJSON(): JSONFieldInOrderBy {
 		return {
-			field: (<QField<any,any>>this.field).toJSON(),
+			field: (<QField<IQF>>this.field).toJSON(),
 			sortOrder: this.sortOrder
 		};
 	}

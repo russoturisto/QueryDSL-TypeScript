@@ -17,12 +17,12 @@ export interface JSONValueOperation extends JSONBaseOperation {
     rValue?: boolean | boolean[] | Date | Date[] | number | number[] | string | string[] | JSONClauseField | JSONClauseField[] | PHJsonFieldQSLQuery;
 }
 export interface JSONBaseOperation {
-    operator: string;
+    operation: string;
     category: OperationCategory;
 }
-export interface JSONRawValueOperation<IQF extends IQOperableField<any, any, any, any>> extends JSONBaseOperation {
-    lValue?: IQF;
-    rValue?: any;
+export interface JSONRawValueOperation<T, IQF extends IQOperableField<any, any, any, any>> extends JSONBaseOperation {
+    lValue?: T | IQF | PHRawFieldSQLQuery<IQF>;
+    rValue?: T | IQF | PHRawFieldSQLQuery<IQF>;
 }
 export interface IOperation<T, JO extends JSONBaseOperation> {
 }
@@ -39,9 +39,10 @@ export declare abstract class Operation<T, JRO extends JSONBaseOperation> implem
     category: OperationCategory;
     constructor(category: OperationCategory);
 }
-export declare abstract class ValueOperation<T, JRO extends JSONRawValueOperation<IQF>, IQF extends IQOperableField<T, JRO, any, any>> extends Operation<T, JRO> implements IValueOperation<T, JRO, IQF> {
-    category: OperationCategory;
-    constructor(category: OperationCategory);
+export declare abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF>, IQF extends IQOperableField<T, JRO, any, any>> extends Operation<T, JRO> implements IValueOperation<T, JRO, IQF> {
+    private category;
+    private lValue;
+    constructor(category: OperationCategory, lValue: T | IQF | PHRawFieldSQLQuery<IQF>);
     equals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JRO;
     isNotNull(): JRO;
     isNull(): JRO;

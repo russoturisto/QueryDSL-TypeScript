@@ -10,10 +10,10 @@ export interface PHJsonFieldQSLQuery extends PHJsonNonEntitySqlQuery {
     select: JSONClauseField;
     type: JSONClauseObjectType;
 }
-export interface PHRawFieldSQLQuery<IQF extends IQField<any, IQF>> extends PHRawNonEntitySQLQuery {
+export interface PHRawFieldSQLQuery<IQF extends IQField<IQF>> extends PHRawNonEntitySQLQuery {
     select: IQF | IQDistinctFunction<IQF>;
 }
-export declare class PHFieldSQLQuery<IQF extends IQField<any, IQF>> extends PHDistinguishableSQLQuery implements PHSQLQuery {
+export declare class PHFieldSQLQuery<IQF extends IQField<IQF>> extends PHDistinguishableSQLQuery implements PHSQLQuery {
     private phRawQuery;
     constructor(phRawQuery: PHRawFieldSQLQuery<IQF>);
     nonDistinctSelectClauseToJSON(rawSelect: any): any;

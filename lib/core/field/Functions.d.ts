@@ -30,5 +30,5 @@ export declare enum SqlFunction {
     DISTINCT = 15,
     EXISTS = 16,
 }
-export declare function abs<IQF extends IQNumberField<any>>(numeric: IQF | number | PHRawFieldSQLQuery<IQNumberField<any>>): IQF;
-export declare function avg<IQ extends IQEntity, IQF extends IQNumberField<IQ>>(numberField: IQF | number | PHRawFieldSQLQuery<IQNumberField<IQ>>): IQF;
+export declare function abs<IQF extends IQNumberField>(numeric: IQF | number | PHRawFieldSQLQuery<IQNumberField>): IQF;
+export declare function avg<IQ extends IQEntity, IQF extends IQNumberField>(numberField: IQF | number | PHRawFieldSQLQuery<IQNumberField>): IQF;

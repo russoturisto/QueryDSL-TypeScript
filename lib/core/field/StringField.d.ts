@@ -7,16 +7,16 @@ import { IQOperableField, QOperableField } from "./OperableField";
 /**
  * Created by Papa on 8/11/2016.
  */
-export interface IQStringField<IQ extends IQEntity> extends IQOperableField<IQ, string, JSONRawStringOperation<IQ>, IStringOperation<IQ>, IQStringField<IQ>> {
-    like(like: string | IQStringField<IQ> | PHRawFieldSQLQuery<IQStringField<IQ>>): JSONRawStringOperation<IQ>;
+export interface IQStringField extends IQOperableField<string, JSONRawStringOperation, IStringOperation, IQStringField> {
+    like(like: string | IQStringField | PHRawFieldSQLQuery<IQStringField>): JSONRawStringOperation;
 }
-export declare class QStringField<IQ extends IQEntity> extends QOperableField<IQ, string, JSONRawStringOperation<IQ>, IStringOperation<IQ>, IQStringField<IQ>> implements IQStringField<IQ> {
-    constructor(q: IQ, qConstructor: new () => IQ, entityName: string, fieldName: string);
-    like(like: string | IQStringField<IQ> | PHRawFieldSQLQuery<IQStringField<IQ>>): JSONRawStringOperation<IQ>;
+export declare class QStringField extends QOperableField<string, JSONRawStringOperation, IStringOperation, IQStringField> implements IQStringField {
+    constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string);
+    like(like: string | IQStringField | PHRawFieldSQLQuery<IQStringField>): JSONRawStringOperation;
 }
-export declare class QStringFunction extends QStringField<any> {
+export declare class QStringFunction extends QStringField {
     private value;
     constructor(value?: string | PHRawFieldSQLQuery<any>);
-    applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQStringField<any>;
+    applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQStringField;
     toJSON(): JSONClauseField;
 }

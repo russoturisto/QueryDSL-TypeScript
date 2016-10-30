@@ -30,15 +30,15 @@ export interface IQNumberField extends IQOperableField<number, JSONRawNumberOper
 
 }
 
-export class QNumberField<IQ extends IQEntity> extends QOperableField<IQ, number, JSONRawNumberOperation, INumberOperation<IQ>, IQNumberField> implements IQNumberField {
+export class QNumberField extends QOperableField<number, JSONRawNumberOperation, INumberOperation, IQNumberField> implements IQNumberField {
 
 	constructor(
-		q: IQ,
-		qConstructor: new() => IQ,
+		q: IQEntity,
+		qConstructor: new() => IQEntity,
 		entityName: string,
 		fieldName: string
 	) {
-		super(QNumberField, q, qConstructor, entityName, fieldName, FieldType.DATE, new NumberOperation<IQ>());
+		super(QNumberField, q, qConstructor, entityName, fieldName, FieldType.DATE, new NumberOperation());
 	}
 
 	greaterThan(
@@ -67,7 +67,7 @@ export class QNumberField<IQ extends IQEntity> extends QOperableField<IQ, number
 
 }
 
-export class QNumberFunction extends QNumberField<any> {
+export class QNumberFunction extends QNumberField {
 
 	constructor(
 		private value?: number| PHRawFieldSQLQuery<IQNumberField>

@@ -15,12 +15,12 @@ export interface PHJsonFieldQSLQuery extends PHJsonNonEntitySqlQuery {
 	type: JSONClauseObjectType;
 }
 
-export interface PHRawFieldSQLQuery<IQF extends IQField<any, IQF>>
+export interface PHRawFieldSQLQuery<IQF extends IQField<IQF>>
 extends PHRawNonEntitySQLQuery {
 	select: IQF | IQDistinctFunction<IQF>;
 }
 
-export class PHFieldSQLQuery<IQF extends IQField<any, IQF>> extends PHDistinguishableSQLQuery implements PHSQLQuery {
+export class PHFieldSQLQuery<IQF extends IQField<IQF>> extends PHDistinguishableSQLQuery implements PHSQLQuery {
 
 	// private qEntityMap: {[entityName: string]: QEntity<any>},
 	//	private entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
@@ -35,7 +35,7 @@ export class PHFieldSQLQuery<IQF extends IQField<any, IQF>> extends PHDistinguis
 		if (!(this.phRawQuery.select instanceof QField)) {
 			throw NON_ENTITY_SELECT_ERROR_MESSAGE;
 		}
-		return (<QField<any, any>><any>this.phRawQuery.select).toJSON();
+		return (<QField<any>><any>this.phRawQuery.select).toJSON();
 	}
 
 	toJSON(): PHJsonFieldQSLQuery {

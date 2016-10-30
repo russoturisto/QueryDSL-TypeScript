@@ -186,10 +186,10 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
 				let columnSelect = this.getSimpleColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
 				selectSqlFragment += columnSelect;
-			} else if (entityRelationMap[propertyName]) {
+			} else if (entityRelationMap[propert
+			// For null entity reference, retrieve just the idyName]) {
 				let subSelectClauseFragment = selectClauseFragment[propertyName];
 				if (subSelectClauseFragment == null) {
-					// For null entity reference, retrieve just the id
 					if (entityMetadata.manyToOneMap[propertyName]) {
 						let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
 						let columnSelect = this.getSimpleColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);

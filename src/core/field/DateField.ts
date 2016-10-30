@@ -9,71 +9,71 @@ import {IQOperableField, QOperableField} from "./OperableField";
  * Created by Papa on 8/11/2016.
  */
 
-export interface IQDateField<IQ extends IQEntity> extends IQOperableField<IQ, Date, JSONRawDateOperation<IQ>, IDateOperation<IQ>, IQDateField<IQ>> {
+export interface IQDateField extends IQOperableField<Date, JSONRawDateOperation, IDateOperation, IQDateField> {
 
 	greaterThan(
-		value: Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
-	): JSONRawDateOperation<IQ>;
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation;
 
 	greaterThanOrEquals(
-		value: Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
-	): JSONRawDateOperation<IQ>;
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation;
 
 	lessThan(
-		value: Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
-	): JSONRawDateOperation<IQ>;
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation;
 
 	lessThanOrEquals(
-		value: Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
-	): JSONRawDateOperation<IQ>;
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation;
 
 }
 
-export class QDateField<IQ extends IQEntity> extends QOperableField<IQ, Date, JSONRawDateOperation<IQ>, IDateOperation<IQ>, IQDateField<IQ>> implements IQDateField<IQ> {
+export class QDateField extends QOperableField<Date, JSONRawDateOperation, IDateOperation, IQDateField> implements IQDateField {
 
 	constructor(
-		q: IQ,
-		qConstructor: new() => IQ,
+		q: IQEntity,
+		qConstructor: new() => IQEntity,
 		entityName: string,
 		fieldName: string
 	) {
-		super(QDateField, q, qConstructor, entityName, fieldName, FieldType.DATE, new DateOperation<IQ>());
+		super(QDateField, q, qConstructor, entityName, fieldName, FieldType.DATE, new DateOperation());
 	}
 
 	greaterThan(
-		value: Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
-	): JSONRawDateOperation<IQ> {
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation {
 		return this.setOperation(this.operation.greaterThan(value));
 	}
 
 	greaterThanOrEquals(
-		value: Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
-	): JSONRawDateOperation<IQ> {
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation {
 		return this.setOperation(this.operation.greaterThanOrEquals(value));
 	}
 
 	lessThan(
-		value: Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
-	): JSONRawDateOperation<IQ> {
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation {
 		return this.setOperation(this.operation.lessThan(value));
 	}
 
 	lessThanOrEquals(
-		value: Date | IQDateField<IQ> | PHRawFieldSQLQuery<IQDateField<IQ>>
-	): JSONRawDateOperation<IQ> {
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation {
 		return this.setOperation(this.operation.lessThanOrEquals(value));
 	}
 
 }
 
-export class QDateFunction extends QDateField<any> {
+export class QDateFunction extends QDateField {
 	constructor(
 		private value?: Date
 	) {
 		super(null, null, null, null);
 	}
 
-	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQDateField<any> {
+	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQDateField {
 		let functionApplicable = new QDateFunction(this.value);
 		functionApplicable.__appliedFunctions__ = functionApplicable.__appliedFunctions__.concat(this.__appliedFunctions__);
 		functionApplicable.__appliedFunctions__.push(sqlFunctionCall);

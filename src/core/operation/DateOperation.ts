@@ -2,7 +2,6 @@ import {
 	JSONRawValueOperation, IValueOperation,
 	ValueOperation, OperationCategory
 } from "./Operation";
-import {IQEntity} from "../entity/Entity";
 import {IQDateField} from "../field/DateField";
 import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
 /**
@@ -10,74 +9,74 @@ import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
  */
 
 
-export interface JSONRawDateOperation<IQ extends IQEntity> extends JSONRawValueOperation<IQDateField<IQ>> {
+export interface JSONRawDateOperation extends JSONRawValueOperation<IQDateField> {
 	operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin" | "$gt" | "$gte" | "$lt" | "$lte";
-	lValue: IQDateField<IQ>;
-	rValue: Date | Date[] | IQDateField<any> | IQDateField<any>[] | PHRawFieldSQLQuery<IQDateField<any>> | PHRawFieldSQLQuery<IQDateField<any>>[];
+	lValue: IQDateField;
+	rValue: Date | Date[] | IQDateField | IQDateField[] | PHRawFieldSQLQuery<IQDateField> | PHRawFieldSQLQuery<IQDateField>[];
 }
 
-export interface IDateOperation<IQ extends IQEntity> extends IValueOperation<Date, JSONRawDateOperation<IQ>, IQ, IQDateField<any>> {
+export interface IDateOperation extends IValueOperation<Date, JSONRawDateOperation, IQDateField> {
 
 	greaterThan(
-		value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>
-	): JSONRawDateOperation<IQ>;
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation;
 
 	greaterThanOrEquals(
-		value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>
-	): JSONRawDateOperation<IQ>;
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation;
 
 	lessThan(
-		value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>
-	): JSONRawDateOperation<IQ>;
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation;
 
 	lessThanOrEquals(
-		value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>
-	): JSONRawDateOperation<IQ>;
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation;
 
 }
 
-export class DateOperation<IQ extends IQEntity>
-extends ValueOperation<Date, JSONRawDateOperation<IQ>, IQ, IQDateField<any>> implements IDateOperation<IQ> {
+export class DateOperation
+extends ValueOperation<Date, JSONRawDateOperation, IQDateField> implements IDateOperation {
 
 	constructor() {
 		super(OperationCategory.DATE);
 	}
 
 	greaterThan(
-		value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>
-	): JSONRawDateOperation<IQ> {
-		return <any>{
-			operator: "$gt",
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation {
+		return {
+			operation: "$gt",
 			category: this.category,
 			rValue: value
 		};
 	}
 
 	greaterThanOrEquals(
-		value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>
-	): JSONRawDateOperation<IQ> {
-		return <any>{
-			operator: "$gte",
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation {
+		return {
+			operation: "$gte",
 			category: this.category,
 			rValue: value
 		};
 	}
 
 	lessThan(
-		value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>
-	): JSONRawDateOperation<IQ> {
-		return <any>{
-			operator: "$lt",
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation {
+		return {
+			operation: "$lt",
 			category: this.category,
 			rValue: value
 		};
 	}
 
 	lessThanOrEquals(
-		value: Date | IQDateField<any> | PHRawFieldSQLQuery<IQDateField<any>>
-	): JSONRawDateOperation<IQ> {
-		return <any>{
-			operator: "$lte",
+		value: Date | IQDateField | PHRawFieldSQLQuery<IQDateField>
+	): JSONRawDateOperation {
+		return {
+			operation: "$lte",
 			category: this.category,
 			rValue: value
 		};

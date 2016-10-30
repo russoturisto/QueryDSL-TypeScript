@@ -29,8 +29,8 @@ extends Orderable<IQF> {
 
 }
 
-export abstract class QField<IQ extends IQEntity, IQF extends IQField<IQF>>
-implements IQField<IQF>, Appliable<JSONClauseField, IQ, IQF> {
+export abstract class QField<IQF extends IQField<IQF>>
+implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 
 	__appliedFunctions__: JSONSqlFunctionCall[] = [];
 	__subQuery__: PHRawFieldSQLQuery<IQF>;
@@ -39,9 +39,9 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQ, IQF> {
 		// All child field constructors must have the following signature (4 parameters):
 		public childConstructor: new(
 			...args: any[]
-		) => IQField<IQ, IQF>,
-		public q: IQ,
-		public qConstructor: new() => IQ,
+		) => IQField<IQF>,
+		public q: IQEntity,
+		public qConstructor: new() => IQEntity,
 		public entityName: string,
 		public fieldName: string,
 		public fieldType: FieldType,
@@ -55,7 +55,7 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQ, IQF> {
 	}
 
 
-	objectEquals<QF extends QField<any, any>>(
+	objectEquals<QF extends QField<any>>(
 		otherField: QF,
 		checkValue?: boolean
 	): boolean {
@@ -76,16 +76,16 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQ, IQF> {
 		return true;
 	}
 
-	asc(): IFieldInOrderBy<IQ, IQF> {
-		return new FieldInOrderBy<IQ, IQF>(this, SortOrder.ASCENDING);
+	asc(): IFieldInOrderBy<IQF> {
+		return new FieldInOrderBy<IQF>(this, SortOrder.ASCENDING);
 	}
 
-	desc(): IFieldInOrderBy<IQ, IQF> {
-		return new FieldInOrderBy<IQ, IQF>(this, SortOrder.DESCENDING);
+	desc(): IFieldInOrderBy<IQF> {
+		return new FieldInOrderBy<IQF>(this, SortOrder.DESCENDING);
 	}
 
-	getInstance(): QField<IQ, IQF> {
-		return <QField<IQ, IQF>><any>new this.childConstructor(this.q, this.qConstructor, this.entityName, this.fieldName, this.fieldType);
+	getInstance(): QField<IQF> {
+		return <QField<IQF>><any>new this.childConstructor(this.q, this.qConstructor, this.entityName, this.fieldName, this.fieldType);
 	}
 
 	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQF {

@@ -1,7 +1,7 @@
 import {JSONSqlFunctionCall} from "./Functions";
 import {IQEntity} from "../entity/Entity";
 import {JSONFunctionOperation} from "../operation/Operation";
-import {PHJsonFieldQSLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
+import {PHJsonFieldQSLQuery, PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
 import {IQField} from "./Field";
 /**
  * Created by Papa on 10/19/2016.
@@ -28,7 +28,7 @@ export interface JSONClauseField extends JSONClauseObject {
 	propertyName?: string,
 	subQuery?: PHJsonFieldQSLQuery;
 	tableAlias?: string,
-	value?: boolean | Date | number | string;
+	value?: boolean | Date | number | string | PHRawFieldSQLQuery<IQField<any>>;
 }
 
 export interface Appliable<JCO extends JSONClauseObject, IQF extends IQField<IQF>> {

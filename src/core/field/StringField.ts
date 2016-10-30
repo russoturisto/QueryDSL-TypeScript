@@ -9,36 +9,36 @@ import {IQOperableField, QOperableField} from "./OperableField";
  * Created by Papa on 8/11/2016.
  */
 
-export interface IQStringField<IQ extends IQEntity>
-extends IQOperableField<IQ, string, JSONRawStringOperation<IQ>, IStringOperation<IQ>, IQStringField<IQ>> {
+export interface IQStringField
+extends IQOperableField<string, JSONRawStringOperation, IStringOperation, IQStringField> {
 
 	like(
-		like: string | IQStringField<IQ> | PHRawFieldSQLQuery<IQStringField<IQ>>
-	): JSONRawStringOperation<IQ>;
+		like: string | IQStringField | PHRawFieldSQLQuery<IQStringField>
+	): JSONRawStringOperation;
 
 }
 
-export class QStringField<IQ extends IQEntity>
-extends QOperableField<IQ, string, JSONRawStringOperation<IQ>, IStringOperation<IQ>, IQStringField<IQ>> implements IQStringField<IQ> {
+export class QStringField
+extends QOperableField<string, JSONRawStringOperation, IStringOperation, IQStringField> implements IQStringField {
 
 	constructor(
-		q: IQ,
-		qConstructor: new() => IQ,
+		q: IQEntity,
+		qConstructor: new() => IQEntity,
 		entityName: string,
 		fieldName: string
 	) {
-		super(QStringField, q, qConstructor, entityName, fieldName, FieldType.STRING, new StringOperation<IQ>());
+		super(QStringField, q, qConstructor, entityName, fieldName, FieldType.STRING, new StringOperation());
 	}
 
 	like(
-		like: string | IQStringField<IQ> | PHRawFieldSQLQuery<IQStringField<IQ>>
-	): JSONRawStringOperation<IQ> {
+		like: string | IQStringField | PHRawFieldSQLQuery<IQStringField>
+	): JSONRawStringOperation {
 		return this.setOperation(this.operation.like(like));
 	}
 
 }
 
-export class QStringFunction extends QStringField<any> {
+export class QStringFunction extends QStringField {
 
 	constructor(
 		private value?:string | PHRawFieldSQLQuery<any>
@@ -46,7 +46,7 @@ export class QStringFunction extends QStringField<any> {
 		super(null, null, null, null);
 	}
 
-	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQStringField<any> {
+	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQStringField {
 		let functionApplicable = new QStringFunction(this.value);
 		functionApplicable.__appliedFunctions__ = functionApplicable.__appliedFunctions__.concat(this.__appliedFunctions__);
 		functionApplicable.__appliedFunctions__.push(sqlFunctionCall);

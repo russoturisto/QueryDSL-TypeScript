@@ -9,33 +9,33 @@ import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
  * Created by Papa on 6/20/2016.
  */
 
-export interface JSONRawStringOperation<IQ extends IQEntity> extends JSONRawValueOperation<IQStringField<IQ>> {
+export interface JSONRawStringOperation extends JSONRawValueOperation<IQStringField> {
 	operation: "$eq" | "$isNotNull" | "$isNull" | "$in" | "$ne" | "$nin" | "$like";
-	lValue:IQStringField<IQ>;
-	rValue: string | string[] | IQStringField<any> | IQStringField<any>[] | PHRawFieldSQLQuery<IQStringField<any>> | PHRawFieldSQLQuery<IQStringField<any>>[];
+	lValue:IQStringField;
+	rValue: string | string[] | IQStringField | IQStringField[] | PHRawFieldSQLQuery<IQStringField> | PHRawFieldSQLQuery<IQStringField>[];
 }
 
-export interface IStringOperation<IQ extends IQEntity> extends IValueOperation<string, JSONRawStringOperation<IQ>, IQ, IQStringField<any>> {
+export interface IStringOperation extends IValueOperation<string, JSONRawStringOperation, IQStringField> {
 
 	like(
-		like:string | IQStringField<any> | PHRawFieldSQLQuery<IQStringField<any>>
-	):JSONRawStringOperation<IQ>;
+		like:string | IQStringField | PHRawFieldSQLQuery<IQStringField>
+	):JSONRawStringOperation;
 
 }
 
-export class StringOperation<IQ extends IQEntity>
-extends ValueOperation<string, JSONRawStringOperation<IQ>, IQ, IQStringField<any>>
-implements IStringOperation<IQ> {
+export class StringOperation
+extends ValueOperation<string, JSONRawStringOperation, IQStringField>
+implements IStringOperation {
 
 	constructor() {
 		super(OperationCategory.STRING);
 	}
 
 	like(
-		like:string | IQStringField<any> | PHRawFieldSQLQuery<IQStringField<any>>
+		like:string | IQStringField | PHRawFieldSQLQuery<IQStringField>
 	  // TODO: implement ReqExp
 			//| RegExp
-	):JSONRawStringOperation<IQ>{
+	):JSONRawStringOperation {
 		return <any>{
 			operator: "$like",
 			category: this.category,

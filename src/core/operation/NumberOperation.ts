@@ -47,9 +47,9 @@ extends ValueOperation<number, JSONRawNumberOperation, IQNumberField> implements
 	greaterThan(
 		value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>
 	): JSONRawNumberOperation {
-		return <any>{
-			operator: "$gt",
+		return {
 			category: this.category,
+			operator: "$gt",
 			rValue: value
 		};
 	}

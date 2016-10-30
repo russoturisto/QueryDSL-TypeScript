@@ -8,23 +8,23 @@ import {JSONClauseObjectType, JSONClauseField} from "./Appliable";
  */
 
 
-export interface IQBooleanField<IQ extends IQEntity> extends IQOperableField<IQ, boolean, JSONRawBooleanOperation<IQ>, IBooleanOperation<IQ>, IQBooleanField<IQ>> {
+export interface IQBooleanField extends IQOperableField<boolean, JSONRawBooleanOperation, IBooleanOperation, IQBooleanField> {
 }
 
-export class QBooleanField<IQ extends IQEntity> extends QOperableField<IQ, boolean, JSONRawBooleanOperation<IQ>, IBooleanOperation<IQ>, IQBooleanField<IQ>> implements IQBooleanField<IQ> {
+export class QBooleanField extends QOperableField<boolean, JSONRawBooleanOperation, IBooleanOperation, IQBooleanField> implements IQBooleanField {
 
 	constructor(
-		q: IQ,
-		qConstructor: new() => IQ,
+		q: IQEntity,
+		qConstructor: new() => IQEntity,
 		entityName: string,
 		fieldName: string
 	) {
-		super(QBooleanField, q, qConstructor, entityName, fieldName, FieldType.BOOLEAN, new BooleanOperation<IQ>());
+		super(QBooleanField, q, qConstructor, entityName, fieldName, FieldType.BOOLEAN, new BooleanOperation());
 	}
 
 }
 
-export class QBooleanFunction extends QBooleanField<any> {
+export class QBooleanFunction extends QBooleanField {
 
 	constructor(
 		private value: boolean

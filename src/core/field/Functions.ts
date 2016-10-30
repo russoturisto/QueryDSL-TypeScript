@@ -64,8 +64,8 @@ function getSqlFunctionCall(
 	};
 }
 
-export function abs<IQF extends IQNumberField<any>>(
-	numeric: IQF | number | PHRawFieldSQLQuery<IQNumberField<any>>
+export function abs<IQF extends IQNumberField>(
+	numeric: IQF | number | PHRawFieldSQLQuery<IQNumberField>
 ): IQF {
 	if (numeric instanceof QNumberField) {
 		numeric.applySqlFunction(getSqlFunctionCall(SqlFunction.AVG));
@@ -75,40 +75,40 @@ export function abs<IQF extends IQNumberField<any>>(
 	}
 }
 
-export function avg<IQ extends IQEntity, IQF extends IQNumberField<IQ>>(
-	numberField: IQF | number | PHRawFieldSQLQuery<IQNumberField<IQ>>
+export function avg<IQ extends IQEntity, IQF extends IQNumberField>(
+	numberField: IQF | number | PHRawFieldSQLQuery<IQNumberField>
 ): IQF {
 	if (numberField instanceof QNumberField) {
-		(<Appliable<any, any, any>><any>numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.AVG));
+		(<Appliable< any, any>><any>numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.AVG));
 		return numberField;
 	}
 
-	export function count<IQ extends IQEntity, IQF extends IQOperableField<IQ, any, any, any, IQF>>(
+	export function count<IQ extends IQEntity, IQF extends IQOperableField<any, any, any, IQF>>(
 		field: IQF | number | PHRawFieldSQLQuery<any>
 	): IQF {
-		(<Appliable<any, any, any>><any>field).applySqlFunction(getSqlFunctionCall(SqlFunction.COUNT));
+		(<Appliable< any, any>><any>field).applySqlFunction(getSqlFunctionCall(SqlFunction.COUNT));
 		return field;
 	}
 
-	export function max<IQ extends IQEntity, IQF extends IQNumberField<IQ> | IQStringField<IQ> | IQDateField<IQ>>(
-		field: IQF | number | PHRawFieldSQLQuery<IQNumberField<IQ>>
+	export function max<IQ extends IQEntity, IQF extends IQNumberField | IQStringField<IQ> | IQDateField<IQ>>(
+		field: IQF | number | PHRawFieldSQLQuery<IQNumberField>
 	): IQF {
-		(<Appliable<any, any, any>><any>field).applySqlFunction(getSqlFunctionCall(SqlFunction.MAX));
+		(<Appliable< any, any>><any>field).applySqlFunction(getSqlFunctionCall(SqlFunction.MAX));
 		return field;
 	}
 
-	export function min<IQ extends IQEntity, IQF extends IQNumberField<IQ> | IQStringField<IQ> | IQDateField<IQ>>(
-		field: IQF | number | PHRawFieldSQLQuery<IQNumberField<IQ>>
+	export function min<IQ extends IQEntity, IQF extends IQNumberField | IQStringField<IQ> | IQDateField<IQ>>(
+		field: IQF | number | PHRawFieldSQLQuery<IQNumberField>
 	): IQF {
-		(<Appliable<any, any, any>><any>field).applySqlFunction(getSqlFunctionCall(SqlFunction.MIN));
+		(<Appliable< any, any>><any>field).applySqlFunction(getSqlFunctionCall(SqlFunction.MIN));
 		return field;
 	}
 
 	export function sum<IQ extends IQEntity>(
-		numberField: IQNumberField<IQ>
-	): IQNumberField<IQ> {
+		numberField: IQNumberField
+	): IQNumberField {
 		if (numberField instanceof QNumberField) {
-			(<Appliable<any, any, any>><any>numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.SUM));
+			(<Appliable< any, any>><any>numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.SUM));
 			return numberField;
 		}
 
@@ -142,7 +142,7 @@ export function avg<IQ extends IQEntity, IQF extends IQNumberField<IQ>>(
 			if (typeof stringField === "string") {
 				return <any>new QStringFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.MID, true, [stringField, start, length]));
 			} else {
-				(<Appliable<any, any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.MID, false, [start, length]));
+				(<Appliable< any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.MID, false, [start, length]));
 				return stringField;
 			}
 		}
@@ -151,19 +151,19 @@ export function avg<IQ extends IQEntity, IQF extends IQNumberField<IQ>>(
 			if (typeof stringField === "string") {
 				return <any>new QStringFunction(stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.LEN, true, []));
 			} else {
-				(<Appliable<any, any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.LEN));
+				(<Appliable< any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.LEN));
 				return stringField;
 			}
 		}
 
 		export function round<IQ extends IQEntity>(
-			numberField: IQNumberField<IQ> | number,
+			numberField: IQNumberField | number,
 			digits: number = 0
-		): IQNumberField<IQ> {
+		): IQNumberField {
 			if (typeof numberField === "number") {
 				return <any>new QNumberFunction(numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.ROUND, true, [digits]));
 			} else {
-				(<Appliable<any, any, any>><any>numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.ROUND, false, [digits]));
+				(<Appliable< any, any>><any>numberField).applySqlFunction(getSqlFunctionCall(SqlFunction.ROUND, false, [digits]));
 				return numberField;
 			}
 		}
@@ -189,7 +189,7 @@ export function avg<IQ extends IQEntity, IQF extends IQNumberField<IQ>>(
 			if (typeof stringField === "string") {
 				return <any>new QStringFunction(stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.REPLACE, true, [toReplace, replaceWith]));
 			} else {
-				(<Appliable<any, any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.REPLACE, false, [toReplace, replaceWith]));
+				(<Appliable< any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.REPLACE, false, [toReplace, replaceWith]));
 				return stringField;
 			}
 		}
@@ -198,7 +198,7 @@ export function avg<IQ extends IQEntity, IQF extends IQNumberField<IQ>>(
 			stringField: IQStringField<IQ> | string | PHRawFieldSQLQuery<any>
 		): IQStringField<IQ> {
 			if (stringField instanceof QStringField) {
-				(<Appliable<any, any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.TRIM));
+				(<Appliable< any, any>><any>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.TRIM));
 				return stringField;
 			} else {
 				return <any>new QStringFunction(<string | PHRawFieldSQLQuery<any>>stringField).applySqlFunction(getSqlFunctionCall(SqlFunction.TRIM, true, []));
@@ -319,7 +319,7 @@ export function avg<IQ extends IQEntity, IQF extends IQNumberField<IQ>>(
 
 		export function num(
 			primitive: number
-		): IQNumberField<any> {
+		): IQNumberField {
 			return new QNumberFunction(primitive);
 		}
 
