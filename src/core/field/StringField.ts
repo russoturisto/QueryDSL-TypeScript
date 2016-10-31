@@ -55,12 +55,6 @@ export class QStringFunction extends QStringField {
 	}
 
 	toJSON(): JSONClauseField {
-		let value;
-		if(typeof this.value === "string") {
-			value = this.value;
-		} else {
-			va
-		}
 
 		return {
 			__appliedFunctions__: this.__appliedFunctions__,

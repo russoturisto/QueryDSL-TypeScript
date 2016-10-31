@@ -7,6 +7,7 @@ import {FieldInOrderBy, SortOrder, IFieldInOrderBy} from "./FieldInOrderBy";
 import {JSONSqlFunctionCall} from "./Functions";
 import {Appliable, JSONClauseField, JSONClauseObjectType} from "./Appliable";
 import {PHRawFieldSQLQuery, PHFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
+import {JSONFunctionOperation} from "../operation/Operation";
 
 export enum FieldType {
 	BOOLEAN,
@@ -117,4 +118,45 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 		return jsonField;
 	}
 
+	appliedFunctionsToJson(appliedFunctions:JSONSqlFunctionCall[]) {
+		if(!appliedFunctions) {
+			return appliedFunctions;
+		}
+		return appliedFunctions.map((appliedFunction) => {
+			
+		});
+	}
+
+	functionCallToJson(functionCall:JSONSqlFunctionCall) {
+		let parameters;
+		if(functionCall.parameters) {
+			parameters = functionCall.parameters.map((parameter) => {
+				return this.valueToJSON(parameter);
+			});
+		}
+		return {
+			functionType: functionCall.functionType,
+			parameters: parameters
+		};
+	}
+
+	valueToJSON(value) {
+		switch(typeof value) {
+			case "boolean":
+			case "number":
+			case "string":
+			case "undefined":
+				return value;
+		}
+		if(value === null){
+			return value;
+		}
+		if(value instanceof QField) {
+			return value.toJSON();
+		}
+		// must be a field sub-query
+		let rawFieldQuery: PHRawFieldSQLQuery<any> = value;
+		let phFieldQuery = new PHFieldSQLQuery(rawFieldQuery);
+		return phFieldQuery.toJSON();
+	}
 }

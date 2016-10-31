@@ -36,4 +36,6 @@ export declare abstract class QField<IQF extends IQField<IQF>> implements IQFiel
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQF;
     addSubQuery(subQuery: PHRawFieldSQLQuery<IQF>): IQF;
     toJSON(): JSONClauseField;
+    functionCallToJson(functionCall: JSONSqlFunctionCall): void;
+    valueToJSON(value: any): any;
 }
