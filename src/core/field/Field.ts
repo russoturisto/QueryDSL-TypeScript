@@ -105,7 +105,7 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 
 	toJSON(): JSONClauseField {
 		let jsonField: JSONClauseField = {
-			__appliedFunctions__: this.__appliedFunctions__,
+			__appliedFunctions__: this.appliedFunctionsToJson(this.__appliedFunctions__),
 			propertyName: this.fieldName,
 			tableAlias: QRelation.getPositionAlias(this.q.rootEntityPrefix, this.q.fromClausePosition),
 			type: JSONClauseObjectType.FIELD
@@ -118,16 +118,16 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 		return jsonField;
 	}
 
-	appliedFunctionsToJson(appliedFunctions:JSONSqlFunctionCall[]) {
+	appliedFunctionsToJson(appliedFunctions:JSONSqlFunctionCall[]):JSONSqlFunctionCall[] {
 		if(!appliedFunctions) {
 			return appliedFunctions;
 		}
 		return appliedFunctions.map((appliedFunction) => {
-			
+			return this.functionCallToJson(appliedFunction);
 		});
 	}
 
-	functionCallToJson(functionCall:JSONSqlFunctionCall) {
+	functionCallToJson(functionCall:JSONSqlFunctionCall):JSONSqlFunctionCall {
 		let parameters;
 		if(functionCall.parameters) {
 			parameters = functionCall.parameters.map((parameter) => {
@@ -141,15 +141,15 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 	}
 
 	valueToJSON(value) {
+		if(!value){
+			return value;
+		}
 		switch(typeof value) {
 			case "boolean":
 			case "number":
 			case "string":
 			case "undefined":
 				return value;
-		}
-		if(value === null){
-			return value;
 		}
 		if(value instanceof QField) {
 			return value.toJSON();
@@ -158,5 +158,13 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 		let rawFieldQuery: PHRawFieldSQLQuery<any> = value;
 		let phFieldQuery = new PHFieldSQLQuery(rawFieldQuery);
 		return phFieldQuery.toJSON();
+	}
+
+	operableFunctionToJson(type:JSONClauseObjectType, value):JSONClauseField {
+		return {
+			__appliedFunctions__: this.appliedFunctionsToJson(this.__appliedFunctions__),
+			type: JSONClauseObjectType.NUMBER_FIELD_FUNCTION,
+			value: this.valueToJSON(value)
+		};
 	}
 }

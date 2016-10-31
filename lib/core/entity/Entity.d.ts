@@ -21,20 +21,20 @@ export interface IQEntity {
         new (): any;
     };
     __entityFieldMap__: {
-        [propertyName: string]: IQOperableField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>;
+        [propertyName: string]: IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>;
     };
     __entityName__: string;
     __entityRelationMap__: {
-        [propertyName: string]: IQRelation<IQEntity, any, IQEntity>;
+        [propertyName: string]: IQRelation<IQEntity, any>;
     };
     currentChildIndex: number;
     rootEntityPrefix: string;
     fromClausePosition: number[];
     relationPropertyName: string;
     joinType: JoinType;
-    addEntityRelation<IQR extends IQEntity, R>(propertyName: string, relation: IQRelation<IQR, R, IQEntity>): void;
-    addEntityField<IQF extends IQOperableField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>>(propertyName: string, field: IQF): void;
-    fields(fields: IQOperableField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]): IQEntity;
+    addEntityRelation<IQR extends IQEntity, R>(propertyName: string, relation: IQRelation<IQR, R>): void;
+    addEntityField<IQF extends IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>>(propertyName: string, field: IQF): void;
+    fields(fields: IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]): IQEntity;
     getRelationJson(): JSONRelation;
 }
 export declare abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
@@ -50,10 +50,10 @@ export declare abstract class QEntity<IQ extends IQEntity> implements IQEntity, 
     relationPropertyName: any;
     joinType: JoinType;
     __entityFieldMap__: {
-        [propertyName: string]: IQOperableField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>;
+        [propertyName: string]: IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>;
     };
     __entityRelationMap__: {
-        [propertyName: string]: IQRelation<IQEntity, any, IQEntity>;
+        [propertyName: string]: IQRelation<IQEntity, any>;
     };
     currentChildIndex: number;
     joinWhereClause: JSONBaseOperation;
@@ -62,13 +62,13 @@ export declare abstract class QEntity<IQ extends IQEntity> implements IQEntity, 
     }, __entityConstructor__: {
         new (): any;
     }, __entityName__: string, rootEntityPrefix?: string, fromClausePosition?: number[], relationPropertyName?: any, joinType?: JoinType);
-    addEntityRelation<IQR extends IQEntity, R>(propertyName: string, relation: IQRelation<IQR, R, IQ>): void;
-    addEntityField<T, IQF extends IQOperableField<IQ, T, JSONBaseOperation, IOperation<T, JSONBaseOperation>, any>>(propertyName: string, field: IQF): void;
+    addEntityRelation<IQR extends IQEntity, R>(propertyName: string, relation: IQRelation<IQR, R>): void;
+    addEntityField<T, IQF extends IQOperableField<T, JSONBaseOperation, IOperation<T, JSONBaseOperation>, any>>(propertyName: string, field: IQF): void;
     getRelationJson(): JSONRelation;
     getJoinRelationJson(jsonRelation: JSONJoinRelation): JSONJoinRelation;
     getEntityRelationJson(jsonRelation: JSONEntityRelation): JSONEntityRelation;
     getRootRelationJson(jsonRelation: JSONRelation): JSONJoinRelation;
     getQ(): IQ;
-    fields(fields: IQOperableField<IQ, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]): IQ;
+    fields(fields: IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]): IQ;
     abstract toJSON(): any;
 }

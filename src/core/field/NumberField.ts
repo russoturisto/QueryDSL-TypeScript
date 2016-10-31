@@ -60,10 +60,6 @@ export class QNumberFunction extends QNumberField {
 	}
 
 	toJSON(): JSONClauseField {
-		return {
-			__appliedFunctions__: this.__appliedFunctions__,
-			type: JSONClauseObjectType.NUMBER_FIELD_FUNCTION,
-			value: this.value
-		};
+		return this.operableFunctionToJson(JSONClauseObjectType.NUMBER_FIELD_FUNCTION, this.value);
 	}
 }

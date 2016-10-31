@@ -41,10 +41,6 @@ export class QDateFunction extends QDateField {
 	}
 
 	toJSON(): JSONClauseField {
-		return {
-			__appliedFunctions__: this.__appliedFunctions__,
-			type: JSONClauseObjectType.DATE_FIELD_FUNCTION,
-			value: this.value
-		};
+		return this.operableFunctionToJson(JSONClauseObjectType.DATE_FIELD_FUNCTION, this.value);
 	}
 }

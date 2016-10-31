@@ -13,7 +13,7 @@ export declare function view<IME extends IMappedEntity>(query: (...args: any[]) 
  * @param query
  * @returns {IQF}
  */
-export declare function field<IQF extends IQField<any, any>>(query: (...args: any[]) => PHRawFieldSQLQuery<IQF> | PHRawFieldSQLQuery<IQF>): IQField<any, IQF>;
+export declare function field<IQF extends IQField<any>>(query: (...args: any[]) => PHRawFieldSQLQuery<IQF> | PHRawFieldSQLQuery<IQF>): IQField<IQF>;
 export declare enum JoinType {
     FULL_JOIN = 0,
     INNER_JOIN = 1,

@@ -14,6 +14,7 @@ import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
 import {PHJsonCommonSQLQuery} from "./PHSQLQuery";
 import {PHJsonMappedQSLQuery} from "./query/ph/PHMappedSQLQuery";
 import {JSONClauseField} from "../../core/field/Appliable";
+import {JoinType} from "../../core/entity/Joins";
 /**
  * Created by Papa on 8/20/2016.
  */

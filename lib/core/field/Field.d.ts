@@ -4,7 +4,7 @@
 import { IQEntity } from "../entity/Entity";
 import { IFieldInOrderBy } from "./FieldInOrderBy";
 import { JSONSqlFunctionCall } from "./Functions";
-import { Appliable, JSONClauseField } from "./Appliable";
+import { Appliable, JSONClauseField, JSONClauseObjectType } from "./Appliable";
 import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 export declare enum FieldType {
     BOOLEAN = 0,
@@ -36,6 +36,8 @@ export declare abstract class QField<IQF extends IQField<IQF>> implements IQFiel
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQF;
     addSubQuery(subQuery: PHRawFieldSQLQuery<IQF>): IQF;
     toJSON(): JSONClauseField;
-    functionCallToJson(functionCall: JSONSqlFunctionCall): void;
+    appliedFunctionsToJson(appliedFunctions: JSONSqlFunctionCall[]): JSONSqlFunctionCall[];
+    functionCallToJson(functionCall: JSONSqlFunctionCall): JSONSqlFunctionCall;
     valueToJSON(value: any): any;
+    operableFunctionToJson(type: JSONClauseObjectType, value: any): JSONClauseField;
 }

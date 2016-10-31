@@ -23,9 +23,9 @@ export interface IQEntity {
 
 	__qEntityConstructor__: {new ( ...args: any[] ): any};
 	__entityConstructor__: {new (): any};
-	__entityFieldMap__: {[propertyName: string]: IQOperableField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>};
+	__entityFieldMap__: {[propertyName: string]: IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>};
 	__entityName__: string;
-	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any, IQEntity>};
+	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any>};
 	currentChildIndex:number;
 	rootEntityPrefix: string;
 	fromClausePosition: number[];
@@ -35,16 +35,16 @@ export interface IQEntity {
 
 	addEntityRelation<IQR extends IQEntity, R>(
 		propertyName: string,
-		relation: IQRelation<IQR, R, IQEntity>
+		relation: IQRelation<IQR, R>
 	): void;
 
-	addEntityField<IQF extends IQOperableField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>>(
+	addEntityField<IQF extends IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>>(
 		propertyName: string,
 		field: IQF
 	): void;
 
 	fields(
-		fields: IQOperableField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]
+		fields: IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]
 	): IQEntity;
 
 	/*
@@ -59,8 +59,8 @@ export interface IQEntity {
 
 export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 
-	__entityFieldMap__: {[propertyName: string]: IQOperableField<IQEntity, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>} = {};
-	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any, IQEntity>} = {};
+	__entityFieldMap__: {[propertyName: string]: IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>} = {};
+	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any>} = {};
 
 	// rootOperation:LogicalOperation<IQ> = new LogicalOperation<IQ>(<any>this, OperationType.AND, []);
 
@@ -80,12 +80,12 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 
 	addEntityRelation<IQR extends IQEntity, R>(
 		propertyName: string,
-		relation: IQRelation<IQR, R, IQ>
+		relation: IQRelation<IQR, R>
 	): void {
 		this.__entityRelationMap__[propertyName] = relation;
 	}
 
-	addEntityField<T, IQF extends IQOperableField<IQ, T, JSONBaseOperation, IOperation<T, JSONBaseOperation>, any>>(
+	addEntityField<T, IQF extends IQOperableField<T, JSONBaseOperation, IOperation<T, JSONBaseOperation>, any>>(
 		propertyName: string,
 		field: IQF
 	): void {
@@ -137,7 +137,7 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 	}
 
 	fields(
-		fields: IQOperableField<IQ, any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]
+		fields: IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]
 	): IQ {
 		throw `Not implemented`;
 	}

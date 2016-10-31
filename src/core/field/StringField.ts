@@ -55,11 +55,6 @@ export class QStringFunction extends QStringField {
 	}
 
 	toJSON(): JSONClauseField {
-
-		return {
-			__appliedFunctions__: this.__appliedFunctions__,
-			type: JSONClauseObjectType.STRING_FIELD_FUNCTION,
-			value: this.value
-		};
+		return this.operableFunctionToJson(JSONClauseObjectType.STRING_FIELD_FUNCTION, this.value);
 	}
 }

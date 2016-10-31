@@ -8,12 +8,12 @@ import {JoinType} from "./Joins";
  * Created by Papa on 10/23/2016.
  */
 
-export interface IQNumberManyToOneRelation <IQR extends IQEntity, R, IQ extends IQEntity>
-extends IQRelation<IQR, R, IQ>, IQNumberField<IQR> {
+export interface IQNumberManyToOneRelation <IQR extends IQEntity, R>
+extends IQRelation<IQR, R>, IQNumberField {
 }
 
-export class QNumberManyToOneRelation<IQR extends IQEntity, R, IQ extends IQEntity>
-extends QNumberField<IQR> implements IQRelation<IQR, R, IQ> {
+export class QNumberManyToOneRelation<IQR extends IQEntity, R extends IQEntity>
+extends QNumberField implements IQRelation<IQR, R> {
 
 	relationType = EntityRelationType.MANY_TO_ONE;
 
@@ -40,7 +40,7 @@ extends QNumberField<IQR> implements IQRelation<IQR, R, IQ> {
 		return new this.relationQEntityConstructor(this.relationQEntityConstructor, this.relationEntityConstructor, this.entityName, this.q.rootEntityPrefix, QRelation.getNextChildJoinPosition(this.q), this.fieldName, joinType);
 	}
 
-	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQNumberManyToOneRelation <IQR, R, IQ> {
+	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQNumberManyToOneRelation <IQR, R> {
 		let appliedMtoRelation = new QNumberManyToOneRelation(this.q, this.qConstructor, this.entityName, this.fieldName, this.relationEntityConstructor, this.relationQEntityConstructor);
 		appliedMtoRelation.__appliedFunctions__ = appliedMtoRelation.__appliedFunctions__.concat(this.__appliedFunctions__);
 		appliedMtoRelation.__appliedFunctions__.push(sqlFunctionCall);

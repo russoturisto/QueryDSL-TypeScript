@@ -37,9 +37,9 @@ export function view<IME extends IMappedEntity>(
  * @param query
  * @returns {IQF}
  */
-export function field<IQF extends IQField<any, any>>(
+export function field<IQF extends IQField<any>>(
 	query: ( ...args: any[] ) => PHRawFieldSQLQuery<IQF> | PHRawFieldSQLQuery<IQF>
-): IQField<any, IQF> {
+): IQField<IQF> {
 	let queryDefinition: PHRawFieldSQLQuery<IQF>;
 	if (query instanceof Function) {
 		queryDefinition = query();
@@ -47,7 +47,7 @@ export function field<IQF extends IQField<any, any>>(
 		queryDefinition = query;
 	}
 	let customField: IQF = <IQF>queryDefinition.select;
-	customField = (<QField<any, IQF>><any>customField).addSubQuery(queryDefinition);
+	customField = (<QField<IQF>><any>customField).addSubQuery(queryDefinition);
 	// Field query cannot be joined to any other query so don't have set the positional fields
 	return customField;
 

@@ -6,9 +6,9 @@ import { JSONClauseField } from "../field/Appliable";
 /**
  * Created by Papa on 10/23/2016.
  */
-export interface IQNumberManyToOneRelation<IQR extends IQEntity, R, IQ extends IQEntity> extends IQRelation<IQR, R, IQ>, IQNumberField<IQR> {
+export interface IQNumberManyToOneRelation<IQR extends IQEntity, R> extends IQRelation<IQR, R>, IQNumberField {
 }
-export declare class QNumberManyToOneRelation<IQR extends IQEntity, R, IQ extends IQEntity> extends QNumberField<IQR> implements IQRelation<IQR, R, IQ> {
+export declare class QNumberManyToOneRelation<IQR extends IQEntity, R extends IQEntity> extends QNumberField implements IQRelation<IQR, R> {
     q: IQR;
     qConstructor: new () => IQR;
     entityName: string;
@@ -20,6 +20,6 @@ export declare class QNumberManyToOneRelation<IQR extends IQEntity, R, IQ extend
     innerJoin(): IQR;
     leftJoin(): IQR;
     private getNewQEntity(joinType);
-    applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQNumberManyToOneRelation<IQR, R, IQ>;
+    applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQNumberManyToOneRelation<IQR, R>;
     toJSON(): JSONClauseField;
 }

@@ -34,10 +34,6 @@ export class QBooleanFunction extends QBooleanField {
 	}
 
 	toJSON(): JSONClauseField {
-		return {
-			__appliedFunctions__: [],
-			type: JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION,
-			value: this.value
-		};
+		return this.operableFunctionToJson(JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION, this.value);
 	}
 }

@@ -8,7 +8,7 @@ import {JSONFieldInOrderBy, IFieldInOrderBy} from "../../core/field/FieldInOrder
 
 export interface PHRawSQLQuery extends PHRawQuery {
 	from?: any[];
-	orderBy?: IFieldInOrderBy<any, any>[]
+	orderBy?: IFieldInOrderBy<any>[]
 	select: any;
 	where?: JSONBaseOperation;
 }

@@ -46,7 +46,7 @@ export interface JSONEntityRelation extends JSONRelation {
 	relationPropertyName: string;
 }
 
-export interface IQRelation<IQR extends IQEntity, R, IQ extends IQEntity> {
+export interface IQRelation<IQR extends IQEntity, R> {
 
 	relationType: EntityRelationType;
 	relationEntityConstructor: new () => R;
