@@ -14,10 +14,10 @@ import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
  * Created by Papa on 10/2/2016.
  */
 
-export class SQLStringUpdate<IE extends IEntity> extends SQLStringNoJoinQuery<IE> {
+export class SQLStringUpdate extends SQLStringNoJoinQuery {
 
 	constructor(
-		public phJsonUpdate: PHJsonSQLUpdate<IE>,
+		public phJsonUpdate: PHJsonSQLUpdate<IEntity>,
 		qEntity: IQEntity,
 		qEntityMap: {[entityName: string]: IQEntity},
 		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
@@ -52,7 +52,7 @@ ${whereFragment}`;
 	protected getSetFragment(
 		updateAlias: string,
 		entityName: string,
-		setClauseFragment: IE,
+		setClauseFragment: IEntity,
 		embedParameters: boolean = true,
 		parameters: any[] = null
 	): string {

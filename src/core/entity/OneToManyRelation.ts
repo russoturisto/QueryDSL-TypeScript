@@ -5,14 +5,14 @@ import {JoinType} from "./Joins";
  * Created by Papa on 10/25/2016.
  */
 
-export class QOneToManyRelation<IQR extends IQEntity, R, IQ extends IQEntity>
-implements IQRelation<IQR, R, IQ> {
+export class QOneToManyRelation<IQR extends IQEntity, R>
+implements IQRelation<IQR, R> {
 
 	public relationType: EntityRelationType = EntityRelationType.ONE_TO_MANY;
 
 	constructor(
-		public q: IQ,
-		public qConstructor: new () => IQ,
+		public q: IQEntity,
+		public qConstructor: new () => IQEntity,
 		public entityName: string,
 		public propertyName: string,
 		public relationEntityConstructor: new () => R,

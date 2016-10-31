@@ -1,4 +1,4 @@
-import { IEntity, IQEntity } from "../../core/entity/Entity";
+import { IQEntity } from "../../core/entity/Entity";
 import { EntityRelationRecord } from "../../core/entity/Relation";
 import { SQLDialect } from "./SQLStringQuery";
 import { PHJsonSQLDelete } from "./PHSQLDelete";
@@ -6,9 +6,9 @@ import { SQLStringNoJoinQuery } from "./SQLStringNoJoinQuery";
 /**
  * Created by Papa on 10/2/2016.
  */
-export declare class SQLStringDelete<IE extends IEntity> extends SQLStringNoJoinQuery<IE> {
-    phJsonDelete: PHJsonSQLDelete<IE>;
-    constructor(phJsonDelete: PHJsonSQLDelete<IE>, qEntity: IQEntity, qEntityMap: {
+export declare class SQLStringDelete extends SQLStringNoJoinQuery {
+    phJsonDelete: PHJsonSQLDelete;
+    constructor(phJsonDelete: PHJsonSQLDelete, qEntity: IQEntity, qEntityMap: {
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {

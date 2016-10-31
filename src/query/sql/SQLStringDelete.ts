@@ -7,10 +7,10 @@ import {SQLStringNoJoinQuery} from "./SQLStringNoJoinQuery";
  * Created by Papa on 10/2/2016.
  */
 
-export class SQLStringDelete<IE extends IEntity> extends SQLStringNoJoinQuery<IE> {
+export class SQLStringDelete extends SQLStringNoJoinQuery {
 
 	constructor(
-		public phJsonDelete: PHJsonSQLDelete<IE>,
+		public phJsonDelete: PHJsonSQLDelete,
 		qEntity: IQEntity,
 		qEntityMap: {[entityName: string]: IQEntity},
 		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},

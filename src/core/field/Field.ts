@@ -33,6 +33,7 @@ export abstract class QField<IQF extends IQField<IQF>>
 implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 
 	__appliedFunctions__: JSONSqlFunctionCall[] = [];
+	// Sub-query as defined in SELECT clause via the field() function
 	__subQuery__: PHRawFieldSQLQuery<IQF>;
 
 	constructor(

@@ -6,9 +6,9 @@ import { SQLStringNoJoinQuery } from "./SQLStringNoJoinQuery";
 /**
  * Created by Papa on 10/2/2016.
  */
-export declare class SQLStringUpdate<IE extends IEntity> extends SQLStringNoJoinQuery<IE> {
-    phJsonUpdate: PHJsonSQLUpdate<IE>;
-    constructor(phJsonUpdate: PHJsonSQLUpdate<IE>, qEntity: IQEntity, qEntityMap: {
+export declare class SQLStringUpdate extends SQLStringNoJoinQuery {
+    phJsonUpdate: PHJsonSQLUpdate<IEntity>;
+    constructor(phJsonUpdate: PHJsonSQLUpdate<IEntity>, qEntity: IQEntity, qEntityMap: {
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
@@ -20,7 +20,7 @@ export declare class SQLStringUpdate<IE extends IEntity> extends SQLStringNoJoin
         };
     }, dialect: SQLDialect);
     toSQL(embedParameters?: boolean, parameters?: any[]): string;
-    protected getSetFragment(updateAlias: string, entityName: string, setClauseFragment: IE, embedParameters?: boolean, parameters?: any[]): string;
+    protected getSetFragment(updateAlias: string, entityName: string, setClauseFragment: IEntity, embedParameters?: boolean, parameters?: any[]): string;
     protected getSetPropertyColumnName(qEntity: IQEntity, propertyName: string): string;
     private getSetValueFragment<T>(value, entityName, propertyName, typeCheckFunction, embedParameters?, parameters?, conversionFunction?);
 }

@@ -17,5 +17,5 @@ export declare abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEnti
         [alias: string]: JoinTreeNode;
     }): JoinTreeNode;
     getValue(rawValue: any, allowField: boolean, allowSubqueries: boolean): string;
-    getFieldValue(value: JSONClauseField, selectSqlFragment: string, allowNestedObjects: boolean, defaultCallback: () => string): string;
+    getFieldValue(clauseField: JSONClauseField, selectSqlFragment: string, allowNestedObjects: boolean, defaultCallback: () => string): string;
 }

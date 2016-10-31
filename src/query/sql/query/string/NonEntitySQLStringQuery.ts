@@ -110,37 +110,40 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 	}
 
 	getFieldValue(
-		value: JSONClauseField,
+		clauseField: JSONClauseField,
 		selectSqlFragment: string,
 		allowNestedObjects:boolean,
 	  defaultCallback:() => string
 	):string {
 		let columnName;
 		let columnSelect;
-		switch (value.type) {
-			case JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION:
+		switch (clauseField.type) {
 			case JSONClauseObjectType.DATE_FIELD_FUNCTION:
+				if(!(clauseField.value instanceof Date) && !(<JSONClauseField>clauseField.value).type) {
+					clauseField.value = new Date(clauseField.value);
+				}
+			case JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION:
+			case JSONClauseObjectType.NUMBER_FIELD_FUNCTION:
+			case JSONClauseObjectType.STRING_FIELD_FUNCTION:
+				break;
 			case JSONClauseObjectType.DISTINCT_FUNCTION:
 				throw `Distinct function cannot be nested inside the SELECT clause`;
 			case JSONClauseObjectType.EXISTS_FUNCTION:
 				throw `Exists function cannot be used in SELECT clause`;
 			case JSONClauseObjectType.FIELD:
-				let qEntity = this.qEntityMapByAlias[value.tableAlias];
-				columnName = this.getEntityPropertyColumnName(qEntity, value.propertyName, value.tableAlias);
-				columnSelect = this.getComplexColumnSelectFragment(value, columnName, selectSqlFragment);
+				let qEntity = this.qEntityMapByAlias[clauseField.tableAlias];
+				columnName = this.getEntityPropertyColumnName(qEntity, clauseField.propertyName, clauseField.tableAlias);
+				columnSelect = this.getComplexColumnSelectFragment(clauseField, columnName, selectSqlFragment);
 				break;
 			case JSONClauseObjectType.FIELD_QUERY:
 				// TODO: figure out if functions can be applied to sub-queries
-				let jsonFieldSqlQuery:PHJsonFieldQSLQuery = <PHJsonFieldQSLQuery><any>value;
+				let jsonFieldSqlQuery:PHJsonFieldQSLQuery = <PHJsonFieldQSLQuery><any>clauseField;
 				let fieldSqlQuery = new FieldSQLStringQuery(jsonFieldSqlQuery, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect);
 				fieldSqlQuery.addQEntityMapByAlias(this.qEntityMapByAlias);
 				selectSqlFragment += `(${fieldSqlQuery.toSQL()})`;
 			case JSONClauseObjectType.MANY_TO_ONE_RELATION:
-				columnName = this.getEntityManyToOneColumnName(qEntity, value.propertyName, value.tableAlias);
-				columnSelect = this.getComplexColumnSelectFragment(value, columnName, selectSqlFragment);
-				break;
-			case JSONClauseObjectType.NUMBER_FIELD_FUNCTION:
-			case JSONClauseObjectType.STRING_FIELD_FUNCTION:
+				columnName = this.getEntityManyToOneColumnName(qEntity, clauseField.propertyName, clauseField.tableAlias);
+				columnSelect = this.getComplexColumnSelectFragment(clauseField, columnName, selectSqlFragment);
 				break;
 			// must be a nested object
 			default:

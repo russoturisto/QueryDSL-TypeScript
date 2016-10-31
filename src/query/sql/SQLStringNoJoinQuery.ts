@@ -6,7 +6,7 @@ import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
  * Created by Papa on 10/2/2016.
  */
 
-export abstract class SQLStringNoJoinQuery<IE extends IEntity> extends SQLStringWhereBase<IE> {
+export abstract class SQLStringNoJoinQuery extends SQLStringWhereBase {
 
 	getJoinNodeMap(): {[alias: string]: JoinTreeNode} {
 		let rootRelation: JSONEntityRelation = {
