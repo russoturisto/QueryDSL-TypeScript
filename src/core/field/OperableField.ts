@@ -36,25 +36,18 @@ export abstract class QOperableField<T, JO extends JSONRawValueOperation<T, IQF>
 extends QField<IQF> implements IQOperableField<T, JO, IO, IQF>  {
 
 	constructor(
-		// All child field constructors must have the following signature (4 parameters):
-		childConstructor: new(
-			...args:any[]
-		) => IQOperableField<T, JO, IO, IQF>,
 		q: IQEntity,
 		qConstructor: new() => IQEntity,
 		entityName: string,
 		fieldName: string,
 		fieldType: FieldType,
-		public operation: IO
+		public operation: IO,
+		alias:string
 	) {
-		super(childConstructor, q, qConstructor, entityName, fieldName, fieldType);
+		super(q, qConstructor, entityName, fieldName, fieldType, alias);
 		if (q) {
 			q.addEntityField(fieldName, this);
 		}
-	}
-
-	getInstance():any {
-		return new this.childConstructor(this.q, this.qConstructor, this.entityName, this.fieldName, this.fieldType, this.operation);
 	}
 
 	equals(

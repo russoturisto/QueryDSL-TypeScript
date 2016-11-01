@@ -11,12 +11,14 @@ export interface IQStringField extends IQOperableField<string, JSONRawStringOper
     like(like: string | IQStringField | PHRawFieldSQLQuery<IQStringField>): JSONRawStringOperation;
 }
 export declare class QStringField extends QOperableField<string, JSONRawStringOperation, IStringOperation, IQStringField> implements IQStringField {
-    constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string);
+    constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string, alias?: string);
+    getInstance(): QStringField;
     like(like: string | IQStringField | PHRawFieldSQLQuery<IQStringField>): JSONRawStringOperation;
 }
 export declare class QStringFunction extends QStringField {
     private value;
-    constructor(value?: string | PHRawFieldSQLQuery<any>);
+    constructor(value?: string | PHRawFieldSQLQuery<any>, alias?: string);
+    getInstance(): QStringFunction;
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQStringField;
     toJSON(): JSONClauseField;
 }

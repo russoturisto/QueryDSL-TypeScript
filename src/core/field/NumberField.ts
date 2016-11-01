@@ -5,6 +5,7 @@ import {JSONSqlFunctionCall} from "./Functions";
 import {JSONClauseField, JSONClauseObjectType} from "./Appliable";
 import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
 import {IQOperableField, QOperableField} from "./OperableField";
+import {ColumnAliases} from "../entity/Aliases";
 /**
  * Created by Papa on 8/11/2016.
  */
@@ -30,29 +31,44 @@ export interface IQNumberField extends IQOperableField<number, JSONRawNumberOper
 
 }
 
+export const NUMBER_PROPERTY_ALIASES = new ColumnAliases('np_');
+export const NUMBER_ENTITY_PROPERTY_ALIASES = new ColumnAliases('ne_');
+
 export class QNumberField extends QOperableField<number, JSONRawNumberOperation, INumberOperation, IQNumberField> implements IQNumberField {
 
 	constructor(
 		q: IQEntity,
 		qConstructor: new() => IQEntity,
 		entityName: string,
-		fieldName: string
+		fieldName: string,
+	  alias = NUMBER_ENTITY_PROPERTY_ALIASES.getNextAlias()
 	) {
-		super(QNumberField, q, qConstructor, entityName, fieldName, FieldType.DATE, new NumberOperation());
+		super(q, qConstructor, entityName, fieldName, FieldType.DATE, new NumberOperation(), alias);
+	}
+
+	getInstance():QNumberField {
+		return new QNumberField(this.q, this.qConstructor, this.entityName, this.fieldName, NUMBER_PROPERTY_ALIASES.getNextAlias())
 	}
 
 }
 
+const NUMBER_FUNCTION_ALIASES = new ColumnAliases('nf_');
+
 export class QNumberFunction extends QNumberField {
 
 	constructor(
-		private value?: number| PHRawFieldSQLQuery<IQNumberField>
+		private value?: number| PHRawFieldSQLQuery<IQNumberField>,
+	  alias = NUMBER_FUNCTION_ALIASES.getNextAlias()
 	) {
-		super(null, null, null, null);
+		super(null, null, null, null, alias);
+	}
+
+	getInstance():QNumberFunction {
+		return new QNumberFunction(this.value);
 	}
 
 	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQNumberField {
-		let functionApplicable = new QNumberFunction(this.value);
+		let functionApplicable = this.getInstance();
 		functionApplicable.__appliedFunctions__ = functionApplicable.__appliedFunctions__.concat(this.__appliedFunctions__);
 		functionApplicable.__appliedFunctions__.push(sqlFunctionCall);
 

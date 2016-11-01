@@ -12,6 +12,7 @@ import {FieldMap} from "./FieldMap";
 import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
 import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
 import {JSONLogicalOperation} from "../../core/operation/LogicalOperation";
+import {IValidator, getValidator} from "../../validation/Validator";
 /**
  * Created by Papa on 10/2/2016.
  */
@@ -19,8 +20,9 @@ import {JSONLogicalOperation} from "../../core/operation/LogicalOperation";
 export abstract class SQLStringWhereBase implements SqlValueProvider {
 
 	protected fieldMap: FieldMap = new FieldMap();
-	protected sqlAdaptor: ISQLAdaptor;
 	protected qEntityMapByAlias: {[entityName: string]: IQEntity} = {};
+	protected sqlAdaptor: ISQLAdaptor;
+	protected validator: IValidator;
 
 	constructor(
 		protected qEntityMapByName: {[entityName: string]: IQEntity},
@@ -29,9 +31,10 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		protected dialect: SQLDialect
 	) {
 		this.sqlAdaptor = getSQLAdaptor(this, dialect);
+		this.validator = getValidator(this.qEntityMapByName);
 	}
 
-	abstract getValue(rawValue:any, allowField:boolean, allowSubqueries:boolean):string;
+	abstract getFunctionCallValue( rawValue: any ): string;
 
 	protected getWHEREFragment(
 		operation: JSONBaseOperation,

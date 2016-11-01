@@ -20,7 +20,7 @@ export interface ISQLAdaptor {
     getFunctionAdaptor(): ISQLFunctionAdaptor;
 }
 export interface SqlValueProvider {
-    getValue(rawValue: any, allowField: boolean, allowSubqueries: boolean): string;
+    getFunctionCallValue(rawValue: any): string;
 }
 export interface ISQLFunctionAdaptor {
     getFunctionCalls(clause: JSONClauseObject, innerValue: string, qEntityMapByAlias: {

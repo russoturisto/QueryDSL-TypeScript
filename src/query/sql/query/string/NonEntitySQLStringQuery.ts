@@ -23,11 +23,11 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 	buildJoinTree(): void {
 		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
 		this.joinTree = this.buildFromJoinTree(this.phJsonQuery.from, joinNodeMap);
-		this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, false, []);
+		this.getSELECTFragment(null, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, false, []);
 	}
 
-	addQEntityMapByAlias( sourceMap) {
-		for(let alias in sourceMap) {
+	addQEntityMapByAlias( sourceMap ) {
+		for (let alias in sourceMap) {
 			this.qEntityMapByAlias[alias] = sourceMap[alias];
 		}
 	}
@@ -54,6 +54,7 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 		}
 
 		let alias = QRelation.getAlias(firstRelation);
+		this.validator.validateReadFromEntity(firstRelation);
 		let firstEntity = QRelation.createRelatedQEntity(firstRelation, this.qEntityMapByName);
 		this.qEntityMapByAlias[alias] = firstEntity;
 		jsonTree = new JoinTreeNode(firstRelation, [], null);
@@ -87,6 +88,7 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 			leftNode.addChildNode(rightNode);
 
 			alias = QRelation.getAlias(joinRelation);
+			this.validator.validateReadFromEntity(joinRelation);
 			let rightEntity = QRelation.createRelatedQEntity(joinRelation, this.qEntityMapByName);
 			this.qEntityMapByAlias[alias] = rightEntity;
 			if (!rightEntity) {
@@ -101,25 +103,30 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 		return jsonTree;
 	}
 
-	getValue(
-		rawValue: any,
-		allowField: boolean,
-		allowSubqueries: boolean
+	getFunctionCallValue(
+		rawValue: any
 	): string {
-
+		return this.getFieldValue(<JSONClauseField>rawValue, '', false, false, null);
 	}
 
 	getFieldValue(
 		clauseField: JSONClauseField,
 		selectSqlFragment: string,
-		allowNestedObjects:boolean,
-	  defaultCallback:() => string
-	):string {
+		forSelectClause: boolean,
+		allowNestedObjects: boolean,
+		defaultCallback: () => string
+	): string {
 		let columnName;
 		let columnSelect;
+		if (!clauseField) {
+			throw `Missing Clause Field definition`;
+		}
+		if (!clauseField.type) {
+			throw `Type is not defined in JSONClauseField`;
+		}
 		switch (clauseField.type) {
 			case JSONClauseObjectType.DATE_FIELD_FUNCTION:
-				if(!(clauseField.value instanceof Date) && !(<JSONClauseField>clauseField.value).type) {
+				if (!(clauseField.value instanceof Date) && !(<PHJsonFieldQSLQuery>clauseField.value).type) {
 					clauseField.value = new Date(clauseField.value);
 				}
 			case JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION:
@@ -132,23 +139,27 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 				throw `Exists function cannot be used in SELECT clause`;
 			case JSONClauseObjectType.FIELD:
 				let qEntity = this.qEntityMapByAlias[clauseField.tableAlias];
+				this.validator.validateReadQEntityProperty(clauseField.propertyName, qEntity);
 				columnName = this.getEntityPropertyColumnName(qEntity, clauseField.propertyName, clauseField.tableAlias);
-				columnSelect = this.getComplexColumnSelectFragment(clauseField, columnName, selectSqlFragment);
+				columnSelect = this.getComplexColumnFragment(clauseField, columnName, selectSqlFragment, forSelectClause);
+				selectSqlFragment += columnSelect;
 				break;
 			case JSONClauseObjectType.FIELD_QUERY:
 				// TODO: figure out if functions can be applied to sub-queries
-				let jsonFieldSqlQuery:PHJsonFieldQSLQuery = <PHJsonFieldQSLQuery><any>clauseField;
+				let jsonFieldSqlQuery: PHJsonFieldQSLQuery = <PHJsonFieldQSLQuery><any>clauseField;
 				let fieldSqlQuery = new FieldSQLStringQuery(jsonFieldSqlQuery, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect);
 				fieldSqlQuery.addQEntityMapByAlias(this.qEntityMapByAlias);
 				selectSqlFragment += `(${fieldSqlQuery.toSQL()})`;
 			case JSONClauseObjectType.MANY_TO_ONE_RELATION:
+				this.validator.validateReadQEntityManyToOneRelation(clauseField.propertyName, qEntity);
 				columnName = this.getEntityManyToOneColumnName(qEntity, clauseField.propertyName, clauseField.tableAlias);
-				columnSelect = this.getComplexColumnSelectFragment(clauseField, columnName, selectSqlFragment);
+				columnSelect = this.getComplexColumnFragment(clauseField, columnName, selectSqlFragment, forSelectClause);
+				selectSqlFragment += columnSelect;
 				break;
 			// must be a nested object
 			default:
-				if(!allowNestedObjects) {
-					`Nested objects not allowed in the SELECT clause of Flat and Field queries.`;
+				if (!allowNestedObjects) {
+					`Nested objects not allowed in the SELECT clause of Flat and Field queries, or function parameters.`;
 				}
 				selectSqlFragment += defaultCallback();
 		}

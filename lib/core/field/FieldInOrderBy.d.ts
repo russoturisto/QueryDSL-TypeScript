@@ -1,7 +1,12 @@
+/**
+ * Created by Papa on 10/16/2016.
+ */
 import { Orderable, IQField } from "./Field";
-import { JSONClauseField } from "./Appliable";
-export interface JSONFieldInOrderBy {
-    field: JSONClauseField;
+export interface JSONFieldInGroupBy {
+    fieldAlias: string;
+}
+export interface JSONFieldInOrderBy extends JSONFieldInGroupBy {
+    fieldAlias: string;
     sortOrder: SortOrder;
 }
 export declare enum SortOrder {

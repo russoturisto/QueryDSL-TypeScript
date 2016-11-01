@@ -2,12 +2,14 @@
  * Created by Papa on 10/16/2016.
  */
 
-import {IQEntity} from "../entity/Entity";
 import {Orderable, IQField, QField} from "./Field";
-import {JSONClauseField} from "./Appliable";
 
-export interface JSONFieldInOrderBy {
-	field: JSONClauseField;
+export interface JSONFieldInGroupBy {
+	fieldAlias: string;
+}
+
+export interface JSONFieldInOrderBy extends JSONFieldInGroupBy {
+	fieldAlias: string;
 	sortOrder: SortOrder;
 }
 
@@ -30,7 +32,7 @@ implements IFieldInOrderBy<IQF> {
 
 	toJSON(): JSONFieldInOrderBy {
 		return {
-			field: (<QField<IQF>>this.field).toJSON(),
+			fieldAlias: (<QField<IQF>>this.field).alias,
 			sortOrder: this.sortOrder
 		};
 	}

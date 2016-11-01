@@ -1,6 +1,6 @@
 import {PHRawMappedSQLQuery, IMappedEntity} from "../../query/sql/query/ph/PHMappedSQLQuery";
 import {JSONRelation, JSONJoinRelation, QRelation} from "./Relation";
-import {getNextRootEntityName} from "./Aliases";
+import {getNextRootEntityName, ColumnAliases} from "./Aliases";
 import {IFrom, QEntity} from "./Entity";
 import {JSONBaseOperation} from "../operation/Operation";
 import {IQField, QField} from "../field/Field";

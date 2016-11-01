@@ -4,6 +4,7 @@ import { JSONSqlFunctionCall } from "./Functions";
 import { JSONClauseField } from "./Appliable";
 import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 import { IQOperableField, QOperableField } from "./OperableField";
+import { ColumnAliases } from "../entity/Aliases";
 /**
  * Created by Papa on 8/11/2016.
  */
@@ -13,12 +14,16 @@ export interface IQNumberField extends IQOperableField<number, JSONRawNumberOper
     lessThan(value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>): JSONRawNumberOperation;
     lessThanOrEquals(value: number | IQNumberField | PHRawFieldSQLQuery<IQNumberField>): JSONRawNumberOperation;
 }
+export declare const NUMBER_PROPERTY_ALIASES: ColumnAliases;
+export declare const NUMBER_ENTITY_PROPERTY_ALIASES: ColumnAliases;
 export declare class QNumberField extends QOperableField<number, JSONRawNumberOperation, INumberOperation, IQNumberField> implements IQNumberField {
-    constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string);
+    constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string, alias?: string);
+    getInstance(): QNumberField;
 }
 export declare class QNumberFunction extends QNumberField {
     private value;
-    constructor(value?: number | PHRawFieldSQLQuery<IQNumberField>);
+    constructor(value?: number | PHRawFieldSQLQuery<IQNumberField>, alias?: string);
+    getInstance(): QNumberFunction;
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQNumberField;
     toJSON(): JSONClauseField;
 }

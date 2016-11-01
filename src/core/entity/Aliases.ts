@@ -37,7 +37,7 @@ export function getNextRootEntityName():string {
 
 	return nameString;
 }
-
+/*
 class SpecificColumnAliases {
 
 	private aliasEntries:string[] = [];
@@ -65,12 +65,17 @@ class SpecificColumnAliases {
 		return this.aliasEntries[this.readIndex++];
 	}
 }
-
+*/
 export class ColumnAliases {
-	numFields:number = 0;
-	private lastAlias = [-1, -1, -1];
-	private columnAliasMap:{[aliasPropertyCombo:string]:SpecificColumnAliases} = {};
+	// numFields:number = 0;
+	private lastAlias = [-1, -1, -1, -1];
+	// private columnAliasMap:{[aliasPropertyCombo:string]:SpecificColumnAliases} = {};
 
+	constructor(
+		private aliasPrefix:string = ''
+	) {
+	}
+/*
 	addAlias(
 		tableAlias:string,
 		propertyName:string
@@ -113,10 +118,11 @@ export class ColumnAliases {
 		let aliasKey = `${tableAlias}.${propertyName}`;
 		return aliasKey;
 	}
+	*/
 
-	private getNextAlias():string {
+	getNextAlias():string {
 		let currentAlias = this.lastAlias;
-		for (var i = 2; i >= 0; i--) {
+		for (var i = 3; i >= 0; i--) {
 			let currentIndex = currentAlias[i];
 			currentIndex = (currentIndex + 1) % 26;
 			currentAlias[i] = currentIndex;
@@ -124,8 +130,8 @@ export class ColumnAliases {
 				break;
 			}
 		}
-		let aliasString = '';
-		for (var i = 0; i < 3; i++) {
+		let aliasString = this.aliasPrefix;
+		for (var i = 0; i < 4; i++) {
 			aliasString += ALIASES[currentAlias[i]];
 		}
 

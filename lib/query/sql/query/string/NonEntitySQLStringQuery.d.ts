@@ -16,6 +16,6 @@ export declare abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEnti
     buildFromJoinTree(joinRelations: (JSONRelation | PHJsonMappedQSLQuery)[], joinNodeMap: {
         [alias: string]: JoinTreeNode;
     }): JoinTreeNode;
-    getValue(rawValue: any, allowField: boolean, allowSubqueries: boolean): string;
-    getFieldValue(clauseField: JSONClauseField, selectSqlFragment: string, allowNestedObjects: boolean, defaultCallback: () => string): string;
+    getFunctionCallValue(rawValue: any): string;
+    getFieldValue(clauseField: JSONClauseField, selectSqlFragment: string, forSelectClause: boolean, allowNestedObjects: boolean, defaultCallback: () => string): string;
 }

@@ -72,6 +72,7 @@ export class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJsonMappedQS
 			let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
 			let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
 			for (let propertyName in entityPropertyTypeMap) {
+				this.validator.validateReadProperty(propertyName, entityName);
 				selectClauseFragment[propertyName] = entityPropertyTypeMap[propertyName];
 			}
 			throw `'*' operator isn't yet implemented in mapped queries`;
@@ -93,7 +94,7 @@ export class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJsonMappedQS
 			let fieldKey = `${tableAlias}.${propertyName}`;
 			if (entityPropertyTypeMap[propertyName]) {
 				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
-				let columnSelect = this.getSimpleColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
+				let columnSelect = this.getSimpleColumnFragment(propertyName, tableAlias, columnName, selectSqlFragment, true);
 				selectSqlFragment += columnSelect;
 			} else if (entityRelationMap[propertyName]) {
 				let subSelectClauseFragment = selectClauseFragment[propertyName];
@@ -101,7 +102,7 @@ export class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJsonMappedQS
 					// For null entity reference, retrieve just the id
 					if (entityMetadata.manyToOneMap[propertyName]) {
 						let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
-						let columnSelect = this.getSimpleColumnSelectFragment(propertyName, tableAlias, columnName, selectSqlFragment);
+						let columnSelect = this.getSimpleColumnFragment(propertyName, tableAlias, columnName, selectSqlFragment, true);
 						selectSqlFragment += columnSelect;
 						continue;
 					} else {

@@ -130,17 +130,19 @@ ORDER BY
 		parameters?: any[]
 	): string;
 
-	protected getSimpleColumnSelectFragment(
+	protected getSimpleColumnFragment(
 		propertyName: string,
 		tableAlias: string,
 		columnName: string,
-		existingSelectFragment: string
+		existingFragment: string,
+		forSelectClause: boolean
 	): string {
+		if (!forSelectClause) {
+			return `${tableAlias}.${columnName}`;
+		}
 		let columnAlias = this.columnAliases.addAlias(tableAlias, propertyName);
 		let columnSelect = `${tableAlias}.${columnName} as ${columnAlias}\n`;
-
-
-		if (existingSelectFragment) {
+		if (existingFragment) {
 			columnSelect = `\t, ${columnSelect}`;
 		} else {
 			columnSelect = `\t${columnSelect}`;
@@ -149,16 +151,19 @@ ORDER BY
 		return columnSelect;
 	}
 
-	protected getComplexColumnSelectFragment(
+	protected getComplexColumnFragment(
 		value: JSONClauseField,
 		columnName: string,
-		existingSelectFragment: string
+		existingFragment: string,
+		forSelectClause: boolean
 	): string {
-		let columnAlias = this.columnAliases.addAlias(value.tableAlias, value.propertyName);
 		let selectSqlFragment = `${value.tableAlias}.${columnName}`;
 		selectSqlFragment = this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(value, selectSqlFragment, this.qEntityMapByAlias, true);
-		let columnSelect = `${selectSqlFragment} as ${columnAlias}\n`;
-		if (existingSelectFragment) {
+		if (!forSelectClause) {
+			return selectSqlFragment;
+		}
+		let columnSelect = `${selectSqlFragment} as ${value.fieldAlias}\n`;
+		if (existingFragment) {
 			columnSelect = `\t, ${columnSelect}`;
 		} else {
 			columnSelect = `\t${columnSelect}`;

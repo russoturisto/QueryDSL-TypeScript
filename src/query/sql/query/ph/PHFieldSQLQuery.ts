@@ -12,12 +12,14 @@ import {IQDistinctFunction} from "../../../../core/field/Functions";
 
 export interface PHJsonFieldQSLQuery extends PHJsonNonEntitySqlQuery {
 	select: JSONClauseField;
+	alias:string;
 	type: JSONClauseObjectType;
 }
 
 export interface PHRawFieldSQLQuery<IQF extends IQField<IQF>>
 extends PHRawNonEntitySQLQuery {
 	select: IQF | IQDistinctFunction<IQF>;
+	alias:string;
 }
 
 export class PHFieldSQLQuery<IQF extends IQField<IQF>> extends PHDistinguishableSQLQuery implements PHSQLQuery {
@@ -43,6 +45,7 @@ export class PHFieldSQLQuery<IQF extends IQField<IQF>> extends PHDistinguishable
 		let select = this.selectClauseToJSON(this.phRawQuery.select);
 
 		let jsonFieldQuery: PHJsonFieldQSLQuery = {
+			alias: this.phRawQuery.alias,
 			select: select,
 			type: JSONClauseObjectType.FIELD_QUERY
 		};

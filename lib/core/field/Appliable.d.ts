@@ -21,6 +21,7 @@ export interface JSONClauseObject {
     type: JSONClauseObjectType;
 }
 export interface JSONClauseField extends JSONClauseObject {
+    fieldAlias: string;
     propertyName?: string;
     subQuery?: PHJsonFieldQSLQuery;
     tableAlias?: string;

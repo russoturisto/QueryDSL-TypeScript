@@ -5,6 +5,7 @@ import { EntityRelationRecord } from "../../core/entity/Relation";
 import { JSONBaseOperation } from "../../core/operation/Operation";
 import { FieldMap } from "./FieldMap";
 import { JoinTreeNode } from "../../core/entity/JoinTreeNode";
+import { IValidator } from "../../validation/Validator";
 /**
  * Created by Papa on 10/2/2016.
  */
@@ -24,10 +25,11 @@ export declare abstract class SQLStringWhereBase implements SqlValueProvider {
     };
     protected dialect: SQLDialect;
     protected fieldMap: FieldMap;
-    protected sqlAdaptor: ISQLAdaptor;
     protected qEntityMapByAlias: {
         [entityName: string]: IQEntity;
     };
+    protected sqlAdaptor: ISQLAdaptor;
+    protected validator: IValidator;
     constructor(qEntityMapByName: {
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
@@ -39,7 +41,7 @@ export declare abstract class SQLStringWhereBase implements SqlValueProvider {
             [propertyName: string]: boolean;
         };
     }, dialect: SQLDialect);
-    abstract getValue(rawValue: any, allowField: boolean, allowSubqueries: boolean): string;
+    abstract getFunctionCallValue(rawValue: any): string;
     protected getWHEREFragment(operation: JSONBaseOperation, nestingPrefix: string, joinNodeMap: {
         [alias: string]: JoinTreeNode;
     }, embedParameters?: boolean, parameters?: any[]): string;

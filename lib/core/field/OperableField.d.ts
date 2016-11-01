@@ -15,8 +15,7 @@ export interface IQOperableField<T, JO extends JSONBaseOperation, IO extends IOp
 }
 export declare abstract class QOperableField<T, JO extends JSONRawValueOperation<T, IQF>, IO extends IValueOperation<T, JO, IQF>, IQF extends IQOperableField<T, JO, IO, IQF>> extends QField<IQF> implements IQOperableField<T, JO, IO, IQF> {
     operation: IO;
-    constructor(childConstructor: new (...args: any[]) => IQOperableField<T, JO, IO, IQF>, q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string, fieldType: FieldType, operation: IO);
-    getInstance(): any;
+    constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string, fieldType: FieldType, operation: IO, alias: string);
     equals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
     greaterThan(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
     greaterThanOrEquals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;

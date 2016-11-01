@@ -4,12 +4,12 @@ import { JSONBaseOperation } from "../../../../core/operation/Operation";
 import { IFrom } from "../../../../core/entity/Entity";
 import { IQOperableField } from "../../../../core/field/OperableField";
 import { PHAbstractSQLQuery } from "./PHAbstractSQLQuery";
-import { JSONClauseObject } from "../../../../core/field/Appliable";
+import { JSONFieldInGroupBy } from "../../../../core/field/FieldInOrderBy";
 /**
  * Created by Papa on 10/24/2016.
  */
 export interface PHJsonGroupedSQLQuery {
-    groupBy?: JSONClauseObject[];
+    groupBy?: JSONFieldInGroupBy[];
     having?: JSONBaseOperation;
 }
 export interface PHJsonNonEntitySqlQuery extends PHJsonCommonSQLQuery, PHJsonGroupedSQLQuery, PHJsonLimitedSQLQuery {

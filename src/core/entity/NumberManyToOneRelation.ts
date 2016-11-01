@@ -4,6 +4,7 @@ import {JSONSqlFunctionCall} from "../field/Functions";
 import {IQRelation, EntityRelationType, QRelation} from "./Relation";
 import {JSONClauseField, JSONClauseObjectType} from "../field/Appliable";
 import {JoinType} from "./Joins";
+import {ColumnAliases} from "./Aliases";
 /**
  * Created by Papa on 10/23/2016.
  */
@@ -11,6 +12,9 @@ import {JoinType} from "./Joins";
 export interface IQNumberManyToOneRelation <IQR extends IQEntity, R>
 extends IQRelation<IQR, R>, IQNumberField {
 }
+
+const NUMBER_MANY_TO_ONE_ALIASES = new ColumnAliases('nmp_');
+const NUMBER_ENTITY_MANY_TO_ONE_ALIASES = new ColumnAliases('nme_');
 
 export class QNumberManyToOneRelation<IQR extends IQEntity, R extends IQEntity>
 extends QNumberField implements IQRelation<IQR, R> {
@@ -23,9 +27,14 @@ extends QNumberField implements IQRelation<IQR, R> {
 		public entityName: string,
 		public fieldName: string,
 		public relationEntityConstructor: new () => R,
-		public relationQEntityConstructor: new ( ...args: any[] ) => IQR
+		public relationQEntityConstructor: new ( ...args: any[] ) => IQR,
+	  alias = NUMBER_ENTITY_MANY_TO_ONE_ALIASES.getNextAlias()
 	) {
-		super(q, qConstructor, entityName, fieldName);
+		super(q, qConstructor, entityName, fieldName, alias);
+	}
+
+	getInstance():QNumberManyToOneRelation<IQR, R> {
+		return new QNumberManyToOneRelation(this.q, this.qConstructor, this.entityName, this.fieldName, this.relationEntityConstructor, this.relationQEntityConstructor, NUMBER_MANY_TO_ONE_ALIASES.getNextAlias())
 	}
 
 	innerJoin(): IQR {

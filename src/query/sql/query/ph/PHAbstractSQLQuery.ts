@@ -1,5 +1,8 @@
 import {PHMappedSQLQuery, PHRawMappedSQLQuery, PHJsonMappedQSLQuery} from "./PHMappedSQLQuery";
-import {FieldInOrderBy, JSONFieldInOrderBy, IFieldInOrderBy} from "../../../../core/field/FieldInOrderBy";
+import {
+	FieldInOrderBy, JSONFieldInOrderBy, IFieldInOrderBy,
+	JSONFieldInGroupBy
+} from "../../../../core/field/FieldInOrderBy";
 import {SUB_SELECT_QUERY} from "../../../../core/entity/Joins";
 import {QField} from "../../../../core/field/Field";
 import {IQOperableField, QOperableField} from "../../../../core/field/OperableField";
@@ -131,12 +134,14 @@ export abstract class PHAbstractSQLQuery {
 		}
 	}
 
-	protected groupByClauseToJSON( groupBy: IQOperableField<any, any, any, any>[] ): JSONClauseField[] {
+	protected groupByClauseToJSON( groupBy: IQOperableField<any, any, any, any>[] ): JSONFieldInGroupBy[] {
 		if (!groupBy || !groupBy.length) {
 			return null;
 		}
 		return groupBy.map(( field ) => {
-			return (<QField<any>><any>field).toJSON();
+			return {
+				fieldAlias: (<QField<any>><any>field).alias
+			};
 		});
 	}
 

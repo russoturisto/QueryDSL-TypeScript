@@ -37,16 +37,16 @@ export interface ISQLAdaptor {
 }
 
 export interface SqlValueProvider {
-	getValue(rawValue:any, allowField:boolean, allowSubqueries:boolean):string;
+	getFunctionCallValue( rawValue: any ): string;
 }
 
 export interface ISQLFunctionAdaptor {
 
 	getFunctionCalls(
-		clause:JSONClauseObject,
+		clause: JSONClauseObject,
 		innerValue: string,
 		qEntityMapByAlias: {[alias: string]: IQEntity},
-		forField:boolean
+		forField: boolean
 	): string ;
 
 	getFunctionCall(
@@ -59,7 +59,7 @@ export interface ISQLFunctionAdaptor {
 }
 
 export function getSQLAdaptor(
-	sqlValueProvider:SqlValueProvider,
+	sqlValueProvider: SqlValueProvider,
 	sqlDialect: SQLDialect
 ): ISQLAdaptor {
 
@@ -82,10 +82,10 @@ export abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
 	}
 
 	getFunctionCalls(
-		clause:JSONClauseObject,
+		clause: JSONClauseObject,
 		innerValue: string,
 		qEntityMapByAlias: {[alias: string]: IQEntity},
-		forField:boolean
+		forField: boolean
 	): string {
 		clause.__appliedFunctions__.forEach(( appliedFunction ) => {
 			innerValue = this.getFunctionCall(appliedFunction, innerValue, qEntityMapByAlias, forField);

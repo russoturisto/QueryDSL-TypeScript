@@ -69,8 +69,8 @@ export declare abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> 
     }, entityName?: string): any;
     toSQL(embedParameters?: boolean, parameters?: any[]): string;
     protected abstract getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults, embedParameters?: boolean, parameters?: any[]): string;
-    protected getSimpleColumnSelectFragment(propertyName: string, tableAlias: string, columnName: string, existingSelectFragment: string): string;
-    protected getComplexColumnSelectFragment(value: JSONClauseField, columnName: string, existingSelectFragment: string): string;
+    protected getSimpleColumnFragment(propertyName: string, tableAlias: string, columnName: string, existingFragment: string, forSelectClause: boolean): string;
+    protected getComplexColumnFragment(value: JSONClauseField, columnName: string, existingFragment: string, forSelectClause: boolean): string;
     private getFROMFragment(parentTree, currentTree, embedParameters?, parameters?);
     protected getEntityManyToOneColumnName(qEntity: IQEntity, propertyName: string, tableAlias: string): string;
     /**
