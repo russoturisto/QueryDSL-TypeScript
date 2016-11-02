@@ -31,51 +31,36 @@ export interface IQNumberField extends IQOperableField<number, JSONRawNumberOper
 
 }
 
-export const NUMBER_PROPERTY_ALIASES = new ColumnAliases('np_');
-export const NUMBER_ENTITY_PROPERTY_ALIASES = new ColumnAliases('ne_');
-
 export class QNumberField extends QOperableField<number, JSONRawNumberOperation, INumberOperation, IQNumberField> implements IQNumberField {
 
 	constructor(
 		q: IQEntity,
 		qConstructor: new() => IQEntity,
 		entityName: string,
-		fieldName: string,
-	  alias = NUMBER_ENTITY_PROPERTY_ALIASES.getNextAlias()
+		fieldName: string
 	) {
-		super(q, qConstructor, entityName, fieldName, FieldType.DATE, new NumberOperation(), alias);
+		super(q, qConstructor, entityName, fieldName, FieldType.DATE, new NumberOperation());
 	}
 
-	getInstance():QNumberField {
-		return new QNumberField(this.q, this.qConstructor, this.entityName, this.fieldName, NUMBER_PROPERTY_ALIASES.getNextAlias())
+	getInstance(): QNumberField {
+		return this.copyFunctions(new QNumberField(this.q, this.qConstructor, this.entityName, this.fieldName));
 	}
 
 }
 
-const NUMBER_FUNCTION_ALIASES = new ColumnAliases('nf_');
-
 export class QNumberFunction extends QNumberField {
 
 	constructor(
-		private value?: number| PHRawFieldSQLQuery<IQNumberField>,
-	  alias = NUMBER_FUNCTION_ALIASES.getNextAlias()
+		private value?: number| PHRawFieldSQLQuery<IQNumberField>
 	) {
-		super(null, null, null, null, alias);
+		super(null, null, null, null);
 	}
 
-	getInstance():QNumberFunction {
-		return new QNumberFunction(this.value);
+	getInstance(): QNumberFunction {
+		return this.copyFunctions(new QNumberFunction(this.value));
 	}
 
-	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQNumberField {
-		let functionApplicable = this.getInstance();
-		functionApplicable.__appliedFunctions__ = functionApplicable.__appliedFunctions__.concat(this.__appliedFunctions__);
-		functionApplicable.__appliedFunctions__.push(sqlFunctionCall);
-
-		return functionApplicable;
-	}
-
-	toJSON(): JSONClauseField {
-		return this.operableFunctionToJson(JSONClauseObjectType.NUMBER_FIELD_FUNCTION, this.value);
+	toJSON( columnAliases?: ColumnAliases ): JSONClauseField {
+		return this.operableFunctionToJson(JSONClauseObjectType.NUMBER_FIELD_FUNCTION, this.value, columnAliases);
 	}
 }

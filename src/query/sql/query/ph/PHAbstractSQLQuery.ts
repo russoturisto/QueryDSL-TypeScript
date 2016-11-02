@@ -17,6 +17,7 @@ import {IFrom, QEntity} from "../../../../core/entity/Entity";
 import {JSONRelation, JSONJoinRelation, JSONRelationType} from "../../../../core/entity/Relation";
 import {PHRawNonEntitySQLQuery, PHJsonNonEntitySqlQuery} from "./PHNonEntitySQLQuery";
 import {QExistsFunction} from "../../../../core/field/Functions";
+import {ColumnAliases} from "../../../../core/entity/Aliases";
 /**
  * Created by Papa on 10/27/2016.
  */
@@ -24,6 +25,8 @@ import {QExistsFunction} from "../../../../core/field/Functions";
 export abstract class PHAbstractSQLQuery {
 
 	protected isEntityQuery: boolean = false;
+
+	protected columnAliases: ColumnAliases = new ColumnAliases();
 
 	protected getNonEntitySqlQuery(
 		rawQuery: PHRawNonEntitySQLQuery,
@@ -139,6 +142,9 @@ export abstract class PHAbstractSQLQuery {
 			return null;
 		}
 		return groupBy.map(( field ) => {
+			if(!this.columnAliases.hasField(field)) {
+				throw `Field used in group by clause is not present in select clause`;
+			}
 			return {
 				fieldAlias: (<QField<any>><any>field).alias
 			};
@@ -150,7 +156,7 @@ export abstract class PHAbstractSQLQuery {
 			return null;
 		}
 		return orderBy.map(( field ) => {
-			return (<FieldInOrderBy<any>><any>field).toJSON();
+			return (<FieldInOrderBy<any>><any>field).toJSON(this.columnAliases);
 		});
 	}
 

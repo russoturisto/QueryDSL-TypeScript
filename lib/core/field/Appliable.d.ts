@@ -25,7 +25,7 @@ export interface JSONClauseField extends JSONClauseObject {
     propertyName?: string;
     subQuery?: PHJsonFieldQSLQuery;
     tableAlias?: string;
-    value?: boolean | Date | number | string | PHJsonFieldQSLQuery;
+    value?: boolean | Date | number | string | JSONClauseField | PHJsonFieldQSLQuery;
 }
 export interface Appliable<JCO extends JSONClauseObject, IQF extends IQField<IQF>> {
     __appliedFunctions__: JSONSqlFunctionCall[];

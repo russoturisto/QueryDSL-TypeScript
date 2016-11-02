@@ -106,32 +106,40 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 	getFunctionCallValue(
 		rawValue: any
 	): string {
-		return this.getFieldValue(<JSONClauseField>rawValue, '', false, false, null);
+		return this.getFieldValue(<JSONClauseField>rawValue, false, null);
 	}
 
 	getFieldValue(
 		clauseField: JSONClauseField,
-		selectSqlFragment: string,
-		forSelectClause: boolean,
 		allowNestedObjects: boolean,
 		defaultCallback: () => string
 	): string {
 		let columnName;
-		let columnSelect;
 		if (!clauseField) {
 			throw `Missing Clause Field definition`;
 		}
 		if (!clauseField.type) {
 			throw `Type is not defined in JSONClauseField`;
 		}
+		let aValue;
 		switch (clauseField.type) {
 			case JSONClauseObjectType.DATE_FIELD_FUNCTION:
+				if (!clauseField.value) {
+					throw `Value not provided for a Date function`;
+				}
 				if (!(clauseField.value instanceof Date) && !(<PHJsonFieldQSLQuery>clauseField.value).type) {
 					clauseField.value = new Date(clauseField.value);
 				}
 			case JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION:
 			case JSONClauseObjectType.NUMBER_FIELD_FUNCTION:
 			case JSONClauseObjectType.STRING_FIELD_FUNCTION:
+				aValue = clauseField.value;
+				if(this.isPrimitive(aValue)) {
+					aValue = this.parsePrimitive(aValue);
+				} else {
+					aValue = this.getFieldValue(aValue, allowNestedObjects, defaultCallback);
+				}
+				this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(clauseField, aValue, this.qEntityMapByAlias, this.embedParameters, this.parameters);
 				break;
 			case JSONClauseObjectType.DISTINCT_FUNCTION:
 				throw `Distinct function cannot be nested inside the SELECT clause`;
@@ -141,28 +149,23 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 				let qEntity = this.qEntityMapByAlias[clauseField.tableAlias];
 				this.validator.validateReadQEntityProperty(clauseField.propertyName, qEntity);
 				columnName = this.getEntityPropertyColumnName(qEntity, clauseField.propertyName, clauseField.tableAlias);
-				columnSelect = this.getComplexColumnFragment(clauseField, columnName, selectSqlFragment, forSelectClause);
-				selectSqlFragment += columnSelect;
-				break;
+				return this.getComplexColumnFragment(clauseField, columnName);
 			case JSONClauseObjectType.FIELD_QUERY:
 				// TODO: figure out if functions can be applied to sub-queries
 				let jsonFieldSqlQuery: PHJsonFieldQSLQuery = <PHJsonFieldQSLQuery><any>clauseField;
 				let fieldSqlQuery = new FieldSQLStringQuery(jsonFieldSqlQuery, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect);
 				fieldSqlQuery.addQEntityMapByAlias(this.qEntityMapByAlias);
-				selectSqlFragment += `(${fieldSqlQuery.toSQL()})`;
+				return `(${fieldSqlQuery.toSQL()})`;
 			case JSONClauseObjectType.MANY_TO_ONE_RELATION:
 				this.validator.validateReadQEntityManyToOneRelation(clauseField.propertyName, qEntity);
 				columnName = this.getEntityManyToOneColumnName(qEntity, clauseField.propertyName, clauseField.tableAlias);
-				columnSelect = this.getComplexColumnFragment(clauseField, columnName, selectSqlFragment, forSelectClause);
-				selectSqlFragment += columnSelect;
-				break;
+				return this.getComplexColumnFragment(clauseField, columnName);
 			// must be a nested object
 			default:
 				if (!allowNestedObjects) {
-					`Nested objects not allowed in the SELECT clause of Flat and Field queries, or function parameters.`;
+					`Nested objects only allowed in the mapped SELECT clause.`;
 				}
-				selectSqlFragment += defaultCallback();
+				return defaultCallback();
 		}
-		return selectSqlFragment;
 	}
 }

@@ -37,7 +37,7 @@ export class PHFieldSQLQuery<IQF extends IQField<IQF>> extends PHDistinguishable
 		if (!(this.phRawQuery.select instanceof QField)) {
 			throw NON_ENTITY_SELECT_ERROR_MESSAGE;
 		}
-		return (<QField<any>><any>this.phRawQuery.select).toJSON();
+		return (<QField<any>><any>this.phRawQuery.select).toJSON(this.columnAliases);
 	}
 
 	toJSON(): PHJsonFieldQSLQuery {

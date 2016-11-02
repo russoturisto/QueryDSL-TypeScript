@@ -34,7 +34,7 @@ export const FIELD_IN_SELECT_CLAUSE_ERROR_MESSAGE = `Entity SELECT clauses can o
 export abstract class PHMappableSQLQuery
 extends PHDistinguishableSQLQuery {
 
-	nonDistinctSelectClauseToJSON( rawSelect: any ): any {
+	protected nonDistinctSelectClauseToJSON( rawSelect: any ): any {
 		let select = {};
 
 		for (let property in rawSelect) {
@@ -43,7 +43,11 @@ extends PHDistinguishableSQLQuery {
 				if (this.isEntityQuery) {
 					throw FIELD_IN_SELECT_CLAUSE_ERROR_MESSAGE;
 				}
-				select[property] = value.toJSON();
+				// The same value may appear in the select clause more than once.
+				// In that case the last one will set the alias for all of them.
+				// Because the alias only matters for GROUP BY and ORDER BY
+				// that is OK.
+				select[property] = value.toJSON(this.columnAliases);
 			} else if (value instanceof QOneToManyRelation) {
 				throw `@OneToMany relation objects can cannot be used in SELECT clauses`;
 			} // Must be a primitive

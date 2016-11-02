@@ -1,6 +1,8 @@
 import {IEntity, IFrom} from "../../../../core/entity/Entity";
 import {PHRawSQLQuery, PHSQLQuery, PHJsonCommonSQLQuery, PHJsonLimitedSQLQuery} from "../../PHSQLQuery";
 import {PHMappableSQLQuery} from "./PHMappedSQLQuery";
+import {FieldInOrderBy, IFieldInOrderBy, JSONFieldInOrderBy} from "../../../../core/field/FieldInOrderBy";
+import {QField} from "../../../../core/field/Field";
 /**
  * Created by Papa on 10/24/2016.
  */
@@ -31,6 +33,27 @@ export class PHEntitySQLQuery<IE extends IEntity> extends PHMappableSQLQuery imp
 			where: this.whereClauseToJSON(this.phRawQuery.where),
 			orderBy: this.orderByClauseToJSON(this.phRawQuery.orderBy)
 		};
+	}
+
+	protected nonDistinctSelectClauseToJSON( rawSelect:any):any {
+		for(let field in rawSelect) {
+			let value = rawSelect[field];
+			if(value instanceof QField) {
+				throw `Field References cannot be used in Entity Queries`;
+			} else if (value instanceof Object && !(value instanceof Date)) {
+				this.nonDistinctSelectClauseToJSON(value);
+			}
+		}
+		return rawSelect;
+	}
+
+	protected orderByClauseToJSON( orderBy: IFieldInOrderBy<any>[] ): JSONFieldInOrderBy[] {
+		if (!orderBy || !orderBy.length) {
+			return null;
+		}
+		return orderBy.map(( field ) => {
+			return (<FieldInOrderBy<any>><any>field).toEntityJSON();
+		});
 	}
 
 }

@@ -35,7 +35,7 @@ export class PHFlatSQLQuery extends PHDistinguishableSQLQuery implements PHSQLQu
 			if (!(selectField instanceof QField)) {
 				throw NON_ENTITY_SELECT_ERROR_MESSAGE;
 			}
-			return selectField.toJSON();
+			return selectField.toJSON(this.columnAliases);
 		});
 	}
 

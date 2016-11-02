@@ -6,7 +6,8 @@ import { IQEntity } from "../../../core/entity/Entity";
  * Created by Papa on 8/27/2016.
  */
 export interface ISQLAdaptor {
-    dateToDbQuery(date: Date, embedParameters: any): string | number;
+    getParameterSymbol(): string;
+    dateToDbQuery(date: Date): string;
     getResultArray(rawResponse: any): any[];
     /**
      * Options in returned result:
@@ -25,10 +26,10 @@ export interface SqlValueProvider {
 export interface ISQLFunctionAdaptor {
     getFunctionCalls(clause: JSONClauseObject, innerValue: string, qEntityMapByAlias: {
         [alias: string]: IQEntity;
-    }, forField: boolean): string;
+    }, embedParameters: boolean, parameters: any[]): string;
     getFunctionCall(jsonFunctionCall: JSONSqlFunctionCall, value: string, qEntityMapByAlias: {
         [entityName: string]: IQEntity;
-    }, forField: boolean): string;
+    }, embedParameters: boolean, parameters: any[]): string;
 }
 export declare function getSQLAdaptor(sqlValueProvider: SqlValueProvider, sqlDialect: SQLDialect): ISQLAdaptor;
 export declare abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
@@ -36,8 +37,8 @@ export declare abstract class AbstractFunctionAdaptor implements ISQLFunctionAda
     constructor(sqlValueProvider: SqlValueProvider);
     getFunctionCalls(clause: JSONClauseObject, innerValue: string, qEntityMapByAlias: {
         [alias: string]: IQEntity;
-    }, forField: boolean): string;
+    }, embedParameters?: boolean, parameters?: any[]): string;
     abstract getFunctionCall(jsonFunctionCall: JSONSqlFunctionCall, value: string, qEntityMapByAlias: {
         [entityName: string]: IQEntity;
-    }, forField: boolean): string;
+    }, embedParameters: boolean, parameters: any[]): string;
 }

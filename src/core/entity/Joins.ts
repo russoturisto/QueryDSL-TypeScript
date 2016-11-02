@@ -21,15 +21,47 @@ export function view<IME extends IMappedEntity>(
 	} else {
 		queryDefinition = query;
 	}
-	let customEntity: IME = <IME>queryDefinition.select;
+
 	// When retrieved via the view() function the query is the first one in the list
 	let rootQuery = <JSONRelation><any>queryDefinition;
 	rootQuery.currentChildIndex = 0;
 	rootQuery.fromClausePosition = [];
 	rootQuery.rootEntityPrefix = getNextRootEntityName();
-	customEntity[SUB_SELECT_QUERY] = queryDefinition;
 
+	let customEntity: IME = <IME>queryDefinition.select;
+	for (let property in customEntity) {
+		let value = customEntity[property];
+		if (value instanceof QField) {
+			customEntity[property] = value.getInstance();
+		} else {
+			if (value instanceof Object && !(value instanceof Date)) {
+
+			} else {
+				throw `All SELECT clause entries of a Mapped query must be Fields or Functions`;
+			}
+		}
+	}
+	customEntity[SUB_SELECT_QUERY] = queryDefinition;
+	convertMappedEntitySelect(customEntity, queryDefinition);
 	return customEntity;
+}
+
+export function convertMappedEntitySelect<IME extends IMappedEntity>(
+	customEntity: IME,
+	queryDefinition: PHRawMappedSQLQuery<IME>
+) {
+	for (let property in customEntity) {
+		let value = customEntity[property];
+		if (value instanceof QField) {
+			customEntity[property] = value.getInstance();
+		} else {
+			if (value instanceof Object && !(value instanceof Date)) {
+				convertMappedEntitySelect(value, queryDefinition);
+			} else {
+				throw `All SELECT clause entries of a Mapped query must be Fields or Functions`;
+			}
+		}
+	}
 }
 
 /**

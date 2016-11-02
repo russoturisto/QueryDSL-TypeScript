@@ -7,6 +7,7 @@ import {FieldInOrderBy, SortOrder, IFieldInOrderBy} from "./FieldInOrderBy";
 import {JSONSqlFunctionCall} from "./Functions";
 import {Appliable, JSONClauseField, JSONClauseObjectType} from "./Appliable";
 import {PHRawFieldSQLQuery, PHFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
+import {ColumnAliases} from "../entity/Aliases";
 
 export enum FieldType {
 	BOOLEAN,
@@ -34,14 +35,14 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 	__appliedFunctions__: JSONSqlFunctionCall[] = [];
 	// Sub-query as defined in SELECT clause via the field() function
 	__subQuery__: PHRawFieldSQLQuery<IQF>;
+	alias: string;
 
 	constructor(
 		public q: IQEntity,
 		public qConstructor: new() => IQEntity,
 		public entityName: string,
 		public fieldName: string,
-		public fieldType: FieldType,
-		public alias:string
+		public fieldType: FieldType
 	) {
 	}
 
@@ -83,9 +84,13 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 
 	abstract getInstance(): QField<IQF>;
 
+	protected copyFunctions<QF extends QField<IQF>>( field: QF ): QF {
+		field.__appliedFunctions__ = this.__appliedFunctions__.slice();
+		return field;
+	}
+
 	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQF {
 		let appliedField = this.getInstance();
-		appliedField.__appliedFunctions__ = appliedField.__appliedFunctions__.concat(this.__appliedFunctions__);
 		appliedField.__appliedFunctions__.push(sqlFunctionCall);
 
 		return <IQF><any>appliedField;
@@ -100,10 +105,13 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 		return <IQF><any>appliedField;
 	}
 
-	toJSON(): JSONClauseField {
+	toJSON( columnAliases?: ColumnAliases ): JSONClauseField {
+		if (columnAliases) {
+			this.alias = columnAliases.getNextAlias(this);
+		}
 		let jsonField: JSONClauseField = {
 			__appliedFunctions__: this.appliedFunctionsToJson(this.__appliedFunctions__),
-			fieldAlias: this.alias,
+			fieldAlias: columnAliases ? this.alias : null,
 			propertyName: this.fieldName,
 			tableAlias: QRelation.getPositionAlias(this.q.rootEntityPrefix, this.q.fromClausePosition),
 			type: JSONClauseObjectType.FIELD
@@ -160,11 +168,15 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 
 	operableFunctionToJson(
 		type: JSONClauseObjectType,
-		value
+		value: any,
+		columnAliases?: ColumnAliases
 	): JSONClauseField {
+		if (columnAliases) {
+			this.alias = columnAliases.getNextAlias(this);
+		}
 		return {
 			__appliedFunctions__: this.appliedFunctionsToJson(this.__appliedFunctions__),
-			fieldAlias: this.alias,
+			fieldAlias: columnAliases ? this.alias : null,
 			type: JSONClauseObjectType.NUMBER_FIELD_FUNCTION,
 			value: this.valueToJSON(value)
 		};

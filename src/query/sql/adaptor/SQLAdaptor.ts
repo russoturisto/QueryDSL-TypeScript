@@ -10,10 +10,11 @@ import {IQEntity} from "../../../core/entity/Entity";
 
 export interface ISQLAdaptor {
 
+	getParameterSymbol():string;
+
 	dateToDbQuery(
-		date: Date,
-		embedParameters
-	): string | number;
+		date: Date
+	): string;
 
 	getResultArray( rawResponse: any ): any[];
 
@@ -37,7 +38,9 @@ export interface ISQLAdaptor {
 }
 
 export interface SqlValueProvider {
-	getFunctionCallValue( rawValue: any ): string;
+	getFunctionCallValue(
+		rawValue: any
+	): string;
 }
 
 export interface ISQLFunctionAdaptor {
@@ -46,14 +49,16 @@ export interface ISQLFunctionAdaptor {
 		clause: JSONClauseObject,
 		innerValue: string,
 		qEntityMapByAlias: {[alias: string]: IQEntity},
-		forField: boolean
+		embedParameters: boolean,
+		parameters: any[]
 	): string ;
 
 	getFunctionCall(
 		jsonFunctionCall: JSONSqlFunctionCall,
 		value: string,
 		qEntityMapByAlias: {[entityName: string]: IQEntity},
-		forField: boolean
+		embedParameters: boolean,
+		parameters: any[]
 	): string;
 
 }
@@ -85,10 +90,11 @@ export abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
 		clause: JSONClauseObject,
 		innerValue: string,
 		qEntityMapByAlias: {[alias: string]: IQEntity},
-		forField: boolean
+		embedParameters: boolean = true,
+		parameters: any[] = null
 	): string {
 		clause.__appliedFunctions__.forEach(( appliedFunction ) => {
-			innerValue = this.getFunctionCall(appliedFunction, innerValue, qEntityMapByAlias, forField);
+			innerValue = this.getFunctionCall(appliedFunction, innerValue, qEntityMapByAlias, embedParameters, parameters);
 		});
 
 		return innerValue;
@@ -98,7 +104,8 @@ export abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
 		jsonFunctionCall: JSONSqlFunctionCall,
 		value: string,
 		qEntityMapByAlias: {[entityName: string]: IQEntity},
-		forField: boolean
+		embedParameters: boolean,
+		parameters: any[]
 	): string;
 
 }

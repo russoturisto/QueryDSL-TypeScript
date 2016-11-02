@@ -9,14 +9,13 @@ import { ColumnAliases } from "../entity/Aliases";
  */
 export interface IQBooleanField extends IQOperableField<boolean, JSONRawBooleanOperation, IBooleanOperation, IQBooleanField> {
 }
-export declare const BOOLEAN_ENTITY_PROPERTY_ALIASES: ColumnAliases;
 export declare class QBooleanField extends QOperableField<boolean, JSONRawBooleanOperation, IBooleanOperation, IQBooleanField> implements IQBooleanField {
-    constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string, alias?: string);
+    constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string);
     getInstance(): QBooleanField;
 }
 export declare class QBooleanFunction extends QBooleanField {
     private value;
-    constructor(value: boolean | PHRawFieldSQLQuery<QBooleanField>, alias?: string);
+    constructor(value: boolean | PHRawFieldSQLQuery<QBooleanField>);
     getInstance(): QBooleanFunction;
-    toJSON(): JSONClauseField;
+    toJSON(columnAliases?: ColumnAliases): JSONClauseField;
 }

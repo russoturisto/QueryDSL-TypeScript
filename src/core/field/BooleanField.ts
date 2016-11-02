@@ -13,43 +13,36 @@ import {ColumnAliases} from "../entity/Aliases";
 export interface IQBooleanField extends IQOperableField<boolean, JSONRawBooleanOperation, IBooleanOperation, IQBooleanField> {
 }
 
-const BOOLEAN_PROPERTY_ALIASES = new ColumnAliases('bp_');
-export const BOOLEAN_ENTITY_PROPERTY_ALIASES = new ColumnAliases('be_');
-
 export class QBooleanField extends QOperableField<boolean, JSONRawBooleanOperation, IBooleanOperation, IQBooleanField> implements IQBooleanField {
 
 	constructor(
 		q: IQEntity,
 		qConstructor: new() => IQEntity,
 		entityName: string,
-		fieldName: string,
-	  alias = BOOLEAN_ENTITY_PROPERTY_ALIASES.getNextAlias()
+		fieldName: string
 	) {
-		super(q, qConstructor, entityName, fieldName, FieldType.BOOLEAN, new BooleanOperation(), alias);
+		super(q, qConstructor, entityName, fieldName, FieldType.BOOLEAN, new BooleanOperation());
 	}
 
-	getInstance():QBooleanField {
-		return new QBooleanField(this.q, this.qConstructor, this.entityName, this.fieldName, BOOLEAN_PROPERTY_ALIASES.getNextAlias())
+	getInstance(): QBooleanField {
+		return this.copyFunctions(new QBooleanField(this.q, this.qConstructor, this.entityName, this.fieldName));
 	}
 
 }
 
-const BOOLEAN_FUNCTION_ALIASES = new ColumnAliases('bf_');
-
 export class QBooleanFunction extends QBooleanField {
 
 	constructor(
-		private value: boolean | PHRawFieldSQLQuery<QBooleanField>,
-	  alias = BOOLEAN_FUNCTION_ALIASES.getNextAlias()
+		private value: boolean | PHRawFieldSQLQuery<QBooleanField>
 	) {
-		super(null, null, null, null, alias);
+		super(null, null, null, null);
 	}
 
-	getInstance():QBooleanFunction {
-		return new QBooleanFunction(this.value);
+	getInstance(): QBooleanFunction {
+		return this.copyFunctions(new QBooleanFunction(this.value));
 	}
 
-	toJSON(): JSONClauseField {
-		return this.operableFunctionToJson(JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION, this.value);
+	toJSON( columnAliases?: ColumnAliases ): JSONClauseField {
+		return this.operableFunctionToJson(JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION, this.value, columnAliases);
 	}
 }

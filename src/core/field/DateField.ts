@@ -13,50 +13,35 @@ import {ColumnAliases} from "../entity/Aliases";
 export interface IQDateField extends IQOperableField<Date, JSONRawDateOperation, IDateOperation, IQDateField> {
 }
 
-const DATE_PROPERTY_ALIASES = new ColumnAliases('dp_');
-const DATE_ENTITY_PROPERTY_ALIASES = new ColumnAliases('de_');
-
 export class QDateField extends QOperableField<Date, JSONRawDateOperation, IDateOperation, IQDateField> implements IQDateField {
 
 	constructor(
 		q: IQEntity,
 		qConstructor: new() => IQEntity,
 		entityName: string,
-		fieldName: string,
-	  alias = DATE_ENTITY_PROPERTY_ALIASES.getNextAlias()
+		fieldName: string
 	) {
-		super(q, qConstructor, entityName, fieldName, FieldType.DATE, new DateOperation(), alias);
+		super(q, qConstructor, entityName, fieldName, FieldType.DATE, new DateOperation());
 	}
 
-	getInstance():QDateField {
-		return new QDateField(this.q, this.qConstructor, this.entityName, this.fieldName, DATE_PROPERTY_ALIASES.getNextAlias())
+	getInstance(): QDateField {
+		return this.copyFunctions(new QDateField(this.q, this.qConstructor, this.entityName, this.fieldName));
 	}
 
 }
 
-const DATE_FUNCTION_ALIASES = new ColumnAliases('df_');
-
 export class QDateFunction extends QDateField {
 	constructor(
-		private value?: Date | PHRawFieldSQLQuery<QDateField>,
-	  alias = DATE_FUNCTION_ALIASES.getNextAlias()
+		private value?: Date | PHRawFieldSQLQuery<QDateField>
 	) {
-		super(null, null, null, null, alias);
+		super(null, null, null, null);
 	}
 
-	getInstance():QDateFunction {
-		return new QDateFunction(this.value);
+	getInstance(): QDateFunction {
+		return this.copyFunctions(new QDateFunction(this.value));
 	}
 
-	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQDateField {
-		let functionApplicable = this.getInstance();
-		functionApplicable.__appliedFunctions__ = functionApplicable.__appliedFunctions__.concat(this.__appliedFunctions__);
-		functionApplicable.__appliedFunctions__.push(sqlFunctionCall);
-
-		return functionApplicable;
-	}
-
-	toJSON(): JSONClauseField {
-		return this.operableFunctionToJson(JSONClauseObjectType.DATE_FIELD_FUNCTION, this.value);
+	toJSON( columnAliases?: ColumnAliases ): JSONClauseField {
+		return this.operableFunctionToJson(JSONClauseObjectType.DATE_FIELD_FUNCTION, this.value, columnAliases);
 	}
 }

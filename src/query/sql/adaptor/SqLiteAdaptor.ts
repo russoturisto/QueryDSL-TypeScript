@@ -16,16 +16,16 @@ export class SqLiteAdaptor implements ISQLAdaptor {
 		this.functionAdaptor = new SqlLiteFunctionAdaptor(sqlValueProvider);
 	}
 
+	getParameterSymbol(): string {
+		return '?';
+	}
+
 	dateToDbQuery(
-		date: Date,
-		embedParameters: boolean
-	): string | number {
+		date: Date
+	): string {
 		let milliseconds = date.getTime();
-		if (embedParameters) {
-			return `FROM_UNIXTIME(${milliseconds})`;
-		} else {
-			return milliseconds;
-		}
+
+		return '' + milliseconds;
 	}
 
 	getResultArray( rawResponse: any ): any[] {
@@ -68,7 +68,8 @@ export class SqlLiteFunctionAdaptor extends AbstractFunctionAdaptor {
 		jsonFunctionCall: JSONSqlFunctionCall,
 		value: string,
 		qEntityMapByAlias: {[entityName: string]: IQEntity},
-		forField: boolean
+		embedParameters: boolean = true,
+		parameters: any[] = null
 	): string {
 		switch (jsonFunctionCall.functionType) {
 			case SqlFunction.ABS:

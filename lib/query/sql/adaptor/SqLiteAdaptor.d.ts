@@ -9,7 +9,8 @@ export declare class SqLiteAdaptor implements ISQLAdaptor {
     protected sqlValueProvider: SqlValueProvider;
     private functionAdaptor;
     constructor(sqlValueProvider: SqlValueProvider);
-    dateToDbQuery(date: Date, embedParameters: boolean): string | number;
+    getParameterSymbol(): string;
+    dateToDbQuery(date: Date): string;
     getResultArray(rawResponse: any): any[];
     getResultCellValue(resultRow: any, columnName: string, index: number, dataType: SQLDataType, defaultValue: any): any;
     getFunctionAdaptor(): ISQLFunctionAdaptor;
@@ -20,5 +21,5 @@ export declare class SqlLiteFunctionAdaptor extends AbstractFunctionAdaptor {
     constructor(sqlValueProvider: SqlValueProvider);
     getFunctionCall(jsonFunctionCall: JSONSqlFunctionCall, value: string, qEntityMapByAlias: {
         [entityName: string]: IQEntity;
-    }, forField: boolean): string;
+    }, embedParameters?: boolean, parameters?: any[]): string;
 }

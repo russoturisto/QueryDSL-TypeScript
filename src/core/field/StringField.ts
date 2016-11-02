@@ -10,8 +10,7 @@ import {ColumnAliases} from "../entity/Aliases";
  * Created by Papa on 8/11/2016.
  */
 
-export interface IQStringField
-extends IQOperableField<string, JSONRawStringOperation, IStringOperation, IQStringField> {
+export interface IQStringField extends IQOperableField<string, JSONRawStringOperation, IStringOperation, IQStringField> {
 
 	like(
 		like: string | IQStringField | PHRawFieldSQLQuery<IQStringField>
@@ -19,24 +18,19 @@ extends IQOperableField<string, JSONRawStringOperation, IStringOperation, IQStri
 
 }
 
-const STRING_PROPERTY_ALIASES = new ColumnAliases('sp_');
-const STRING_ENTITY_PROPERTY_ALIASES = new ColumnAliases('se_');
-
-export class QStringField
-extends QOperableField<string, JSONRawStringOperation, IStringOperation, IQStringField> implements IQStringField {
+export class QStringField extends QOperableField<string, JSONRawStringOperation, IStringOperation, IQStringField> implements IQStringField {
 
 	constructor(
 		q: IQEntity,
 		qConstructor: new() => IQEntity,
 		entityName: string,
-		fieldName: string,
-		alias = STRING_ENTITY_PROPERTY_ALIASES.getNextAlias()
+		fieldName: string
 	) {
-		super(q, qConstructor, entityName, fieldName, FieldType.STRING, new StringOperation(), alias);
+		super(q, qConstructor, entityName, fieldName, FieldType.STRING, new StringOperation());
 	}
 
-	getInstance():QStringField {
-		return new QStringField(this.q, this.qConstructor, this.entityName, this.fieldName, STRING_PROPERTY_ALIASES.getNextAlias())
+	getInstance(): QStringField {
+		return this.copyFunctions(new QStringField(this.q, this.qConstructor, this.entityName, this.fieldName));
 	}
 
 	like(
@@ -47,30 +41,19 @@ extends QOperableField<string, JSONRawStringOperation, IStringOperation, IQStrin
 
 }
 
-const STRING_PRIMITIVE_ALIASES = new ColumnAliases('sp_');
-
 export class QStringFunction extends QStringField {
 
 	constructor(
-		private value?:string | PHRawFieldSQLQuery<any>,
-	  alias = STRING_PRIMITIVE_ALIASES.getNextAlias()
+		private value?: string | PHRawFieldSQLQuery<any>
 	) {
-		super(null, null, null, null, alias);
+		super(null, null, null, null);
 	}
 
-	getInstance():QStringFunction {
-		return new QStringFunction(this.value);
+	getInstance(): QStringFunction {
+		return this.copyFunctions(new QStringFunction(this.value));
 	}
 
-	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQStringField {
-		let functionApplicable = this.getInstance();
-		functionApplicable.__appliedFunctions__ = functionApplicable.__appliedFunctions__.concat(this.__appliedFunctions__);
-		functionApplicable.__appliedFunctions__.push(sqlFunctionCall);
-
-		return functionApplicable;
-	}
-
-	toJSON(): JSONClauseField {
-		return this.operableFunctionToJson(JSONClauseObjectType.STRING_FIELD_FUNCTION, this.value);
+	toJSON( columnAliases?: ColumnAliases ): JSONClauseField {
+		return this.operableFunctionToJson(JSONClauseObjectType.STRING_FIELD_FUNCTION, this.value, columnAliases);
 	}
 }

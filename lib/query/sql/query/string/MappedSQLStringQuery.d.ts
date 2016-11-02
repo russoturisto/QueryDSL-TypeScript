@@ -22,5 +22,5 @@ export declare class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJson
             [propertyName: string]: boolean;
         };
     }, dialect: SQLDialect, queryResultType: QueryResultType);
-    protected getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults, embedParameters?: boolean, parameters?: any[]): string;
+    protected getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults): string;
 }

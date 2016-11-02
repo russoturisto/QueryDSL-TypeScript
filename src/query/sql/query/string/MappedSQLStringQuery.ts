@@ -31,9 +31,7 @@ export class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJsonMappedQS
 		selectSqlFragment: string,
 		selectClauseFragment: any,
 		joinTree: JoinTreeNode,
-		entityDefaults: EntityDefaults,
-		embedParameters: boolean = true,
-		parameters: any[] = null
+		entityDefaults: EntityDefaults
 	): string {
 		if (entityName) {
 			throw `Entity references cannot be used in SELECT clause of mapped queries`;
@@ -45,7 +43,7 @@ export class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJsonMappedQS
 		{
 			let distinctClause = <JSONClauseField>selectClauseFragment;
 			if (distinctClause.type == JSONClauseObjectType.DISTINCT_FUNCTION) {
-				let distinctSelect = this.getSELECTFragment(entityName, selectSqlFragment, distinctClause.__appliedFunctions__[0].parameters[0], joinTree, entityDefaults, embedParameters, parameters);
+				let distinctSelect = this.getSELECTFragment(entityName, selectSqlFragment, distinctClause.__appliedFunctions__[0].parameters[0], null, entityDefaults);
 				return `DISTINCT ${distinctSelect}`;
 			}
 		}
@@ -65,16 +63,6 @@ export class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJsonMappedQS
 		}
 		//  For {} select causes or if '*' is present, retrieve the entire object
 		if (retrieveAllOwnFields) {
-			selectClauseFragment = {};
-			let tableAlias = QRelation.getAlias(joinTree.jsonRelation);
-			let qEntity = this.qEntityMapByAlias[tableAlias];
-			let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
-			let entityPropertyTypeMap = this.entitiesPropertyTypeMap[entityName];
-			let entityRelationMap = this.entitiesRelationPropertyMap[entityName];
-			for (let propertyName in entityPropertyTypeMap) {
-				this.validator.validateReadProperty(propertyName, entityName);
-				selectClauseFragment[propertyName] = entityPropertyTypeMap[propertyName];
-			}
 			throw `'*' operator isn't yet implemented in mapped queries`;
 		}
 
@@ -84,35 +72,17 @@ export class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJsonMappedQS
 			if (value === undefined) {
 				continue;
 			}
-			selectSqlFragment += this.getFieldValue(value, selectSqlFragment, true,
+			let columnSelectSqlFragment = this.getFieldValue(value, true,
 				// Nested object processing
 				()=> {
 					return this.getSELECTFragment(null,
-						selectSqlFragment, selectClauseFragment[propertyName], joinTree.getEntityRelationChildNode(childEntityName, propertyName), null, embedParameters, parameters);
+						selectSqlFragment, selectClauseFragment[propertyName], null, null);
 				});
-
-			let fieldKey = `${tableAlias}.${propertyName}`;
-			if (entityPropertyTypeMap[propertyName]) {
-				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
-				let columnSelect = this.getSimpleColumnFragment(propertyName, tableAlias, columnName, selectSqlFragment, true);
-				selectSqlFragment += columnSelect;
-			} else if (entityRelationMap[propertyName]) {
-				let subSelectClauseFragment = selectClauseFragment[propertyName];
-				if (subSelectClauseFragment == null) {
-					// For null entity reference, retrieve just the id
-					if (entityMetadata.manyToOneMap[propertyName]) {
-						let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
-						let columnSelect = this.getSimpleColumnFragment(propertyName, tableAlias, columnName, selectSqlFragment, true);
-						selectSqlFragment += columnSelect;
-						continue;
-					} else {
-						// Do not retrieve @OneToMay set to null
-						continue;
-					}
-				}
-				let childEntityName = entityRelationMap[propertyName].entityName;
+			columnSelectSqlFragment += ` as ${value.fieldAlias}\n`;
+			if(selectSqlFragment) {
+				selectSqlFragment += `\t, ${columnSelectSqlFragment}`;
 			} else {
-				throw `Unexpected property '${propertyName}' on entity '${entityName}' (alias '${tableAlias}') in SELECT clause.`;
+				selectSqlFragment += `\t${columnSelectSqlFragment}`;
 			}
 		}
 

@@ -13,9 +13,6 @@ export interface IQStringManyToOneRelation <IQR extends IQEntity, R>
 extends IQRelation<IQR, R>, IQStringField {
 }
 
-const STRING_MANY_TO_ONE_ALIASES = new ColumnAliases('smp_');
-const STRING_ENTITY_MANY_TO_ONE_ALIASES = new ColumnAliases('sme_');
-
 export class QStringManyToOneRelation<IQR extends IQEntity, R>
 extends QStringField implements IQRelation<IQR, R> {
 
@@ -27,14 +24,13 @@ extends QStringField implements IQRelation<IQR, R> {
 		public entityName: string,
 		public fieldName: string,
 		public relationEntityConstructor: new () => R,
-		public relationQEntityConstructor: new ( ...args: any[] ) => IQR,
-	  alias = STRING_ENTITY_MANY_TO_ONE_ALIASES.getNextAlias()
+		public relationQEntityConstructor: new ( ...args: any[] ) => IQR
 	) {
-		super(q, qConstructor, entityName, fieldName, alias);
+		super(q, qConstructor, entityName, fieldName);
 	}
 
 	getInstance():QStringManyToOneRelation<IQR, R> {
-		return new QStringManyToOneRelation(this.q, this.qConstructor, this.entityName, this.fieldName, this.relationEntityConstructor, this.relationQEntityConstructor, STRING_MANY_TO_ONE_ALIASES.getNextAlias())
+		return this.copyFunctions(new QStringManyToOneRelation(this.q, this.qConstructor, this.entityName, this.fieldName, this.relationEntityConstructor, this.relationQEntityConstructor));
 	}
 
 	innerJoin(): IQR {
@@ -47,14 +43,6 @@ extends QStringField implements IQRelation<IQR, R> {
 
 	private getNewQEntity( joinType: JoinType ): IQR {
 		return new this.relationQEntityConstructor(this.relationQEntityConstructor, this.relationEntityConstructor, this.entityName, this.q.rootEntityPrefix, QRelation.getNextChildJoinPosition(this.q), this.fieldName, joinType);
-	}
-
-	applySqlFunction( sqlFunctionCall: JSONSqlFunctionCall ): IQStringManyToOneRelation <IQR, R> {
-		let appliedMtoRelation = new QStringManyToOneRelation(this.q, this.qConstructor, this.entityName, this.fieldName, this.relationEntityConstructor, this.relationQEntityConstructor);
-		appliedMtoRelation.__appliedFunctions__ = appliedMtoRelation.__appliedFunctions__.concat(this.__appliedFunctions__);
-		appliedMtoRelation.__appliedFunctions__.push(sqlFunctionCall);
-
-		return appliedMtoRelation;
 	}
 
 	toJSON(): JSONClauseField {

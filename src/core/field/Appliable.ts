@@ -30,7 +30,7 @@ export interface JSONClauseField extends JSONClauseObject {
 	// A reference pointer from a field to a query, as defined in SELECT clause via the field function
 	subQuery?: PHJsonFieldQSLQuery;
 	tableAlias?: string,
-	value?: boolean | Date | number | string | PHJsonFieldQSLQuery;
+	value?: boolean | Date | number | string | JSONClauseField | PHJsonFieldQSLQuery;
 }
 
 export interface Appliable<JCO extends JSONClauseObject, IQF extends IQField<IQF>> {

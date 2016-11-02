@@ -1,6 +1,5 @@
 import { QNumberField, IQNumberField } from "../field/NumberField";
 import { IQEntity } from "./Entity";
-import { JSONSqlFunctionCall } from "../field/Functions";
 import { IQRelation, EntityRelationType } from "./Relation";
 import { JSONClauseField } from "../field/Appliable";
 /**
@@ -16,11 +15,10 @@ export declare class QNumberManyToOneRelation<IQR extends IQEntity, R extends IQ
     relationEntityConstructor: new () => R;
     relationQEntityConstructor: new (...args: any[]) => IQR;
     relationType: EntityRelationType;
-    constructor(q: IQR, qConstructor: new () => IQR, entityName: string, fieldName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR, alias?: string);
+    constructor(q: IQR, qConstructor: new () => IQR, entityName: string, fieldName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR);
     getInstance(): QNumberManyToOneRelation<IQR, R>;
     innerJoin(): IQR;
     leftJoin(): IQR;
     private getNewQEntity(joinType);
-    applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQNumberManyToOneRelation<IQR, R>;
     toJSON(): JSONClauseField;
 }

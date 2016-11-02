@@ -74,6 +74,8 @@ export abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> extends 
 	protected entityDefaults: EntityDefaults = new EntityDefaults();
 	protected joinTree: JoinTreeNode;
 	protected orderByParser: IOrderByParser;
+	protected embedParameters = true;
+	protected parameters = [];
 
 	constructor(
 		protected phJsonQuery: PHJsonCommonSQLQuery,
@@ -125,51 +127,23 @@ ORDER BY
 		selectSqlFragment: string,
 		selectClauseFragment: any,
 		joinTree: JoinTreeNode,
-		entityDefaults: EntityDefaults,
-		embedParameters?: boolean,
-		parameters?: any[]
+		entityDefaults: EntityDefaults
 	): string;
 
 	protected getSimpleColumnFragment(
-		propertyName: string,
-		tableAlias: string,
-		columnName: string,
-		existingFragment: string,
-		forSelectClause: boolean
+		value: JSONClauseField,
+		columnName: string
 	): string {
-		if (!forSelectClause) {
-			return `${tableAlias}.${columnName}`;
-		}
-		let columnAlias = this.columnAliases.addAlias(tableAlias, propertyName);
-		let columnSelect = `${tableAlias}.${columnName} as ${columnAlias}\n`;
-		if (existingFragment) {
-			columnSelect = `\t, ${columnSelect}`;
-		} else {
-			columnSelect = `\t${columnSelect}`;
-		}
-
-		return columnSelect;
+		return `${value.tableAlias}.${columnName}`;
 	}
 
 	protected getComplexColumnFragment(
 		value: JSONClauseField,
-		columnName: string,
-		existingFragment: string,
-		forSelectClause: boolean
+		columnName: string
 	): string {
 		let selectSqlFragment = `${value.tableAlias}.${columnName}`;
-		selectSqlFragment = this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(value, selectSqlFragment, this.qEntityMapByAlias, true);
-		if (!forSelectClause) {
-			return selectSqlFragment;
-		}
-		let columnSelect = `${selectSqlFragment} as ${value.fieldAlias}\n`;
-		if (existingFragment) {
-			columnSelect = `\t, ${columnSelect}`;
-		} else {
-			columnSelect = `\t${columnSelect}`;
-		}
-
-		return columnSelect;
+		selectSqlFragment = this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(value, selectSqlFragment, this.qEntityMapByAlias, this.embedParameters, this.parameters);
+		return selectSqlFragment;
 	}
 
 	private getFROMFragment(
@@ -298,5 +272,40 @@ ORDER BY
 	protected abstract getOrderByFragment(
 		orderBy?: JSONFieldInOrderBy[]
 	): string;
+
+	isPrimitive( value: any ) {
+		if (value === null || value === undefined || value === '' || value === NaN) {
+			throw `Invalid query value: ${value}`;
+		}
+		switch (typeof value) {
+			case "boolean":
+			case "number":
+			case "string":
+				return true;
+		}
+		if (value instanceof Date) {
+			return true;
+		}
+		return false;
+	}
+
+	parsePrimitive(
+		primitiveValue: any
+	): string {
+		if (this.embedParameters) {
+			this.parameters.push(primitiveValue);
+			return this.sqlAdaptor.getParameterSymbol();
+		}
+		switch (typeof primitiveValue) {
+			case "boolean":
+			case "number":
+			case "string":
+				return '' + primitiveValue;
+		}
+		if (primitiveValue instanceof Date) {
+			return this.sqlAdaptor.dateToDbQuery(primitiveValue);
+		}
+		throw `Cannot parse a non-primitive value`;
+	}
 
 }

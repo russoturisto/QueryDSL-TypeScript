@@ -21,7 +21,7 @@ export declare const FIELD_IN_SELECT_CLAUSE_ERROR_MESSAGE: string;
  * A query whose select object is a collection of properties.
  */
 export declare abstract class PHMappableSQLQuery extends PHDistinguishableSQLQuery {
-    nonDistinctSelectClauseToJSON(rawSelect: any): any;
+    protected nonDistinctSelectClauseToJSON(rawSelect: any): any;
 }
 export declare class PHMappedSQLQuery<IME extends IMappedEntity> extends PHMappableSQLQuery implements PHSQLQuery {
     phRawQuery: PHRawMappedSQLQuery<IME>;

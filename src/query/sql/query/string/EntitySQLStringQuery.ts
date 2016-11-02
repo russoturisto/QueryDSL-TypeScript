@@ -181,10 +181,9 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 			} else if (value !== null) {
 				defaults[propertyName] = value;
 			}
-			let fieldKey = `${tableAlias}.${propertyName}`;
 			if (entityPropertyTypeMap[propertyName]) {
 				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
-				let columnSelect = this.getSimpleColumnFragment(propertyName, tableAlias, columnName, selectSqlFragment, true);
+				let columnSelect = this.getSimpleColumnFragment(value, columnName);
 				selectSqlFragment += columnSelect;
 			} else if (entityRelationMap[propertyName]) {
 				let subSelectClauseFragment = selectClauseFragment[propertyName];
@@ -192,7 +191,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 					// For null entity reference, retrieve just the id
 					if (entityMetadata.manyToOneMap[propertyName]) {
 						let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
-						let columnSelect = this.getSimpleColumnFragment(propertyName, tableAlias, columnName, selectSqlFragment, true);
+						let columnSelect = this.getSimpleColumnFragment(value, columnName);
 						selectSqlFragment += columnSelect;
 						continue;
 					} else {

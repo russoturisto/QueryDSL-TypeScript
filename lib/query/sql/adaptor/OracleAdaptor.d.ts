@@ -6,7 +6,8 @@ import { ISQLAdaptor, ISQLFunctionAdaptor, SqlValueProvider } from "./SQLAdaptor
 export declare class OracleAdaptor implements ISQLAdaptor {
     protected sqlValueProvider: SqlValueProvider;
     constructor(sqlValueProvider: SqlValueProvider);
-    dateToDbQuery(date: Date, embedParameters: boolean): string | number;
+    getParameterSymbol(): string;
+    dateToDbQuery(date: Date): string;
     getResultArray(rawResponse: any): any[];
     getResultCellValue(resultRow: any, columnName: string, index: number, dataType: SQLDataType, defaultValue: any): any;
     getFunctionAdaptor(): ISQLFunctionAdaptor;

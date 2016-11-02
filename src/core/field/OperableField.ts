@@ -41,10 +41,9 @@ extends QField<IQF> implements IQOperableField<T, JO, IO, IQF>  {
 		entityName: string,
 		fieldName: string,
 		fieldType: FieldType,
-		public operation: IO,
-		alias:string
+		public operation: IO
 	) {
-		super(q, qConstructor, entityName, fieldName, fieldType, alias);
+		super(q, qConstructor, entityName, fieldName, fieldType);
 		if (q) {
 			q.addEntityField(fieldName, this);
 		}

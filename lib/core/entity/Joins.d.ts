@@ -8,6 +8,7 @@ import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
  */
 export declare const SUB_SELECT_QUERY: string;
 export declare function view<IME extends IMappedEntity>(query: (...args: any[]) => PHRawMappedSQLQuery<IME> | PHRawMappedSQLQuery<IME>): IME;
+export declare function convertMappedEntitySelect<IME extends IMappedEntity>(customEntity: IME, queryDefinition: PHRawMappedSQLQuery<IME>): void;
 /**
  * Sub-queries in select clause
  * @param query

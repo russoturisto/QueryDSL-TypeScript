@@ -1,6 +1,7 @@
 import { IEntity, IFrom } from "../../../../core/entity/Entity";
 import { PHRawSQLQuery, PHSQLQuery, PHJsonCommonSQLQuery, PHJsonLimitedSQLQuery } from "../../PHSQLQuery";
 import { PHMappableSQLQuery } from "./PHMappedSQLQuery";
+import { IFieldInOrderBy, JSONFieldInOrderBy } from "../../../../core/field/FieldInOrderBy";
 /**
  * Created by Papa on 10/24/2016.
  */
@@ -15,6 +16,8 @@ export declare class PHEntitySQLQuery<IE extends IEntity> extends PHMappableSQLQ
     phRawQuery: PHRawEntitySQLQuery<IE>;
     constructor(phRawQuery: PHRawEntitySQLQuery<IE>);
     toJSON(): PHJsonEntitySQLQuery<IE>;
+    protected nonDistinctSelectClauseToJSON(rawSelect: any): any;
+    protected orderByClauseToJSON(orderBy: IFieldInOrderBy<any>[]): JSONFieldInOrderBy[];
 }
 export interface PHJsonLimitedEntitySQLQuery<IE extends IEntity> extends PHJsonEntitySQLQuery<IE>, PHJsonLimitedSQLQuery {
 }

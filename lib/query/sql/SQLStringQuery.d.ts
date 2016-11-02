@@ -52,6 +52,8 @@ export declare abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> 
     protected entityDefaults: EntityDefaults;
     protected joinTree: JoinTreeNode;
     protected orderByParser: IOrderByParser;
+    protected embedParameters: boolean;
+    protected parameters: any[];
     constructor(phJsonQuery: PHJsonCommonSQLQuery, qEntityMapByName: {
         [alias: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
@@ -68,9 +70,9 @@ export declare abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> 
         [alias: string]: JoinTreeNode;
     }, entityName?: string): any;
     toSQL(embedParameters?: boolean, parameters?: any[]): string;
-    protected abstract getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults, embedParameters?: boolean, parameters?: any[]): string;
-    protected getSimpleColumnFragment(propertyName: string, tableAlias: string, columnName: string, existingFragment: string, forSelectClause: boolean): string;
-    protected getComplexColumnFragment(value: JSONClauseField, columnName: string, existingFragment: string, forSelectClause: boolean): string;
+    protected abstract getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults): string;
+    protected getSimpleColumnFragment(value: JSONClauseField, columnName: string): string;
+    protected getComplexColumnFragment(value: JSONClauseField, columnName: string): string;
     private getFROMFragment(parentTree, currentTree, embedParameters?, parameters?);
     protected getEntityManyToOneColumnName(qEntity: IQEntity, propertyName: string, tableAlias: string): string;
     /**
@@ -87,4 +89,6 @@ export declare abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> 
      */
     protected abstract parseQueryResults(results: any[], queryResultType: QueryResultType, bridgedQueryConfiguration?: any): any[];
     protected abstract getOrderByFragment(orderBy?: JSONFieldInOrderBy[]): string;
+    isPrimitive(value: any): boolean;
+    parsePrimitive(primitiveValue: any): string;
 }
