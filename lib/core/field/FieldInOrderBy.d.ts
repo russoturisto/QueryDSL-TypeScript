@@ -2,7 +2,7 @@
  * Created by Papa on 10/16/2016.
  */
 import { Orderable, IQField } from "./Field";
-import { ColumnAliases } from "../entity/Aliases";
+import { FieldColumnAliases } from "../entity/Aliases";
 export interface JSONFieldInGroupBy {
     fieldAlias: string;
 }
@@ -20,6 +20,6 @@ export declare class FieldInOrderBy<IQF extends IQField<IQF>> implements IFieldI
     field: Orderable<IQF>;
     sortOrder: SortOrder;
     constructor(field: Orderable<IQF>, sortOrder: SortOrder);
-    toJSON(columnAliases: ColumnAliases): JSONFieldInOrderBy;
+    toJSON(columnAliases: FieldColumnAliases): JSONFieldInOrderBy;
     toEntityJSON(): JSONFieldInOrderBy;
 }

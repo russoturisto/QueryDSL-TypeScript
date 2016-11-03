@@ -9,6 +9,9 @@ import {PHJsonNonEntitySqlQuery} from "../ph/PHNonEntitySQLQuery";
 import {JSONClauseField, JSONClauseObjectType} from "../../../../core/field/Appliable";
 import {PHJsonFieldQSLQuery} from "../ph/PHFieldSQLQuery";
 import {FieldSQLStringQuery} from "./FieldSQLStringQuery";
+import {FieldColumnAliases} from "../../../../core/entity/Aliases";
+import {JoinType} from "../../../../core/entity/Joins";
+import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
 /**
  * Created by Papa on 10/28/2016.
  */
@@ -16,6 +19,7 @@ import {FieldSQLStringQuery} from "./FieldSQLStringQuery";
 
 export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQuery> extends SQLStringQuery<PHJQ> {
 
+	protected columnAliases: FieldColumnAliases = new FieldColumnAliases();
 
 	/**
 	 * Used in remote execution to parse the result set and to validate a join.
@@ -23,7 +27,7 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 	buildJoinTree(): void {
 		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
 		this.joinTree = this.buildFromJoinTree(this.phJsonQuery.from, joinNodeMap);
-		this.getSELECTFragment(null, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, false, []);
+		this.getSELECTFragment(null, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults);
 	}
 
 	addQEntityMapByAlias( sourceMap ) {
@@ -68,16 +72,29 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 			switch (joinRelation.relationType) {
 				case JSONRelationType.ENTITY_ROOT:
 				case JSONRelationType.SUB_QUERY_ROOT:
-					throw `All tables after the first must be joined`;
+					// Non-Joined table
+					alias = QRelation.getAlias(joinRelation);
+					this.validator.validateReadFromEntity(joinRelation);
+					let nonJoinedEntity = QRelation.createRelatedQEntity(joinRelation, this.qEntityMapByName);
+					this.qEntityMapByAlias[alias] = nonJoinedEntity;
+					let subTree = new JoinTreeNode(joinRelation, [], jsonTree);
+					if (joinNodeMap[alias]) {
+						throw `Alias '${alias}' used more than once in the FROM clause.`;
+					}
+					joinNodeMap[alias] = subTree;
+					continue;
 				case JSONRelationType.ENTITY_SCHEMA_RELATION:
 					if (!(<JSONEntityRelation>joinRelation).relationPropertyName) {
 						throw `Table ${i + 1} in FROM clause is missing relationPropertyName`;
 					}
-				default:
+				case JSONRelationType.ENTITY_JOIN_ON:
+				case JSONRelationType.SUB_QUERY_JOIN_ON:
 					if (!(<JSONJoinRelation>joinRelation).joinWhereClause) {
-						throw `Table ${i + 1} in FROM clause is missing joinWhereClause`;
+						this.warn(`Table ${i + 1} in FROM clause is missing joinWhereClause`);
 					}
 					break;
+				default:
+					throw `Unknown JSONRelationType ${joinRelation.relationType}`;
 			}
 			let parentAlias = QRelation.getParentAlias(joinRelation);
 			if (!joinNodeMap[parentAlias]) {
@@ -134,7 +151,7 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 			case JSONClauseObjectType.NUMBER_FIELD_FUNCTION:
 			case JSONClauseObjectType.STRING_FIELD_FUNCTION:
 				aValue = clauseField.value;
-				if(this.isPrimitive(aValue)) {
+				if (this.isPrimitive(aValue)) {
 					aValue = this.parsePrimitive(aValue);
 				} else {
 					aValue = this.getFieldValue(aValue, allowNestedObjects, defaultCallback);
@@ -167,5 +184,70 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 				}
 				return defaultCallback();
 		}
+	}
+
+	private getFROMFragment(
+		parentTree: JoinTreeNode,
+		currentTree: JoinTreeNode,
+		embedParameters: boolean = true,
+		parameters: any[] = null
+	): string {
+		let fromFragment = '\t';
+		let currentRelation = currentTree.jsonRelation;
+		let currentAlias = QRelation.getAlias(currentRelation);
+		let qEntity = this.qEntityMapByAlias[currentAlias];
+		let tableName = this.getTableName(qEntity);
+
+		if (!parentTree) {
+			fromFragment += `${tableName} ${currentAlias}`;
+		} else {
+			let parentRelation = parentTree.jsonRelation;
+			let parentAlias = QRelation.getAlias(parentRelation);
+			let leftEntity = this.qEntityMapByAlias[parentAlias];
+
+			let rightEntity = this.qEntityMapByAlias[currentAlias];
+
+			let joinTypeString;
+			switch (currentRelation.joinType) {
+				case JoinType.FULL_JOIN:
+					joinTypeString = 'FULL JOIN';
+					break;
+				case JoinType.INNER_JOIN:
+					joinTypeString = 'INNER JOIN';
+					break;
+				case JoinType.LEFT_JOIN:
+					joinTypeString = 'LEFT JOIN';
+					break;
+				case JoinType.RIGHT_JOIN:
+					joinTypeString = 'RIGHT JOIN';
+				default:
+					throw `Unsupported join type: ${currentRelation.joinType}`;
+			}
+
+			let rightEntityJoinColumn, leftColumn;
+			let leftEntityMetadata: EntityMetadata = <EntityMetadata><any>leftEntity.__entityConstructor__;
+			let rightEntityMetadata: EntityMetadata = <EntityMetadata><any>rightEntity.__entityConstructor__;
+			let errorPrefix = 'Error building FROM: ';
+
+			switch(currentRelation.relationType) {
+				case JSONRelationType.ENTITY_ROOT:
+					fromFragment += `${tableName} ${currentAlias}`;
+					break;
+				case JSONRelationType.ENTITY_JOIN_ON:
+				case JSONRelationType.ENTITY_SCHEMA_RELATION:
+					fromFragment += this.getEntitySchemaRelationFromJoin(leftEntity, rightEntity,
+						<JSONEntityRelation>currentRelation, parentRelation, currentAlias, parentAlias,
+						tableName, joinTypeString, errorPrefix);
+					break;
+				case JSONRelationType.SUB_QUERY_JOIN_ON:
+				case JSONRelationType.SUB_QUERY_ROOT:
+			}
+		}
+		for (let i = 0; i < currentTree.childNodes.length; i++) {
+			let childTreeNode = currentTree.childNodes[i];
+			fromFragment += this.getFROMFragment(currentTree, childTreeNode, embedParameters, parameters);
+		}
+
+		return fromFragment;
 	}
 }

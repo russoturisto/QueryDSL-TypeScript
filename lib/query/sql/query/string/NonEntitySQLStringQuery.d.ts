@@ -4,10 +4,12 @@ import { PHJsonMappedQSLQuery } from "../ph/PHMappedSQLQuery";
 import { SQLStringQuery } from "../../SQLStringQuery";
 import { PHJsonNonEntitySqlQuery } from "../ph/PHNonEntitySQLQuery";
 import { JSONClauseField } from "../../../../core/field/Appliable";
+import { FieldColumnAliases } from "../../../../core/entity/Aliases";
 /**
  * Created by Papa on 10/28/2016.
  */
 export declare abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQuery> extends SQLStringQuery<PHJQ> {
+    protected columnAliases: FieldColumnAliases;
     /**
      * Used in remote execution to parse the result set and to validate a join.
      */
@@ -18,4 +20,5 @@ export declare abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEnti
     }): JoinTreeNode;
     getFunctionCallValue(rawValue: any): string;
     getFieldValue(clauseField: JSONClauseField, allowNestedObjects: boolean, defaultCallback: () => string): string;
+    private getFROMFragment(parentTree, currentTree, embedParameters?, parameters?);
 }

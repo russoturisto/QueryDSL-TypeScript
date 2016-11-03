@@ -6,7 +6,7 @@ import { IFieldInOrderBy } from "./FieldInOrderBy";
 import { JSONSqlFunctionCall } from "./Functions";
 import { Appliable, JSONClauseField, JSONClauseObjectType } from "./Appliable";
 import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
-import { ColumnAliases } from "../entity/Aliases";
+import { FieldColumnAliases } from "../entity/Aliases";
 export declare enum FieldType {
     BOOLEAN = 0,
     DATE = 1,
@@ -26,8 +26,7 @@ export declare abstract class QField<IQF extends IQField<IQF>> implements IQFiel
     fieldName: string;
     fieldType: FieldType;
     __appliedFunctions__: JSONSqlFunctionCall[];
-    __subQuery__: PHRawFieldSQLQuery<IQF>;
-    alias: string;
+    __fieldSubQuery__: PHRawFieldSQLQuery<IQF>;
     constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string, fieldType: FieldType);
     protected getFieldKey(): string;
     objectEquals<QF extends QField<any>>(otherField: QF, checkValue?: boolean): boolean;
@@ -37,9 +36,9 @@ export declare abstract class QField<IQF extends IQField<IQF>> implements IQFiel
     protected copyFunctions<QF extends QField<IQF>>(field: QF): QF;
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQF;
     addSubQuery(subQuery: PHRawFieldSQLQuery<IQF>): IQF;
-    toJSON(columnAliases?: ColumnAliases): JSONClauseField;
+    toJSON(columnAliases?: FieldColumnAliases): JSONClauseField;
     appliedFunctionsToJson(appliedFunctions: JSONSqlFunctionCall[]): JSONSqlFunctionCall[];
     functionCallToJson(functionCall: JSONSqlFunctionCall): JSONSqlFunctionCall;
     valueToJSON(value: any): any;
-    operableFunctionToJson(type: JSONClauseObjectType, value: any, columnAliases?: ColumnAliases): JSONClauseField;
+    operableFunctionToJson(type: JSONClauseObjectType, value: any, columnAliases?: FieldColumnAliases): JSONClauseField;
 }

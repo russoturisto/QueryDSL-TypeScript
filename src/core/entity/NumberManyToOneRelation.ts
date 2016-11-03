@@ -4,7 +4,7 @@ import {JSONSqlFunctionCall} from "../field/Functions";
 import {IQRelation, EntityRelationType, QRelation} from "./Relation";
 import {JSONClauseField, JSONClauseObjectType} from "../field/Appliable";
 import {JoinType} from "./Joins";
-import {ColumnAliases} from "./Aliases";
+import {FieldColumnAliases} from "./Aliases";
 /**
  * Created by Papa on 10/23/2016.
  */

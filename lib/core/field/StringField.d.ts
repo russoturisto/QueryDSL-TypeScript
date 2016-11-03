@@ -3,7 +3,7 @@ import { IStringOperation, JSONRawStringOperation } from "../operation/StringOpe
 import { JSONClauseField } from "./Appliable";
 import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 import { IQOperableField, QOperableField } from "./OperableField";
-import { ColumnAliases } from "../entity/Aliases";
+import { FieldColumnAliases } from "../entity/Aliases";
 /**
  * Created by Papa on 8/11/2016.
  */
@@ -19,5 +19,5 @@ export declare class QStringFunction extends QStringField {
     private value;
     constructor(value?: string | PHRawFieldSQLQuery<any>);
     getInstance(): QStringFunction;
-    toJSON(columnAliases?: ColumnAliases): JSONClauseField;
+    toJSON(columnAliases?: FieldColumnAliases): JSONClauseField;
 }

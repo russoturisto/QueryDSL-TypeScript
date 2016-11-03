@@ -9,7 +9,7 @@ import {SQLStringWhereBase} from "./SQLStringWhereBase";
 import {JSONFieldInOrderBy} from "../../core/field/FieldInOrderBy";
 import {IOrderByParser, getOrderByParser} from "./query/orderBy/IOrderByParser";
 import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
-import {ColumnAliases, getNextRootEntityName} from "../../core/entity/Aliases";
+import {FieldColumnAliases, getNextRootEntityName} from "../../core/entity/Aliases";
 import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
 import {PHJsonCommonSQLQuery} from "./PHSQLQuery";
 import {PHJsonMappedQSLQuery} from "./query/ph/PHMappedSQLQuery";
@@ -70,11 +70,10 @@ export enum QueryResultType {
  */
 export abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> extends SQLStringWhereBase {
 
-	protected columnAliases: ColumnAliases = new ColumnAliases();
 	protected entityDefaults: EntityDefaults = new EntityDefaults();
 	protected joinTree: JoinTreeNode;
 	protected orderByParser: IOrderByParser;
-	protected embedParameters = true;
+	protected embedParameters = false;
 	protected parameters = [];
 
 	constructor(
@@ -99,15 +98,12 @@ export abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> extends 
 		entityName?: string
 	);
 
-	toSQL(
-		embedParameters: boolean = true,
-		parameters: any[] = null
-	): string {
+	toSQL(): string {
 		let entityName = this.rootQEntity.__entityName__;
 
 		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
 		this.joinTree = this.buildFromJoinTree(this.phJsonQuery.from, joinNodeMap, entityName);
-		let selectFragment = this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, embedParameters, parameters);
+		let selectFragment = this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults);
 		let fromFragment = this.getFROMFragment(null, this.joinTree, embedParameters, parameters);
 		let whereFragment = this.getWHEREFragment(this.phJsonQuery.where, 0, joinNodeMap, embedParameters, parameters);
 		let orderByFragment = this.getOrderByFragment(this.phJsonQuery.orderBy);
@@ -144,97 +140,6 @@ ORDER BY
 		let selectSqlFragment = `${value.tableAlias}.${columnName}`;
 		selectSqlFragment = this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(value, selectSqlFragment, this.qEntityMapByAlias, this.embedParameters, this.parameters);
 		return selectSqlFragment;
-	}
-
-	private getFROMFragment(
-		parentTree: JoinTreeNode,
-		currentTree: JoinTreeNode,
-		embedParameters: boolean = true,
-		parameters: any[] = null
-	): string {
-		let fromFragment = '\t';
-		let currentRelation = currentTree.jsonRelation;
-		let currentAlias = QRelation.getAlias(currentRelation);
-		let qEntity = this.qEntityMapByAlias[currentAlias];
-		let tableName = this.getTableName(qEntity);
-
-		if (!parentTree) {
-			fromFragment += `${tableName} ${currentAlias}`;
-		} else {
-			let parentRelation = parentTree.jsonRelation;
-			let parentAlias = QRelation.getAlias(parentRelation);
-			let leftEntity = this.qEntityMapByAlias[parentAlias];
-
-			let rightEntity = this.qEntityMapByAlias[currentAlias];
-
-			let joinTypeString;
-			switch (currentRelation.joinType) {
-				case JoinType.FULL_JOIN:
-					if (this.queryResultType !== QueryResultType.FLAT) {
-						throw `Full Joins only allowed in flat queries`;
-					}
-					joinTypeString = 'FULL JOIN';
-					break;
-				case JoinType.INNER_JOIN:
-					joinTypeString = 'INNER JOIN';
-					break;
-				case JoinType.LEFT_JOIN:
-					joinTypeString = 'LEFT JOIN';
-					break;
-				case JoinType.RIGHT_JOIN:
-					if (this.queryResultType !== QueryResultType.FLAT) {
-						throw `Full Joins only allowed in flat queries`;
-					}
-					joinTypeString = 'RIGHT JOIN';
-				default:
-					throw `Unsupported join type: ${currentRelation.joinType}`;
-			}
-			// FIXME: figure out why the switch statement above quit working
-			/*			if (joinRelation.joinType === <number>JoinType.INNER_JOIN) {
-			 joinTypeString = 'INNER JOIN';
-			 } else if (joinRelation.joinType === <number>JoinType.LEFT_JOIN) {
-			 joinTypeString = 'LEFT JOIN';
-			 } else {
-			 throw `Unsupported join type: ${joinRelation.joinType}`;
-			 }*/
-
-			let rightEntityJoinColumn, leftColumn;
-			let leftEntityMetadata: EntityMetadata = <EntityMetadata><any>leftEntity.__entityConstructor__;
-			let rightEntityMetadata: EntityMetadata = <EntityMetadata><any>rightEntity.__entityConstructor__;
-			let errorPrefix = 'Error building FROM: ';
-
-			if (rightEntityMetadata.manyToOneMap[currentRelation.relationPropertyName]) {
-				rightEntityJoinColumn = this.getEntityManyToOneColumnName(rightEntity, currentRelation.relationPropertyName, parentAlias);
-
-				if (!leftEntityMetadata.idProperty) {
-					throw `${errorPrefix} Could not find @Id for right entity of join to table  '${parentRelation.entityName}.${currentRelation.relationPropertyName}'`;
-				}
-				leftColumn = this.getEntityPropertyColumnName(leftEntity, leftEntityMetadata.idProperty, currentAlias);
-			} else if (rightEntityMetadata.oneToManyMap[currentRelation.relationPropertyName]) {
-				let rightEntityOneToManyMetadata = rightEntityMetadata.oneToManyMap[currentRelation.relationPropertyName];
-				let mappedByLeftEntityProperty = rightEntityOneToManyMetadata.mappedBy;
-				if (!mappedByLeftEntityProperty) {
-					throw `${errorPrefix} Could not find @OneToMany.mappedBy for relation '${parentRelation.entityName}.${currentRelation.relationPropertyName}'.`;
-				}
-				leftColumn = this.getEntityManyToOneColumnName(leftEntity, mappedByLeftEntityProperty, currentAlias);
-
-				if (!rightEntityMetadata.idProperty) {
-					throw `${errorPrefix} Could not find @Id for right entity of join to table '${currentRelation.entityName}' `;
-				}
-				rightEntityJoinColumn = this.getEntityPropertyColumnName(rightEntity, rightEntityMetadata.idProperty, parentAlias);
-			} else {
-				throw `${errorPrefix} Relation '${parentRelation.entityName}.${currentRelation.relationPropertyName}' for table (${tableName}) is not listed as @ManyToOne or @OneToMany`;
-			}
-			fromFragment += `\t${joinTypeString} ${tableName} ${currentAlias}`;
-			// TODO: add support for custom JOIN ON clauses
-			fromFragment += `\t\tON ${parentAlias}.${rightEntityJoinColumn} = ${currentAlias}.${leftColumn}`;
-		}
-		for (let i = 0; i < currentTree.childNodes.length; i++) {
-			let childTreeNode = currentTree.childNodes[i];
-			fromFragment += this.getFROMFragment(currentTree, childTreeNode, embedParameters, parameters);
-		}
-
-		return fromFragment;
 	}
 
 	protected getEntityManyToOneColumnName(
@@ -306,6 +211,50 @@ ORDER BY
 			return this.sqlAdaptor.dateToDbQuery(primitiveValue);
 		}
 		throw `Cannot parse a non-primitive value`;
+	}
+
+	protected getEntitySchemaRelationFromJoin(
+		leftEntity: IQEntity,
+		rightEntity: IQEntity,
+		entityRelation: JSONEntityRelation,
+		parentRelation: JSONRelation,
+		currentAlias: string,
+		parentAlias:string,
+		tableName:string,
+		joinTypeString:string,
+		errorPrefix:string
+	):string {
+
+		let rightEntityJoinColumn, leftColumn;
+		let leftEntityMetadata: EntityMetadata = <EntityMetadata><any>leftEntity.__entityConstructor__;
+		let rightEntityMetadata: EntityMetadata = <EntityMetadata><any>rightEntity.__entityConstructor__;
+
+		if (rightEntityMetadata.manyToOneMap[entityRelation.relationPropertyName]) {
+			rightEntityJoinColumn = this.getEntityManyToOneColumnName(rightEntity, entityRelation.relationPropertyName, parentAlias);
+
+			if (!leftEntityMetadata.idProperty) {
+				throw `${errorPrefix} Could not find @Id for right entity of join to table  '${parentRelation.entityName}.${entityRelation.relationPropertyName}'`;
+			}
+			leftColumn = this.getEntityPropertyColumnName(leftEntity, leftEntityMetadata.idProperty, currentAlias);
+		} else if (rightEntityMetadata.oneToManyMap[entityRelation.relationPropertyName]) {
+			let rightEntityOneToManyMetadata = rightEntityMetadata.oneToManyMap[entityRelation.relationPropertyName];
+			let mappedByLeftEntityProperty = rightEntityOneToManyMetadata.mappedBy;
+			if (!mappedByLeftEntityProperty) {
+				throw `${errorPrefix} Could not find @OneToMany.mappedBy for relation '${parentRelation.entityName}.${entityRelation.relationPropertyName}'.`;
+			}
+			leftColumn = this.getEntityManyToOneColumnName(leftEntity, mappedByLeftEntityProperty, currentAlias);
+
+			if (!rightEntityMetadata.idProperty) {
+				throw `${errorPrefix} Could not find @Id for right entity of join to table '${entityRelation.entityName}' `;
+			}
+			rightEntityJoinColumn = this.getEntityPropertyColumnName(rightEntity, rightEntityMetadata.idProperty, parentAlias);
+		} else {
+			throw `${errorPrefix} Relation '${parentRelation.entityName}.${entityRelation.relationPropertyName}' for table (${tableName}) is not listed as @ManyToOne or @OneToMany`;
+		}
+		let fromFragment = `\t${joinTypeString} ${tableName} ${currentAlias}`;
+		fromFragment += `\t\tON ${parentAlias}.${rightEntityJoinColumn} = ${currentAlias}.${leftColumn}`;
+
+		return fromFragment;
 	}
 
 }

@@ -15,7 +15,6 @@ export interface IEntity {
 }
 
 export interface IFrom {
-
 }
 
 

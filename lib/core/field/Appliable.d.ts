@@ -23,7 +23,7 @@ export interface JSONClauseObject {
 export interface JSONClauseField extends JSONClauseObject {
     fieldAlias: string;
     propertyName?: string;
-    subQuery?: PHJsonFieldQSLQuery;
+    fieldSubQuery?: PHJsonFieldQSLQuery;
     tableAlias?: string;
     value?: boolean | Date | number | string | JSONClauseField | PHJsonFieldQSLQuery;
 }

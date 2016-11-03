@@ -1,4 +1,4 @@
-import {IQField} from "../field/Field";
+import {IQField, QField} from "../field/Field";
 /**
  * Created by Papa on 10/18/2016.
  */
@@ -38,95 +38,43 @@ export function getNextRootEntityName(): string {
 
 	return nameString;
 }
-/*
- class SpecificColumnAliases {
 
- private aliasEntries:string[] = [];
- private readIndex = 0;
+class SpecificColumnAliases {
 
- constructor(
- private aliasKey:string
- ) {
- }
-
- addAlias(
- columnAlias:string
- ):void {
- this.aliasEntries.push(columnAlias);
- }
-
- resetReadIndex():void {
- this.readIndex = 0;
- }
-
- readNextAlias():string {
- if (this.readIndex >= this.aliasEntries.length) {
- throw `Too many read references for column ${this.aliasKey}`;
- }
- return this.aliasEntries[this.readIndex++];
- }
- }
- */
-export class ColumnAliases {
-	// numFields:number = 0;
-	private lastAlias = [-1, -1, -1];
-	private fields: IQField<any>[] = [];
-	// private columnAliasMap:{[aliasPropertyCombo:string]:SpecificColumnAliases} = {};
+	private aliasEntries: string[] = [];
+	private readIndex = 0;
 
 	constructor(
-		private aliasPrefix: string = ''
+		private aliasKey: string
 	) {
 	}
 
-	/*
-	 addAlias(
-	 tableAlias:string,
-	 propertyName:string
-	 ):string {
-	 let aliasKey = this.getAliasKey(tableAlias, propertyName);
-	 let columnAlias = this.getNextAlias();
-	 let specificColumnAliases = this.columnAliasMap[aliasKey];
-	 if (!specificColumnAliases) {
-	 specificColumnAliases = new SpecificColumnAliases(aliasKey);
-	 this.columnAliasMap[aliasKey] = specificColumnAliases;
-	 }
-	 specificColumnAliases.addAlias(columnAlias);
-	 this.numFields++;
+	addAlias(
+		columnAlias: string
+	): void {
+		this.aliasEntries.push(columnAlias);
+	}
 
-	 return columnAlias;
-	 }
+	resetReadIndex(): void {
+		this.readIndex = 0;
+	}
 
-	 resetReadIndexes() {
-	 for (let aliasKey in this.columnAliasMap) {
-	 this.columnAliasMap[aliasKey].resetReadIndex();
-	 }
-	 }
-
-	 getAlias(
-	 tableAlias:string,
-	 propertyName:string
-	 ):string {
-	 let aliasKey = this.getAliasKey(tableAlias, propertyName);
-	 let specificColumnAliases = this.columnAliasMap[aliasKey];
-	 if (!specificColumnAliases) {
-	 throw `No columns added for ${aliasKey}`;
-	 }
-	 return specificColumnAliases.readNextAlias();
-	 }
-
-	 private getAliasKey(
-	 tableAlias:string,
-	 propertyName:string
-	 ):string {
-	 let aliasKey = `${tableAlias}.${propertyName}`;
-	 return aliasKey;
-	 }
-	 */
-
-	getNextAlias( field: IQField<any> ): string {
-		if (!this.hasField(field)) {
-			this.fields.push(field);
+	readNextAlias(): string {
+		if (this.readIndex >= this.aliasEntries.length) {
+			throw `Too many read references for column ${this.aliasKey}`;
 		}
+		return this.aliasEntries[this.readIndex++];
+	}
+
+}
+
+export class ColumnAliases {
+
+	private lastAlias = [-1, -1, -1];
+	protected aliasPrefix = '';
+
+	getFollowingAlias(): string {
+
 		let currentAlias = this.lastAlias;
 		for (var i = 2; i >= 0; i--) {
 			let currentIndex = currentAlias[i];
@@ -144,13 +92,78 @@ export class ColumnAliases {
 		return aliasString;
 	}
 
+}
+
+export class EntityColumnAliases extends ColumnAliases {
+	private columnAliasMap: {[aliasPropertyCombo: string]: SpecificColumnAliases} = {};
+	numFields: number = 0;
+
+	addAlias(
+		tableAlias: string,
+		propertyName: string
+	): string {
+		let aliasKey = this.getAliasKey(tableAlias, propertyName);
+		let columnAlias = this.getFollowingAlias();
+		let specificColumnAliases = this.columnAliasMap[aliasKey];
+		if (!specificColumnAliases) {
+			specificColumnAliases = new SpecificColumnAliases(aliasKey);
+			this.columnAliasMap[aliasKey] = specificColumnAliases;
+		}
+		specificColumnAliases.addAlias(columnAlias);
+		this.numFields++;
+
+		return columnAlias;
+	}
+
+	resetReadIndexes() {
+		for (let aliasKey in this.columnAliasMap) {
+			this.columnAliasMap[aliasKey].resetReadIndex();
+		}
+	}
+
+	getAlias(
+		tableAlias: string,
+		propertyName: string
+	): string {
+		let aliasKey = this.getAliasKey(tableAlias, propertyName);
+		let specificColumnAliases = this.columnAliasMap[aliasKey];
+		if (!specificColumnAliases) {
+			throw `No columns added for ${aliasKey}`;
+		}
+		return specificColumnAliases.readNextAlias();
+	}
+
+	private getAliasKey(
+		tableAlias: string,
+		propertyName: string
+	): string {
+		let aliasKey = `${tableAlias}.${propertyName}`;
+		return aliasKey;
+	}
+}
+
+export class FieldColumnAliases extends ColumnAliases {
+	private aliasMap: Map<IQField<any>, string> = new Map<IQField<any>, string>();
+
+	getNextAlias( field: IQField<any> ): string {
+		if (!this.hasField(field)) {
+			return this.getExistingAlias(field);
+		}
+		let aliasString = this.getFollowingAlias();
+		this.aliasMap.set(field, aliasString);
+
+		return aliasString;
+	}
+
+	getExistingAlias( field: IQField<any> ): string {
+		return this.aliasMap.get(field);
+	}
+
 	hasField( field: IQField<any> ): boolean {
-		return this.fields.some(( memberField ) => {
-			return memberField === field;
-		});
+		return this.aliasMap.has(field);
 	}
 
 	clearFields() {
-		this.fields = [];
+		this.aliasMap.clear();
 	}
 }

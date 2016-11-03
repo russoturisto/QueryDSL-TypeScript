@@ -1,6 +1,6 @@
 import {PHRawMappedSQLQuery, IMappedEntity} from "../../query/sql/query/ph/PHMappedSQLQuery";
 import {JSONRelation, JSONJoinRelation, QRelation} from "./Relation";
-import {getNextRootEntityName, ColumnAliases} from "./Aliases";
+import {getNextRootEntityName, FieldColumnAliases} from "./Aliases";
 import {IFrom, QEntity} from "./Entity";
 import {JSONBaseOperation} from "../operation/Operation";
 import {IQField, QField} from "../field/Field";
@@ -13,7 +13,7 @@ import {IQOperableField} from "../field/OperableField";
 export const SUB_SELECT_QUERY = '.subSelect';
 
 export function view<IME extends IMappedEntity>(
-	query: ( ...args: any[] )=> PHRawMappedSQLQuery<IME>| PHRawMappedSQLQuery<IME>
+	query: ( ...args: any[] )=> PHRawMappedSQLQuery<IME> | PHRawMappedSQLQuery<IME>
 ): IME {
 	let queryDefinition: PHRawMappedSQLQuery<IME>;
 	if (query instanceof Function) {
@@ -29,22 +29,12 @@ export function view<IME extends IMappedEntity>(
 	rootQuery.rootEntityPrefix = getNextRootEntityName();
 
 	let customEntity: IME = <IME>queryDefinition.select;
-	for (let property in customEntity) {
-		let value = customEntity[property];
-		if (value instanceof QField) {
-			customEntity[property] = value.getInstance();
-		} else {
-			if (value instanceof Object && !(value instanceof Date)) {
-
-			} else {
-				throw `All SELECT clause entries of a Mapped query must be Fields or Functions`;
-			}
-		}
-	}
-	customEntity[SUB_SELECT_QUERY] = queryDefinition;
 	convertMappedEntitySelect(customEntity, queryDefinition);
+	customEntity[SUB_SELECT_QUERY] = queryDefinition;
+
 	return customEntity;
 }
+
 
 export function convertMappedEntitySelect<IME extends IMappedEntity>(
 	customEntity: IME,

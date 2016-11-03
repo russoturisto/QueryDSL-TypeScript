@@ -3,7 +3,7 @@ import { IQEntity } from "../entity/Entity";
 import { IQOperableField, QOperableField } from "./OperableField";
 import { JSONClauseField } from "./Appliable";
 import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
-import { ColumnAliases } from "../entity/Aliases";
+import { FieldColumnAliases } from "../entity/Aliases";
 /**
  * Created by Papa on 8/10/2016.
  */
@@ -17,5 +17,5 @@ export declare class QBooleanFunction extends QBooleanField {
     private value;
     constructor(value: boolean | PHRawFieldSQLQuery<QBooleanField>);
     getInstance(): QBooleanFunction;
-    toJSON(columnAliases?: ColumnAliases): JSONClauseField;
+    toJSON(columnAliases?: FieldColumnAliases): JSONClauseField;
 }

@@ -59,7 +59,11 @@ export class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJsonMappedQS
 			numProperties++;
 		}
 		if (numProperties === 0) {
-			throw `Mapped query must have fields in select clause`;
+			if (selectSqlFragment) {
+				throw `Mapped query must have fields in sub-select clause`;
+			} else {
+				return '*';
+			}
 		}
 		//  For {} select causes or if '*' is present, retrieve the entire object
 		if (retrieveAllOwnFields) {
@@ -79,7 +83,7 @@ export class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJsonMappedQS
 						selectSqlFragment, selectClauseFragment[propertyName], null, null);
 				});
 			columnSelectSqlFragment += ` as ${value.fieldAlias}\n`;
-			if(selectSqlFragment) {
+			if (selectSqlFragment) {
 				selectSqlFragment += `\t, ${columnSelectSqlFragment}`;
 			} else {
 				selectSqlFragment += `\t${columnSelectSqlFragment}`;

@@ -28,7 +28,7 @@ export interface JSONClauseField extends JSONClauseObject {
 	fieldAlias:string;
 	propertyName?: string,
 	// A reference pointer from a field to a query, as defined in SELECT clause via the field function
-	subQuery?: PHJsonFieldQSLQuery;
+	fieldSubQuery?: PHJsonFieldQSLQuery;
 	tableAlias?: string,
 	value?: boolean | Date | number | string | JSONClauseField | PHJsonFieldQSLQuery;
 }

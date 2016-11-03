@@ -8,12 +8,14 @@ import { BridgedQueryConfiguration } from "../result/IEntityResultParser";
 import { JSONFieldInOrderBy } from "../../../../core/field/FieldInOrderBy";
 import { JoinTreeNode } from "../../../../core/entity/JoinTreeNode";
 import { PHJsonEntitySQLQuery } from "../ph/PHEntitySQLQuery";
+import { EntityColumnAliases } from "../../../../core/entity/Aliases";
 /**
  * Represents SQL String query with Entity tree Select clause.
  */
 export declare class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJsonEntitySQLQuery<IE>> {
     protected rootQEntity: IQEntity;
     protected bridgedQueryConfiguration: BridgedQueryConfiguration;
+    protected columnAliases: EntityColumnAliases;
     private queryParser;
     constructor(rootQEntity: IQEntity, phJsonQuery: PHJsonEntitySQLQuery<IE>, qEntityMapByName: {
         [entityName: string]: IQEntity;
@@ -35,6 +37,7 @@ export declare class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQ
         [alias: string]: JoinTreeNode;
     }, entityName: string): JoinTreeNode;
     protected getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults, embedParameters?: boolean, parameters?: any[]): string;
+    private getFROMFragment(parentTree, currentTree, embedParameters?, parameters?);
     protected getOrderByFragment(orderBy?: JSONFieldInOrderBy[]): string;
     /**
      * If bridging is not applied:

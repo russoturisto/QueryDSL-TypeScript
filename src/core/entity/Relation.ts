@@ -47,13 +47,8 @@ export interface JSONEntityRelation extends JSONRelation {
 }
 
 export interface IQRelation<IQR extends IQEntity, R> {
-
-	relationType: EntityRelationType;
-	relationEntityConstructor: new () => R;
-	relationQEntityConstructor: new () => IQR;
 	innerJoin();
 	leftJoin();
-
 }
 
 export const IS_ENTITY_PROPERTY_NAME = '.isEntity';

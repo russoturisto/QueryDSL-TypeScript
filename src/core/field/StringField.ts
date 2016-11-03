@@ -5,7 +5,7 @@ import {JSONSqlFunctionCall} from "./Functions";
 import {JSONClauseField, JSONClauseObjectType} from "./Appliable";
 import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
 import {IQOperableField, QOperableField} from "./OperableField";
-import {ColumnAliases} from "../entity/Aliases";
+import {FieldColumnAliases} from "../entity/Aliases";
 /**
  * Created by Papa on 8/11/2016.
  */
@@ -53,7 +53,7 @@ export class QStringFunction extends QStringField {
 		return this.copyFunctions(new QStringFunction(this.value));
 	}
 
-	toJSON( columnAliases?: ColumnAliases ): JSONClauseField {
+	toJSON( columnAliases?: FieldColumnAliases ): JSONClauseField {
 		return this.operableFunctionToJson(JSONClauseObjectType.STRING_FIELD_FUNCTION, this.value, columnAliases);
 	}
 }

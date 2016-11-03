@@ -76,7 +76,6 @@ extends PHDistinguishableSQLQuery {
 
 		return select;
 	}
-
 }
 
 export class PHMappedSQLQuery<IME extends IMappedEntity>

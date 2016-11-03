@@ -3,7 +3,7 @@ import { JSONRawNumberOperation, INumberOperation } from "../operation/NumberOpe
 import { JSONClauseField } from "./Appliable";
 import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 import { IQOperableField, QOperableField } from "./OperableField";
-import { ColumnAliases } from "../entity/Aliases";
+import { FieldColumnAliases } from "../entity/Aliases";
 /**
  * Created by Papa on 8/11/2016.
  */
@@ -21,5 +21,5 @@ export declare class QNumberFunction extends QNumberField {
     private value;
     constructor(value?: number | PHRawFieldSQLQuery<IQNumberField>);
     getInstance(): QNumberFunction;
-    toJSON(columnAliases?: ColumnAliases): JSONClauseField;
+    toJSON(columnAliases?: FieldColumnAliases): JSONClauseField;
 }

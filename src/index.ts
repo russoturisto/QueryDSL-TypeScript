@@ -59,7 +59,7 @@ import {SQLStringWhereBase} from "./query/sql/SQLStringWhereBase";
 import {SQLStringNoJoinQuery} from "./query/sql/SQLStringNoJoinQuery";
 import {PHRawSQLUpdate, PHJsonSQLUpdate, PHSQLUpdate} from "./query/sql/PHSQLUpdate";
 import {SQLStringUpdate} from "./query/sql/SQLStringUpdate";
-import {ColumnAliases} from "./core/entity/Aliases";
+import {FieldColumnAliases} from "./core/entity/Aliases";
 import {JoinTreeNode} from "./core/entity/JoinTreeNode";
 import {FlatSQLStringQuery} from "./query/sql/query/string/FlatSQLStringQuery";
 import {ExactOrderByParser} from "./query/sql/query/orderBy/ExactOrderByParser";
@@ -182,7 +182,7 @@ export {
 	IOperation,
 	Operation,
 	OperationType,
-	ColumnAliases,
+	FieldColumnAliases,
 	JoinTreeNode,
 	JSONEntityRelation,
 	EntityRelationType,

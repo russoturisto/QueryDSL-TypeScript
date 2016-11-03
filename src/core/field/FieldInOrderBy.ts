@@ -3,7 +3,7 @@
  */
 
 import {Orderable, IQField, QField} from "./Field";
-import {ColumnAliases} from "../entity/Aliases";
+import {FieldColumnAliases} from "../entity/Aliases";
 
 export interface JSONFieldInGroupBy {
 	fieldAlias: string;
@@ -31,12 +31,12 @@ implements IFieldInOrderBy<IQF> {
 	) {
 	}
 
-	toJSON( columnAliases: ColumnAliases ): JSONFieldInOrderBy {
+	toJSON( columnAliases: FieldColumnAliases ): JSONFieldInOrderBy {
 		if(!columnAliases.hasField(this.field)) {
 			throw `Field used in order by clause is not present in select clause`;
 		}
 		return {
-			fieldAlias: (<QField<IQF>>this.field).alias,
+			fieldAlias: columnAliases.getExistingAlias(this.field),
 			sortOrder: this.sortOrder
 		};
 	}
