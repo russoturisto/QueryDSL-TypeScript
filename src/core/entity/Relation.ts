@@ -1,6 +1,7 @@
 import {IQEntity} from "./Entity";
 import {JSONBaseOperation} from "../operation/Operation";
 import {JoinType} from "./Joins";
+import {PHJsonMappedQSLQuery} from "../../query/sql/query/ph/PHMappedSQLQuery";
 /**
  * Created by Papa on 4/26/2016.
  */
@@ -42,6 +43,10 @@ export interface JSONJoinRelation extends JSONRelation {
 	joinWhereClause?: JSONBaseOperation;
 }
 
+export interface JSONViewJoinRelation extends JSONJoinRelation {
+	subQuery: PHJsonMappedQSLQuery;
+}
+
 export interface JSONEntityRelation extends JSONRelation {
 	relationPropertyName: string;
 }
@@ -51,18 +56,7 @@ export interface IQRelation<IQR extends IQEntity, R> {
 	leftJoin();
 }
 
-export const IS_ENTITY_PROPERTY_NAME = '.isEntity';
-
 export abstract class QRelation {
-	/*
-	 static isStub(object:any) {
-	 return !object[IS_ENTITY_PROPERTY_NAME];
-	 }
-
-	 static markAsEntity(object:any) {
-	 object[IS_ENTITY_PROPERTY_NAME] = true;
-	 }
-	 */
 
 	static getPositionAlias(
 		rootEntityPrefix: string,
@@ -98,7 +92,7 @@ export abstract class QRelation {
 			joinRelation.joinType);
 	}
 
-	static getNextChildJoinPosition( joinParent: JSONJoinRelation | IQEntity ): number[] {
+	static getNextChildJoinPosition( joinParent: IQEntity ): number[] {
 		let nextChildJoinPosition = joinParent.fromClausePosition.slice();
 		nextChildJoinPosition.push(++joinParent.currentChildIndex);
 

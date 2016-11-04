@@ -10,6 +10,7 @@ import { FieldColumnAliases } from "../../../../core/entity/Aliases";
  */
 export declare abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQuery> extends SQLStringQuery<PHJQ> {
     protected columnAliases: FieldColumnAliases;
+    protected joinTrees: JoinTreeNode[];
     /**
      * Used in remote execution to parse the result set and to validate a join.
      */
@@ -17,7 +18,7 @@ export declare abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEnti
     addQEntityMapByAlias(sourceMap: any): void;
     buildFromJoinTree(joinRelations: (JSONRelation | PHJsonMappedQSLQuery)[], joinNodeMap: {
         [alias: string]: JoinTreeNode;
-    }): JoinTreeNode;
+    }): JoinTreeNode[];
     getFunctionCallValue(rawValue: any): string;
     getFieldValue(clauseField: JSONClauseField, allowNestedObjects: boolean, defaultCallback: () => string): string;
     private getFROMFragment(parentTree, currentTree, embedParameters?, parameters?);

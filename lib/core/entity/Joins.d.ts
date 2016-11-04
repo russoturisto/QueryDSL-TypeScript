@@ -6,9 +6,7 @@ import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 /**
  * Created by Papa on 10/25/2016.
  */
-export declare const SUB_SELECT_QUERY: string;
-export declare function view<IME extends IMappedEntity>(query: (...args: any[]) => PHRawMappedSQLQuery<IME> | PHRawMappedSQLQuery<IME>): IME;
-export declare function convertMappedEntitySelect<IME extends IMappedEntity>(customEntity: IME, queryDefinition: PHRawMappedSQLQuery<IME>): void;
+export declare function view<IME extends IMappedEntity>(query: ((...args: any[]) => PHRawMappedSQLQuery<IME>) | PHRawMappedSQLQuery<IME>): IME & IFrom;
 /**
  * Sub-queries in select clause
  * @param query
@@ -21,15 +19,11 @@ export declare enum JoinType {
     LEFT_JOIN = 2,
     RIGHT_JOIN = 3,
 }
-export interface JoinOperation<IF extends IFrom, IME extends IMappedEntity> {
-    (entity: IF | IME): JSONBaseOperation;
+export interface JoinOperation<IF extends IFrom> {
+    (entity: IF): JSONBaseOperation;
 }
-export declare class JoinFields<IF extends IFrom, IME extends IMappedEntity> {
+export declare class JoinFields<IF extends IFrom> {
     private joinTo;
-    constructor(joinTo: IF | PHRawMappedSQLQuery<IME>);
-    on(joinOperation: JoinOperation<IF, IME>): IF | IME;
+    constructor(joinTo: IF);
+    on(joinOperation: JoinOperation<IF>): IF;
 }
-export declare function fullJoin<IF extends IFrom, IME extends IMappedEntity>(left: IF | IME, right: IF | PHRawMappedSQLQuery<IME>): JoinFields<IF, IME>;
-export declare function innerJoin<IF extends IFrom, IME extends IMappedEntity>(left: IF | IME, right: IF | PHRawMappedSQLQuery<IME>): JoinFields<IF, IME>;
-export declare function leftJoin<IF extends IFrom, IME extends IMappedEntity>(left: IF | IME, right: IF | PHRawMappedSQLQuery<IME>): JoinFields<IF, IME>;
-export declare function rightJoin<IF extends IFrom, IME extends IMappedEntity>(left: IF | IME, right: IF | PHRawMappedSQLQuery<IME>): JoinFields<IF, IME>;

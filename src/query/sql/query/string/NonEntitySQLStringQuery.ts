@@ -12,6 +12,7 @@ import {FieldSQLStringQuery} from "./FieldSQLStringQuery";
 import {FieldColumnAliases} from "../../../../core/entity/Aliases";
 import {JoinType} from "../../../../core/entity/Joins";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
+import {QView} from "../../../../core/entity/Entity";
 /**
  * Created by Papa on 10/28/2016.
  */
@@ -20,13 +21,14 @@ import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
 export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQuery> extends SQLStringQuery<PHJQ> {
 
 	protected columnAliases: FieldColumnAliases = new FieldColumnAliases();
+	protected joinTrees: JoinTreeNode[];
 
 	/**
 	 * Used in remote execution to parse the result set and to validate a join.
 	 */
 	buildJoinTree(): void {
 		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
-		this.joinTree = this.buildFromJoinTree(this.phJsonQuery.from, joinNodeMap);
+		this.joinTrees = this.buildFromJoinTree(this.phJsonQuery.from, joinNodeMap);
 		this.getSELECTFragment(null, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults);
 	}
 
@@ -39,7 +41,8 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 	buildFromJoinTree(
 		joinRelations: (JSONRelation | PHJsonMappedQSLQuery)[],
 		joinNodeMap: {[alias: string]: JoinTreeNode}
-	): JoinTreeNode {
+	): JoinTreeNode[] {
+		let jsonTrees: JoinTreeNode[] = [];
 		let jsonTree: JoinTreeNode;
 
 		// For entity queries it is possible to have a query with no from clause, in this case
@@ -62,6 +65,7 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 		let firstEntity = QRelation.createRelatedQEntity(firstRelation, this.qEntityMapByName);
 		this.qEntityMapByAlias[alias] = firstEntity;
 		jsonTree = new JoinTreeNode(firstRelation, [], null);
+		jsonTrees.push(jsonTree);
 		joinNodeMap[alias] = jsonTree;
 
 		for (let i = 1; i < joinRelations.length; i++) {
@@ -69,26 +73,30 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 			if (!joinRelation.joinType) {
 				throw `Table ${i + 1} in FROM clause is missing joinType`;
 			}
+			this.validator.validateReadFromEntity(joinRelation);
+			alias = QRelation.getAlias(joinRelation);
 			switch (joinRelation.relationType) {
-				case JSONRelationType.ENTITY_ROOT:
 				case JSONRelationType.SUB_QUERY_ROOT:
+					let view = new QView(joinRelation.rootEntityPrefix, joinRelation.fromClausePosition, null);
+					TODO: add fields to the view
+					this.qEntityMapByAlias[alias] = view;
+				case JSONRelationType.ENTITY_ROOT:
 					// Non-Joined table
-					alias = QRelation.getAlias(joinRelation);
-					this.validator.validateReadFromEntity(joinRelation);
 					let nonJoinedEntity = QRelation.createRelatedQEntity(joinRelation, this.qEntityMapByName);
 					this.qEntityMapByAlias[alias] = nonJoinedEntity;
-					let subTree = new JoinTreeNode(joinRelation, [], jsonTree);
+					let anotherTree = new JoinTreeNode(joinRelation, [], null);
 					if (joinNodeMap[alias]) {
 						throw `Alias '${alias}' used more than once in the FROM clause.`;
 					}
-					joinNodeMap[alias] = subTree;
+					jsonTrees.push(anotherTree);
+					joinNodeMap[alias] = anotherTree;
 					continue;
 				case JSONRelationType.ENTITY_SCHEMA_RELATION:
 					if (!(<JSONEntityRelation>joinRelation).relationPropertyName) {
 						throw `Table ${i + 1} in FROM clause is missing relationPropertyName`;
 					}
-				case JSONRelationType.ENTITY_JOIN_ON:
 				case JSONRelationType.SUB_QUERY_JOIN_ON:
+				case JSONRelationType.ENTITY_JOIN_ON:
 					if (!(<JSONJoinRelation>joinRelation).joinWhereClause) {
 						this.warn(`Table ${i + 1} in FROM clause is missing joinWhereClause`);
 					}
@@ -117,7 +125,7 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 			joinNodeMap[alias] = rightNode;
 		}
 
-		return jsonTree;
+		return jsonTrees;
 	}
 
 	getFunctionCallValue(
@@ -229,7 +237,7 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 			let rightEntityMetadata: EntityMetadata = <EntityMetadata><any>rightEntity.__entityConstructor__;
 			let errorPrefix = 'Error building FROM: ';
 
-			switch(currentRelation.relationType) {
+			switch (currentRelation.relationType) {
 				case JSONRelationType.ENTITY_ROOT:
 					fromFragment += `${tableName} ${currentAlias}`;
 					break;

@@ -3,18 +3,15 @@ import {
 	FieldInOrderBy, JSONFieldInOrderBy, IFieldInOrderBy,
 	JSONFieldInGroupBy
 } from "../../../../core/field/FieldInOrderBy";
-import {SUB_SELECT_QUERY} from "../../../../core/entity/Joins";
-import {QField} from "../../../../core/field/Field";
 import {IQOperableField, QOperableField} from "../../../../core/field/OperableField";
-import {JSONClauseField, Appliable} from "../../../../core/field/Appliable";
 import {PHFieldSQLQuery, PHRawFieldSQLQuery} from "./PHFieldSQLQuery";
 import {
 	JSONValueOperation, JSONRawValueOperation, OperationCategory,
 	JSONBaseOperation
 } from "../../../../core/operation/Operation";
 import {JSONLogicalOperation} from "../../../../core/operation/LogicalOperation";
-import {IFrom, QEntity} from "../../../../core/entity/Entity";
-import {JSONRelation, JSONJoinRelation, JSONRelationType} from "../../../../core/entity/Relation";
+import {IFrom, QEntity, QView} from "../../../../core/entity/Entity";
+import {JSONRelation} from "../../../../core/entity/Relation";
 import {PHRawNonEntitySQLQuery, PHJsonNonEntitySqlQuery} from "./PHNonEntitySQLQuery";
 import {QExistsFunction} from "../../../../core/field/Functions";
 import {FieldColumnAliases} from "../../../../core/entity/Aliases";
@@ -35,9 +32,9 @@ export abstract class PHAbstractSQLQuery {
 		let from = this.fromClauseToJSON(rawQuery.from);
 
 		jsonQuery.from = from;
-		jsonQuery.where = this.whereClauseToJSON(rawQuery.where);
+		jsonQuery.where = PHAbstractSQLQuery.whereClauseToJSON(rawQuery.where);
 		jsonQuery.groupBy = this.groupByClauseToJSON(rawQuery.groupBy);
-		jsonQuery.having = this.whereClauseToJSON(rawQuery.having);
+		jsonQuery.having = PHAbstractSQLQuery.whereClauseToJSON(rawQuery.having);
 		jsonQuery.orderBy = this.orderByClauseToJSON(rawQuery.orderBy);
 		jsonQuery.limit = rawQuery.limit;
 		jsonQuery.offset = rawQuery.offset;
@@ -49,20 +46,20 @@ export abstract class PHAbstractSQLQuery {
 		fromClause: (IFrom | PHRawMappedSQLQuery<any>)[]
 	): (JSONRelation | PHJsonMappedQSLQuery)[] {
 		return fromClause.map(( fromEntity ) => {
-			if (fromEntity instanceof QEntity) {
-				return fromEntity.getRelationJson();
+			if (!(fromEntity instanceof QEntity)) {
+				throw `FROM clause can contain only Views or Entities.`;
 			}
-			// Must be a sub-query
-			else {
-				if (this.isEntityQuery) {
-					throw `Entity FROM clauses can only contain QEntities`;
+			if (this.isEntityQuery) {
+				if (fromEntity instanceof QView) {
+
+					throw `Entity FROM clauses can contain only Entities.`;
 				}
-				return this.getSubSelectInFromClause(fromEntity);
 			}
+			return fromEntity.getRelationJson();
 		});
 	}
 
-	protected whereClauseToJSON( whereClause: JSONBaseOperation ): JSONBaseOperation {
+	static whereClauseToJSON( whereClause: JSONBaseOperation ): JSONBaseOperation {
 		if (!whereClause) {
 			return null;
 		}
@@ -117,7 +114,7 @@ export abstract class PHAbstractSQLQuery {
 		return jsonOperation;
 	}
 
-	private convertLRValue( rValue ): any {
+	private static convertLRValue( rValue ): any {
 		switch (typeof rValue) {
 			case "boolean":
 			case "number":
@@ -142,7 +139,7 @@ export abstract class PHAbstractSQLQuery {
 			return null;
 		}
 		return groupBy.map(( field ) => {
-			if(!this.columnAliases.hasField(field)) {
+			if (!this.columnAliases.hasField(field)) {
 				throw `Field used in group by clause is not present in select clause`;
 			}
 			return {
@@ -160,25 +157,4 @@ export abstract class PHAbstractSQLQuery {
 		});
 	}
 
-	private getSubSelectInFromClause( subSelectEntity: any ): PHJsonMappedQSLQuery {
-		let rawQuery: PHRawMappedSQLQuery<any> = subSelectEntity[SUB_SELECT_QUERY];
-		if (!rawQuery) {
-			throw `Reference to own query is missing in sub-select entity`;
-		}
-
-		let joinRelation = <JSONJoinRelation><any>rawQuery;
-
-		let jsonMappedQuery = new PHMappedSQLQuery(rawQuery).toJSON();
-
-
-		if (joinRelation.joinWhereClause) {
-			jsonMappedQuery.relationType = JSONRelationType.SUB_QUERY_JOIN_ON;
-			jsonMappedQuery.joinWhereClause = this.whereClauseToJSON(joinRelation.joinWhereClause);
-		} else {
-			jsonMappedQuery.relationType = JSONRelationType.SUB_QUERY_ROOT;
-
-		}
-
-		return jsonMappedQuery;
-	}
 }

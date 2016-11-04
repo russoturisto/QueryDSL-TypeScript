@@ -3,6 +3,7 @@ import {PHRawSQLQuery, PHSQLQuery, PHJsonCommonSQLQuery, PHJsonLimitedSQLQuery} 
 import {PHMappableSQLQuery} from "./PHMappedSQLQuery";
 import {FieldInOrderBy, IFieldInOrderBy, JSONFieldInOrderBy} from "../../../../core/field/FieldInOrderBy";
 import {QField} from "../../../../core/field/Field";
+import {PHAbstractSQLQuery} from "./PHAbstractSQLQuery";
 /**
  * Created by Papa on 10/24/2016.
  */
@@ -30,7 +31,7 @@ export class PHEntitySQLQuery<IE extends IEntity> extends PHMappableSQLQuery imp
 		return {
 			select: this.selectClauseToJSON(this.phRawQuery.select),
 			from: this.fromClauseToJSON(this.phRawQuery.from),
-			where: this.whereClauseToJSON(this.phRawQuery.where),
+			where: PHAbstractSQLQuery.whereClauseToJSON(this.phRawQuery.where),
 			orderBy: this.orderByClauseToJSON(this.phRawQuery.orderBy)
 		};
 	}

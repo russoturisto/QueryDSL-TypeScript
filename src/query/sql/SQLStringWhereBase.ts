@@ -20,7 +20,7 @@ import {IValidator, getValidator} from "../../validation/Validator";
 export abstract class SQLStringWhereBase implements SqlValueProvider {
 
 	protected fieldMap: FieldMap = new FieldMap();
-	protected qEntityMapByAlias: {[entityName: string]: IQEntity} = {};
+	protected qEntityMapByAlias: {[entityAlias: string]: IQEntity} = {};
 	protected sqlAdaptor: ISQLAdaptor;
 	protected validator: IValidator;
 

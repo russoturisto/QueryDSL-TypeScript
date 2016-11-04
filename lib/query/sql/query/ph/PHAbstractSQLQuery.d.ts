@@ -14,9 +14,8 @@ export declare abstract class PHAbstractSQLQuery {
     protected columnAliases: FieldColumnAliases;
     protected getNonEntitySqlQuery(rawQuery: PHRawNonEntitySQLQuery, jsonQuery: PHJsonNonEntitySqlQuery): PHJsonNonEntitySqlQuery;
     protected fromClauseToJSON(fromClause: (IFrom | PHRawMappedSQLQuery<any>)[]): (JSONRelation | PHJsonMappedQSLQuery)[];
-    protected whereClauseToJSON(whereClause: JSONBaseOperation): JSONBaseOperation;
-    private convertLRValue(rValue);
+    static whereClauseToJSON(whereClause: JSONBaseOperation): JSONBaseOperation;
+    private static convertLRValue(rValue);
     protected groupByClauseToJSON(groupBy: IQOperableField<any, any, any, any>[]): JSONFieldInGroupBy[];
     protected orderByClauseToJSON(orderBy: IFieldInOrderBy<any>[]): JSONFieldInOrderBy[];
-    private getSubSelectInFromClause(subSelectEntity);
 }

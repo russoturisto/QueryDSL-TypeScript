@@ -1,5 +1,4 @@
 import {PHRawSQLQuery, PHJsonCommonSQLQuery, PHJsonLimitedSQLQuery} from "../../PHSQLQuery";
-import {IMappedEntity} from "./PHMappedSQLQuery";
 import {JSONBaseOperation} from "../../../../core/operation/Operation";
 import {IFrom} from "../../../../core/entity/Entity";
 import {IQOperableField} from "../../../../core/field/OperableField";
@@ -20,7 +19,7 @@ export interface PHJsonNonEntitySqlQuery extends PHJsonCommonSQLQuery, PHJsonGro
 }
 
 export interface PHRawNonEntitySQLQuery extends PHRawSQLQuery {
-	from: (IFrom | IMappedEntity)[];
+	from: IFrom[];
 	groupBy?: IQOperableField<any, any, any, any>[];
 	having?: JSONBaseOperation,
 	limit?: number;

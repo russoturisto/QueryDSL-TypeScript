@@ -28,7 +28,7 @@ export class PHSQLDelete<IQE extends IQEntity> extends PHAbstractSQLQuery implem
 	toSQL(): PHJsonSQLDelete {
 		return {
 			deleteFrom: <JSONEntityRelation>this.phRawQuery.deleteFrom.getRelationJson(),
-			where: this.whereClauseToJSON(this.phRawQuery.where)
+			where: PHAbstractSQLQuery.whereClauseToJSON(this.phRawQuery.where)
 		};
 	}
 }

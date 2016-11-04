@@ -26,7 +26,7 @@ export declare abstract class SQLStringWhereBase implements SqlValueProvider {
     protected dialect: SQLDialect;
     protected fieldMap: FieldMap;
     protected qEntityMapByAlias: {
-        [entityName: string]: IQEntity;
+        [entityAlias: string]: IQEntity;
     };
     protected sqlAdaptor: ISQLAdaptor;
     protected validator: IValidator;
