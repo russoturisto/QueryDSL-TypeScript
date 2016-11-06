@@ -17,5 +17,5 @@ export declare class QDateFunction extends QDateField {
     private value;
     constructor(value?: Date | PHRawFieldSQLQuery<QDateField>);
     getInstance(): QDateFunction;
-    toJSON(columnAliases?: FieldColumnAliases): JSONClauseField;
+    toJSON(columnAliases: FieldColumnAliases, forSelectClause: boolean): JSONClauseField;
 }

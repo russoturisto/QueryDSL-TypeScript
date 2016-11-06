@@ -3,13 +3,11 @@ import { JoinTreeNode } from "../../../../core/entity/JoinTreeNode";
 import { SQLStringQuery } from "../../SQLStringQuery";
 import { PHJsonNonEntitySqlQuery } from "../ph/PHNonEntitySQLQuery";
 import { JSONClauseField } from "../../../../core/field/Appliable";
-import { FieldColumnAliases } from "../../../../core/entity/Aliases";
 import { QView } from "../../../../core/entity/Entity";
 /**
  * Created by Papa on 10/28/2016.
  */
 export declare abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQuery> extends SQLStringQuery<PHJQ> {
-    protected columnAliases: FieldColumnAliases;
     protected joinTrees: JoinTreeNode[];
     /**
      * Used in remote execution to parse the result set and to validate a join.

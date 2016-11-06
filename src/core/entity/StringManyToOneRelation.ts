@@ -29,7 +29,7 @@ extends QStringField implements IQRelation<IQR, R> {
 		super(q, qConstructor, entityName, fieldName);
 	}
 
-	getInstance(qEntity:IQR = this.q):QStringManyToOneRelation<IQR, R> {
+	getInstance( qEntity: IQR = this.q ): QStringManyToOneRelation<IQR, R> {
 		return this.copyFunctions(new QStringManyToOneRelation(qEntity, this.qConstructor, this.entityName, this.fieldName, this.relationEntityConstructor, this.relationQEntityConstructor));
 	}
 
@@ -45,8 +45,11 @@ extends QStringField implements IQRelation<IQR, R> {
 		return new this.relationQEntityConstructor(this.relationQEntityConstructor, this.relationEntityConstructor, this.entityName, this.q.rootEntityPrefix, QRelation.getNextChildJoinPosition(this.q), this.fieldName, joinType);
 	}
 
-	toJSON(): JSONClauseField {
-		let json = super.toJSON();
+	toJSON(
+		columnAliases: FieldColumnAliases,
+		forSelectClause: boolean
+	): JSONClauseField {
+		let json = super.toJSON(columnAliases, forSelectClause);
 		json.type = JSONClauseObjectType.MANY_TO_ONE_RELATION;
 
 		return json;

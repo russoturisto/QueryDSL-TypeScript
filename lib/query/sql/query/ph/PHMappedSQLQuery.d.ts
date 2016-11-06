@@ -1,6 +1,7 @@
 import { PHRawNonEntitySQLQuery, PHDistinguishableSQLQuery, PHJsonNonEntitySqlQuery } from "./PHNonEntitySQLQuery";
 import { PHSQLQuery } from "../../PHSQLQuery";
 import { IQDistinctFunction } from "../../../../core/field/Functions";
+import { EntityAliases } from "../../../../core/entity/Aliases";
 /**
  * Created by Papa on 10/24/2016.
  */
@@ -24,6 +25,6 @@ export declare abstract class PHMappableSQLQuery extends PHDistinguishableSQLQue
 }
 export declare class PHMappedSQLQuery<IME extends IMappedEntity> extends PHMappableSQLQuery implements PHSQLQuery {
     phRawQuery: PHRawMappedSQLQuery<IME>;
-    constructor(phRawQuery: PHRawMappedSQLQuery<IME>);
+    constructor(phRawQuery: PHRawMappedSQLQuery<IME>, entityAliases: EntityAliases);
     toJSON(): PHJsonMappedQSLQuery;
 }

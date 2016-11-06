@@ -17,15 +17,16 @@ import {EntityUtils} from "../../../../core/utils/EntityUtils";
 import {JSONFieldInOrderBy} from "../../../../core/field/FieldInOrderBy";
 import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
 import {PHJsonEntitySQLQuery} from "../ph/PHEntitySQLQuery";
-import {getNextRootEntityName, EntityColumnAliases} from "../../../../core/entity/Aliases";
+import {getNextRootEntityName, AliasCache} from "../../../../core/entity/Aliases";
 import {JoinType} from "../../../../core/entity/Joins";
 /**
  * Represents SQL String query with Entity tree Select clause.
  */
 export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJsonEntitySQLQuery<IE>> {
 
-	protected columnAliases: EntityColumnAliases = new EntityColumnAliases();
+	private columnAliases = new AliasCache();
 	private queryParser: IEntityResultParser;
+
 
 	constructor(
 		protected rootQEntity: IQEntity,
@@ -189,7 +190,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 			if (entityPropertyTypeMap[propertyName]) {
 				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, tableAlias);
 				let columnSelect = this.getSimpleColumnFragment(value, columnName);
-				selectSqlFragment += columnSelect;
+				selectSqlFragment += `${columnSelect} ${this.columnAliases.getFollowingAlias()}`;
 			} else if (entityRelationMap[propertyName]) {
 				let subSelectClauseFragment = selectClauseFragment[propertyName];
 				if (subSelectClauseFragment == null) {
@@ -197,7 +198,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 					if (entityMetadata.manyToOneMap[propertyName]) {
 						let columnName = this.getEntityManyToOneColumnName(qEntity, propertyName, tableAlias);
 						let columnSelect = this.getSimpleColumnFragment(value, columnName);
-						selectSqlFragment += columnSelect;
+						selectSqlFragment += `${columnSelect} ${this.columnAliases.getFollowingAlias()}`;
 						continue;
 					} else {
 						// Do not retrieve @OneToMay set to null
@@ -304,6 +305,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 		let lastResult;
 		results.forEach(( result ) => {
 			let entityAlias = QRelation.getAlias(this.joinTree.jsonRelation);
+			this.columnAliases.reset();
 			let parsedResult = this.parseQueryResult(this.rootQEntity.__entityName__, this.phJsonQuery.select, entityAlias, this.joinTree, result, [0]);
 			if (!lastResult) {
 				parsedResults.push(parsedResult);
@@ -355,7 +357,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 					dataType = SQLDataType.STRING;
 				}
 
-				let columnAlias = this.columnAliases.getAlias(entityAlias, propertyName);
+				let columnAlias = this.columnAliases.getFollowingAlias();
 				let defaultValue = this.entityDefaults.getForAlias(entityAlias)[propertyName];
 
 				let propertyValue = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], dataType, defaultValue);
@@ -371,7 +373,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 					if (entityMetadata.manyToOneMap[propertyName]) {
 						let relationGenericQEntity = this.qEntityMapByName[relation.entityName];
 						let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>relationGenericQEntity.__entityConstructor__;
-						let columnAlias = this.columnAliases.getAlias(entityAlias, propertyName);
+						let columnAlias = this.columnAliases.getFollowingAlias();
 						let relatedEntityId = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], SQLDataType.NUMBER, null);
 						if (EntityUtils.exists(relatedEntityId)) {
 							this.queryParser.bufferManyToOneStub(entityAlias, qEntity, entityMetadata, resultObject, propertyName, relationGenericQEntity, relationEntityMetadata, relatedEntityId);

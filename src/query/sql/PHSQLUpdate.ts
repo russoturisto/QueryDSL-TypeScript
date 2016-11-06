@@ -29,9 +29,9 @@ export class PHSQLUpdate<IE extends IEntity, IQE extends IQEntity> extends PHAbs
 
 	toSQL(): PHJsonSQLUpdate<IE> {
 		return {
-			update: <JSONEntityRelation>this.phRawQuery.update.getRelationJson(),
+			update: <JSONEntityRelation>this.phRawQuery.update.getRelationJson(this.columnAliases),
 			set: this.phRawQuery.set,
-			where: PHAbstractSQLQuery.whereClauseToJSON(this.phRawQuery.where)
+			where: PHAbstractSQLQuery.whereClauseToJSON(this.phRawQuery.where, this.columnAliases)
 		};
 	}
 }

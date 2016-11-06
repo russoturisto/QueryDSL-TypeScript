@@ -17,5 +17,5 @@ export declare class QBooleanFunction extends QBooleanField {
     private value;
     constructor(value: boolean | PHRawFieldSQLQuery<QBooleanField>);
     getInstance(): QBooleanFunction;
-    toJSON(columnAliases?: FieldColumnAliases): JSONClauseField;
+    toJSON(columnAliases: FieldColumnAliases, forSelectClause: boolean): JSONClauseField;
 }

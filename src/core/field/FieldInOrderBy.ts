@@ -32,7 +32,7 @@ implements IFieldInOrderBy<IQF> {
 	}
 
 	toJSON( columnAliases: FieldColumnAliases ): JSONFieldInOrderBy {
-		if(!columnAliases.hasField(this.field)) {
+		if(!columnAliases.hasAliasFor(this.field)) {
 			throw `Field used in order by clause is not present in select clause`;
 		}
 		return {

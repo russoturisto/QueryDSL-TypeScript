@@ -24,7 +24,7 @@ export class QDateField extends QOperableField<Date, JSONRawDateOperation, IDate
 		super(q, qConstructor, entityName, fieldName, FieldType.DATE, new DateOperation());
 	}
 
-	getInstance(qEntity:IQEntity = this.q): QDateField {
+	getInstance( qEntity: IQEntity = this.q ): QDateField {
 		return this.copyFunctions(new QDateField(qEntity, this.qConstructor, this.entityName, this.fieldName));
 	}
 
@@ -41,7 +41,10 @@ export class QDateFunction extends QDateField {
 		return this.copyFunctions(new QDateFunction(this.value));
 	}
 
-	toJSON( columnAliases?: FieldColumnAliases ): JSONClauseField {
-		return this.operableFunctionToJson(JSONClauseObjectType.DATE_FIELD_FUNCTION, this.value, columnAliases);
+	toJSON(
+		columnAliases: FieldColumnAliases,
+		forSelectClause: boolean
+	): JSONClauseField {
+		return this.operableFunctionToJson(JSONClauseObjectType.DATE_FIELD_FUNCTION, this.value, columnAliases, forSelectClause);
 	}
 }

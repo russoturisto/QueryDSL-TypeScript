@@ -8,14 +8,13 @@ import { BridgedQueryConfiguration } from "../result/IEntityResultParser";
 import { JSONFieldInOrderBy } from "../../../../core/field/FieldInOrderBy";
 import { JoinTreeNode } from "../../../../core/entity/JoinTreeNode";
 import { PHJsonEntitySQLQuery } from "../ph/PHEntitySQLQuery";
-import { EntityColumnAliases } from "../../../../core/entity/Aliases";
 /**
  * Represents SQL String query with Entity tree Select clause.
  */
 export declare class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJsonEntitySQLQuery<IE>> {
     protected rootQEntity: IQEntity;
     protected bridgedQueryConfiguration: BridgedQueryConfiguration;
-    protected columnAliases: EntityColumnAliases;
+    private columnAliases;
     private queryParser;
     constructor(rootQEntity: IQEntity, phJsonQuery: PHJsonEntitySQLQuery<IE>, qEntityMapByName: {
         [entityName: string]: IQEntity;

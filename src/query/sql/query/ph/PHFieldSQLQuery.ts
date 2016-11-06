@@ -6,6 +6,7 @@ import {PHSQLQuery} from "../../PHSQLQuery";
 import {JSONClauseField, JSONClauseObjectType} from "../../../../core/field/Appliable";
 import {QField, IQField} from "../../../../core/field/Field";
 import {IQDistinctFunction} from "../../../../core/field/Functions";
+import {EntityAliases} from "../../../../core/entity/Aliases";
 /**
  * Created by Papa on 10/24/2016.
  */
@@ -26,16 +27,17 @@ export class PHFieldSQLQuery<IQF extends IQField<IQF>> extends PHDistinguishable
 	//	private entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 //		private entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}}
 	constructor(
-		private phRawQuery: PHRawFieldSQLQuery<IQF>
+		private phRawQuery: PHRawFieldSQLQuery<IQF>,
+		entityAliases: EntityAliases
 	) {
-		super();
+		super(entityAliases);
 	}
 
 	nonDistinctSelectClauseToJSON( rawSelect: any ): any {
 		if (!(this.phRawQuery.select instanceof QField)) {
 			throw NON_ENTITY_SELECT_ERROR_MESSAGE;
 		}
-		return (<QField<any>><any>this.phRawQuery.select).toJSON(this.columnAliases);
+		return (<QField<any>><any>this.phRawQuery.select).toJSON(this.columnAliases, true);
 	}
 
 	toJSON(): PHJsonFieldQSLQuery {

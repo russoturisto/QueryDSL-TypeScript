@@ -1,4 +1,5 @@
 import {IQField, QField} from "../field/Field";
+import {IQEntity} from "./Entity";
 /**
  * Created by Papa on 10/18/2016.
  */
@@ -68,13 +69,16 @@ class SpecificColumnAliases {
 
 }
 
-export class ColumnAliases {
+export class AliasCache {
 
-	private lastAlias = [-1, -1, -1];
+	private lastAlias;
 	protected aliasPrefix = '';
 
-	getFollowingAlias(): string {
+	constructor() {
+		this.reset();
+	}
 
+	getFollowingAlias(): string {
 		let currentAlias = this.lastAlias;
 		for (var i = 2; i >= 0; i--) {
 			let currentIndex = currentAlias[i];
@@ -92,78 +96,77 @@ export class ColumnAliases {
 		return aliasString;
 	}
 
-}
-
-export class EntityColumnAliases extends ColumnAliases {
-	private columnAliasMap: {[aliasPropertyCombo: string]: SpecificColumnAliases} = {};
-	numFields: number = 0;
-
-	addAlias(
-		tableAlias: string,
-		propertyName: string
-	): string {
-		let aliasKey = this.getAliasKey(tableAlias, propertyName);
-		let columnAlias = this.getFollowingAlias();
-		let specificColumnAliases = this.columnAliasMap[aliasKey];
-		if (!specificColumnAliases) {
-			specificColumnAliases = new SpecificColumnAliases(aliasKey);
-			this.columnAliasMap[aliasKey] = specificColumnAliases;
-		}
-		specificColumnAliases.addAlias(columnAlias);
-		this.numFields++;
-
-		return columnAlias;
-	}
-
-	resetReadIndexes() {
-		for (let aliasKey in this.columnAliasMap) {
-			this.columnAliasMap[aliasKey].resetReadIndex();
-		}
-	}
-
-	getAlias(
-		tableAlias: string,
-		propertyName: string
-	): string {
-		let aliasKey = this.getAliasKey(tableAlias, propertyName);
-		let specificColumnAliases = this.columnAliasMap[aliasKey];
-		if (!specificColumnAliases) {
-			throw `No columns added for ${aliasKey}`;
-		}
-		return specificColumnAliases.readNextAlias();
-	}
-
-	private getAliasKey(
-		tableAlias: string,
-		propertyName: string
-	): string {
-		let aliasKey = `${tableAlias}.${propertyName}`;
-		return aliasKey;
+	reset() {
+		this.lastAlias = [-1, -1, -1];
 	}
 }
 
-export class FieldColumnAliases extends ColumnAliases {
-	private aliasMap: Map<IQField<any>, string> = new Map<IQField<any>, string>();
+export abstract class AliasMap<T> {
+	protected aliasMap: Map<T, string> = new Map<T, string>();
 
-	getNextAlias( field: IQField<any> ): string {
-		if (!this.hasField(field)) {
-			return this.getExistingAlias(field);
+	constructor(
+		private aliasCache: AliasCache
+	) {
+	}
+
+	getNextAlias( object: T ): string {
+		if (!this.hasAliasFor(object)) {
+			return this.getExistingAlias(object);
 		}
-		let aliasString = this.getFollowingAlias();
-		this.aliasMap.set(field, aliasString);
+		let aliasString = this.aliasCache.getFollowingAlias();
+		this.aliasMap.set(object, aliasString);
 
 		return aliasString;
 	}
 
+	abstract getExistingAlias( object: T ): string;
+
+	hasAliasFor( object: T ): boolean {
+		return this.aliasMap.has(object);
+	}
+
+}
+
+export class EntityAliases extends AliasMap<IQEntity> {
+
+	constructor(
+		private entityAliasCache = new AliasCache(),
+		private columnAliasCache = new AliasCache()
+	) {
+		super(entityAliasCache);
+	}
+
+	getNewFieldColumnAliases(): FieldColumnAliases {
+		return new FieldColumnAliases(this, this.columnAliasCache);
+	}
+
+	getExistingAlias( entity: IQEntity ): string {
+		if (!this.hasAliasFor(entity)) {
+			throw `No alias found for entity ${entity.__entityName__}`;
+		}
+		return this.aliasMap.get(entity);
+	}
+
+}
+
+export class FieldColumnAliases extends AliasMap<IQField<any>> {
+
+	constructor(
+		protected _entityAliases: EntityAliases,
+		aliasCache: AliasCache
+	) {
+		super(aliasCache);
+	}
+
+	get entityAliases() {
+		return this._entityAliases
+	}
+
 	getExistingAlias( field: IQField<any> ): string {
+		if (!this.hasAliasFor(field)) {
+			throw `No alias found for field ${(<QField<any>>field).entityName}.${(<QField<any>>field).fieldName}`;
+		}
 		return this.aliasMap.get(field);
 	}
 
-	hasField( field: IQField<any> ): boolean {
-		return this.aliasMap.has(field);
-	}
-
-	clearFields() {
-		this.aliasMap.clear();
-	}
 }

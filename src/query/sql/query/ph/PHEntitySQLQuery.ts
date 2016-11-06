@@ -31,7 +31,7 @@ export class PHEntitySQLQuery<IE extends IEntity> extends PHMappableSQLQuery imp
 		return {
 			select: this.selectClauseToJSON(this.phRawQuery.select),
 			from: this.fromClauseToJSON(this.phRawQuery.from),
-			where: PHAbstractSQLQuery.whereClauseToJSON(this.phRawQuery.where),
+			where: PHAbstractSQLQuery.whereClauseToJSON(this.phRawQuery.where, this.columnAliases),
 			orderBy: this.orderByClauseToJSON(this.phRawQuery.orderBy)
 		};
 	}

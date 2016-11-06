@@ -7,7 +7,7 @@ import {FieldInOrderBy, SortOrder, IFieldInOrderBy} from "./FieldInOrderBy";
 import {JSONSqlFunctionCall} from "./Functions";
 import {Appliable, JSONClauseField, JSONClauseObjectType} from "./Appliable";
 import {PHRawFieldSQLQuery, PHFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
-import {FieldColumnAliases} from "../entity/Aliases";
+import {FieldColumnAliases, EntityAliases} from "../entity/Aliases";
 
 export enum FieldType {
 	BOOLEAN,
@@ -81,7 +81,7 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 		return new FieldInOrderBy<IQF>(this, SortOrder.DESCENDING);
 	}
 
-	abstract getInstance(qEntity?:IQEntity): QField<IQF>;
+	abstract getInstance( qEntity?: IQEntity ): QField<IQF>;
 
 	protected copyFunctions<QF extends QField<IQF>>( field: QF ): QF {
 		field.__appliedFunctions__ = this.__appliedFunctions__.slice();
@@ -104,13 +104,16 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 		return <IQF><any>appliedField;
 	}
 
-	toJSON( columnAliases?: FieldColumnAliases ): JSONClauseField {
+	toJSON(
+		columnAliases: FieldColumnAliases,
+		forSelectClause: boolean
+	): JSONClauseField {
 		let alias;
-		if (columnAliases) {
+		if (forSelectClause) {
 			alias = columnAliases.getNextAlias(this);
 		}
 		let jsonField: JSONClauseField = {
-			__appliedFunctions__: this.appliedFunctionsToJson(this.__appliedFunctions__),
+			__appliedFunctions__: this.appliedFunctionsToJson(this.__appliedFunctions__, columnAliases),
 			entityName: this.q.__entityName__,
 			fieldAlias: alias,
 			propertyName: this.fieldName,
@@ -118,27 +121,33 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 			type: JSONClauseObjectType.FIELD
 		};
 		if (this.__fieldSubQuery__) {
-			let subSelectQuery = new PHFieldSQLQuery<IQF>(this.__fieldSubQuery__).toJSON();
+			let subSelectQuery = new PHFieldSQLQuery<IQF>(this.__fieldSubQuery__, columnAliases.entityAliases).toJSON();
 			jsonField.fieldSubQuery = subSelectQuery;
 		}
 
 		return jsonField;
 	}
 
-	appliedFunctionsToJson( appliedFunctions: JSONSqlFunctionCall[] ): JSONSqlFunctionCall[] {
+	private appliedFunctionsToJson(
+		appliedFunctions: JSONSqlFunctionCall[],
+		columnAliases: FieldColumnAliases
+	): JSONSqlFunctionCall[] {
 		if (!appliedFunctions) {
 			return appliedFunctions;
 		}
 		return appliedFunctions.map(( appliedFunction ) => {
-			return this.functionCallToJson(appliedFunction);
+			return this.functionCallToJson(appliedFunction, columnAliases);
 		});
 	}
 
-	functionCallToJson( functionCall: JSONSqlFunctionCall ): JSONSqlFunctionCall {
+	private functionCallToJson(
+		functionCall: JSONSqlFunctionCall,
+		columnAliases: FieldColumnAliases
+	): JSONSqlFunctionCall {
 		let parameters;
 		if (functionCall.parameters) {
 			parameters = functionCall.parameters.map(( parameter ) => {
-				return this.valueToJSON(parameter);
+				return this.valueToJSON(parameter, columnAliases, false);
 			});
 		}
 		return {
@@ -147,7 +156,11 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 		};
 	}
 
-	valueToJSON( value ) {
+	private valueToJSON(
+		value: any,
+		columnAliases: FieldColumnAliases,
+		forSelectClause: boolean
+	) {
 		if (!value) {
 			return value;
 		}
@@ -159,28 +172,29 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 				return value;
 		}
 		if (value instanceof QField) {
-			return value.toJSON();
+			return value.toJSON(columnAliases, forSelectClause);
 		}
 		// must be a field sub-query
 		let rawFieldQuery: PHRawFieldSQLQuery<any> = value;
-		let phFieldQuery = new PHFieldSQLQuery(rawFieldQuery);
+		let phFieldQuery = new PHFieldSQLQuery(rawFieldQuery, columnAliases.entityAliases);
 		return phFieldQuery.toJSON();
 	}
 
 	operableFunctionToJson(
 		type: JSONClauseObjectType,
 		value: any,
-		columnAliases?: FieldColumnAliases
+		columnAliases: FieldColumnAliases,
+		forSelectClause: boolean
 	): JSONClauseField {
 		let alias;
-		if (columnAliases) {
+		if (forSelectClause) {
 			alias = columnAliases.getNextAlias(this);
 		}
 		return {
-			__appliedFunctions__: this.appliedFunctionsToJson(this.__appliedFunctions__),
+			__appliedFunctions__: this.appliedFunctionsToJson(this.__appliedFunctions__, columnAliases),
 			fieldAlias: alias,
 			type: type,
-			value: this.valueToJSON(value)
+			value: this.valueToJSON(value, columnAliases, false)
 		};
 	}
 }

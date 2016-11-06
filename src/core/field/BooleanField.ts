@@ -24,7 +24,7 @@ export class QBooleanField extends QOperableField<boolean, JSONRawBooleanOperati
 		super(q, qConstructor, entityName, fieldName, FieldType.BOOLEAN, new BooleanOperation());
 	}
 
-	getInstance(qEntity:IQEntity = this.q): QBooleanField {
+	getInstance( qEntity: IQEntity = this.q ): QBooleanField {
 		return this.copyFunctions(new QBooleanField(qEntity, this.qConstructor, this.entityName, this.fieldName));
 	}
 
@@ -42,7 +42,10 @@ export class QBooleanFunction extends QBooleanField {
 		return this.copyFunctions(new QBooleanFunction(this.value));
 	}
 
-	toJSON( columnAliases?: FieldColumnAliases ): JSONClauseField {
-		return this.operableFunctionToJson(JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION, this.value, columnAliases);
+	toJSON(
+		columnAliases: FieldColumnAliases,
+		forSelectClause: boolean
+	): JSONClauseField {
+		return this.operableFunctionToJson(JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION, this.value, columnAliases, forSelectClause);
 	}
 }

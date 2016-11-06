@@ -42,7 +42,7 @@ export class QNumberField extends QOperableField<number, JSONRawNumberOperation,
 		super(q, qConstructor, entityName, fieldName, FieldType.DATE, new NumberOperation());
 	}
 
-	getInstance(qEntity:IQEntity = this.q): QNumberField {
+	getInstance( qEntity: IQEntity = this.q ): QNumberField {
 		return this.copyFunctions(new QNumberField(qEntity, this.qConstructor, this.entityName, this.fieldName));
 	}
 
@@ -60,7 +60,10 @@ export class QNumberFunction extends QNumberField {
 		return this.copyFunctions(new QNumberFunction(this.value));
 	}
 
-	toJSON( columnAliases?: FieldColumnAliases ): JSONClauseField {
-		return this.operableFunctionToJson(JSONClauseObjectType.NUMBER_FIELD_FUNCTION, this.value, columnAliases);
+	toJSON(
+		columnAliases: FieldColumnAliases,
+		forSelectClause: boolean
+	): JSONClauseField {
+		return this.operableFunctionToJson(JSONClauseObjectType.NUMBER_FIELD_FUNCTION, this.value, columnAliases, forSelectClause);
 	}
 }

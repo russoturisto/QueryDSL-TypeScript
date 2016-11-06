@@ -29,7 +29,7 @@ export class QStringField extends QOperableField<string, JSONRawStringOperation,
 		super(q, qConstructor, entityName, fieldName, FieldType.STRING, new StringOperation());
 	}
 
-	getInstance(qEntity:IQEntity = this.q): QStringField {
+	getInstance( qEntity: IQEntity = this.q ): QStringField {
 		return this.copyFunctions(new QStringField(qEntity, this.qConstructor, this.entityName, this.fieldName));
 	}
 
@@ -53,7 +53,10 @@ export class QStringFunction extends QStringField {
 		return this.copyFunctions(new QStringFunction(this.value));
 	}
 
-	toJSON( columnAliases?: FieldColumnAliases ): JSONClauseField {
-		return this.operableFunctionToJson(JSONClauseObjectType.STRING_FIELD_FUNCTION, this.value, columnAliases);
+	toJSON(
+		columnAliases: FieldColumnAliases,
+		forSelectClause: boolean
+	): JSONClauseField {
+		return this.operableFunctionToJson(JSONClauseObjectType.STRING_FIELD_FUNCTION, this.value, columnAliases, forSelectClause);
 	}
 }

@@ -26,7 +26,6 @@ import {MappedSQLStringQuery} from "./MappedSQLStringQuery";
 
 export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQuery> extends SQLStringQuery<PHJQ> {
 
-	protected columnAliases: FieldColumnAliases = new FieldColumnAliases();
 	protected joinTrees: JoinTreeNode[];
 
 	/**

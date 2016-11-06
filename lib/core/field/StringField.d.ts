@@ -19,5 +19,5 @@ export declare class QStringFunction extends QStringField {
     private value;
     constructor(value?: string | PHRawFieldSQLQuery<any>);
     getInstance(): QStringFunction;
-    toJSON(columnAliases?: FieldColumnAliases): JSONClauseField;
+    toJSON(columnAliases: FieldColumnAliases, forSelectClause: boolean): JSONClauseField;
 }

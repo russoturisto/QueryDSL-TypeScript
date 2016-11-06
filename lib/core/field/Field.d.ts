@@ -36,9 +36,9 @@ export declare abstract class QField<IQF extends IQField<IQF>> implements IQFiel
     protected copyFunctions<QF extends QField<IQF>>(field: QF): QF;
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQF;
     addSubQuery(subQuery: PHRawFieldSQLQuery<IQF>): IQF;
-    toJSON(columnAliases?: FieldColumnAliases): JSONClauseField;
-    appliedFunctionsToJson(appliedFunctions: JSONSqlFunctionCall[]): JSONSqlFunctionCall[];
-    functionCallToJson(functionCall: JSONSqlFunctionCall): JSONSqlFunctionCall;
-    valueToJSON(value: any): any;
-    operableFunctionToJson(type: JSONClauseObjectType, value: any, columnAliases?: FieldColumnAliases): JSONClauseField;
+    toJSON(columnAliases: FieldColumnAliases, forSelectClause: boolean): JSONClauseField;
+    private appliedFunctionsToJson(appliedFunctions, columnAliases);
+    private functionCallToJson(functionCall, columnAliases);
+    private valueToJSON(value, columnAliases, forSelectClause);
+    operableFunctionToJson(type: JSONClauseObjectType, value: any, columnAliases: FieldColumnAliases, forSelectClause: boolean): JSONClauseField;
 }

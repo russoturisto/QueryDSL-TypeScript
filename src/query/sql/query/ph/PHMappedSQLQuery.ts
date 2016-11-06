@@ -7,6 +7,7 @@ import {JSONJoinRelation} from "../../../../core/entity/Relation";
 import {QField} from "../../../../core/field/Field";
 import {QOneToManyRelation} from "../../../../core/entity/OneToManyRelation";
 import {IQDistinctFunction} from "../../../../core/field/Functions";
+import {EntityAliases} from "../../../../core/entity/Aliases";
 /**
  * Created by Papa on 10/24/2016.
  */
@@ -47,7 +48,7 @@ extends PHDistinguishableSQLQuery {
 				// In that case the last one will set the alias for all of them.
 				// Because the alias only matters for GROUP BY and ORDER BY
 				// that is OK.
-				select[property] = value.toJSON(this.columnAliases);
+				select[property] = value.toJSON(this.columnAliases, true);
 			} else if (value instanceof QOneToManyRelation) {
 				throw `@OneToMany relation objects can cannot be used in SELECT clauses`;
 			} // Must be a primitive
@@ -82,22 +83,15 @@ export class PHMappedSQLQuery<IME extends IMappedEntity>
 extends PHMappableSQLQuery implements PHSQLQuery {
 
 	constructor(
-		public phRawQuery: PHRawMappedSQLQuery<IME>
+		public phRawQuery: PHRawMappedSQLQuery<IME>,
+	  entityAliases:EntityAliases
 	) {
-		super();
+		super(entityAliases);
 	}
 
 	toJSON(): PHJsonMappedQSLQuery {
-
 		let select = this.selectClauseToJSON(this.phRawQuery.select);
-
-		let jsonRelation: JSONJoinRelation = <JSONJoinRelation><any>this.phRawQuery;
 		let jsonMappedQuery: PHJsonMappedQSLQuery = {
-			currentChildIndex: jsonRelation.currentChildIndex,
-			fromClausePosition: jsonRelation.fromClausePosition,
-			joinType: jsonRelation.joinType,
-			relationType: jsonRelation.relationType,
-			rootEntityPrefix: jsonRelation.rootEntityPrefix,
 			select: select
 		};
 

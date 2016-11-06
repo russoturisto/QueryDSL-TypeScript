@@ -21,5 +21,5 @@ export declare class QNumberFunction extends QNumberField {
     private value;
     constructor(value?: number | PHRawFieldSQLQuery<IQNumberField>);
     getInstance(): QNumberFunction;
-    toJSON(columnAliases?: FieldColumnAliases): JSONClauseField;
+    toJSON(columnAliases: FieldColumnAliases, forSelectClause: boolean): JSONClauseField;
 }

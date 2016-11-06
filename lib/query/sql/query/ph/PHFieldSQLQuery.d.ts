@@ -3,6 +3,7 @@ import { PHSQLQuery } from "../../PHSQLQuery";
 import { JSONClauseField, JSONClauseObjectType } from "../../../../core/field/Appliable";
 import { IQField } from "../../../../core/field/Field";
 import { IQDistinctFunction } from "../../../../core/field/Functions";
+import { EntityAliases } from "../../../../core/entity/Aliases";
 /**
  * Created by Papa on 10/24/2016.
  */
@@ -15,7 +16,7 @@ export interface PHRawFieldSQLQuery<IQF extends IQField<IQF>> extends PHRawNonEn
 }
 export declare class PHFieldSQLQuery<IQF extends IQField<IQF>> extends PHDistinguishableSQLQuery implements PHSQLQuery {
     private phRawQuery;
-    constructor(phRawQuery: PHRawFieldSQLQuery<IQF>);
+    constructor(phRawQuery: PHRawFieldSQLQuery<IQF>, entityAliases: EntityAliases);
     nonDistinctSelectClauseToJSON(rawSelect: any): any;
     toJSON(): PHJsonFieldQSLQuery;
 }

@@ -2,6 +2,7 @@ import { QStringField, IQStringField } from "../field/StringField";
 import { IQEntity } from "./Entity";
 import { IQRelation, EntityRelationType } from "./Relation";
 import { JSONClauseField } from "../field/Appliable";
+import { FieldColumnAliases } from "./Aliases";
 /**
  * Created by Papa on 10/23/2016.
  */
@@ -20,5 +21,5 @@ export declare class QStringManyToOneRelation<IQR extends IQEntity, R> extends Q
     innerJoin(): IQR;
     leftJoin(): IQR;
     private getNewQEntity(joinType);
-    toJSON(): JSONClauseField;
+    toJSON(columnAliases: FieldColumnAliases, forSelectClause: boolean): JSONClauseField;
 }

@@ -14,7 +14,7 @@ import {IFrom, QEntity, QView} from "../../../../core/entity/Entity";
 import {JSONRelation} from "../../../../core/entity/Relation";
 import {PHRawNonEntitySQLQuery, PHJsonNonEntitySqlQuery} from "./PHNonEntitySQLQuery";
 import {QExistsFunction} from "../../../../core/field/Functions";
-import {FieldColumnAliases} from "../../../../core/entity/Aliases";
+import {FieldColumnAliases, EntityAliases} from "../../../../core/entity/Aliases";
 /**
  * Created by Papa on 10/27/2016.
  */
@@ -23,7 +23,11 @@ export abstract class PHAbstractSQLQuery {
 
 	protected isEntityQuery: boolean = false;
 
-	protected columnAliases: FieldColumnAliases = new FieldColumnAliases();
+	constructor(
+		protected entityAliases: EntityAliases = new EntityAliases(),
+		protected columnAliases: FieldColumnAliases = entityAliases.getNewFieldColumnAliases()
+	) {
+	}
 
 	protected getNonEntitySqlQuery(
 		rawQuery: PHRawNonEntitySQLQuery,
@@ -32,9 +36,9 @@ export abstract class PHAbstractSQLQuery {
 		let from = this.fromClauseToJSON(rawQuery.from);
 
 		jsonQuery.from = from;
-		jsonQuery.where = PHAbstractSQLQuery.whereClauseToJSON(rawQuery.where);
+		jsonQuery.where = PHAbstractSQLQuery.whereClauseToJSON(rawQuery.where, this.columnAliases);
 		jsonQuery.groupBy = this.groupByClauseToJSON(rawQuery.groupBy);
-		jsonQuery.having = PHAbstractSQLQuery.whereClauseToJSON(rawQuery.having);
+		jsonQuery.having = PHAbstractSQLQuery.whereClauseToJSON(rawQuery.having, this.columnAliases);
 		jsonQuery.orderBy = this.orderByClauseToJSON(rawQuery.orderBy);
 		jsonQuery.limit = rawQuery.limit;
 		jsonQuery.offset = rawQuery.offset;
@@ -55,11 +59,14 @@ export abstract class PHAbstractSQLQuery {
 					throw `Entity FROM clauses can contain only Entities.`;
 				}
 			}
-			return fromEntity.getRelationJson();
+			return fromEntity.getRelationJson(this.columnAliases);
 		});
 	}
 
-	static whereClauseToJSON( whereClause: JSONBaseOperation ): JSONBaseOperation {
+	static whereClauseToJSON(
+		whereClause: JSONBaseOperation,
+		columnAliases: FieldColumnAliases
+	): JSONBaseOperation {
 		if (!whereClause) {
 			return null;
 		}
@@ -74,12 +81,12 @@ export abstract class PHAbstractSQLQuery {
 				let jsonLogicalOperation = <JSONLogicalOperation>jsonOperation;
 				switch (operation.operation) {
 					case '$not':
-						jsonLogicalOperation.value = this.whereClauseToJSON(<JSONBaseOperation>logicalOperation.value);
+						jsonLogicalOperation.value = this.whereClauseToJSON(<JSONBaseOperation>logicalOperation.value, columnAliases);
 						break;
 					case '$and':
 					case '$or':
 						jsonLogicalOperation.value = (<JSONBaseOperation[]>logicalOperation.value).map(( value ) =>
-							this.whereClauseToJSON(value)
+							this.whereClauseToJSON(value, columnAliases)
 						);
 						break;
 					default:
@@ -89,7 +96,7 @@ export abstract class PHAbstractSQLQuery {
 			case OperationCategory.FUNCTION:
 				let functionOperation: QExistsFunction<any> = <QExistsFunction<any>>operation;
 				let query = functionOperation.getQuery();
-				let jsonQuery = new PHMappedSQLQuery(query).toJSON();
+				let jsonQuery = new PHMappedSQLQuery(query, columnAliases.entityAliases).toJSON();
 				jsonOperation = functionOperation.toJSON(jsonQuery);
 				break;
 			case OperationCategory.BOOLEAN:
@@ -99,14 +106,14 @@ export abstract class PHAbstractSQLQuery {
 				let valueOperation: JSONRawValueOperation<any, any> = <JSONRawValueOperation<any, any>>operation;
 				// All Non logical or exists operations are value operations (eq, isNull, like, etc.)
 				let jsonValueOperation: JSONValueOperation = <JSONValueOperation>jsonOperation;
-				jsonValueOperation.lValue = this.convertLRValue(valueOperation.lValue);
+				jsonValueOperation.lValue = this.convertLRValue(valueOperation.lValue, columnAliases);
 				let rValue = valueOperation.rValue;
 				if (rValue instanceof Array) {
 					jsonValueOperation.rValue = rValue.map(( anRValue ) => {
-						return this.convertLRValue(anRValue);
+						return this.convertLRValue(anRValue, columnAliases);
 					})
 				} else {
-					jsonValueOperation.rValue = this.convertLRValue(rValue);
+					jsonValueOperation.rValue = this.convertLRValue(rValue, columnAliases);
 				}
 				break;
 		}
@@ -114,7 +121,10 @@ export abstract class PHAbstractSQLQuery {
 		return jsonOperation;
 	}
 
-	private static convertLRValue( rValue ): any {
+	private static convertLRValue(
+		rValue,
+		columnAliases: FieldColumnAliases
+	): any {
 		switch (typeof rValue) {
 			case "boolean":
 			case "number":
@@ -124,11 +134,11 @@ export abstract class PHAbstractSQLQuery {
 				if (rValue instanceof Date) {
 					return rValue;
 				} else if (rValue instanceof QOperableField) {
-					return rValue.toJSON();
+					return rValue.toJSON(columnAliases, false);
 				} // Must be a Field Query
 				else {
 					let rawFieldQuery: PHRawFieldSQLQuery<any> = rValue;
-					let phFieldQuery = new PHFieldSQLQuery(rawFieldQuery);
+					let phFieldQuery = new PHFieldSQLQuery(rawFieldQuery, columnAliases.entityAliases);
 					return phFieldQuery.toJSON();
 				}
 		}
@@ -139,7 +149,7 @@ export abstract class PHAbstractSQLQuery {
 			return null;
 		}
 		return groupBy.map(( field ) => {
-			if (!this.columnAliases.hasField(field)) {
+			if (!this.columnAliases.hasAliasFor(field)) {
 				throw `Field used in group by clause is not present in select clause`;
 			}
 			return {

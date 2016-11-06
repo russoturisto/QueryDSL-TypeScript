@@ -31,5 +31,5 @@ export interface JSONClauseField extends JSONClauseObject {
 export interface Appliable<JCO extends JSONClauseObject, IQF extends IQField<IQF>> {
     __appliedFunctions__: JSONSqlFunctionCall[];
     applySqlFunction<A extends Appliable<JCO, IQF>>(sqlFunctionCall: JSONSqlFunctionCall): A;
-    toJSON(): JCO | JSONFunctionOperation;
+    toJSON(...args: any[]): JCO | JSONFunctionOperation;
 }

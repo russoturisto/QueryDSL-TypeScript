@@ -6,7 +6,7 @@ import {
 	JSONViewJoinRelation
 } from "./Relation";
 import {JSONBaseOperation, IOperation} from "../operation/Operation";
-import {getNextRootEntityName} from "./Aliases";
+import {getNextRootEntityName, FieldColumnAliases} from "./Aliases";
 import {JoinType, JoinFields} from "./Joins";
 import {IQOperableField} from "../field/OperableField";
 import {PHRawMappedSQLQuery, PHMappedSQLQuery} from "../../query/sql/query/ph/PHMappedSQLQuery";
@@ -68,7 +68,7 @@ export interface IQEntity {
 		fields: IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]
 	): IQEntity;
 
-	getRelationJson(): JSONRelation;
+	getRelationJson( columnAliases: FieldColumnAliases ): JSONRelation;
 
 }
 
@@ -118,7 +118,7 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 		this.__entityFieldMap__[propertyName] = field;
 	}
 
-	getRelationJson(): JSONRelation {
+	getRelationJson( columnAliases: FieldColumnAliases ): JSONRelation {
 		let jsonRelation: JSONRelation = {
 			currentChildIndex: this.currentChildIndex,
 			entityName: this.__entityName__,
@@ -128,18 +128,21 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 			rootEntityPrefix: this.rootEntityPrefix
 		};
 		if (this.joinWhereClause) {
-			this.getJoinRelationJson(<JSONJoinRelation>jsonRelation);
+			this.getJoinRelationJson(<JSONJoinRelation>jsonRelation, columnAliases);
 		} else if (this.relationPropertyName) {
 			this.getEntityRelationJson(<JSONEntityRelation>jsonRelation);
 		} else {
-			this.getRootRelationJson(jsonRelation);
+			this.getRootRelationJson(jsonRelation, columnAliases);
 		}
 		return jsonRelation;
 	}
 
-	getJoinRelationJson( jsonRelation: JSONJoinRelation ): JSONJoinRelation {
+	getJoinRelationJson(
+		jsonRelation: JSONJoinRelation,
+		columnAliases: FieldColumnAliases
+	): JSONJoinRelation {
 		jsonRelation.relationType = JSONRelationType.ENTITY_JOIN_ON;
-		jsonRelation.joinWhereClause = PHAbstractSQLQuery.whereClauseToJSON(this.joinWhereClause);
+		jsonRelation.joinWhereClause = PHAbstractSQLQuery.whereClauseToJSON(this.joinWhereClause, columnAliases);
 
 		return jsonRelation;
 	}
@@ -151,7 +154,10 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 		return jsonRelation;
 	}
 
-	getRootRelationJson( jsonRelation: JSONRelation ): JSONJoinRelation {
+	getRootRelationJson(
+		jsonRelation: JSONRelation,
+		columnAliases: FieldColumnAliases
+	): JSONJoinRelation {
 		jsonRelation.relationType = (this instanceof QView) ? JSONRelationType.SUB_QUERY_ROOT : JSONRelationType.ENTITY_ROOT;
 
 		return jsonRelation;
@@ -225,18 +231,24 @@ export class QView extends QEntity<QView> implements IQEntity, IFrom {
 		return instance;
 	}
 
-	getJoinRelationJson( jsonRelation: JSONViewJoinRelation ): JSONViewJoinRelation {
-		jsonRelation = <JSONViewJoinRelation>super.getJoinRelationJson(jsonRelation);
+	getJoinRelationJson(
+		jsonRelation: JSONViewJoinRelation,
+		columnAliases: FieldColumnAliases
+	): JSONViewJoinRelation {
+		jsonRelation = <JSONViewJoinRelation>super.getJoinRelationJson(jsonRelation, columnAliases);
 		jsonRelation.relationType = JSONRelationType.SUB_QUERY_JOIN_ON;
-		jsonRelation.subQuery = new PHMappedSQLQuery(this.subQuery).toJSON();
+		jsonRelation.subQuery = new PHMappedSQLQuery(this.subQuery, columnAliases.entityAliases).toJSON();
 
 		return jsonRelation;
 	}
 
-	getRootRelationJson( jsonRelation: JSONViewJoinRelation ): JSONViewJoinRelation {
-		jsonRelation = <JSONViewJoinRelation>super.getJoinRelationJson(jsonRelation);
+	getRootRelationJson(
+		jsonRelation: JSONViewJoinRelation,
+		columnAliases: FieldColumnAliases
+	): JSONViewJoinRelation {
+		jsonRelation = <JSONViewJoinRelation>super.getJoinRelationJson(jsonRelation, columnAliases);
 		jsonRelation.relationType = JSONRelationType.SUB_QUERY_ROOT;
-		jsonRelation.subQuery = new PHMappedSQLQuery(this.subQuery).toJSON();
+		jsonRelation.subQuery = new PHMappedSQLQuery(this.subQuery, columnAliases.entityAliases).toJSON();
 
 		return jsonRelation;
 	}
