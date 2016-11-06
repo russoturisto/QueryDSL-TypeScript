@@ -2,8 +2,7 @@
  * Created by Papa on 10/16/2016.
  */
 import {
-	QRelation, EntityRelationRecord, JSONEntityRelation, JSONRelationType,
-	JSONRelation
+	QRelation, EntityRelationRecord, JSONEntityRelation, JSONRelationType
 } from "../../../../core/entity/Relation";
 import {EntityDefaults, SQLStringQuery, SQLDataType, QueryResultType, SQLDialect} from "../../SQLStringQuery";
 import {IEntity, IQEntity} from "../../../../core/entity/Entity";
@@ -17,14 +16,14 @@ import {EntityUtils} from "../../../../core/utils/EntityUtils";
 import {JSONFieldInOrderBy} from "../../../../core/field/FieldInOrderBy";
 import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
 import {PHJsonEntitySQLQuery} from "../ph/PHEntitySQLQuery";
-import {getNextRootEntityName, AliasCache} from "../../../../core/entity/Aliases";
+import {AliasCache} from "../../../../core/entity/Aliases";
 import {JoinType} from "../../../../core/entity/Joins";
 /**
  * Represents SQL String query with Entity tree Select clause.
  */
 export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJsonEntitySQLQuery<IE>> {
 
-	private columnAliases = new AliasCache();
+	private columnAliases = new AliasCache('ec_');
 	private queryParser: IEntityResultParser;
 
 
@@ -71,7 +70,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 				joinType: null,
 				relationPropertyName: null,
 				relationType: JSONRelationType.ENTITY_ROOT,
-				rootEntityPrefix: getNextRootEntityName()
+				rootEntityPrefix: 'r_'
 			};
 			joinRelations.push(onlyJsonRelation);
 		}

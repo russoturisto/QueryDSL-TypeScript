@@ -144,7 +144,7 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 		viewJoinRelation: JSONViewJoinRelation,
 		viewAlias: string
 	) {
-		let view = new QView(viewJoinRelation.rootEntityPrefix, viewJoinRelation.fromClausePosition, null);
+		let view = new QView(viewJoinRelation.fromClausePosition, null);
 		this.addFieldsToViewForSelect(view, viewAlias, viewJoinRelation.subQuery.select, 'f');
 
 		return view;

@@ -42,7 +42,9 @@ extends QStringField implements IQRelation<IQR, R> {
 	}
 
 	private getNewQEntity( joinType: JoinType ): IQR {
-		return new this.relationQEntityConstructor(this.relationQEntityConstructor, this.relationEntityConstructor, this.entityName, this.q.rootEntityPrefix, QRelation.getNextChildJoinPosition(this.q), this.fieldName, joinType);
+		let newQEntity = new this.relationQEntityConstructor(this.relationQEntityConstructor, this.relationEntityConstructor, this.entityName, QRelation.getNextChildJoinPosition(this.q), this.fieldName, joinType);
+		newQEntity.parentJoinEntity = this.q;
+		return newQEntity;
 	}
 
 	toJSON(

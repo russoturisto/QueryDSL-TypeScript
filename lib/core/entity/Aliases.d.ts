@@ -1,10 +1,9 @@
 import { IQField } from "../field/Field";
 import { IQEntity } from "./Entity";
-export declare function getNextRootEntityName(): string;
 export declare class AliasCache {
-    private lastAlias;
     protected aliasPrefix: string;
-    constructor();
+    private lastAlias;
+    constructor(aliasPrefix?: string);
     getFollowingAlias(): string;
     reset(): void;
 }

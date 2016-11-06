@@ -6,7 +6,7 @@ import {
 	JSONViewJoinRelation
 } from "./Relation";
 import {JSONBaseOperation, IOperation} from "../operation/Operation";
-import {getNextRootEntityName, FieldColumnAliases} from "./Aliases";
+import {FieldColumnAliases} from "./Aliases";
 import {JoinType, JoinFields} from "./Joins";
 import {IQOperableField} from "../field/OperableField";
 import {PHRawMappedSQLQuery, PHMappedSQLQuery} from "../../query/sql/query/ph/PHMappedSQLQuery";
@@ -48,11 +48,11 @@ export interface IQEntity {
 	__entityName__: string;
 	__entityRelationMap__: {[propertyName: string]: IQRelation<IQEntity, any>};
 	currentChildIndex: number;
-	rootEntityPrefix: string;
 	fromClausePosition: number[];
 	relationPropertyName: string;
 	joinType: JoinType;
 	joinWhereClause: JSONBaseOperation;
+	parentJoinEntity: IQEntity;
 
 	addEntityRelation<IQR extends IQEntity, R>(
 		propertyName: string,
@@ -70,6 +70,8 @@ export interface IQEntity {
 
 	getRelationJson( columnAliases: FieldColumnAliases ): JSONRelation;
 
+	isRootEntity(): boolean;
+	getRootJoinEntity(): IQEntity;
 }
 
 export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
@@ -81,12 +83,12 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 
 	currentChildIndex = 0;
 	joinWhereClause: JSONBaseOperation;
+	parentJoinEntity: IQEntity;
 
 	constructor(
 		public __qEntityConstructor__: {new( ...args: any[] ): IQ},
 		public __entityConstructor__: {new(): any},
 		public __entityName__: string,
-		public rootEntityPrefix: string = getNextRootEntityName(),
 		public fromClausePosition: number[] = [],
 		public relationPropertyName = null,
 		public joinType: JoinType = null
@@ -94,7 +96,7 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 	}
 
 	getInstance(): IQ {
-		let instance = new this.__qEntityConstructor__(this.__qEntityConstructor__, this.__entityConstructor__, this.__entityName__, this.rootEntityPrefix, this.fromClausePosition, this.relationPropertyName, this.joinType);
+		let instance = new this.__qEntityConstructor__(this.__qEntityConstructor__, this.__entityConstructor__, this.__entityName__, this.fromClausePosition, this.relationPropertyName, this.joinType);
 
 		instance.currentChildIndex = this.currentChildIndex;
 		instance.joinWhereClause = this.joinWhereClause;
@@ -125,7 +127,7 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 			fromClausePosition: this.fromClausePosition,
 			joinType: this.joinType,
 			relationType: null,
-			rootEntityPrefix: this.rootEntityPrefix
+			rootEntityPrefix: columnAliases.entityAliases.getNextAlias(this.getRootJoinEntity())
 		};
 		if (this.joinWhereClause) {
 			this.getJoinRelationJson(<JSONJoinRelation>jsonRelation, columnAliases);
@@ -183,9 +185,21 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 		let nextChildPosition = QRelation.getNextChildJoinPosition(this);
 		joinChild.fromClausePosition = nextChildPosition;
 		joinChild.joinType = joinType;
-		joinChild.rootEntityPrefix = this.rootEntityPrefix;
+		joinChild.parentJoinEntity = this;
 
 		return new JoinFields<IF>(right);
+	}
+
+	isRootEntity(): boolean {
+		return !this.parentJoinEntity;
+	}
+
+	getRootJoinEntity(): IQEntity {
+		let rootEntity: IQEntity = this;
+		while (rootEntity.parentJoinEntity) {
+			rootEntity = rootEntity.parentJoinEntity;
+		}
+		return rootEntity;
 	}
 
 	fullJoin<IF extends IFrom>(
@@ -217,11 +231,10 @@ export abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
 export class QView extends QEntity<QView> implements IQEntity, IFrom {
 
 	constructor(
-		public rootEntityPrefix: string = getNextRootEntityName(),
 		public fromClausePosition: number[] = [],
 		public subQuery: PHRawMappedSQLQuery<any>
 	) {
-		super(QView, null, null, rootEntityPrefix, fromClausePosition, null, null);
+		super(QView, null, null, fromClausePosition, null, null);
 	}
 
 	getInstance(): QView {

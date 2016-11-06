@@ -1,20 +1,16 @@
 import {
-	EntityRelationRecord, JSONEntityRelation, QRelation, JSONRelationType,
-	JSONRelation
+	EntityRelationRecord, JSONEntityRelation, JSONRelation
 } from "../../core/entity/Relation";
-import {IEntity, IQEntity} from "../../core/entity/Entity";
+import {IQEntity} from "../../core/entity/Entity";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
 import {FieldMap} from "./FieldMap";
 import {SQLStringWhereBase} from "./SQLStringWhereBase";
 import {JSONFieldInOrderBy} from "../../core/field/FieldInOrderBy";
 import {IOrderByParser, getOrderByParser} from "./query/orderBy/IOrderByParser";
 import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
-import {FieldColumnAliases, getNextRootEntityName} from "../../core/entity/Aliases";
 import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
 import {PHJsonCommonSQLQuery} from "./PHSQLQuery";
-import {PHJsonMappedQSLQuery} from "./query/ph/PHMappedSQLQuery";
 import {JSONClauseField} from "../../core/field/Appliable";
-import {JoinType} from "../../core/entity/Joins";
 /**
  * Created by Papa on 8/20/2016.
  */

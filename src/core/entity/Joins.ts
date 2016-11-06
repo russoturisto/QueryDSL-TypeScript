@@ -1,6 +1,5 @@
 import {PHRawMappedSQLQuery, IMappedEntity} from "../../query/sql/query/ph/PHMappedSQLQuery";
 import {JSONRelation} from "./Relation";
-import {getNextRootEntityName} from "./Aliases";
 import {IFrom, QEntity, QView, IQEntity} from "./Entity";
 import {JSONBaseOperation} from "../operation/Operation";
 import {IQField, QField} from "../field/Field";
@@ -19,17 +18,7 @@ export function view<IME extends IMappedEntity>(
 		queryDefinition = query;
 	}
 
-	// When retrieved via the view() function the query is the first one in the list
-	let rootQuery = <JSONRelation><any>queryDefinition;
-
-	// By default treat the view as the first table in the join, this will be overwritten if it becomes
-	// the right entry in the join
-	rootQuery.currentChildIndex = 0;
-	rootQuery.fromClausePosition = [];
-	rootQuery.rootEntityPrefix = getNextRootEntityName();
-
-	let view = new QView(rootQuery.rootEntityPrefix, rootQuery.fromClausePosition, queryDefinition);
-
+	let view = new QView([], queryDefinition);
 	let customEntity: IME = <IME>queryDefinition.select;
 	view = convertMappedEntitySelect(customEntity, queryDefinition, view, view, 'f');
 

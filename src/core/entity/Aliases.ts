@@ -4,77 +4,17 @@ import {IQEntity} from "./Entity";
  * Created by Papa on 10/18/2016.
  */
 
-function test<A>( a: A ): A {
-	return a;
-}
-
-let a = test({
-	b: 1,
-	c: 2
-});
-
 const ALIASES = ['a', 'b', 'c', 'd', 'e',
 	'f', 'g', 'h', 'i', 'j',
 	'k', 'l', 'm', 'n', 'o',
 	'p', 'q', 'r', 's', 't',
 	'u', 'v', 'w', 'x', 'y', 'z'];
 
-
-const lastRootEntityName = [-1, -1, -1];
-
-export function getNextRootEntityName(): string {
-	let currentName = this.lastRootEntityName;
-	for (var i = 2; i >= 0; i--) {
-		let currentIndex = currentName[i];
-		currentIndex = (currentIndex + 1) % 26;
-		currentName[i] = currentIndex;
-		if (currentIndex !== 0) {
-			break;
-		}
-	}
-	let nameString = '';
-	for (var i = 0; i < 3; i++) {
-		nameString += ALIASES[currentName[i]];
-	}
-
-	return nameString;
-}
-
-class SpecificColumnAliases {
-
-	private aliasEntries: string[] = [];
-	private readIndex = 0;
-
-	constructor(
-		private aliasKey: string
-	) {
-	}
-
-	addAlias(
-		columnAlias: string
-	): void {
-		this.aliasEntries.push(columnAlias);
-	}
-
-	resetReadIndex(): void {
-		this.readIndex = 0;
-	}
-
-	readNextAlias(): string {
-		if (this.readIndex >= this.aliasEntries.length) {
-			throw `Too many read references for column ${this.aliasKey}`;
-		}
-		return this.aliasEntries[this.readIndex++];
-	}
-
-}
-
 export class AliasCache {
 
 	private lastAlias;
-	protected aliasPrefix = '';
 
-	constructor() {
+	constructor( protected aliasPrefix = '' ) {
 		this.reset();
 	}
 

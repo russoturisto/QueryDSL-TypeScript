@@ -30,7 +30,9 @@ implements IQRelation<IQR, R> {
 	}
 
 	private getNewQEntity( joinType: JoinType ): IQR {
-		return new this.relationQEntityConstructor(this.relationQEntityConstructor, this.relationEntityConstructor, this.entityName, QRelation.getNextChildJoinPosition(this.q), this.propertyName, joinType);
+		let newQEntity =  new this.relationQEntityConstructor(this.relationQEntityConstructor, this.relationEntityConstructor, this.entityName, QRelation.getNextChildJoinPosition(this.q), this.propertyName, joinType);
+		newQEntity.parentJoinEntity = this.q;
+		return newQEntity;
 	}
 
 }
