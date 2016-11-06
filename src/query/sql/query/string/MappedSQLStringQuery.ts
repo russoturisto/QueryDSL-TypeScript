@@ -9,6 +9,7 @@ import {EntityRelationRecord} from "../../../../core/entity/Relation";
 import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
 import {NonEntitySQLStringQuery} from "./NonEntitySQLStringQuery";
 import {JSONClauseField, JSONClauseObjectType} from "../../../../core/field/Appliable";
+import {ClauseType} from "../../SQLStringWhereBase";
 /**
  *
  */
@@ -19,10 +20,9 @@ export class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJsonMappedQS
 		qEntityMapByName: {[entityName: string]: IQEntity},
 		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
-		dialect: SQLDialect,
-		queryResultType: QueryResultType
+		dialect: SQLDialect
 	) {
-		super(phJsonQuery, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect, queryResultType);
+		super(phJsonQuery, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect, QueryResultType.MAPPED_HIERARCHICAL);
 	}
 
 	protected getSELECTFragment(
@@ -75,7 +75,7 @@ export class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJsonMappedQS
 			if (value === undefined) {
 				continue;
 			}
-			let columnSelectSqlFragment = this.getFieldValue(value, true,
+			let columnSelectSqlFragment = this.getFieldValue(value, ClauseType.MAPPED_SELECT_CLAUSE,
 				// Nested object processing
 				()=> {
 					return this.getSELECTFragment(null,

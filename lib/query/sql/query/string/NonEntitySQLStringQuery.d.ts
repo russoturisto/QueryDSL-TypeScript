@@ -26,7 +26,5 @@ export declare abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEnti
      */
     addFieldsToViewForSelect(view: QView, viewAlias: string, select: any, fieldPrefix: string, forFieldQueryAlias?: string): void;
     addFieldToViewForSelect(view: QView, viewAlias: string, fieldPrefix: string, fieldJson: JSONClauseField, alias: string, forFieldQueryAlias?: string): boolean;
-    getFunctionCallValue(rawValue: any): string;
-    getFieldValue(clauseField: JSONClauseField, allowNestedObjects: boolean, defaultCallback: () => string): string;
     private getFROMFragment(parentTree, currentTree, embedParameters?, parameters?);
 }

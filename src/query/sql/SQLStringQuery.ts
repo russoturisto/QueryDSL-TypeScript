@@ -72,8 +72,6 @@ export abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> extends 
 	protected entityDefaults: EntityDefaults = new EntityDefaults();
 	protected joinTree: JoinTreeNode;
 	protected orderByParser: IOrderByParser;
-	protected embedParameters = false;
-	protected parameters = [];
 
 	constructor(
 		protected phJsonQuery: PHJsonCommonSQLQuery,
@@ -125,36 +123,6 @@ ORDER BY
 		entityDefaults: EntityDefaults
 	): string;
 
-	protected getSimpleColumnFragment(
-		value: JSONClauseField,
-		columnName: string
-	): string {
-		return `${value.tableAlias}.${columnName}`;
-	}
-
-	protected getComplexColumnFragment(
-		value: JSONClauseField,
-		columnName: string
-	): string {
-		let selectSqlFragment = `${value.tableAlias}.${columnName}`;
-		selectSqlFragment = this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(value, selectSqlFragment, this.qEntityMapByAlias, this.embedParameters, this.parameters);
-		return selectSqlFragment;
-	}
-
-	protected getEntityManyToOneColumnName(
-		qEntity: IQEntity,
-		propertyName: string,
-		tableAlias: string
-	): string {
-		let entityName = qEntity.__entityName__;
-		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
-
-		let columnName = MetadataUtils.getJoinColumnName(propertyName, entityMetadata, tableAlias);
-		this.addField(entityName, this.getTableName(qEntity), propertyName, columnName);
-
-		return columnName;
-	}
-
 	/**
 	 * If bridging is not applied:
 	 *
@@ -176,41 +144,6 @@ ORDER BY
 	protected abstract getOrderByFragment(
 		orderBy?: JSONFieldInOrderBy[]
 	): string;
-
-	isPrimitive( value: any ) {
-		if (value === null || value === undefined || value === '' || value === NaN) {
-			throw `Invalid query value: ${value}`;
-		}
-		switch (typeof value) {
-			case "boolean":
-			case "number":
-			case "string":
-				return true;
-		}
-		if (value instanceof Date) {
-			return true;
-		}
-		return false;
-	}
-
-	parsePrimitive(
-		primitiveValue: any
-	): string {
-		if (this.embedParameters) {
-			this.parameters.push(primitiveValue);
-			return this.sqlAdaptor.getParameterSymbol();
-		}
-		switch (typeof primitiveValue) {
-			case "boolean":
-			case "number":
-			case "string":
-				return '' + primitiveValue;
-		}
-		if (primitiveValue instanceof Date) {
-			return this.sqlAdaptor.dateToDbQuery(primitiveValue);
-		}
-		throw `Cannot parse a non-primitive value`;
-	}
 
 	protected getEntitySchemaRelationFromJoin(
 		leftEntity: IQEntity,

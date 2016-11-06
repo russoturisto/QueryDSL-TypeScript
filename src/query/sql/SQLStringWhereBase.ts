@@ -1,21 +1,33 @@
 import {IQEntity} from "../../core/entity/Entity";
 import {ISQLAdaptor, getSQLAdaptor, SqlValueProvider} from "./adaptor/SQLAdaptor";
-import {SQLDialect} from "./SQLStringQuery";
+import {SQLDialect, QueryResultType} from "./SQLStringQuery";
 import {EntityRelationRecord} from "../../core/entity/Relation";
 import {QBooleanField} from "../../core/field/BooleanField";
 import {QDateField} from "../../core/field/DateField";
 import {QNumberField} from "../../core/field/NumberField";
 import {QStringField} from "../../core/field/StringField";
-import {JSONBaseOperation, OperationCategory} from "../../core/operation/Operation";
+import {JSONBaseOperation, OperationCategory, JSONValueOperation} from "../../core/operation/Operation";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
 import {FieldMap} from "./FieldMap";
 import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
 import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
 import {JSONLogicalOperation} from "../../core/operation/LogicalOperation";
 import {IValidator, getValidator} from "../../validation/Validator";
+import {JSONClauseField, JSONClauseObjectType} from "../../core/field/Appliable";
+import {PHJsonFieldQSLQuery} from "./query/ph/PHFieldSQLQuery";
+import {FieldSQLStringQuery} from "./query/string/FieldSQLStringQuery";
+import {MappedSQLStringQuery} from "./query/string/MappedSQLStringQuery";
+import {PHJsonMappedQSLQuery} from "./query/ph/PHMappedSQLQuery";
 /**
  * Created by Papa on 10/2/2016.
  */
+
+export enum ClauseType {
+	MAPPED_SELECT_CLAUSE,
+	NON_MAPPED_SELECT_CLAUSE,
+	WHERE_CLAUSE,
+	FUNCTION_CLALL
+}
 
 export abstract class SQLStringWhereBase implements SqlValueProvider {
 
@@ -23,6 +35,8 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 	protected qEntityMapByAlias: {[entityAlias: string]: IQEntity} = {};
 	protected sqlAdaptor: ISQLAdaptor;
 	protected validator: IValidator;
+	protected embedParameters = false;
+	protected parameters = [];
 
 	constructor(
 		protected qEntityMapByName: {[entityName: string]: IQEntity},
@@ -34,31 +48,30 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		this.validator = getValidator(this.qEntityMapByName);
 	}
 
-	abstract getFunctionCallValue( rawValue: any ): string;
-
 	protected getWHEREFragment(
 		operation: JSONBaseOperation,
-		nestingPrefix: string,
-		joinNodeMap: {[alias: string]: JoinTreeNode},
-		embedParameters: boolean = true,
-		parameters: any[] = null
+		nestingPrefix: string
 	): string {
 		let whereFragment = '';
-		nestingPrefix = `${nestingPrefix}  `;
+		nestingPrefix = `${nestingPrefix}\t`;
 
 		switch (operation.category) {
 			case OperationCategory.LOGICAL:
-				return this.getLogicalWhereFragment(<JSONLogicalOperation>operation, nestingPrefix, joinNodeMap, embedParameters, parameters);
+				return this.getLogicalWhereFragment(<JSONLogicalOperation>operation, nestingPrefix);
 			case OperationCategory.BOOLEAN:
+			case OperationCategory.DATE:
+			case OperationCategory.NUMBER:
+			case OperationCategory.STRING:
+				let valueOperation = <JSONValueOperation>operation;
+				let lValue = valueOperation.lValue;
+				let rValue = valueOperation.rValue;
+				let lValueSql = this.getFieldValue(valueOperation.lValue, ClauseType.WHERE_CLAUSE);
+				let rValueSql = this.getFieldValue(valueOperation.rValue, ClauseType.WHERE_CLAUSE);
 				let aliasColumnPair = property.split('.');
 				if (aliasColumnPair.length != 2) {
 					throw `Expecting 'alias.column' instead of ${property}`;
 				}
 				let alias = aliasColumnPair[0];
-				let joinNode = joinNodeMap[alias];
-				if (!joinNode) {
-					throw `Unknown alias '${alias}' in WHERE clause`;
-				}
 				let qEntity = this.qEntityMapByAlias[alias];
 				let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
 				let propertyName = aliasColumnPair[1];
@@ -78,7 +91,6 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, alias);
 				whereFragment = `${alias}.${columnName} `;
 
-				let valueOperation = operation[property];
 				let fieldOperation;
 				for (let operationProperty in valueOperation) {
 					if (fieldOperation) {
@@ -124,6 +136,9 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 
 				whereFragment += operatorAndValueFragment;
 				break;
+			case OperationCategory.FUNCTION:
+				// exists function and maybe others
+				break;
 		}
 
 		return whereFragment;
@@ -131,13 +146,10 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 
 	private getLogicalWhereFragment(
 		operation: JSONLogicalOperation,
-		nestingPrefix: string,
-		joinNodeMap: {[alias: string]: JoinTreeNode},
-		embedParameters: boolean = true,
-		parameters: any[] = null
+		nestingPrefix: string
 	) {
 		let operator;
-		switch (operation.operator) {
+		switch (operation.operation) {
 			case '$and':
 				operator = 'AND';
 				break;
@@ -146,16 +158,16 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 				break;
 			case '$not':
 				operator = 'NOT';
-				return `${operator} (${this.getWHEREFragment(<JSONBaseOperation>operation.value, nestingPrefix, joinNodeMap, embedParameters, parameters)})`;
+				return `${operator} (${this.getWHEREFragment(<JSONBaseOperation>operation.value, nestingPrefix)})`;
 			default:
-				throw `Unknown logical operator: ${operation.operator}`;
+				throw `Unknown logical operator: ${operation.operation}`;
 		}
 		let childOperations = <JSONBaseOperation[]>operation.value;
 		if (!(childOperations instanceof Array)) {
 			throw `Expecting an array of child operations as a value for operator ${operator}, in the WHERE Clause.`;
 		}
 		let whereFragment = childOperations.map(( childOperation ) => {
-			this.getWHEREFragment(childOperation, nestingPrefix, joinNodeMap, embedParameters, parameters);
+			this.getWHEREFragment(childOperation, nestingPrefix);
 		}).join(`\n${nestingPrefix}${operator} `);
 
 		return `( ${whereFragment} )`;
@@ -400,6 +412,142 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		warning: string
 	): void {
 		console.log(warning);
+	}
+
+
+	getFunctionCallValue(
+		rawValue: any
+	): string {
+		return this.getFieldValue(<JSONClauseField>rawValue, ClauseType.FUNCTION_CLALL);
+	}
+
+	getFieldValue(
+		clauseField: JSONClauseField,
+		clauseType: ClauseType,
+		defaultCallback: () => string = null
+	): string {
+		let columnName;
+		if (!clauseField) {
+			throw `Missing Clause Field definition`;
+		}
+		if (!clauseField.type) {
+			throw `Type is not defined in JSONClauseField`;
+		}
+		let aValue;
+		switch (clauseField.type) {
+			case JSONClauseObjectType.DATE_FIELD_FUNCTION:
+				if (!clauseField.value) {
+					throw `Value not provided for a Date function`;
+				}
+				if (!(clauseField.value instanceof Date) && !(<PHJsonFieldQSLQuery>clauseField.value).type) {
+					clauseField.value = new Date(clauseField.value);
+				}
+			case JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION:
+			case JSONClauseObjectType.NUMBER_FIELD_FUNCTION:
+			case JSONClauseObjectType.STRING_FIELD_FUNCTION:
+				aValue = clauseField.value;
+				if (this.isPrimitive(aValue)) {
+					aValue = this.parsePrimitive(aValue);
+				} else {
+					aValue = this.getFieldValue(aValue, ClauseType.FUNCTION_CLALL, defaultCallback);
+				}
+				this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(clauseField, aValue, this.qEntityMapByAlias, this.embedParameters, this.parameters);
+				break;
+			case JSONClauseObjectType.DISTINCT_FUNCTION:
+				throw `Distinct function cannot be nested.`;
+			case JSONClauseObjectType.EXISTS_FUNCTION:
+				if (clauseType !== ClauseType.WHERE_CLAUSE) {
+					throw `Exists function only as a top function in a WHERE clause.`;
+				}
+				let mappedSqlQuery = new MappedSQLStringQuery(<PHJsonMappedQSLQuery>clauseField.value, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect);
+				return `EXISTS(${mappedSqlQuery.toSQL()})`;
+			case JSONClauseObjectType.FIELD:
+				let qEntity = this.qEntityMapByAlias[clauseField.tableAlias];
+				this.validator.validateReadQEntityProperty(clauseField.propertyName, qEntity);
+				columnName = this.getEntityPropertyColumnName(qEntity, clauseField.propertyName, clauseField.tableAlias);
+				return this.getComplexColumnFragment(clauseField, columnName);
+			case JSONClauseObjectType.FIELD_QUERY:
+				// TODO: figure out if functions can be applied to sub-queries
+				let jsonFieldSqlQuery: PHJsonFieldQSLQuery = <PHJsonFieldQSLQuery><any>clauseField;
+				let fieldSqlQuery = new FieldSQLStringQuery(jsonFieldSqlQuery, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect);
+				fieldSqlQuery.addQEntityMapByAlias(this.qEntityMapByAlias);
+				return `(${fieldSqlQuery.toSQL()})`;
+			case JSONClauseObjectType.MANY_TO_ONE_RELATION:
+				this.validator.validateReadQEntityManyToOneRelation(clauseField.propertyName, qEntity);
+				columnName = this.getEntityManyToOneColumnName(qEntity, clauseField.propertyName, clauseField.tableAlias);
+				return this.getComplexColumnFragment(clauseField, columnName);
+			// must be a nested object
+			default:
+				if (clauseType !== ClauseType.MAPPED_SELECT_CLAUSE) {
+					`Nested objects only allowed in the mapped SELECT clause.`;
+				}
+				return defaultCallback();
+		}
+	}
+
+	protected isPrimitive( value: any ) {
+		if (value === null || value === undefined || value === '' || value === NaN) {
+			throw `Invalid query value: ${value}`;
+		}
+		switch (typeof value) {
+			case "boolean":
+			case "number":
+			case "string":
+				return true;
+		}
+		if (value instanceof Date) {
+			return true;
+		}
+		return false;
+	}
+
+	protected parsePrimitive(
+		primitiveValue: any
+	): string {
+		if (this.embedParameters) {
+			this.parameters.push(primitiveValue);
+			return this.sqlAdaptor.getParameterSymbol();
+		}
+		switch (typeof primitiveValue) {
+			case "boolean":
+			case "number":
+			case "string":
+				return '' + primitiveValue;
+		}
+		if (primitiveValue instanceof Date) {
+			return this.sqlAdaptor.dateToDbQuery(primitiveValue);
+		}
+		throw `Cannot parse a non-primitive value`;
+	}
+
+	protected getSimpleColumnFragment(
+		value: JSONClauseField,
+		columnName: string
+	): string {
+		return `${value.tableAlias}.${columnName}`;
+	}
+
+	protected getComplexColumnFragment(
+		value: JSONClauseField,
+		columnName: string
+	): string {
+		let selectSqlFragment = `${value.tableAlias}.${columnName}`;
+		selectSqlFragment = this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(value, selectSqlFragment, this.qEntityMapByAlias, this.embedParameters, this.parameters);
+		return selectSqlFragment;
+	}
+
+	protected getEntityManyToOneColumnName(
+		qEntity: IQEntity,
+		propertyName: string,
+		tableAlias: string
+	): string {
+		let entityName = qEntity.__entityName__;
+		let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
+
+		let columnName = MetadataUtils.getJoinColumnName(propertyName, entityMetadata, tableAlias);
+		this.addField(entityName, this.getTableName(qEntity), propertyName, columnName);
+
+		return columnName;
 	}
 
 }

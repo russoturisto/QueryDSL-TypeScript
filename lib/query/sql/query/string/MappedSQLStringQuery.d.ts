@@ -2,7 +2,7 @@
  * Created by Papa on 10/28/2016.
  */
 import { PHJsonMappedQSLQuery } from "../ph/PHMappedSQLQuery";
-import { SQLDialect, QueryResultType, EntityDefaults } from "../../SQLStringQuery";
+import { SQLDialect, EntityDefaults } from "../../SQLStringQuery";
 import { IQEntity } from "../../../../core/entity/Entity";
 import { EntityRelationRecord } from "../../../../core/entity/Relation";
 import { JoinTreeNode } from "../../../../core/entity/JoinTreeNode";
@@ -21,6 +21,6 @@ export declare class MappedSQLStringQuery extends NonEntitySQLStringQuery<PHJson
         [entityName: string]: {
             [propertyName: string]: boolean;
         };
-    }, dialect: SQLDialect, queryResultType: QueryResultType);
+    }, dialect: SQLDialect);
     protected getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults): string;
 }

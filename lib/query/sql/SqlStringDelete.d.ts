@@ -8,7 +8,7 @@ import { SQLStringNoJoinQuery } from "./SQLStringNoJoinQuery";
  */
 export declare class SQLStringDelete extends SQLStringNoJoinQuery {
     phJsonDelete: PHJsonSQLDelete;
-    constructor(phJsonDelete: PHJsonSQLDelete, qEntity: IQEntity, qEntityMap: {
+    constructor(phJsonDelete: PHJsonSQLDelete, qEntity: IQEntity, qEntityMapByName: {
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {

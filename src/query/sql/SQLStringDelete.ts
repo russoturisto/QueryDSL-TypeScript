@@ -12,12 +12,12 @@ export class SQLStringDelete extends SQLStringNoJoinQuery {
 	constructor(
 		public phJsonDelete: PHJsonSQLDelete,
 		qEntity: IQEntity,
-		qEntityMap: {[entityName: string]: IQEntity},
+		qEntityMapByName: {[entityName: string]: IQEntity},
 		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		dialect: SQLDialect
 	) {
-		super(qEntity, qEntityMap, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
+		super(qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
 	}
 
 	toSQL(

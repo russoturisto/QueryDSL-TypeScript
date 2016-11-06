@@ -6,7 +6,6 @@ import { JSONFieldInOrderBy } from "../../core/field/FieldInOrderBy";
 import { IOrderByParser } from "./query/orderBy/IOrderByParser";
 import { JoinTreeNode } from "../../core/entity/JoinTreeNode";
 import { PHJsonCommonSQLQuery } from "./PHSQLQuery";
-import { JSONClauseField } from "../../core/field/Appliable";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -47,8 +46,6 @@ export declare abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> 
     protected entityDefaults: EntityDefaults;
     protected joinTree: JoinTreeNode;
     protected orderByParser: IOrderByParser;
-    protected embedParameters: boolean;
-    protected parameters: any[];
     constructor(phJsonQuery: PHJsonCommonSQLQuery, qEntityMapByName: {
         [alias: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
@@ -66,9 +63,6 @@ export declare abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> 
     }, entityName?: string): any;
     toSQL(): string;
     protected abstract getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults): string;
-    protected getSimpleColumnFragment(value: JSONClauseField, columnName: string): string;
-    protected getComplexColumnFragment(value: JSONClauseField, columnName: string): string;
-    protected getEntityManyToOneColumnName(qEntity: IQEntity, propertyName: string, tableAlias: string): string;
     /**
      * If bridging is not applied:
      *
@@ -83,7 +77,5 @@ export declare abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> 
      */
     protected abstract parseQueryResults(results: any[], queryResultType: QueryResultType, bridgedQueryConfiguration?: any): any[];
     protected abstract getOrderByFragment(orderBy?: JSONFieldInOrderBy[]): string;
-    isPrimitive(value: any): boolean;
-    parsePrimitive(primitiveValue: any): string;
     protected getEntitySchemaRelationFromJoin(leftEntity: IQEntity, rightEntity: IQEntity, entityRelation: JSONEntityRelation, parentRelation: JSONRelation, currentAlias: string, parentAlias: string, tableName: string, joinTypeString: string, errorPrefix: string): string;
 }

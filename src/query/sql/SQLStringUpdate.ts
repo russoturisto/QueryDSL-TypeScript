@@ -24,7 +24,7 @@ export class SQLStringUpdate extends SQLStringNoJoinQuery {
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		dialect: SQLDialect
 	) {
-		super(qEntity, qEntityMap, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
+		super(qEntityMap, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
 	}
 
 	toSQL(

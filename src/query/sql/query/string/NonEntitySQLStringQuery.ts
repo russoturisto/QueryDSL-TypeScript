@@ -4,7 +4,7 @@ import {
 } from "../../../../core/entity/Relation";
 import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
 import {PHJsonMappedQSLQuery} from "../ph/PHMappedSQLQuery";
-import {SQLStringQuery} from "../../SQLStringQuery";
+import {SQLStringQuery, QueryResultType} from "../../SQLStringQuery";
 import {PHJsonNonEntitySqlQuery} from "../ph/PHNonEntitySQLQuery";
 import {JSONClauseField, JSONClauseObjectType} from "../../../../core/field/Appliable";
 import {PHJsonFieldQSLQuery} from "../ph/PHFieldSQLQuery";
@@ -233,73 +233,6 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 		return hasDistinctClause;
 	}
 
-
-	getFunctionCallValue(
-		rawValue: any
-	): string {
-		return this.getFieldValue(<JSONClauseField>rawValue, false, null);
-	}
-
-	getFieldValue(
-		clauseField: JSONClauseField,
-		allowNestedObjects: boolean,
-		defaultCallback: () => string
-	): string {
-		let columnName;
-		if (!clauseField) {
-			throw `Missing Clause Field definition`;
-		}
-		if (!clauseField.type) {
-			throw `Type is not defined in JSONClauseField`;
-		}
-		let aValue;
-		switch (clauseField.type) {
-			case JSONClauseObjectType.DATE_FIELD_FUNCTION:
-				if (!clauseField.value) {
-					throw `Value not provided for a Date function`;
-				}
-				if (!(clauseField.value instanceof Date) && !(<PHJsonFieldQSLQuery>clauseField.value).type) {
-					clauseField.value = new Date(clauseField.value);
-				}
-			case JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION:
-			case JSONClauseObjectType.NUMBER_FIELD_FUNCTION:
-			case JSONClauseObjectType.STRING_FIELD_FUNCTION:
-				aValue = clauseField.value;
-				if (this.isPrimitive(aValue)) {
-					aValue = this.parsePrimitive(aValue);
-				} else {
-					aValue = this.getFieldValue(aValue, allowNestedObjects, defaultCallback);
-				}
-				this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(clauseField, aValue, this.qEntityMapByAlias, this.embedParameters, this.parameters);
-				break;
-			case JSONClauseObjectType.DISTINCT_FUNCTION:
-				throw `Distinct function cannot be nested inside the SELECT clause`;
-			case JSONClauseObjectType.EXISTS_FUNCTION:
-				throw `Exists function cannot be used in SELECT clause`;
-			case JSONClauseObjectType.FIELD:
-				let qEntity = this.qEntityMapByAlias[clauseField.tableAlias];
-				this.validator.validateReadQEntityProperty(clauseField.propertyName, qEntity);
-				columnName = this.getEntityPropertyColumnName(qEntity, clauseField.propertyName, clauseField.tableAlias);
-				return this.getComplexColumnFragment(clauseField, columnName);
-			case JSONClauseObjectType.FIELD_QUERY:
-				// TODO: figure out if functions can be applied to sub-queries
-				let jsonFieldSqlQuery: PHJsonFieldQSLQuery = <PHJsonFieldQSLQuery><any>clauseField;
-				let fieldSqlQuery = new FieldSQLStringQuery(jsonFieldSqlQuery, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect);
-				fieldSqlQuery.addQEntityMapByAlias(this.qEntityMapByAlias);
-				return `(${fieldSqlQuery.toSQL()})`;
-			case JSONClauseObjectType.MANY_TO_ONE_RELATION:
-				this.validator.validateReadQEntityManyToOneRelation(clauseField.propertyName, qEntity);
-				columnName = this.getEntityManyToOneColumnName(qEntity, clauseField.propertyName, clauseField.tableAlias);
-				return this.getComplexColumnFragment(clauseField, columnName);
-			// must be a nested object
-			default:
-				if (!allowNestedObjects) {
-					`Nested objects only allowed in the mapped SELECT clause.`;
-				}
-				return defaultCallback();
-		}
-	}
-
 	private getFROMFragment(
 		parentTree: JoinTreeNode,
 		currentTree: JoinTreeNode,
@@ -319,7 +252,7 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 					break;
 				case JSONRelationType.SUB_QUERY_ROOT:
 					let viewRelation = <JSONViewJoinRelation>currentRelation;
-					let subQuery = new MappedSQLStringQuery(viewRelation.subQuery, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect, this.queryResultType);
+					let subQuery = new MappedSQLStringQuery(viewRelation.subQuery, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect);
 					fromFragment += `(${subQuery.toSQL()}) ${currentAlias}`;
 					break;
 				default:
@@ -351,9 +284,12 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 
 			let errorPrefix = 'Error building FROM: ';
 
+			let joinOnClause;
 			switch (currentRelation.relationType) {
 				case JSONRelationType.ENTITY_JOIN_ON:
-					 TODO: implement
+					let joinRelation = <JSONJoinRelation>currentRelation;
+					joinOnClause = this.getWHEREFragment(joinRelation.joinWhereClause, '\t');
+					fromFragment += `${joinTypeString} ${tableName} ${currentAlias} ON\n${joinOnClause}`;
 					break;
 				case JSONRelationType.ENTITY_SCHEMA_RELATION:
 					fromFragment += this.getEntitySchemaRelationFromJoin(leftEntity, rightEntity,
@@ -361,7 +297,9 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 						tableName, joinTypeString, errorPrefix);
 					break;
 				case JSONRelationType.SUB_QUERY_JOIN_ON:
-					// TODO: implement
+					let viewJoinRelation = <JSONViewJoinRelation>currentRelation;
+					let mappedSqlQuery = new MappedSQLStringQuery(viewJoinRelation.subQuery, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect);
+					fromFragment += `${joinTypeString} (${mappedSqlQuery.toSQL()}) ON\n${joinOnClause}`;
 					break;
 				default:
 					throw `Nested FROM entries must be Entity JOIN ON or Schema Relation, or Sub-Query JOIN ON`;
