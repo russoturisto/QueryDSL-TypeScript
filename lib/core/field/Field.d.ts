@@ -32,7 +32,7 @@ export declare abstract class QField<IQF extends IQField<IQF>> implements IQFiel
     objectEquals<QF extends QField<any>>(otherField: QF, checkValue?: boolean): boolean;
     asc(): IFieldInOrderBy<IQF>;
     desc(): IFieldInOrderBy<IQF>;
-    abstract getInstance(): QField<IQF>;
+    abstract getInstance(qEntity?: IQEntity): QField<IQF>;
     protected copyFunctions<QF extends QField<IQF>>(field: QF): QF;
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): IQF;
     addSubQuery(subQuery: PHRawFieldSQLQuery<IQF>): IQF;

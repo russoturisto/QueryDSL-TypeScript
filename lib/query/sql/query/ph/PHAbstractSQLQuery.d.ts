@@ -1,4 +1,4 @@
-import { PHRawMappedSQLQuery, PHJsonMappedQSLQuery } from "./PHMappedSQLQuery";
+import { PHRawMappedSQLQuery } from "./PHMappedSQLQuery";
 import { JSONFieldInOrderBy, IFieldInOrderBy, JSONFieldInGroupBy } from "../../../../core/field/FieldInOrderBy";
 import { IQOperableField } from "../../../../core/field/OperableField";
 import { JSONBaseOperation } from "../../../../core/operation/Operation";
@@ -13,7 +13,7 @@ export declare abstract class PHAbstractSQLQuery {
     protected isEntityQuery: boolean;
     protected columnAliases: FieldColumnAliases;
     protected getNonEntitySqlQuery(rawQuery: PHRawNonEntitySQLQuery, jsonQuery: PHJsonNonEntitySqlQuery): PHJsonNonEntitySqlQuery;
-    protected fromClauseToJSON(fromClause: (IFrom | PHRawMappedSQLQuery<any>)[]): (JSONRelation | PHJsonMappedQSLQuery)[];
+    protected fromClauseToJSON(fromClause: (IFrom | PHRawMappedSQLQuery<any>)[]): JSONRelation[];
     static whereClauseToJSON(whereClause: JSONBaseOperation): JSONBaseOperation;
     private static convertLRValue(rValue);
     protected groupByClauseToJSON(groupBy: IQOperableField<any, any, any, any>[]): JSONFieldInGroupBy[];

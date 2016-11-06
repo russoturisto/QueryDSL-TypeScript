@@ -77,12 +77,8 @@ export function getOrderByParser(
 		case QueryResultType.ENTITY_HIERARCHICAL:
 		case QueryResultType.MAPPED_HIERARCHICAL:
 			return new ForcedOrderByParser(rootQEntity, selectClauseFragment, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, orderBy);
-		case QueryResultType.ENTITY_PLAIN:
-		case QueryResultType.FLAT:
-		case QueryResultType.ENTITY_FLATTENED:
 		case QueryResultType.FLAT:
 		case QueryResultType.FIELD:
-		case QueryResultType.MAPPED_PLAIN:
 			return new ExactOrderByParser(rootQEntity, selectClauseFragment, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, orderBy);
 		case QueryResultType.RAW:
 			throw `Query parsing not supported for raw queries`;

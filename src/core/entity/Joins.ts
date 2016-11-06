@@ -21,13 +21,17 @@ export function view<IME extends IMappedEntity>(
 
 	// When retrieved via the view() function the query is the first one in the list
 	let rootQuery = <JSONRelation><any>queryDefinition;
+
+	// By default treat the view as the first table in the join, this will be overwritten if it becomes
+	// the right entry in the join
 	rootQuery.currentChildIndex = 0;
 	rootQuery.fromClausePosition = [];
 	rootQuery.rootEntityPrefix = getNextRootEntityName();
+
 	let view = new QView(rootQuery.rootEntityPrefix, rootQuery.fromClausePosition, queryDefinition);
 
 	let customEntity: IME = <IME>queryDefinition.select;
-	view = convertMappedEntitySelect(customEntity, queryDefinition, view);
+	view = convertMappedEntitySelect(customEntity, queryDefinition, view, view, 'f');
 
 	return <IME & IFrom><any>view;
 }
@@ -36,16 +40,22 @@ export function view<IME extends IMappedEntity>(
 function convertMappedEntitySelect<IME extends IMappedEntity>(
 	customEntity: IME,
 	queryDefinition: PHRawMappedSQLQuery<IME>,
-	view: QView
+	view: QView,
+	selectProxy: any,
+	fieldPrefix: string
 ): QView {
+	let fieldIndex = 0;
 	for (let property in customEntity) {
+		let alias = `${fieldPrefix}${++fieldIndex}`;
 		let value = customEntity[property];
 		if (value instanceof QField) {
-			view[property] = value.getInstance();
-			view[property].q = view;
+			let field = value.getInstance(view);
+			field.fieldName = alias;
+			field.q = view;
+			selectProxy[property] = field;
 		} else {
 			if (value instanceof Object && !(value instanceof Date)) {
-				view[value] = convertMappedEntitySelect(value, queryDefinition, view);
+				selectProxy[value] = convertMappedEntitySelect(value, queryDefinition, view, {}, `${alias}_`);
 			} else {
 				throw `All SELECT clause entries of a Mapped query must be Fields or Functions`;
 			}

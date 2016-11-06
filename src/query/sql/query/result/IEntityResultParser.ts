@@ -130,10 +130,6 @@ export function getObjectResultParser(
 			return new BridgedResultParser(config, rootQEntity, qEntityMapByName);
 		case QueryResultType.ENTITY_HIERARCHICAL:
 			return new HierarchicalResultParser();
-		case QueryResultType.ENTITY_PLAIN:
-			return new PlainResultParser();
-		case QueryResultType.ENTITY_FLATTENED:
-			return new FlattenedResultParser();
 		default:
 			throw `ObjectQueryParser not supported for QueryResultType: ${queryResultType}`;
 	}

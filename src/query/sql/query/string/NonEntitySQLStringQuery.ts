@@ -1,6 +1,6 @@
 import {
 	JSONEntityRelation, JSONRelationType, QRelation, JSONRelation,
-	JSONJoinRelation
+	JSONJoinRelation, JSONViewJoinRelation
 } from "../../../../core/entity/Relation";
 import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
 import {PHJsonMappedQSLQuery} from "../ph/PHMappedSQLQuery";
@@ -13,6 +13,12 @@ import {FieldColumnAliases} from "../../../../core/entity/Aliases";
 import {JoinType} from "../../../../core/entity/Joins";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
 import {QView} from "../../../../core/entity/Entity";
+import {QBooleanField} from "../../../../core/field/BooleanField";
+import {QDateField} from "../../../../core/field/DateField";
+import {QNumberField} from "../../../../core/field/NumberField";
+import {QStringField} from "../../../../core/field/StringField";
+import {QField} from "../../../../core/field/Field";
+import {MappedSQLStringQuery} from "./MappedSQLStringQuery";
 /**
  * Created by Papa on 10/28/2016.
  */
@@ -39,7 +45,7 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 	}
 
 	buildFromJoinTree(
-		joinRelations: (JSONRelation | PHJsonMappedQSLQuery)[],
+		joinRelations: JSONRelation[],
 		joinNodeMap: {[alias: string]: JoinTreeNode}
 	): JoinTreeNode[] {
 		let jsonTrees: JoinTreeNode[] = [];
@@ -69,6 +75,7 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 		joinNodeMap[alias] = jsonTree;
 
 		for (let i = 1; i < joinRelations.length; i++) {
+			let rightEntity;
 			let joinRelation = joinRelations[i];
 			if (!joinRelation.joinType) {
 				throw `Table ${i + 1} in FROM clause is missing joinType`;
@@ -77,9 +84,9 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 			alias = QRelation.getAlias(joinRelation);
 			switch (joinRelation.relationType) {
 				case JSONRelationType.SUB_QUERY_ROOT:
-					let view = new QView(joinRelation.rootEntityPrefix, joinRelation.fromClausePosition, null);
-					TODO: add fields to the view
+					let view = this.addFieldsToView(<JSONViewJoinRelation>joinRelation, alias);
 					this.qEntityMapByAlias[alias] = view;
+					continue;
 				case JSONRelationType.ENTITY_ROOT:
 					// Non-Joined table
 					let nonJoinedEntity = QRelation.createRelatedQEntity(joinRelation, this.qEntityMapByName);
@@ -95,11 +102,19 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 					if (!(<JSONEntityRelation>joinRelation).relationPropertyName) {
 						throw `Table ${i + 1} in FROM clause is missing relationPropertyName`;
 					}
+					rightEntity = QRelation.createRelatedQEntity(joinRelation, this.qEntityMapByName);
+					break;
 				case JSONRelationType.SUB_QUERY_JOIN_ON:
+					if (!(<JSONJoinRelation>joinRelation).joinWhereClause) {
+						this.warn(`View ${i + 1} in FROM clause is missing joinWhereClause`);
+					}
+					rightEntity = this.addFieldsToView(<JSONViewJoinRelation>joinRelation, alias);
+					break;
 				case JSONRelationType.ENTITY_JOIN_ON:
 					if (!(<JSONJoinRelation>joinRelation).joinWhereClause) {
 						this.warn(`Table ${i + 1} in FROM clause is missing joinWhereClause`);
 					}
+					rightEntity = QRelation.createRelatedQEntity(joinRelation, this.qEntityMapByName);
 					break;
 				default:
 					throw `Unknown JSONRelationType ${joinRelation.relationType}`;
@@ -112,9 +127,7 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 			let rightNode = new JoinTreeNode(joinRelation, [], leftNode);
 			leftNode.addChildNode(rightNode);
 
-			alias = QRelation.getAlias(joinRelation);
 			this.validator.validateReadFromEntity(joinRelation);
-			let rightEntity = QRelation.createRelatedQEntity(joinRelation, this.qEntityMapByName);
 			this.qEntityMapByAlias[alias] = rightEntity;
 			if (!rightEntity) {
 				throw `Could not find entity ${joinRelation.entityName} for table ${i + 1} in FROM clause`;
@@ -127,6 +140,100 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 
 		return jsonTrees;
 	}
+
+	addFieldsToView(
+		viewJoinRelation: JSONViewJoinRelation,
+		viewAlias: string
+	) {
+		let view = new QView(viewJoinRelation.rootEntityPrefix, viewJoinRelation.fromClausePosition, null);
+		this.addFieldsToViewForSelect(view, viewAlias, viewJoinRelation.subQuery.select, 'f');
+
+		return view;
+	}
+
+	/**
+	 * Just build the shell fields for the external API of the view, don't do anything else.
+	 * @param view
+	 * @param select
+	 * @param fieldPrefix
+	 */
+	addFieldsToViewForSelect(
+		view: QView,
+		viewAlias: string,
+		select: any,
+		fieldPrefix: string,
+		forFieldQueryAlias: string = null
+	) {
+		let fieldIndex = 0;
+		let hasDistinctClause = false;
+		for (let fieldName in select) {
+			let alias = `${fieldPrefix}${++fieldIndex}`;
+			let fieldJson: JSONClauseField = select[fieldName];
+			// If its a nested select
+			if (!fieldJson.type) {
+				this.addFieldsToViewForSelect(view, viewAlias, fieldJson, `${alias}_`);
+			} else {
+				let aliasToSet = forFieldQueryAlias ? forFieldQueryAlias : alias;
+				hasDistinctClause = hasDistinctClause && this.addFieldToViewForSelect(view, viewAlias, fieldPrefix, fieldJson, aliasToSet, forFieldQueryAlias);
+			}
+		}
+		if (fieldIndex > 1) {
+			if (hasDistinctClause) {
+				throw `DISTINCT clause must be the only property at its level`;
+			}
+			if (forFieldQueryAlias) {
+				throw `Field queries can have only one field in SELECT clause`;
+			}
+		}
+	}
+
+	addFieldToViewForSelect(
+		view: QView,
+		viewAlias: string,
+		fieldPrefix: string,
+		fieldJson: JSONClauseField,
+		alias: string,
+		forFieldQueryAlias: string = null
+	): boolean {
+		let hasDistinctClause = false;
+		switch (fieldJson.type) {
+			case JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION:
+				view[alias] = new QBooleanField(view, <any>QView, viewAlias, alias);
+				break;
+			case JSONClauseObjectType.DATE_FIELD_FUNCTION:
+				view[alias] = new QDateField(view, <any>QView, viewAlias, alias);
+				break;
+			case JSONClauseObjectType.EXISTS_FUNCTION:
+				throw `Exists function cannot be used in SELECT clause.`;
+			case JSONClauseObjectType.FIELD:
+				let field = <QField<any>><any>this.qEntityMapByName[fieldJson.entityName].__entityFieldMap__[fieldJson.propertyName];
+				view[alias] = field.getInstance(view);
+				break;
+			case JSONClauseObjectType.FIELD_QUERY:
+				let fieldQuery = <PHJsonFieldQSLQuery><any>fieldJson;
+				this.addFieldToViewForSelect(view, viewAlias, fieldPrefix, fieldQuery.select, alias, alias);
+				break;
+			case JSONClauseObjectType.DISTINCT_FUNCTION:
+				this.addFieldsToViewForSelect(view, viewAlias, fieldJson.value, fieldPrefix, forFieldQueryAlias);
+				hasDistinctClause = true;
+				break;
+			case JSONClauseObjectType.MANY_TO_ONE_RELATION:
+				let relation = <QField<any>><any>this.qEntityMapByName[fieldJson.entityName].__entityRelationMap__[fieldJson.propertyName];
+				view[alias] = relation.getInstance(view);
+				break;
+			case JSONClauseObjectType.NUMBER_FIELD_FUNCTION:
+				view[alias] = new QNumberField(view, <any>QView, viewAlias, alias);
+				break;
+			case JSONClauseObjectType.STRING_FIELD_FUNCTION:
+				view[alias] = new QStringField(view, <any>QView, viewAlias, alias);
+				break;
+			default:
+				throw `Missing type property on JSONClauseField`;
+		}
+
+		return hasDistinctClause;
+	}
+
 
 	getFunctionCallValue(
 		rawValue: any
@@ -207,7 +314,18 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 		let tableName = this.getTableName(qEntity);
 
 		if (!parentTree) {
-			fromFragment += `${tableName} ${currentAlias}`;
+			switch (currentRelation.relationType) {
+				case JSONRelationType.ENTITY_ROOT:
+					fromFragment += `${tableName} ${currentAlias}`;
+					break;
+				case JSONRelationType.SUB_QUERY_ROOT:
+					let viewRelation = <JSONViewJoinRelation>currentRelation;
+					let subQuery = new MappedSQLStringQuery(viewRelation.subQuery, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect, this.queryResultType);
+					fromFragment += `(${subQuery.toSQL()}) ${currentAlias}`;
+					break;
+				default:
+					throw `Top level FROM entries must be Entity or Sub-Query root`;
+			}
 		} else {
 			let parentRelation = parentTree.jsonRelation;
 			let parentAlias = QRelation.getAlias(parentRelation);
@@ -232,23 +350,23 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 					throw `Unsupported join type: ${currentRelation.joinType}`;
 			}
 
-			let rightEntityJoinColumn, leftColumn;
-			let leftEntityMetadata: EntityMetadata = <EntityMetadata><any>leftEntity.__entityConstructor__;
-			let rightEntityMetadata: EntityMetadata = <EntityMetadata><any>rightEntity.__entityConstructor__;
 			let errorPrefix = 'Error building FROM: ';
 
 			switch (currentRelation.relationType) {
-				case JSONRelationType.ENTITY_ROOT:
-					fromFragment += `${tableName} ${currentAlias}`;
-					break;
 				case JSONRelationType.ENTITY_JOIN_ON:
+					 TODO: implement
+					break;
 				case JSONRelationType.ENTITY_SCHEMA_RELATION:
 					fromFragment += this.getEntitySchemaRelationFromJoin(leftEntity, rightEntity,
 						<JSONEntityRelation>currentRelation, parentRelation, currentAlias, parentAlias,
 						tableName, joinTypeString, errorPrefix);
 					break;
 				case JSONRelationType.SUB_QUERY_JOIN_ON:
-				case JSONRelationType.SUB_QUERY_ROOT:
+					// TODO: implement
+					break;
+				default:
+					throw `Nested FROM entries must be Entity JOIN ON or Schema Relation, or Sub-Query JOIN ON`;
+
 			}
 		}
 		for (let i = 0; i < currentTree.childNodes.length; i++) {

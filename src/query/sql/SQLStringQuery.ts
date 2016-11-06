@@ -48,15 +48,18 @@ export enum QueryResultType {
 	// Ordered query result with bridging for all MtOs and OtM
 	ENTITY_BRIDGED,
 		// A flat array of values, returned by a on object select
-	ENTITY_FLATTENED,
+		// Not supporting, requires support for order by (with field aliases) which is not currently implemented
+		// ENTITY_FLATTENED,
 		// Ordered query result, with objects grouped hierarchically by entity
 	ENTITY_HIERARCHICAL,
 		// A flat array of objects, returned by a regular join
-	ENTITY_PLAIN,
+		// Not supporting, requires support for order by (with field aliases) which is not currently implemented
+		// ENTITY_PLAIN,
 		// Ordered query result, with objects grouped hierarchically by mapping
 	MAPPED_HIERARCHICAL,
 		// A flat array of objects, returned by a mapped query
-	MAPPED_PLAIN,
+		// Not supporting, please use flat query
+		// MAPPED_PLAIN,
 		// Flat array query result, with no forced ordering or grouping
 	FLAT,
 		// A single field query result, with no forced ordering or grouping
@@ -219,11 +222,11 @@ ORDER BY
 		entityRelation: JSONEntityRelation,
 		parentRelation: JSONRelation,
 		currentAlias: string,
-		parentAlias:string,
-		tableName:string,
-		joinTypeString:string,
-		errorPrefix:string
-	):string {
+		parentAlias: string,
+		tableName: string,
+		joinTypeString: string,
+		errorPrefix: string
+	): string {
 
 		let rightEntityJoinColumn, leftColumn;
 		let leftEntityMetadata: EntityMetadata = <EntityMetadata><any>leftEntity.__entityConstructor__;

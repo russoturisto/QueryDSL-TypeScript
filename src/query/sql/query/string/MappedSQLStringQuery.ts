@@ -5,10 +5,9 @@
 import {PHJsonMappedQSLQuery} from "../ph/PHMappedSQLQuery";
 import {SQLDialect, QueryResultType, EntityDefaults} from "../../SQLStringQuery";
 import {IQEntity} from "../../../../core/entity/Entity";
-import {EntityRelationRecord, QRelation} from "../../../../core/entity/Relation";
+import {EntityRelationRecord} from "../../../../core/entity/Relation";
 import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
 import {NonEntitySQLStringQuery} from "./NonEntitySQLStringQuery";
-import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
 import {JSONClauseField, JSONClauseObjectType} from "../../../../core/field/Appliable";
 /**
  *

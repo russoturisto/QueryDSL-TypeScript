@@ -11,7 +11,7 @@ export interface IQBooleanField extends IQOperableField<boolean, JSONRawBooleanO
 }
 export declare class QBooleanField extends QOperableField<boolean, JSONRawBooleanOperation, IBooleanOperation, IQBooleanField> implements IQBooleanField {
     constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string);
-    getInstance(): QBooleanField;
+    getInstance(qEntity?: IQEntity): QBooleanField;
 }
 export declare class QBooleanFunction extends QBooleanField {
     private value;

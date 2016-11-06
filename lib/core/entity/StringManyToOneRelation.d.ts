@@ -16,7 +16,7 @@ export declare class QStringManyToOneRelation<IQR extends IQEntity, R> extends Q
     relationQEntityConstructor: new (...args: any[]) => IQR;
     relationType: EntityRelationType;
     constructor(q: IQR, qConstructor: new () => IQR, entityName: string, fieldName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR);
-    getInstance(): QStringManyToOneRelation<IQR, R>;
+    getInstance(qEntity?: IQR): QStringManyToOneRelation<IQR, R>;
     innerJoin(): IQR;
     leftJoin(): IQR;
     private getNewQEntity(joinType);

@@ -24,8 +24,8 @@ export class QDateField extends QOperableField<Date, JSONRawDateOperation, IDate
 		super(q, qConstructor, entityName, fieldName, FieldType.DATE, new DateOperation());
 	}
 
-	getInstance(): QDateField {
-		return this.copyFunctions(new QDateField(this.q, this.qConstructor, this.entityName, this.fieldName));
+	getInstance(qEntity:IQEntity = this.q): QDateField {
+		return this.copyFunctions(new QDateField(qEntity, this.qConstructor, this.entityName, this.fieldName));
 	}
 
 }

@@ -1,4 +1,4 @@
-import {PHMappedSQLQuery, PHRawMappedSQLQuery, PHJsonMappedQSLQuery} from "./PHMappedSQLQuery";
+import {PHMappedSQLQuery, PHRawMappedSQLQuery} from "./PHMappedSQLQuery";
 import {
 	FieldInOrderBy, JSONFieldInOrderBy, IFieldInOrderBy,
 	JSONFieldInGroupBy
@@ -44,7 +44,7 @@ export abstract class PHAbstractSQLQuery {
 
 	protected fromClauseToJSON(
 		fromClause: (IFrom | PHRawMappedSQLQuery<any>)[]
-	): (JSONRelation | PHJsonMappedQSLQuery)[] {
+	): JSONRelation[] {
 		return fromClause.map(( fromEntity ) => {
 			if (!(fromEntity instanceof QEntity)) {
 				throw `FROM clause can contain only Views or Entities.`;

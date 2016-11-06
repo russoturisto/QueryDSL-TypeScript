@@ -29,8 +29,8 @@ extends QStringField implements IQRelation<IQR, R> {
 		super(q, qConstructor, entityName, fieldName);
 	}
 
-	getInstance():QStringManyToOneRelation<IQR, R> {
-		return this.copyFunctions(new QStringManyToOneRelation(this.q, this.qConstructor, this.entityName, this.fieldName, this.relationEntityConstructor, this.relationQEntityConstructor));
+	getInstance(qEntity:IQR = this.q):QStringManyToOneRelation<IQR, R> {
+		return this.copyFunctions(new QStringManyToOneRelation(qEntity, this.qConstructor, this.entityName, this.fieldName, this.relationEntityConstructor, this.relationQEntityConstructor));
 	}
 
 	innerJoin(): IQR {

@@ -29,8 +29,8 @@ extends QNumberField implements IQRelation<IQR, R> {
 		super(q, qConstructor, entityName, fieldName);
 	}
 
-	getInstance():QNumberManyToOneRelation<IQR, R> {
-		return this.copyFunctions(new QNumberManyToOneRelation(this.q, this.qConstructor, this.entityName, this.fieldName, this.relationEntityConstructor, this.relationQEntityConstructor));
+	getInstance(qEntity:IQR = this.q):QNumberManyToOneRelation<IQR, R> {
+		return this.copyFunctions(new QNumberManyToOneRelation(qEntity, this.qConstructor, this.entityName, this.fieldName, this.relationEntityConstructor, this.relationQEntityConstructor));
 	}
 
 	innerJoin(): IQR {

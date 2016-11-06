@@ -25,6 +25,7 @@ export interface JSONClauseObject {
 }
 
 export interface JSONClauseField extends JSONClauseObject {
+	entityName?:string;
 	fieldAlias:string;
 	propertyName?: string,
 	// A reference pointer from a field to a query, as defined in SELECT clause via the field function

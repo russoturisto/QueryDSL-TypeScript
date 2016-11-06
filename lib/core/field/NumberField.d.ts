@@ -15,7 +15,7 @@ export interface IQNumberField extends IQOperableField<number, JSONRawNumberOper
 }
 export declare class QNumberField extends QOperableField<number, JSONRawNumberOperation, INumberOperation, IQNumberField> implements IQNumberField {
     constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string);
-    getInstance(): QNumberField;
+    getInstance(qEntity?: IQEntity): QNumberField;
 }
 export declare class QNumberFunction extends QNumberField {
     private value;

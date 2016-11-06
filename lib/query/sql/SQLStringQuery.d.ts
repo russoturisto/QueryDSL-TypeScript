@@ -32,14 +32,11 @@ export declare class EntityDefaults {
 }
 export declare enum QueryResultType {
     ENTITY_BRIDGED = 0,
-    ENTITY_FLATTENED = 1,
-    ENTITY_HIERARCHICAL = 2,
-    ENTITY_PLAIN = 3,
-    MAPPED_HIERARCHICAL = 4,
-    MAPPED_PLAIN = 5,
-    FLAT = 6,
-    FIELD = 7,
-    RAW = 8,
+    ENTITY_HIERARCHICAL = 1,
+    MAPPED_HIERARCHICAL = 2,
+    FLAT = 3,
+    FIELD = 4,
+    RAW = 5,
 }
 /**
  * String based SQL query.

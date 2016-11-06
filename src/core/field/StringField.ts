@@ -29,8 +29,8 @@ export class QStringField extends QOperableField<string, JSONRawStringOperation,
 		super(q, qConstructor, entityName, fieldName, FieldType.STRING, new StringOperation());
 	}
 
-	getInstance(): QStringField {
-		return this.copyFunctions(new QStringField(this.q, this.qConstructor, this.entityName, this.fieldName));
+	getInstance(qEntity:IQEntity = this.q): QStringField {
+		return this.copyFunctions(new QStringField(qEntity, this.qConstructor, this.entityName, this.fieldName));
 	}
 
 	like(

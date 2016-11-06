@@ -11,7 +11,7 @@ export interface IQDateField extends IQOperableField<Date, JSONRawDateOperation,
 }
 export declare class QDateField extends QOperableField<Date, JSONRawDateOperation, IDateOperation, IQDateField> implements IQDateField {
     constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string);
-    getInstance(): QDateField;
+    getInstance(qEntity?: IQEntity): QDateField;
 }
 export declare class QDateFunction extends QDateField {
     private value;

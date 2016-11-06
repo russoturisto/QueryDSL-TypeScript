@@ -1,11 +1,10 @@
 import { PHRawNonEntitySQLQuery, PHDistinguishableSQLQuery, PHJsonNonEntitySqlQuery } from "./PHNonEntitySQLQuery";
 import { PHSQLQuery } from "../../PHSQLQuery";
-import { JSONJoinRelation } from "../../../../core/entity/Relation";
 import { IQDistinctFunction } from "../../../../core/field/Functions";
 /**
  * Created by Papa on 10/24/2016.
  */
-export interface PHJsonMappedQSLQuery extends PHJsonNonEntitySqlQuery, JSONJoinRelation {
+export interface PHJsonMappedQSLQuery extends PHJsonNonEntitySqlQuery {
 }
 /**
  * Marker interface for entities in the select clause of a PHRawMappedSQLQuery,

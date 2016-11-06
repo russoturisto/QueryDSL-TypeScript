@@ -42,8 +42,8 @@ export class QNumberField extends QOperableField<number, JSONRawNumberOperation,
 		super(q, qConstructor, entityName, fieldName, FieldType.DATE, new NumberOperation());
 	}
 
-	getInstance(): QNumberField {
-		return this.copyFunctions(new QNumberField(this.q, this.qConstructor, this.entityName, this.fieldName));
+	getInstance(qEntity:IQEntity = this.q): QNumberField {
+		return this.copyFunctions(new QNumberField(qEntity, this.qConstructor, this.entityName, this.fieldName));
 	}
 
 }

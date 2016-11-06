@@ -81,7 +81,7 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 		return new FieldInOrderBy<IQF>(this, SortOrder.DESCENDING);
 	}
 
-	abstract getInstance(): QField<IQF>;
+	abstract getInstance(qEntity?:IQEntity): QField<IQF>;
 
 	protected copyFunctions<QF extends QField<IQF>>( field: QF ): QF {
 		field.__appliedFunctions__ = this.__appliedFunctions__.slice();
@@ -111,6 +111,7 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 		}
 		let jsonField: JSONClauseField = {
 			__appliedFunctions__: this.appliedFunctionsToJson(this.__appliedFunctions__),
+			entityName: this.q.__entityName__,
 			fieldAlias: alias,
 			propertyName: this.fieldName,
 			tableAlias: QRelation.getPositionAlias(this.q.rootEntityPrefix, this.q.fromClausePosition),
@@ -178,7 +179,7 @@ implements IQField<IQF>, Appliable<JSONClauseField, IQF> {
 		return {
 			__appliedFunctions__: this.appliedFunctionsToJson(this.__appliedFunctions__),
 			fieldAlias: alias,
-			type: JSONClauseObjectType.NUMBER_FIELD_FUNCTION,
+			type: type,
 			value: this.valueToJSON(value)
 		};
 	}

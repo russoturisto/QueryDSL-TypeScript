@@ -24,8 +24,8 @@ export class QBooleanField extends QOperableField<boolean, JSONRawBooleanOperati
 		super(q, qConstructor, entityName, fieldName, FieldType.BOOLEAN, new BooleanOperation());
 	}
 
-	getInstance(): QBooleanField {
-		return this.copyFunctions(new QBooleanField(this.q, this.qConstructor, this.entityName, this.fieldName));
+	getInstance(qEntity:IQEntity = this.q): QBooleanField {
+		return this.copyFunctions(new QBooleanField(qEntity, this.qConstructor, this.entityName, this.fieldName));
 	}
 
 }
