@@ -9,18 +9,18 @@ import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
  */
 
 
-export interface JSONRawDateOperation extends JSONRawValueOperation<Date, IQDateField> {
-	operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin" | "$gt" | "$gte" | "$lt" | "$lte";
+export interface JSONRawDateOperation extends JSONRawValueOperation<IQDateField> {
+	operator: "$eq" | "$exists" | "$in" | "$ne" | "$nin" | "$gt" | "$gte" | "$lt" | "$lte";
 	lValue: IQDateField;
-	rValue: Date | Date[] | IQDateField | IQDateField[] | PHRawFieldSQLQuery<IQDateField> | PHRawFieldSQLQuery<IQDateField>[];
+	rValue: IQDateField | IQDateField[] | PHRawFieldSQLQuery<IQDateField> | PHRawFieldSQLQuery<IQDateField>[];
 }
 
-export interface IDateOperation extends IValueOperation<Date, JSONRawDateOperation, IQDateField> {
+export interface IDateOperation extends IValueOperation<JSONRawDateOperation, IQDateField> {
 
 }
 
 export class DateOperation
-extends ValueOperation<Date, JSONRawDateOperation, IQDateField> implements IDateOperation {
+extends ValueOperation<JSONRawDateOperation, IQDateField> implements IDateOperation {
 
 	constructor() {
 		super(OperationCategory.DATE);

@@ -7,8 +7,11 @@ export interface JSONFieldInGroupBy {
     fieldAlias: string;
 }
 export interface JSONFieldInOrderBy extends JSONFieldInGroupBy {
-    fieldAlias: string;
     sortOrder: SortOrder;
+}
+export interface JSONEntityFieldInOrderBy extends JSONFieldInOrderBy {
+    entityName: string;
+    propertyName: string;
 }
 export declare enum SortOrder {
     ASCENDING = 0,
@@ -21,5 +24,5 @@ export declare class FieldInOrderBy<IQF extends IQField<IQF>> implements IFieldI
     sortOrder: SortOrder;
     constructor(field: Orderable<IQF>, sortOrder: SortOrder);
     toJSON(columnAliases: FieldColumnAliases): JSONFieldInOrderBy;
-    toEntityJSON(): JSONFieldInOrderBy;
+    toEntityJSON(): JSONEntityFieldInOrderBy;
 }

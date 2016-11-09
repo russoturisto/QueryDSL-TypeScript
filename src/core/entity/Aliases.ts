@@ -1,5 +1,6 @@
 import {IQField, QField} from "../field/Field";
 import {IQEntity} from "./Entity";
+import {IQFunction} from "../field/OperableField";
 /**
  * Created by Papa on 10/18/2016.
  */
@@ -41,25 +42,33 @@ export class AliasCache {
 	}
 }
 
-export abstract class AliasMap<T> {
-	protected aliasMap: Map<T, string> = new Map<T, string>();
+export interface Parameter {
+	alias: string;
+	type: string;
+	value: boolean | Date | number | string;
+}
+
+export abstract class AliasMap<T, A> {
+	protected aliasMap: Map<T, A> = new Map<T, A>();
 
 	constructor(
-		private aliasCache: AliasCache
+		protected aliasCache: AliasCache
 	) {
 	}
 
-	getNextAlias( object: T ): string {
+	getNextAlias(
+		object: T
+	): string {
 		if (!this.hasAliasFor(object)) {
-			return this.getExistingAlias(object);
+			return <string><any>this.getExistingAlias(object);
 		}
 		let aliasString = this.aliasCache.getFollowingAlias();
-		this.aliasMap.set(object, aliasString);
+		this.aliasMap.set(object, <A><any>aliasString);
 
 		return aliasString;
 	}
 
-	abstract getExistingAlias( object: T ): string;
+	abstract getExistingAlias( object: T ): A;
 
 	hasAliasFor( object: T ): boolean {
 		return this.aliasMap.has(object);
@@ -67,13 +76,21 @@ export abstract class AliasMap<T> {
 
 }
 
-export class EntityAliases extends AliasMap<IQEntity> {
+export class EntityAliases extends AliasMap<IQEntity, string> {
+
+	private parameterAliases;
 
 	constructor(
-		private entityAliasCache = new AliasCache(),
-		private columnAliasCache = new AliasCache()
+		entityAliasCache = new AliasCache('E'),
+		private columnAliasCache = new AliasCache('C'),
+		parameterAliasCache = new AliasCache('P')
 	) {
 		super(entityAliasCache);
+		this.parameterAliases = new ParameterAliases(parameterAliasCache);
+	}
+
+	getParams(): ParameterAliases {
+		return this.parameterAliases;
 	}
 
 	getNewFieldColumnAliases(): FieldColumnAliases {
@@ -89,7 +106,41 @@ export class EntityAliases extends AliasMap<IQEntity> {
 
 }
 
-export class FieldColumnAliases extends AliasMap<IQField<any>> {
+export class ParameterAliases extends AliasMap<IQFunction<any>, Parameter> {
+
+	constructor(
+		aliasCache: AliasCache
+	) {
+		super(aliasCache);
+	}
+
+	getNextAlias(
+		object: IQFunction<any>
+	): string {
+		if (!this.hasAliasFor(object)) {
+			return this.getExistingAlias(object).alias;
+		}
+		let aliasString = this.aliasCache.getFollowingAlias();
+		let parameter: Parameter = {
+			alias: aliasString,
+			type: typeof object.value,
+			value: object.value
+		};
+		this.aliasMap.set(object, parameter);
+
+		return aliasString;
+	}
+
+	getExistingAlias( field: IQFunction<any> ): Parameter {
+		if (!this.hasAliasFor(field)) {
+			throw `No alias found for a parameter`;
+		}
+		return this.aliasMap.get(field);
+	}
+
+}
+
+export class FieldColumnAliases extends AliasMap<IQField<any>, string> {
 
 	constructor(
 		protected _entityAliases: EntityAliases,

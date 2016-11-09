@@ -1,4 +1,4 @@
-import {MappedEntityArray} from "../../../../core/MappedEntityArray";
+import {MappedEntityArray} from "../../../../../core/MappedEntityArray";
 import {ManyToOneStubReference} from "./BridgedMtoMapper";
 /**
  * Created by Papa on 10/15/2016.

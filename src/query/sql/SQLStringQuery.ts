@@ -5,12 +5,8 @@ import {IQEntity} from "../../core/entity/Entity";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
 import {FieldMap} from "./FieldMap";
 import {SQLStringWhereBase} from "./SQLStringWhereBase";
-import {JSONFieldInOrderBy} from "../../core/field/FieldInOrderBy";
-import {IOrderByParser, getOrderByParser} from "./query/orderBy/IOrderByParser";
-import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
 import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
 import {PHJsonCommonSQLQuery} from "./PHSQLQuery";
-import {JSONClauseField} from "../../core/field/Appliable";
 /**
  * Created by Papa on 8/20/2016.
  */
@@ -18,13 +14,6 @@ import {JSONClauseField} from "../../core/field/Appliable";
 export enum SQLDialect {
 	SQLITE,
 	ORACLE
-}
-
-export enum SQLDataType {
-	BOOLEAN,
-	DATE,
-	NUMBER,
-	STRING
 }
 
 export class EntityDefaults {
@@ -70,11 +59,9 @@ export enum QueryResultType {
 export abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> extends SQLStringWhereBase {
 
 	protected entityDefaults: EntityDefaults = new EntityDefaults();
-	protected joinTree: JoinTreeNode;
-	protected orderByParser: IOrderByParser;
 
 	constructor(
-		protected phJsonQuery: PHJsonCommonSQLQuery,
+		protected phJsonQuery: PHJQ,
 		qEntityMapByName: {[alias: string]: IQEntity},
 		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
@@ -82,7 +69,6 @@ export abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> extends 
 		protected queryResultType: QueryResultType
 	) {
 		super(qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
-		this.orderByParser = getOrderByParser(queryResultType, rootQEntity, phJsonQuery.select, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, phJsonQuery.orderBy);
 	}
 
 	getFieldMap(): FieldMap {
@@ -94,34 +80,6 @@ export abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> extends 
 		joinNodeMap: {[alias: string]: JoinTreeNode},
 		entityName?: string
 	);
-
-	toSQL(): string {
-		let entityName = this.rootQEntity.__entityName__;
-
-		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
-		this.joinTree = this.buildFromJoinTree(this.phJsonQuery.from, joinNodeMap, entityName);
-		let selectFragment = this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults);
-		let fromFragment = this.getFROMFragment(null, this.joinTree, embedParameters, parameters);
-		let whereFragment = this.getWHEREFragment(this.phJsonQuery.where, 0, joinNodeMap, embedParameters, parameters);
-		let orderByFragment = this.getOrderByFragment(this.phJsonQuery.orderBy);
-
-		return `SELECT
-${selectFragment}
-FROM
-${fromFragment}
-WHERE
-${whereFragment}
-ORDER BY
-  ${orderByFragment}`;
-	}
-
-	protected abstract getSELECTFragment(
-		entityName: string,
-		selectSqlFragment: string,
-		selectClauseFragment: any,
-		joinTree: JoinTreeNode,
-		entityDefaults: EntityDefaults
-	): string;
 
 	/**
 	 * If bridging is not applied:
@@ -140,10 +98,6 @@ ORDER BY
 		queryResultType: QueryResultType,
 		bridgedQueryConfiguration?: any
 	): any[];
-
-	protected abstract getOrderByFragment(
-		orderBy?: JSONFieldInOrderBy[]
-	): string;
 
 	protected getEntitySchemaRelationFromJoin(
 		leftEntity: IQEntity,

@@ -38,7 +38,7 @@ export interface JSONViewJoinRelation extends JSONJoinRelation {
 export interface JSONEntityRelation extends JSONRelation {
     relationPropertyName: string;
 }
-export interface IQRelation<IQR extends IQEntity, R> {
+export interface IQRelation {
     innerJoin(): any;
     leftJoin(): any;
 }

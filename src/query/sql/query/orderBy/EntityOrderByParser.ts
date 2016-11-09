@@ -1,5 +1,5 @@
 import {JSONFieldInOrderBy, SortOrder} from "../../../../core/field/FieldInOrderBy";
-import {IOrderByParser, AbstractOrderByParser} from "./IOrderByParser";
+import {IEntityOrderByParser, AbstractEntityOrderByParser} from "./IEntityOrderByParser";
 import {IQEntity} from "../../../../core/entity/Entity";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
 import {QRelation} from "../../../../core/entity/Relation";
@@ -9,10 +9,10 @@ import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
  */
 
 /**
- * Will hierarchically order the results of the query using breadth-first procesing. Within a given entity will take
+ * Will hierarchically order the results of the query using breadth-first processing. Within a given entity will take
  * into account the sort order specified in the Order By clause.
  */
-export class ForcedOrderByParser extends AbstractOrderByParser implements IOrderByParser {
+export class EntityOrderByParser extends AbstractEntityOrderByParser implements IEntityOrderByParser {
 
 	/**
 	 * Using the following algorithm
@@ -73,13 +73,20 @@ export class ForcedOrderByParser extends AbstractOrderByParser implements IOrder
 				if (parentNodeFound) {
 					return true;
 				}
+				let fieldAliasFragments = orderByField.fieldAlias.split('.');
+				let orderByEntityName = fieldAliasFragments[0];
+				let orderByPropertyName = fieldAliasFragments[1];
 				if (this.isForParentNode(currentJoinNode, orderByField)) {
-					throw `Found out of order entry in Order By [${orderByField.alias}.${orderByField.propertyName}].  Entries must be ordered hierarchically, in breadth-first order.`;
+					throw `Found out of order entry in Order By [${orderByEntityName}.${orderByPropertyName}].  Entries must be ordered hierarchically, in breadth-first order.`;
 				}
-				if (orderByField.alias !== tableAlias) {
+				if (orderByEntityName !== entityName) {
 					return true;
 				}
-				currentEntityOrderBy.push(orderByField);
+				this.validator.validateReadProperty(orderByPropertyName, orderByEntityName);
+				currentEntityOrderBy.push({
+					fieldAlias: `${tableAlias}.${orderByPropertyName}`,
+					sortOrder: orderByField.sortOrder
+				});
 				return false;
 			});
 
@@ -108,7 +115,7 @@ export class ForcedOrderByParser extends AbstractOrderByParser implements IOrder
 					}
 				}
 			}
-			let entityOrderByFragments = this.buildOrderByFragmentForEntity(tableAlias, qEntity, entityMetadata, propertyNamesToSortBy, manyToOneRelationNamesToSortBy, idColumnToSortBy, currentEntityOrderBy, qEntityMapByAlias);
+			let entityOrderByFragments = this.buildOrderByFragmentForEntity(tableAlias, propertyNamesToSortBy, manyToOneRelationNamesToSortBy, idColumnToSortBy, currentEntityOrderBy, qEntityMapByAlias);
 			orderByFragments = orderByFragments.concat(entityOrderByFragments);
 		}
 		if (orderBy.length) {
@@ -120,8 +127,6 @@ export class ForcedOrderByParser extends AbstractOrderByParser implements IOrder
 
 	buildOrderByFragmentForEntity(
 		tableAlias: string,
-		qEntity: IQEntity,
-		entityMetadata: EntityMetadata,
 		propertyNamesToSortBy: string[],
 		manyToOneRelationNamesToSortBy: string[],
 		idColumnToSortBy: string,
@@ -137,8 +142,7 @@ export class ForcedOrderByParser extends AbstractOrderByParser implements IOrder
 		if (idColumnToSortBy) {
 			if (!inputOrderByPropertyNameSet[idColumnToSortBy]) {
 				finalOrderByColumnsFragments.push({
-					alias: null,
-					propertyName: idColumnToSortBy,
+					fieldAlias: `${tableAlias}.${idColumnToSortBy}`,
 					sortOrder: SortOrder.ASCENDING
 				});
 			}
@@ -146,8 +150,7 @@ export class ForcedOrderByParser extends AbstractOrderByParser implements IOrder
 			propertyNamesToSortBy.forEach(( propertyName ) => {
 				if (!inputOrderByPropertyNameSet[propertyName]) {
 					finalOrderByColumnsFragments.push({
-						alias: null,
-						propertyName: propertyName,
+						fieldAlias: `${tableAlias}.${propertyName}`,
 						sortOrder: SortOrder.ASCENDING
 					});
 				}
@@ -155,9 +158,7 @@ export class ForcedOrderByParser extends AbstractOrderByParser implements IOrder
 			manyToOneRelationNamesToSortBy.forEach(( manyToOneRelationName ) => {
 				if (!inputOrderByPropertyNameSet[manyToOneRelationName]) {
 					finalOrderByColumnsFragments.push({
-						alias: null,
-						isManyToOneReference: true,
-						propertyName: manyToOneRelationName,
+						fieldAlias: `${tableAlias}.${manyToOneRelationName}`,
 						sortOrder: SortOrder.ASCENDING
 					});
 				}

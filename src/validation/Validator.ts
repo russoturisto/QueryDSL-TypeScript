@@ -15,13 +15,21 @@ export interface IValidator {
 
 	validateReadQEntityProperty(
 		propertyName: string,
-		qEntity: IQEntity
+		qEntity: IQEntity,
+		fieldAlias: string
 	): void;
 
 	validateReadQEntityManyToOneRelation(
 		propertyName: string,
-		qEntity: IQEntity
+		qEntity: IQEntity,
+		fieldAlias: string
 	): void;
+
+	addFunctionAlias( functionAlias: string ): void;
+
+	addSubQueryAlias( subQueryAlias: string ): void;
+
+	validateAliasedFieldAccess( fieldAlias: string ): void;
 }
 
 export class QValidator {
@@ -45,6 +53,15 @@ export class QValidator {
 		propertyName: string,
 		qEntity: IQEntity
 	): void {
+	}
+
+	addFunctionAlias( functionAlias: string ): void {
+	}
+
+	addSubQueryAlias( subQueryAlias: string ): void {
+	}
+
+	validateAliasedFieldAccess( fieldAlias: string ): void {
 	}
 
 }

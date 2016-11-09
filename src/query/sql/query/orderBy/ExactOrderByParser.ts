@@ -1,22 +1,31 @@
-import {IOrderByParser, AbstractOrderByParser} from "./IOrderByParser";
-import {IQEntity} from "../../../../core/entity/Entity";
-import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
+import {INonEntityOrderByParser} from "./IEntityOrderByParser";
+import {JSONFieldInOrderBy, SortOrder} from "../../../../core/field/FieldInOrderBy";
+import {IValidator} from "../../../../validation/Validator";
 /**
  * Created by Papa on 10/16/2016.
  */
 /**
  * Will order the results exactly as specified in the Order By clause
  */
-export class ExactOrderByParser extends AbstractOrderByParser implements IOrderByParser {
+export class ExactOrderByParser implements INonEntityOrderByParser {
+
+	constructor(private validator:IValidator) {
+	}
 
 	getOrderByFragment(
-		joinTree: JoinTreeNode,
-		qEntityMapByAlias: {[alias: string]: IQEntity}
+		rootSelectClauseFragment: any,
+		orderBy: JSONFieldInOrderBy[]
 	): string {
-		if (!this.orderBy) {
-			return '';
-		}
-		return this.getCommonOrderByFragment(qEntityMapByAlias, this.orderBy);
+		return orderBy.map(
+			( orderByField ) => {
+				this.validator.validateAliasedFieldAccess(orderByField.fieldAlias);
+				switch (orderByField.sortOrder) {
+					case SortOrder.ASCENDING:
+						return `${orderByField.fieldAlias} ASC`;
+					case SortOrder.DESCENDING:
+						return `${orderByField.fieldAlias} DESC`;
+				}
+			}).join(', ');
 	}
 
 }

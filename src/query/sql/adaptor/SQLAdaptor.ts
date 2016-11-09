@@ -1,8 +1,8 @@
-import {SQLDialect, SQLDataType} from "../SQLStringQuery";
+import {SQLDialect} from "../SQLStringQuery";
 import {OracleAdaptor} from "./OracleAdaptor";
 import {SqLiteAdaptor} from "./SqLiteAdaptor";
 import {JSONSqlFunctionCall} from "../../../core/field/Functions";
-import {JSONClauseObject} from "../../../core/field/Appliable";
+import {JSONClauseObject, SQLDataType} from "../../../core/field/Appliable";
 import {IQEntity} from "../../../core/entity/Entity";
 /**
  * Created by Papa on 8/27/2016.
@@ -10,7 +10,10 @@ import {IQEntity} from "../../../core/entity/Entity";
 
 export interface ISQLAdaptor {
 
-	getParameterSymbol():string;
+	getParameterReference(
+		parameterReferences: string[],
+		newReference: string
+	): string;
 
 	dateToDbQuery(
 		date: Date
@@ -35,6 +38,11 @@ export interface ISQLAdaptor {
 	): any;
 
 	getFunctionAdaptor(): ISQLFunctionAdaptor;
+
+	getOffsetFragment( offset: number ): string;
+
+	getLimitFragment( limit: number ): string;
+
 }
 
 export interface SqlValueProvider {
@@ -48,17 +56,13 @@ export interface ISQLFunctionAdaptor {
 	getFunctionCalls(
 		clause: JSONClauseObject,
 		innerValue: string,
-		qEntityMapByAlias: {[alias: string]: IQEntity},
-		embedParameters: boolean,
-		parameters: any[]
+		qEntityMapByAlias: {[alias: string]: IQEntity}
 	): string ;
 
 	getFunctionCall(
 		jsonFunctionCall: JSONSqlFunctionCall,
 		value: string,
-		qEntityMapByAlias: {[entityName: string]: IQEntity},
-		embedParameters: boolean,
-		parameters: any[]
+		qEntityMapByAlias: {[entityName: string]: IQEntity}
 	): string;
 
 }
@@ -89,12 +93,10 @@ export abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
 	getFunctionCalls(
 		clause: JSONClauseObject,
 		innerValue: string,
-		qEntityMapByAlias: {[alias: string]: IQEntity},
-		embedParameters: boolean = true,
-		parameters: any[] = null
+		qEntityMapByAlias: {[alias: string]: IQEntity}
 	): string {
 		clause.__appliedFunctions__.forEach(( appliedFunction ) => {
-			innerValue = this.getFunctionCall(appliedFunction, innerValue, qEntityMapByAlias, embedParameters, parameters);
+			innerValue = this.getFunctionCall(appliedFunction, innerValue, qEntityMapByAlias);
 		});
 
 		return innerValue;
@@ -103,9 +105,7 @@ export abstract class AbstractFunctionAdaptor implements ISQLFunctionAdaptor {
 	abstract getFunctionCall(
 		jsonFunctionCall: JSONSqlFunctionCall,
 		value: string,
-		qEntityMapByAlias: {[entityName: string]: IQEntity},
-		embedParameters: boolean,
-		parameters: any[]
+		qEntityMapByAlias: {[entityName: string]: IQEntity}
 	): string;
 
 }

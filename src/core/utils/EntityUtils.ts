@@ -39,8 +39,8 @@ export class EntityUtils {
 		for (let propertyName in object) {
 			let property = object[propertyName];
 			if (this.exists(property)) {
-				if (property instanceof Array && property.length > 0) {
-					return false;
+				if (property instanceof Array) {
+					return property.length > 0;
 				} else {
 					return false;
 				}

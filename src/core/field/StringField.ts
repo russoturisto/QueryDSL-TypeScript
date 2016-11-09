@@ -1,10 +1,8 @@
 import {IQEntity} from "../entity/Entity";
-import {FieldType} from "./Field";
 import {StringOperation, IStringOperation, JSONRawStringOperation} from "../operation/StringOperation";
-import {JSONSqlFunctionCall} from "./Functions";
-import {JSONClauseField, JSONClauseObjectType} from "./Appliable";
+import {JSONClauseField, JSONClauseObjectType, SQLDataType} from "./Appliable";
 import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
-import {IQOperableField, QOperableField} from "./OperableField";
+import {IQOperableField, QOperableField, IQFunction} from "./OperableField";
 import {FieldColumnAliases} from "../entity/Aliases";
 /**
  * Created by Papa on 8/11/2016.
@@ -24,9 +22,10 @@ export class QStringField extends QOperableField<string, JSONRawStringOperation,
 		q: IQEntity,
 		qConstructor: new() => IQEntity,
 		entityName: string,
-		fieldName: string
+		fieldName: string,
+		objectType:JSONClauseObjectType = JSONClauseObjectType.FIELD
 	) {
-		super(q, qConstructor, entityName, fieldName, FieldType.STRING, new StringOperation());
+		super(q, qConstructor, entityName, fieldName, objectType, SQLDataType.STRING, new StringOperation());
 	}
 
 	getInstance( qEntity: IQEntity = this.q ): QStringField {
@@ -34,19 +33,22 @@ export class QStringField extends QOperableField<string, JSONRawStringOperation,
 	}
 
 	like(
-		like: string | IQStringField | PHRawFieldSQLQuery<IQStringField>
+		value: string | IQStringField | PHRawFieldSQLQuery<IQStringField>
 	): JSONRawStringOperation {
-		return this.operation.like(<any>this, like);
+		return this.operation.like(<any>this, this.wrapPrimitive(value));
 	}
 
 }
 
-export class QStringFunction extends QStringField {
+export class QStringFunction extends QStringField implements IQFunction<string | PHRawFieldSQLQuery<any>> {
+
+	parameterAlias: string;
 
 	constructor(
-		private value?: string | PHRawFieldSQLQuery<any>
+		public value: string | PHRawFieldSQLQuery<any>,
+		private isQueryParameter: boolean = false
 	) {
-		super(null, null, null, null);
+		super(null, null, null, null, JSONClauseObjectType.FIELD_FUNCTION);
 	}
 
 	getInstance(): QStringFunction {
@@ -57,6 +59,12 @@ export class QStringFunction extends QStringField {
 		columnAliases: FieldColumnAliases,
 		forSelectClause: boolean
 	): JSONClauseField {
-		return this.operableFunctionToJson(JSONClauseObjectType.STRING_FIELD_FUNCTION, this.value, columnAliases, forSelectClause);
+		let json = this.operableFunctionToJson(this, columnAliases, forSelectClause);
+
+		if (this.isQueryParameter) {
+			this.parameterAlias = <string>json.value;
+		}
+
+		return json;
 	}
 }

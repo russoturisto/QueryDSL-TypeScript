@@ -1,8 +1,8 @@
-import { IEntityResultParser } from "./IEntityResultParser";
+import { IEntityResultParser } from "./entity/IEntityResultParser";
 import { IQEntity } from "../../../../core/entity/Entity";
-import { SQLDataType } from "../../SQLStringQuery";
 import { EntityMetadata } from "../../../../core/entity/EntityMetadata";
 import { EntityRelationRecord } from "../../../../core/entity/Relation";
+import { SQLDataType } from "../../../../core/field/Appliable";
 /**
  * Created by Papa on 10/16/2016.
  */

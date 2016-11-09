@@ -1,18 +1,17 @@
 import {QueryResultType} from "../../SQLStringQuery";
-import {ExactOrderByParser} from "./ExactOrderByParser";
-import {ForcedOrderByParser} from "./ForcedOrderByParser";
+import {EntityOrderByParser} from "./EntityOrderByParser";
 import {JSONFieldInOrderBy, SortOrder} from "../../../../core/field/FieldInOrderBy";
 import {IQEntity} from "../../../../core/entity/Entity";
 import {EntityRelationRecord} from "../../../../core/entity/Relation";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
 import {MetadataUtils} from "../../../../core/entity/metadata/MetadataUtils";
 import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
-import {applyFunctionsReturnString} from "../../../../core/field/Appliable";
+import {IValidator} from "../../../../validation/Validator";
 /**
  * Created by Papa on 10/16/2016.
  */
 
-export interface IOrderByParser {
+export interface IEntityOrderByParser {
 
 	getOrderByFragment(
 		joinTree: JoinTreeNode,
@@ -21,14 +20,23 @@ export interface IOrderByParser {
 
 }
 
-export abstract class AbstractOrderByParser {
+export interface INonEntityOrderByParser {
+
+	getOrderByFragment(
+		rootSelectClauseFragment: any,
+		originalOrderBy: JSONFieldInOrderBy[]
+	): string;
+
+}
+
+export abstract class AbstractEntityOrderByParser {
 
 	constructor(
-		protected rootQEntity: IQEntity,
 		protected rootSelectClauseFragment: any,
 		protected qEntityMapByName: {[alias: string]: IQEntity},
 		protected entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		protected entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
+	  protected validator:IValidator,
 		protected orderBy?: JSONFieldInOrderBy[]
 	) {
 	}
@@ -49,8 +57,6 @@ export abstract class AbstractOrderByParser {
 				columnName = MetadataUtils.getPropertyColumnName(propertyName, entityMetadata, orderByField.alias);
 			}
 
-			let orderFieldClause = applyFunctionsReturnString(orderByField.field);
-
 			let orderFieldClause = `${orderByField.alias}.${columnName} `;
 			switch (orderByField.sortOrder) {
 				case SortOrder.ASCENDING:
@@ -65,22 +71,22 @@ export abstract class AbstractOrderByParser {
 
 export function getOrderByParser(
 	queryResultType: QueryResultType,
-	rootQEntity: IQEntity,
 	selectClauseFragment: any,
 	qEntityMapByName: {[entityName: string]: IQEntity},
 	entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 	entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 	orderBy?: JSONFieldInOrderBy[]
-): IOrderByParser {
+): IEntityOrderByParser {
 	switch (queryResultType) {
 		case QueryResultType.ENTITY_BRIDGED:
 		case QueryResultType.ENTITY_HIERARCHICAL:
-		case QueryResultType.MAPPED_HIERARCHICAL:
-			return new ForcedOrderByParser(rootQEntity, selectClauseFragment, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, orderBy);
-		case QueryResultType.FLAT:
-		case QueryResultType.FIELD:
-			return new ExactOrderByParser(rootQEntity, selectClauseFragment, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, orderBy);
+			return new EntityOrderByParser(selectClauseFragment, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, orderBy);
+//		case QueryResultType.FLAT:
+//		case QueryResultType.FIELD:
+//			return new ExactOrderByParser(rootQEntity, selectClauseFragment, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, orderBy);
 		case QueryResultType.RAW:
 			throw `Query parsing not supported for raw queries`;
+		default:
+			throw `Unexpected queryResultType for an Entity ORDER BY parser: ${queryResultType}`;
 	}
 }

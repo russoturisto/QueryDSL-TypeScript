@@ -28,7 +28,7 @@ export interface IEntityResultParser {
     flushRow(): void;
     bridge(parsedResults: any[], selectClauseFragment: any): any[] | MappedEntityArray<any>;
 }
-export declare function getObjectResultParser(queryResultType: QueryResultType, config: BridgedQueryConfiguration, rootQEntity: IQEntity, qEntityMapByName: {
+export declare function getObjectResultParser(queryResultType: QueryResultType, config?: BridgedQueryConfiguration, rootQEntity?: IQEntity, qEntityMapByName?: {
     [entityName: string]: IQEntity;
 }): IEntityResultParser;
 export declare abstract class AbstractObjectResultParser {

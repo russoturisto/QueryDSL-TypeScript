@@ -1,6 +1,6 @@
 import { PHRawNonEntitySQLQuery, PHDistinguishableSQLQuery, PHJsonNonEntitySqlQuery } from "./PHNonEntitySQLQuery";
 import { PHSQLQuery } from "../../PHSQLQuery";
-import { JSONClauseField, JSONClauseObjectType } from "../../../../core/field/Appliable";
+import { JSONClauseField, JSONClauseObjectType, SQLDataType } from "../../../../core/field/Appliable";
 import { IQField } from "../../../../core/field/Field";
 import { IQDistinctFunction } from "../../../../core/field/Functions";
 import { EntityAliases } from "../../../../core/entity/Aliases";
@@ -9,7 +9,8 @@ import { EntityAliases } from "../../../../core/entity/Aliases";
  */
 export interface PHJsonFieldQSLQuery extends PHJsonNonEntitySqlQuery {
     select: JSONClauseField;
-    type: JSONClauseObjectType;
+    objectType: JSONClauseObjectType;
+    dataType: SQLDataType;
 }
 export interface PHRawFieldSQLQuery<IQF extends IQField<IQF>> extends PHRawNonEntitySQLQuery {
     select: IQF | IQDistinctFunction<IQF>;
@@ -19,4 +20,5 @@ export declare class PHFieldSQLQuery<IQF extends IQField<IQF>> extends PHDisting
     constructor(phRawQuery: PHRawFieldSQLQuery<IQF>, entityAliases: EntityAliases);
     nonDistinctSelectClauseToJSON(rawSelect: any): any;
     toJSON(): PHJsonFieldQSLQuery;
+    getClauseDataType(): SQLDataType;
 }

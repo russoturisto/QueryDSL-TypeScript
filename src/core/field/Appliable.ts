@@ -9,20 +9,25 @@ import {FieldColumnAliases} from "../entity/Aliases";
  */
 
 export enum JSONClauseObjectType {
-	BOOLEAN_FIELD_FUNCTION,
-	DATE_FIELD_FUNCTION,
+	FIELD,
+	FIELD_FUNCTION,
+	FIELD_QUERY,
 	DISTINCT_FUNCTION,
 	EXISTS_FUNCTION,
-	FIELD,
-	FIELD_QUERY,
-	NUMBER_FIELD_FUNCTION,
-	MANY_TO_ONE_RELATION,
-	STRING_FIELD_FUNCTION
+	MANY_TO_ONE_RELATION
+}
+
+export enum SQLDataType {
+	BOOLEAN,
+	DATE,
+	NUMBER,
+	STRING
 }
 
 export interface JSONClauseObject {
 	__appliedFunctions__: JSONSqlFunctionCall[];
-	type: JSONClauseObjectType;
+	objectType: JSONClauseObjectType;
+	dataType: SQLDataType;
 }
 
 export interface JSONClauseField extends JSONClauseObject {
@@ -32,7 +37,7 @@ export interface JSONClauseField extends JSONClauseObject {
 	// A reference pointer from a field to a query, as defined in SELECT clause via the field function
 	fieldSubQuery?: PHJsonFieldQSLQuery;
 	tableAlias?: string,
-	value?: boolean | Date | number | string | JSONClauseField | PHJsonFieldQSLQuery;
+	value?: string | JSONClauseField | PHJsonFieldQSLQuery;
 }
 
 export interface Appliable<JCO extends JSONClauseObject, IQF extends IQField<IQF>> {

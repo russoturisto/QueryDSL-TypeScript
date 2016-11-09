@@ -2,14 +2,14 @@ import {JSONRelation} from "../../core/entity/Relation";
 import {JSONBaseOperation} from "../../core/operation/Operation";
 import {PHQuery, PHRawQuery} from "../PHQuery";
 import {JSONFieldInOrderBy, IFieldInOrderBy} from "../../core/field/FieldInOrderBy";
-import {IFrom} from "../../core/entity/Entity";
+import {IFrom, IEntityRelationFrom} from "../../core/entity/Entity";
 /**
  * Created by Papa on 8/12/2016.
  */
 
 export interface PHRawSQLQuery extends PHRawQuery {
-	from?: IFrom[];
-	orderBy?: IFieldInOrderBy<any>[]
+	from?: (IFrom | IEntityRelationFrom)[];
+	orderBy?: IFieldInOrderBy<any>[];
 	select: any;
 	where?: JSONBaseOperation;
 }

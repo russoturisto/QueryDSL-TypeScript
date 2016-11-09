@@ -19,6 +19,8 @@ export interface IFrom {
     leftJoin<IF extends IFrom>(right: IF): JoinFields<IF>;
     rightJoin<IF extends IFrom>(right: IF): JoinFields<IF>;
 }
+export interface IEntityRelationFrom {
+}
 export interface IQEntity {
     __qEntityConstructor__: {
         new (...args: any[]): any;
@@ -27,11 +29,11 @@ export interface IQEntity {
         new (): any;
     };
     __entityFieldMap__: {
-        [propertyName: string]: IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>;
+        [propertyName: string]: IQOperableField<any, JSONBaseOperation, IOperation, any>;
     };
     __entityName__: string;
     __entityRelationMap__: {
-        [propertyName: string]: IQRelation<IQEntity, any>;
+        [propertyName: string]: IQRelation;
     };
     currentChildIndex: number;
     fromClausePosition: number[];
@@ -39,14 +41,14 @@ export interface IQEntity {
     joinType: JoinType;
     joinWhereClause: JSONBaseOperation;
     parentJoinEntity: IQEntity;
-    addEntityRelation<IQR extends IQEntity, R>(propertyName: string, relation: IQRelation<IQR, R>): void;
-    addEntityField<IQF extends IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>>(propertyName: string, field: IQF): void;
-    fields(fields: IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]): IQEntity;
+    addEntityRelation<IQR extends IQEntity, R>(propertyName: string, relation: IQRelation): void;
+    addEntityField<IQF extends IQOperableField<any, JSONBaseOperation, IOperation, any>>(propertyName: string, field: IQF): void;
+    fields(fields: IQOperableField<any, JSONBaseOperation, IOperation, any>[]): IQEntity;
     getRelationJson(columnAliases: FieldColumnAliases): JSONRelation;
     isRootEntity(): boolean;
     getRootJoinEntity(): IQEntity;
 }
-export declare abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom {
+export declare abstract class QEntity<IQ extends IQEntity> implements IQEntity, IFrom, IEntityRelationFrom {
     __qEntityConstructor__: {
         new (...args: any[]): IQ;
     };
@@ -58,10 +60,10 @@ export declare abstract class QEntity<IQ extends IQEntity> implements IQEntity, 
     relationPropertyName: any;
     joinType: JoinType;
     __entityFieldMap__: {
-        [propertyName: string]: IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>;
+        [propertyName: string]: IQOperableField<any, JSONBaseOperation, IOperation, any>;
     };
     __entityRelationMap__: {
-        [propertyName: string]: IQRelation<IQEntity, any>;
+        [propertyName: string]: IQRelation;
     };
     currentChildIndex: number;
     joinWhereClause: JSONBaseOperation;
@@ -72,14 +74,14 @@ export declare abstract class QEntity<IQ extends IQEntity> implements IQEntity, 
         new (): any;
     }, __entityName__: string, fromClausePosition?: number[], relationPropertyName?: any, joinType?: JoinType);
     getInstance(): IQ;
-    addEntityRelation<IQR extends IQEntity, R>(propertyName: string, relation: IQRelation<IQR, R>): void;
-    addEntityField<T, IQF extends IQOperableField<T, JSONBaseOperation, IOperation<T, JSONBaseOperation>, any>>(propertyName: string, field: IQF): void;
+    addEntityRelation<IQR extends IQEntity, R>(propertyName: string, relation: IQRelation): void;
+    addEntityField<T, IQF extends IQOperableField<T, JSONBaseOperation, IOperation, any>>(propertyName: string, field: IQF): void;
     getRelationJson(columnAliases: FieldColumnAliases): JSONRelation;
     getJoinRelationJson(jsonRelation: JSONJoinRelation, columnAliases: FieldColumnAliases): JSONJoinRelation;
     getEntityRelationJson(jsonRelation: JSONEntityRelation): JSONEntityRelation;
     getRootRelationJson(jsonRelation: JSONRelation, columnAliases: FieldColumnAliases): JSONJoinRelation;
     getQ(): IQ;
-    fields(fields: IQOperableField<any, JSONBaseOperation, IOperation<any, JSONBaseOperation>, any>[]): IQ;
+    fields(fields: IQOperableField<any, JSONBaseOperation, IOperation, any>[]): IQ;
     join<IF extends IFrom>(right: IF, joinType: JoinType): JoinFields<IF>;
     isRootEntity(): boolean;
     getRootJoinEntity(): IQEntity;

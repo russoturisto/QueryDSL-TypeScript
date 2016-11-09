@@ -2,15 +2,15 @@
  * Created by Papa on 10/16/2016.
  */
 
-import {SQLDataType, QueryResultType} from "../../SQLStringQuery";
-import {IQEntity} from "../../../../core/entity/Entity";
-import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
-import {MappedEntityArray} from "../../../../core/MappedEntityArray";
-import {EntityRelationRecord} from "../../../../core/entity/Relation";
-import {FlattenedResultParser} from "./FlattenedResultParser";
-import {PlainResultParser} from "./PlainResultParser";
-import {HierarchicalResultParser} from "./HierarchicalResultParser";
+import {QueryResultType} from "../../../SQLStringQuery";
+import {IQEntity} from "../../../../../core/entity/Entity";
+import {EntityMetadata} from "../../../../../core/entity/EntityMetadata";
+import {MappedEntityArray} from "../../../../../core/MappedEntityArray";
+import {EntityRelationRecord} from "../../../../../core/entity/Relation";
+import {HierarchicalResultParser} from "../HierarchicalResultParser";
 import {BridgedResultParser} from "./BridgedResultParser";
+import {SQLDataType} from "../../../../../core/field/Appliable";
+import {HierarchicalEntityResultParser} from "./HierarchicalEntityResultParser";
 
 export class BridgedQueryConfiguration {
 	// This is for conflicts on OneToMany references
@@ -121,15 +121,15 @@ export interface IEntityResultParser {
 
 export function getObjectResultParser(
 	queryResultType: QueryResultType,
-	config: BridgedQueryConfiguration,
-	rootQEntity: IQEntity,
-	qEntityMapByName: {[entityName: string]: IQEntity}
+	config?: BridgedQueryConfiguration,
+	rootQEntity?: IQEntity,
+	qEntityMapByName?: {[entityName: string]: IQEntity}
 ): IEntityResultParser {
 	switch (queryResultType) {
 		case QueryResultType.ENTITY_BRIDGED:
 			return new BridgedResultParser(config, rootQEntity, qEntityMapByName);
 		case QueryResultType.ENTITY_HIERARCHICAL:
-			return new HierarchicalResultParser();
+			return new HierarchicalEntityResultParser();
 		default:
 			throw `ObjectQueryParser not supported for QueryResultType: ${queryResultType}`;
 	}

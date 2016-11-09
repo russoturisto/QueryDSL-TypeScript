@@ -4,15 +4,10 @@
 import { IQEntity } from "../entity/Entity";
 import { IFieldInOrderBy } from "./FieldInOrderBy";
 import { JSONSqlFunctionCall } from "./Functions";
-import { Appliable, JSONClauseField, JSONClauseObjectType } from "./Appliable";
+import { Appliable, JSONClauseField, JSONClauseObjectType, SQLDataType } from "./Appliable";
 import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 import { FieldColumnAliases } from "../entity/Aliases";
-export declare enum FieldType {
-    BOOLEAN = 0,
-    DATE = 1,
-    NUMBER = 2,
-    STRING = 3,
-}
+import { IQFunction } from "./OperableField";
 export interface Orderable<IQF extends IQField<IQF>> {
     asc(): IFieldInOrderBy<IQF>;
     desc(): IFieldInOrderBy<IQF>;
@@ -24,12 +19,19 @@ export declare abstract class QField<IQF extends IQField<IQF>> implements IQFiel
     qConstructor: new () => IQEntity;
     entityName: string;
     fieldName: string;
-    fieldType: FieldType;
+    objectType: JSONClauseObjectType;
+    dataType: SQLDataType;
     __appliedFunctions__: JSONSqlFunctionCall[];
     __fieldSubQuery__: PHRawFieldSQLQuery<IQF>;
-    constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string, fieldType: FieldType);
-    protected getFieldKey(): string;
-    objectEquals<QF extends QField<any>>(otherField: QF, checkValue?: boolean): boolean;
+    constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string, objectType: JSONClauseObjectType, dataType: SQLDataType);
+    /**
+     protected getFieldKey() {
+        let rootEntityPrefix = columnAliases.entityAliases.getExistingAlias(this.q.getRootJoinEntity());
+        let key = `${QRelation.getPositionAlias(rootEntityPrefix, this.q.fromClausePosition)}.${this.fieldName}`;
+
+        return key;
+    }
+     */
     asc(): IFieldInOrderBy<IQF>;
     desc(): IFieldInOrderBy<IQF>;
     abstract getInstance(qEntity?: IQEntity): QField<IQF>;
@@ -39,6 +41,6 @@ export declare abstract class QField<IQF extends IQField<IQF>> implements IQFiel
     toJSON(columnAliases: FieldColumnAliases, forSelectClause: boolean): JSONClauseField;
     private appliedFunctionsToJson(appliedFunctions, columnAliases);
     private functionCallToJson(functionCall, columnAliases);
-    private valueToJSON(value, columnAliases, forSelectClause);
-    operableFunctionToJson(type: JSONClauseObjectType, value: any, columnAliases: FieldColumnAliases, forSelectClause: boolean): JSONClauseField;
+    private valueToJSON(functionObject, columnAliases, forSelectClause);
+    operableFunctionToJson(functionObject: IQFunction<any>, columnAliases: FieldColumnAliases, forSelectClause: boolean): JSONClauseField;
 }

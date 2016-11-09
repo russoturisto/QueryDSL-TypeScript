@@ -1,19 +1,17 @@
 import {IQEntity} from "../../core/entity/Entity";
 import {ISQLAdaptor, getSQLAdaptor, SqlValueProvider} from "./adaptor/SQLAdaptor";
-import {SQLDialect, QueryResultType} from "./SQLStringQuery";
+import {SQLDialect} from "./SQLStringQuery";
 import {EntityRelationRecord} from "../../core/entity/Relation";
-import {QBooleanField} from "../../core/field/BooleanField";
-import {QDateField} from "../../core/field/DateField";
-import {QNumberField} from "../../core/field/NumberField";
-import {QStringField} from "../../core/field/StringField";
-import {JSONBaseOperation, OperationCategory, JSONValueOperation} from "../../core/operation/Operation";
+import {
+	JSONBaseOperation, OperationCategory, JSONValueOperation,
+	JSONFunctionOperation
+} from "../../core/operation/Operation";
 import {EntityMetadata} from "../../core/entity/EntityMetadata";
 import {FieldMap} from "./FieldMap";
 import {MetadataUtils} from "../../core/entity/metadata/MetadataUtils";
-import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
 import {JSONLogicalOperation} from "../../core/operation/LogicalOperation";
 import {IValidator, getValidator} from "../../validation/Validator";
-import {JSONClauseField, JSONClauseObjectType} from "../../core/field/Appliable";
+import {JSONClauseField, JSONClauseObjectType, JSONClauseObject} from "../../core/field/Appliable";
 import {PHJsonFieldQSLQuery} from "./query/ph/PHFieldSQLQuery";
 import {FieldSQLStringQuery} from "./query/string/FieldSQLStringQuery";
 import {MappedSQLStringQuery} from "./query/string/MappedSQLStringQuery";
@@ -26,7 +24,7 @@ export enum ClauseType {
 	MAPPED_SELECT_CLAUSE,
 	NON_MAPPED_SELECT_CLAUSE,
 	WHERE_CLAUSE,
-	FUNCTION_CLALL
+	FUNCTION_CALL
 }
 
 export abstract class SQLStringWhereBase implements SqlValueProvider {
@@ -35,8 +33,7 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 	protected qEntityMapByAlias: {[entityAlias: string]: IQEntity} = {};
 	protected sqlAdaptor: ISQLAdaptor;
 	protected validator: IValidator;
-	protected embedParameters = false;
-	protected parameters = [];
+	protected parameterReferences: string[];
 
 	constructor(
 		protected qEntityMapByName: {[entityName: string]: IQEntity},
@@ -53,6 +50,9 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		nestingPrefix: string
 	): string {
 		let whereFragment = '';
+		if (!operation) {
+			throw `An operation is missing in WHERE or HAVING clause`;
+		}
 		nestingPrefix = `${nestingPrefix}\t`;
 
 		switch (operation.category) {
@@ -67,76 +67,12 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 				let rValue = valueOperation.rValue;
 				let lValueSql = this.getFieldValue(valueOperation.lValue, ClauseType.WHERE_CLAUSE);
 				let rValueSql = this.getFieldValue(valueOperation.rValue, ClauseType.WHERE_CLAUSE);
-				let aliasColumnPair = property.split('.');
-				if (aliasColumnPair.length != 2) {
-					throw `Expecting 'alias.column' instead of ${property}`;
-				}
-				let alias = aliasColumnPair[0];
-				let qEntity = this.qEntityMapByAlias[alias];
-				let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
-				let propertyName = aliasColumnPair[1];
-				if (entityMetadata.manyToOneMap[propertyName]) {
-					throw `Found @ManyToOne property '${alias}.${propertyName}' -  cannot be used in a WHERE clause.`;
-				} else if (entityMetadata.oneToManyMap[propertyName]) {
-					throw `Found @OneToMany property '${alias}.${propertyName}' -  cannot be used in a WHERE clause.`;
-				} else if (entityMetadata.transient[propertyName]) {
-					throw `Found @Transient property '${alias}.${propertyName}' -  cannot be used in a WHERE clause.`;
-				}
-
-				let field = qEntity.__entityFieldMap__[propertyName];
-				if (!field) {
-					throw `Did not find field '${alias}.${propertyName}' used in the WHERE clause.`;
-				}
-
-				let columnName = this.getEntityPropertyColumnName(qEntity, propertyName, alias);
-				whereFragment = `${alias}.${columnName} `;
-
-				let fieldOperation;
-				for (let operationProperty in valueOperation) {
-					if (fieldOperation) {
-						throw `More than one operation (${fieldOperation}, ${operationProperty}, ...) is defined on field '${alias}.${propertyName}' used in the WHERE clause.`;
-					}
-					fieldOperation = operationProperty;
-				}
-
-				let operatorAndValueFragment;
-				let value = valueOperation[fieldOperation];
-				if (field instanceof QBooleanField) {
-					operatorAndValueFragment = this.getCommonOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.stringTypeCheck, 'boolean', embedParameters, parameters);
-					if (!operatorAndValueFragment) {
-						throw `Unexpected operation '${fieldOperation}' on field '${alias}.${propertyName}' in the WHERE clause.`
-					}
-				} else if (field instanceof QDateField) {
-					operatorAndValueFragment = this.getComparibleOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.numberTypeCheck, 'Date', embedParameters, parameters, this.sqlAdaptor.dateToDbQuery);
-				} else if (field instanceof QNumberField) {
-					operatorAndValueFragment = this.getComparibleOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.numberTypeCheck, 'number', embedParameters, parameters);
-
-				} else if (field instanceof QStringField) {
-					operatorAndValueFragment = this.getCommonOperatorAndValueFragment(fieldOperation, value, alias, propertyName, this.stringTypeCheck, 'string', embedParameters, parameters, this.sanitizeStringValue);
-					if (!operatorAndValueFragment) {
-						switch (fieldOperation) {
-							case '$like':
-								if (typeof value != 'string') {
-									this.throwValueOnOperationError('string', '$like (LIKE)', alias, propertyName);
-								}
-								value = this.sanitizeStringValue(value, embedParameters);
-								if (!embedParameters) {
-									parameters.push(value);
-									value = '?';
-								}
-								operatorAndValueFragment = `LIKE ${value}`;
-								break;
-							default:
-								throw `Unexpected operation '${fieldOperation}' on field '${alias}.${propertyName}' in the WHERE clause.`;
-						}
-					}
-				} else {
-					throw `Unexpected type '${(<any>field.constructor).name}' of field '${alias}.${propertyName}' for operation '${fieldOperation}' in the WHERE clause.`;
-				}
-
-				whereFragment += operatorAndValueFragment;
+				let rValueWithOperator = this.applyOperator(valueOperation.operator, rValueSql);
+				whereFragment += `${lValueSql}${rValueWithOperator}`;
 				break;
 			case OperationCategory.FUNCTION:
+				let functionOperation = <JSONFunctionOperation><any>operation;
+				whereFragment = this.getFieldValue(functionOperation.object, ClauseType.WHERE_CLAUSE);
 				// exists function and maybe others
 				break;
 		}
@@ -149,7 +85,7 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		nestingPrefix: string
 	) {
 		let operator;
-		switch (operation.operation) {
+		switch (operation.operator) {
 			case '$and':
 				operator = 'AND';
 				break;
@@ -158,9 +94,9 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 				break;
 			case '$not':
 				operator = 'NOT';
-				return `${operator} (${this.getWHEREFragment(<JSONBaseOperation>operation.value, nestingPrefix)})`;
+				return ` ${operator} (${this.getWHEREFragment(<JSONBaseOperation>operation.value, nestingPrefix)})`;
 			default:
-				throw `Unknown logical operator: ${operation.operation}`;
+				throw `Unknown logical operator: ${operation.operator}`;
 		}
 		let childOperations = <JSONBaseOperation[]>operation.value;
 		if (!(childOperations instanceof Array)) {
@@ -171,153 +107,6 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		}).join(`\n${nestingPrefix}${operator} `);
 
 		return `( ${whereFragment} )`;
-	}
-
-	private getComparibleOperatorAndValueFragment<T>(
-		fieldOperation: string,
-		value: any,
-		alias: string,
-		propertyName: string,
-		typeCheckFunction: ( value: any )=>boolean,
-		typeName: string,
-		embedParameters: boolean = true,
-		parameters: any[] = null,
-		conversionFunction?: (
-			value: any,
-			embedParameters: boolean
-		)=>any
-	): string {
-		let operatorAndValueFragment = this.getCommonOperatorAndValueFragment(fieldOperation, value, alias, propertyName, typeCheckFunction, typeName, embedParameters, parameters, conversionFunction);
-		if (operatorAndValueFragment) {
-			return operatorAndValueFragment;
-		}
-		let opString;
-		switch (fieldOperation) {
-			case '$gt':
-				opString = '$gt (>)';
-				break;
-			case '$gte':
-				opString = '$gte (>=)';
-				break;
-			case '$lt':
-				opString = '$lt (<)';
-				break;
-			case '$lte':
-				opString = '$gt (<=)';
-				break;
-			default:
-				throw `Unexpected operation '${fieldOperation}' on field '${alias}.${propertyName}' in the WHERE clause.`
-		}
-		if (!typeCheckFunction(value)) {
-			this.throwValueOnOperationError(typeName, opString, alias, propertyName);
-		}
-		if (conversionFunction) {
-			value = conversionFunction(value, embedParameters);
-		}
-		if (!embedParameters) {
-			parameters.push(value);
-			value = '?';
-		}
-		switch (fieldOperation) {
-			case '$gt':
-				return `> ${value}`;
-			case '$gte':
-				return `>= ${value}`;
-			case '$lt':
-				return `< ${value}`;
-			case '$lte':
-				return `<= ${value}`;
-			default:
-				throw `Unexpected operation '${fieldOperation}' on field '${alias}.${propertyName}' in the WHERE clause.`
-		}
-	}
-
-	private getCommonOperatorAndValueFragment<T>(
-		fieldOperation: string,
-		value: any,
-		alias: string,
-		propertyName: string,
-		typeCheckFunction: ( value: any )=>boolean,
-		typeName: string,
-		embedParameters: boolean = true,
-		parameters: any[] = null,
-		conversionFunction?: (
-			value: any,
-			embedParameters: boolean
-		)=>any
-	): string {
-		let sqlOperator;
-
-		switch (fieldOperation) {
-			case '$eq':
-				sqlOperator = '=';
-				if (!typeCheckFunction(value)) {
-					this.throwValueOnOperationError(typeName, '$eq (=)', alias, propertyName);
-				}
-				if (conversionFunction) {
-					value = conversionFunction(value, embedParameters);
-				}
-				break;
-			case '$exists':
-				if (value === true) {
-					sqlOperator = 'IS NOT NULL';
-				} else if (value === false) {
-					sqlOperator = 'IS NULL';
-				} else {
-					throw `Invalid $exists value, expecting 'true' (IS NOT NULL), or 'false' (IS NULL)`;
-				}
-				break;
-			case '$in':
-				sqlOperator = 'IN';
-				if (!(value instanceof Array)) {
-					this.throwValueOnOperationError(`${typeName}[]`, '$in (IN)', alias, propertyName);
-				}
-				value = value.map(( aValue: string )=> {
-					if (!typeCheckFunction(aValue)) {
-						this.throwValueOnOperationError(`${typeName}[]`, '$eq (=)', alias, propertyName);
-						if (conversionFunction) {
-							return conversionFunction(aValue, embedParameters);
-						} else {
-							return aValue;
-						}
-					}
-				}).join(', ');
-				break;
-			case '$ne':
-				sqlOperator = '!=';
-				if (!typeCheckFunction(value)) {
-					this.throwValueOnOperationError(typeName, '$ne (!=)', alias, propertyName);
-				}
-				if (conversionFunction) {
-					value = conversionFunction(value, embedParameters);
-				}
-				break;
-			case '$nin':
-				sqlOperator = 'NOT IN';
-				if (!(value instanceof Array)) {
-					this.throwValueOnOperationError(`${typeName}[]`, '$in (IN)', alias, propertyName);
-				}
-				value = value.map(( aValue: string )=> {
-					if (!typeCheckFunction(aValue)) {
-						this.throwValueOnOperationError(`${typeName}[]`, '$eq (=)', alias, propertyName);
-						if (conversionFunction) {
-							return conversionFunction(aValue, embedParameters);
-						} else {
-							return aValue;
-						}
-					}
-				}).join(', ');
-				break;
-			default:
-				return undefined;
-		}
-
-		if (!embedParameters) {
-			parameters.push(value);
-			value = '?';
-		}
-
-		return `${sqlOperator} ${value}`;
 	}
 
 	protected getEntityPropertyColumnName(
@@ -348,15 +137,6 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		}
 
 		return tableName;
-	}
-
-	private throwValueOnOperationError(
-		valueType: string,
-		operation: string,
-		alias: string,
-		propertyName: string
-	) {
-		throw `Expecting a string value for $eq (=) operation on '${alias}.${propertyName}' used in the WHERE clause.`;
 	}
 
 	protected sanitizeStringValue(
@@ -414,15 +194,14 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		console.log(warning);
 	}
 
-
 	getFunctionCallValue(
 		rawValue: any
 	): string {
-		return this.getFieldValue(<JSONClauseField>rawValue, ClauseType.FUNCTION_CLALL);
+		return this.getFieldValue(<JSONClauseField>rawValue, ClauseType.FUNCTION_CALL);
 	}
 
 	getFieldValue(
-		clauseField: JSONClauseField,
+		clauseField: JSONClauseObject | JSONClauseField [] | PHJsonFieldQSLQuery,
 		clauseType: ClauseType,
 		defaultCallback: () => string = null
 	): string {
@@ -430,52 +209,53 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		if (!clauseField) {
 			throw `Missing Clause Field definition`;
 		}
-		if (!clauseField.type) {
+		if (clauseField instanceof Array) {
+			return clauseField
+				.map(( clauseFieldMember ) => this.getFieldValue(clauseFieldMember, clauseType, defaultCallback))
+				.join(', ');
+		}
+		if (!clauseField.objectType) {
 			throw `Type is not defined in JSONClauseField`;
 		}
+		let aField = <JSONClauseField>clauseField;
 		let aValue;
-		switch (clauseField.type) {
-			case JSONClauseObjectType.DATE_FIELD_FUNCTION:
-				if (!clauseField.value) {
-					throw `Value not provided for a Date function`;
-				}
-				if (!(clauseField.value instanceof Date) && !(<PHJsonFieldQSLQuery>clauseField.value).type) {
-					clauseField.value = new Date(clauseField.value);
-				}
-			case JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION:
-			case JSONClauseObjectType.NUMBER_FIELD_FUNCTION:
-			case JSONClauseObjectType.STRING_FIELD_FUNCTION:
-				aValue = clauseField.value;
-				if (this.isPrimitive(aValue)) {
-					aValue = this.parsePrimitive(aValue);
+		switch (clauseField.objectType) {
+			case JSONClauseObjectType.FIELD_FUNCTION:
+				aValue = aField.value;
+				if (this.isParameterReference(aValue)) {
+					this.parameterReferences.push(aValue);
+					aValue = this.sqlAdaptor.getParameterReference(this.parameterReferences, aValue);
 				} else {
-					aValue = this.getFieldValue(aValue, ClauseType.FUNCTION_CLALL, defaultCallback);
+					aValue = this.getFieldValue(aValue, ClauseType.FUNCTION_CALL, defaultCallback);
 				}
-				this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(clauseField, aValue, this.qEntityMapByAlias, this.embedParameters, this.parameters);
+				this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(aField, aValue, this.qEntityMapByAlias);
+				this.validator.addFunctionAlias(aField.fieldAlias);
 				break;
 			case JSONClauseObjectType.DISTINCT_FUNCTION:
 				throw `Distinct function cannot be nested.`;
 			case JSONClauseObjectType.EXISTS_FUNCTION:
 				if (clauseType !== ClauseType.WHERE_CLAUSE) {
-					throw `Exists function only as a top function in a WHERE clause.`;
+					throw `Exists can only be used as a top function in a WHERE clause.`;
 				}
-				let mappedSqlQuery = new MappedSQLStringQuery(<PHJsonMappedQSLQuery>clauseField.value, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect);
+				let mappedSqlQuery = new MappedSQLStringQuery(<PHJsonMappedQSLQuery>aField.value, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect);
 				return `EXISTS(${mappedSqlQuery.toSQL()})`;
-			case JSONClauseObjectType.FIELD:
-				let qEntity = this.qEntityMapByAlias[clauseField.tableAlias];
-				this.validator.validateReadQEntityProperty(clauseField.propertyName, qEntity);
-				columnName = this.getEntityPropertyColumnName(qEntity, clauseField.propertyName, clauseField.tableAlias);
-				return this.getComplexColumnFragment(clauseField, columnName);
+			case <any>JSONClauseObjectType.FIELD:
+				let qEntity = this.qEntityMapByAlias[aField.tableAlias];
+				this.validator.validateReadQEntityProperty(aField.propertyName, qEntity, aField.fieldAlias);
+				columnName = this.getEntityPropertyColumnName(qEntity, aField.propertyName, aField.tableAlias);
+				this.addField(qEntity.__entityName__, this.getTableName(qEntity), aField.propertyName, columnName);
+				return this.getComplexColumnFragment(aField, columnName);
 			case JSONClauseObjectType.FIELD_QUERY:
-				// TODO: figure out if functions can be applied to sub-queries
-				let jsonFieldSqlQuery: PHJsonFieldQSLQuery = <PHJsonFieldQSLQuery><any>clauseField;
+				let jsonFieldSqlQuery: PHJsonFieldQSLQuery = aField.fieldSubQuery;
 				let fieldSqlQuery = new FieldSQLStringQuery(jsonFieldSqlQuery, this.qEntityMapByName, this.entitiesRelationPropertyMap, this.entitiesPropertyTypeMap, this.dialect);
 				fieldSqlQuery.addQEntityMapByAlias(this.qEntityMapByAlias);
+				this.validator.addSubQueryAlias(aField.fieldAlias);
 				return `(${fieldSqlQuery.toSQL()})`;
 			case JSONClauseObjectType.MANY_TO_ONE_RELATION:
-				this.validator.validateReadQEntityManyToOneRelation(clauseField.propertyName, qEntity);
-				columnName = this.getEntityManyToOneColumnName(qEntity, clauseField.propertyName, clauseField.tableAlias);
-				return this.getComplexColumnFragment(clauseField, columnName);
+				this.validator.validateReadQEntityManyToOneRelation(aField.propertyName, qEntity, aField.fieldAlias);
+				columnName = this.getEntityManyToOneColumnName(qEntity, aField.propertyName, aField.tableAlias);
+				this.addField(qEntity.__entityName__, this.getTableName(qEntity), aField.propertyName, columnName);
+				return this.getComplexColumnFragment(aField, columnName);
 			// must be a nested object
 			default:
 				if (clauseType !== ClauseType.MAPPED_SELECT_CLAUSE) {
@@ -485,39 +265,24 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		}
 	}
 
-	protected isPrimitive( value: any ) {
-		if (value === null || value === undefined || value === '' || value === NaN) {
+	protected isParameterReference( value: any ) {
+		if (value === null) {
+			return false;
+		}
+		if (value === undefined || value === '' || value === NaN) {
 			throw `Invalid query value: ${value}`;
 		}
 		switch (typeof value) {
 			case "boolean":
 			case "number":
+				throw `Unexpected primitive isntance, expecting parameter alias.`;
 			case "string":
 				return true;
 		}
 		if (value instanceof Date) {
-			return true;
+			throw `Unexpected date instance, expecting parameter alias.`;
 		}
 		return false;
-	}
-
-	protected parsePrimitive(
-		primitiveValue: any
-	): string {
-		if (this.embedParameters) {
-			this.parameters.push(primitiveValue);
-			return this.sqlAdaptor.getParameterSymbol();
-		}
-		switch (typeof primitiveValue) {
-			case "boolean":
-			case "number":
-			case "string":
-				return '' + primitiveValue;
-		}
-		if (primitiveValue instanceof Date) {
-			return this.sqlAdaptor.dateToDbQuery(primitiveValue);
-		}
-		throw `Cannot parse a non-primitive value`;
 	}
 
 	protected getSimpleColumnFragment(
@@ -532,7 +297,7 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		columnName: string
 	): string {
 		let selectSqlFragment = `${value.tableAlias}.${columnName}`;
-		selectSqlFragment = this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(value, selectSqlFragment, this.qEntityMapByAlias, this.embedParameters, this.parameters);
+		selectSqlFragment = this.sqlAdaptor.getFunctionAdaptor().getFunctionCalls(value, selectSqlFragment, this.qEntityMapByAlias);
 		return selectSqlFragment;
 	}
 
@@ -548,6 +313,38 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		this.addField(entityName, this.getTableName(qEntity), propertyName, columnName);
 
 		return columnName;
+	}
+
+	applyOperator(
+		operator: string,
+		rValue: string
+	): string {
+		switch (operator) {
+			case "$eq":
+				return ` = ${rValue}`;
+			case "$gt":
+				return ` > ${rValue}`;
+			case "$gte":
+				return ` >= ${rValue}`;
+			case "$isNotNull":
+				return ` IS NOT NULL`;
+			case "$isNull":
+				return ` IS NULL`;
+			case "$in":
+				return ` IN (${rValue})`;
+			case "$lt":
+				return ` < ${rValue}`;
+			case "$lte":
+				return ` <= ${rValue}`;
+			case "$ne":
+				return ` != ${rValue}`;
+			case "$nin":
+				return ` NOT IN (${rValue})`;
+			case "$like":
+				return ` LIKE ${rValue}`;
+			default:
+				throw `Unsupported operator ${operator}`;
+		}
 	}
 
 }

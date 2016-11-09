@@ -4,18 +4,20 @@
 import { EntityRelationRecord, JSONEntityRelation } from "../../../../core/entity/Relation";
 import { EntityDefaults, SQLStringQuery, QueryResultType, SQLDialect } from "../../SQLStringQuery";
 import { IEntity, IQEntity } from "../../../../core/entity/Entity";
-import { BridgedQueryConfiguration } from "../result/IEntityResultParser";
-import { JSONFieldInOrderBy } from "../../../../core/field/FieldInOrderBy";
+import { BridgedQueryConfiguration } from "../result/entity/IEntityResultParser";
 import { JoinTreeNode } from "../../../../core/entity/JoinTreeNode";
 import { PHJsonEntitySQLQuery } from "../ph/PHEntitySQLQuery";
+import { IEntityOrderByParser } from "../orderBy/IEntityOrderByParser";
 /**
  * Represents SQL String query with Entity tree Select clause.
  */
 export declare class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJsonEntitySQLQuery<IE>> {
     protected rootQEntity: IQEntity;
     protected bridgedQueryConfiguration: BridgedQueryConfiguration;
-    private columnAliases;
     private queryParser;
+    protected joinTree: JoinTreeNode;
+    orderByParser: IEntityOrderByParser;
+    private columnAliases;
     constructor(rootQEntity: IQEntity, phJsonQuery: PHJsonEntitySQLQuery<IE>, qEntityMapByName: {
         [entityName: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
@@ -27,6 +29,7 @@ export declare class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQ
             [propertyName: string]: boolean;
         };
     }, dialect: SQLDialect, queryResultType: QueryResultType, bridgedQueryConfiguration?: BridgedQueryConfiguration);
+    toSQL(): string;
     /**
      * Useful when a query is executed remotely and a flat result set is returned.  JoinTree is needed to parse that
      * result set.
@@ -37,7 +40,6 @@ export declare class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQ
     }, entityName: string): JoinTreeNode;
     protected getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults, embedParameters?: boolean, parameters?: any[]): string;
     private getFROMFragment(parentTree, currentTree, embedParameters?, parameters?);
-    protected getOrderByFragment(orderBy?: JSONFieldInOrderBy[]): string;
     /**
      * If bridging is not applied:
      *

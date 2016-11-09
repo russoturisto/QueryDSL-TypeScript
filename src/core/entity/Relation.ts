@@ -2,6 +2,7 @@ import {IQEntity} from "./Entity";
 import {JSONBaseOperation} from "../operation/Operation";
 import {JoinType} from "./Joins";
 import {PHJsonMappedQSLQuery} from "../../query/sql/query/ph/PHMappedSQLQuery";
+
 /**
  * Created by Papa on 4/26/2016.
  */
@@ -51,7 +52,7 @@ export interface JSONEntityRelation extends JSONRelation {
 	relationPropertyName: string;
 }
 
-export interface IQRelation<IQR extends IQEntity, R> {
+export interface IQRelation {
 	innerJoin();
 	leftJoin();
 }

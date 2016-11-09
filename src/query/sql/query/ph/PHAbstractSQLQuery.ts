@@ -10,7 +10,7 @@ import {
 	JSONBaseOperation
 } from "../../../../core/operation/Operation";
 import {JSONLogicalOperation} from "../../../../core/operation/LogicalOperation";
-import {IFrom, QEntity, QView} from "../../../../core/entity/Entity";
+import {IFrom, QEntity, QView, IEntityRelationFrom} from "../../../../core/entity/Entity";
 import {JSONRelation} from "../../../../core/entity/Relation";
 import {PHRawNonEntitySQLQuery, PHJsonNonEntitySqlQuery} from "./PHNonEntitySQLQuery";
 import {QExistsFunction} from "../../../../core/field/Functions";
@@ -47,7 +47,7 @@ export abstract class PHAbstractSQLQuery {
 	}
 
 	protected fromClauseToJSON(
-		fromClause: (IFrom | PHRawMappedSQLQuery<any>)[]
+		fromClause: (IFrom | IEntityRelationFrom | PHRawMappedSQLQuery<any>)[]
 	): JSONRelation[] {
 		return fromClause.map(( fromEntity ) => {
 			if (!(fromEntity instanceof QEntity)) {
@@ -73,13 +73,13 @@ export abstract class PHAbstractSQLQuery {
 		let operation: JSONBaseOperation = whereClause;
 		let jsonOperation: JSONBaseOperation = {
 			category: operation.category,
-			operation: operation.operation
+			operator: operation.operator
 		};
 		switch (operation.category) {
 			case OperationCategory.LOGICAL:
 				let logicalOperation = <JSONLogicalOperation>operation;
 				let jsonLogicalOperation = <JSONLogicalOperation>jsonOperation;
-				switch (operation.operation) {
+				switch (operation.operator) {
 					case '$not':
 						jsonLogicalOperation.value = this.whereClauseToJSON(<JSONBaseOperation>logicalOperation.value, columnAliases);
 						break;
@@ -90,7 +90,7 @@ export abstract class PHAbstractSQLQuery {
 						);
 						break;
 					default:
-						throw `Unsupported logical operation '${operation.operation}'`;
+						throw `Unsupported logical operation '${operation.operator}'`;
 				}
 				break;
 			case OperationCategory.FUNCTION:
@@ -103,7 +103,7 @@ export abstract class PHAbstractSQLQuery {
 			case OperationCategory.DATE:
 			case OperationCategory.NUMBER:
 			case OperationCategory.STRING:
-				let valueOperation: JSONRawValueOperation<any, any> = <JSONRawValueOperation<any, any>>operation;
+				let valueOperation: JSONRawValueOperation<any> = <JSONRawValueOperation<any>>operation;
 				// All Non logical or exists operations are value operations (eq, isNull, like, etc.)
 				let jsonValueOperation: JSONValueOperation = <JSONValueOperation>jsonOperation;
 				jsonValueOperation.lValue = this.convertLRValue(valueOperation.lValue, columnAliases);
@@ -129,10 +129,12 @@ export abstract class PHAbstractSQLQuery {
 			case "boolean":
 			case "number":
 			case "string":
-				return rValue;
+				throw `L and R values must be converted to Functions`;
+			case "undefined":
+				throw `'undefined' is not a valid L or R value`;
 			default:
 				if (rValue instanceof Date) {
-					return rValue;
+					throw `L and R values must be converted to Functions`;
 				} else if (rValue instanceof QOperableField) {
 					return rValue.toJSON(columnAliases, false);
 				} // Must be a Field Query

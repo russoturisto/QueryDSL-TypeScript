@@ -56,6 +56,24 @@ function getSqlFunctionCall(
 	sqlFunction: SqlFunction,
 	parameters?: any[]
 ) {
+	if (parameters) {
+		parameters = parameters.map(( parameter ) => {
+			switch (typeof parameter) {
+				case "boolean":
+					return bool(parameter);
+				case "number":
+					return num(parameter);
+				case "string":
+					return str(parameter);
+				case "undefined":
+					throw `'undefined' cannot be used as a function parameter`;
+			}
+			if (parameter instanceof Date) {
+				return date(parameter);
+			}
+			return parameter;
+		});
+	}
 	return {
 		functionType: sqlFunction,
 		parameters: parameters
@@ -206,13 +224,13 @@ export function round(
 }
 
 export function now(): IQDateField {
-	return new QDateFunction().applySqlFunction(getSqlFunctionCall(SqlFunction.NOW));
+	return new QDateFunction(null).applySqlFunction(getSqlFunctionCall(SqlFunction.NOW));
 }
 
-export function format<T extends boolean | Date | number | string, IQF extends IQOperableField<T, any, any, IQF>> (
+export function format<T extends boolean | Date | number | string, IQF extends IQOperableField<T, any, any, IQF>>(
 	format: string | IQStringField | PHRawFieldSQLQuery<IQF>,
 	...formatParameters: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
-): IQStringField{
+): IQStringField {
 	if (format instanceof QStringField) {
 		return format.applySqlFunction(getSqlFunctionCall(SqlFunction.FORMAT, formatParameters));
 	} else {
@@ -291,7 +309,7 @@ extends StandAloneFunction implements IQDistinctFunction<ISelect>, Appliable<JSO
 		return {
 			__appliedFunctions__: appliedFunctions,
 			fieldAlias: null,
-			type: JSONClauseObjectType.DISTINCT_FUNCTION,
+			objectType: JSONClauseObjectType.DISTINCT_FUNCTION,
 			value: <any>parsedSelectClause
 		};
 	}
@@ -318,7 +336,7 @@ export class QExistsFunction<IME extends IMappedEntity>
 extends StandAloneFunction implements IQExistsFunction, Appliable<JSONClauseObject, any> {
 
 	__appliedFunctions__: JSONSqlFunctionCall[] = [];
-	operation = "$exists";
+	operator = "$exists";
 	category = OperationCategory.FUNCTION;
 
 	constructor(
@@ -350,10 +368,10 @@ extends StandAloneFunction implements IQExistsFunction, Appliable<JSONClauseObje
 			category: this.category,
 			object: <JSONClauseObject>{
 				__appliedFunctions__: appliedFunctions,
-				type: JSONClauseObjectType.EXISTS_FUNCTION,
+				objectType: JSONClauseObjectType.EXISTS_FUNCTION,
 				value: <any>parsedQuery
 			},
-			operation: this.operation
+			operator: this.operator
 		};
 	}
 }

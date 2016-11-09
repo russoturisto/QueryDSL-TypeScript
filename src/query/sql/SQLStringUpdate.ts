@@ -38,8 +38,8 @@ export class SQLStringUpdate extends SQLStringNoJoinQuery {
 		let joinNodeMap = this.getJoinNodeMap();
 		let updateAlias = QRelation.getAlias(this.phJsonUpdate.update);
 		let updateFragment = this.getTableFragment(this.phJsonUpdate.update);
-		let setFragment = this.getSetFragment(updateAlias, entityName, this.phJsonUpdate.set, embedParameters, parameters);
-		let whereFragment = this.getWHEREFragment(this.phJsonUpdate.where, 0, joinNodeMap, embedParameters, parameters);
+		let setFragment = this.getSetFragment(updateAlias, entityName, this.phJsonUpdate.set);
+		let whereFragment = this.getWHEREFragment(this.phJsonUpdate.where, 0, joinNodeMap);
 
 		return `update
 ${updateFragment}
@@ -83,13 +83,13 @@ ${whereFragment}`;
 					throw `Did not find field '${entityName}.${propertyName}' used in the WHERE clause.`;
 				}
 				if (field instanceof QBooleanField) {
-					value = this.getSetValueFragment(value, entityName, propertyName, this.booleanTypeCheck, embedParameters, parameters);
+					value = this.getSetValueFragment(value, entityName, propertyName, this.booleanTypeCheck);
 				} else if (field instanceof QDateField) {
-					value = this.getSetValueFragment(value, entityName, propertyName, this.dateTypeCheck, embedParameters, parameters, this.sqlAdaptor.dateToDbQuery);
+					value = this.getSetValueFragment(value, entityName, propertyName, this.dateTypeCheck, this.sqlAdaptor.dateToDbQuery);
 				} else if (field instanceof QNumberField) {
-					value = this.getSetValueFragment(value, entityName, propertyName, this.numberTypeCheck, embedParameters, parameters);
+					value = this.getSetValueFragment(value, entityName, propertyName, this.numberTypeCheck);
 				} else if (field instanceof QStringField) {
-					value = this.getSetValueFragment(value, entityName, propertyName, this.stringTypeCheck, embedParameters, parameters, this.sanitizeStringValue);
+					value = this.getSetValueFragment(value, entityName, propertyName, this.stringTypeCheck);
 				} else {
 					throw `Unexpected type '${(<any>field.constructor).name}' of field '${entityName}.${propertyName}' for assignment in the SET clause.`;
 				}
@@ -110,13 +110,13 @@ ${whereFragment}`;
 					}
 					let relationField = relationGenericQEntity.__entityFieldMap__[relationEntityMetadata.idProperty];
 					if (relationField instanceof QBooleanField) {
-						value = this.getSetValueFragment(value, entityName, propertyName, this.booleanTypeCheck, embedParameters, parameters);
+						value = this.getSetValueFragment(value, entityName, propertyName, this.booleanTypeCheck);
 					} else if (relationField instanceof QDateField) {
-						value = this.getSetValueFragment(value, entityName, propertyName, this.dateTypeCheck, embedParameters, parameters, this.sqlAdaptor.dateToDbQuery);
+						value = this.getSetValueFragment(value, entityName, propertyName, this.dateTypeCheck, this.sqlAdaptor.dateToDbQuery);
 					} else if (relationField instanceof QNumberField) {
-						value = this.getSetValueFragment(value, entityName, propertyName, this.numberTypeCheck, embedParameters, parameters);
+						value = this.getSetValueFragment(value, entityName, propertyName, this.numberTypeCheck);
 					} else if (relationField instanceof QStringField) {
-						value = this.getSetValueFragment(value, entityName, propertyName, this.stringTypeCheck, embedParameters, parameters, this.sanitizeStringValue);
+						value = this.getSetValueFragment(value, entityName, propertyName, this.stringTypeCheck);
 					} else {
 						throw `Unexpected type '${(<any>relation.constructor).name}' of field '${entityName}.${propertyName}' for assignment in the SET clause.`;
 					}
@@ -146,8 +146,6 @@ ${whereFragment}`;
 		entityName: string,
 		propertyName: string,
 		typeCheckFunction: ( value: any )=>boolean,
-		embedParameters: boolean = true,
-		parameters: any[] = null,
 		conversionFunction?: (
 			value: any,
 			embedParameters: boolean

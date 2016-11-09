@@ -1,19 +1,21 @@
-import {IEntity, IFrom} from "../../../../core/entity/Entity";
+import {IEntity, IFrom, IEntityRelationFrom} from "../../../../core/entity/Entity";
 import {PHRawSQLQuery, PHSQLQuery, PHJsonCommonSQLQuery, PHJsonLimitedSQLQuery} from "../../PHSQLQuery";
 import {PHMappableSQLQuery} from "./PHMappedSQLQuery";
 import {FieldInOrderBy, IFieldInOrderBy, JSONFieldInOrderBy} from "../../../../core/field/FieldInOrderBy";
 import {QField} from "../../../../core/field/Field";
 import {PHAbstractSQLQuery} from "./PHAbstractSQLQuery";
+import {JSONEntityRelation} from "../../../../core/entity/Relation";
 /**
  * Created by Papa on 10/24/2016.
  */
 
 export interface PHJsonEntitySQLQuery<IE extends IEntity> extends PHJsonCommonSQLQuery {
+	from?: JSONEntityRelation[];
 	select: IE;
 }
 
 export interface PHRawEntitySQLQuery<IE extends IEntity> extends PHRawSQLQuery {
-	from?: IFrom[];
+	from?: IEntityRelationFrom[];
 	select: IE;
 }
 
@@ -30,16 +32,16 @@ export class PHEntitySQLQuery<IE extends IEntity> extends PHMappableSQLQuery imp
 	toJSON(): PHJsonEntitySQLQuery<IE> {
 		return {
 			select: this.selectClauseToJSON(this.phRawQuery.select),
-			from: this.fromClauseToJSON(this.phRawQuery.from),
+			from: <JSONEntityRelation[]>this.fromClauseToJSON(this.phRawQuery.from),
 			where: PHAbstractSQLQuery.whereClauseToJSON(this.phRawQuery.where, this.columnAliases),
 			orderBy: this.orderByClauseToJSON(this.phRawQuery.orderBy)
 		};
 	}
 
-	protected nonDistinctSelectClauseToJSON( rawSelect:any):any {
-		for(let field in rawSelect) {
+	protected nonDistinctSelectClauseToJSON( rawSelect: any ): any {
+		for (let field in rawSelect) {
 			let value = rawSelect[field];
-			if(value instanceof QField) {
+			if (value instanceof QField) {
 				throw `Field References cannot be used in Entity Queries`;
 			} else if (value instanceof Object && !(value instanceof Date)) {
 				this.nonDistinctSelectClauseToJSON(value);

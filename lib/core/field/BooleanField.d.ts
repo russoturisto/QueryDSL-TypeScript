@@ -1,7 +1,7 @@
 import { JSONRawBooleanOperation, IBooleanOperation } from "../operation/BooleanOperation";
 import { IQEntity } from "../entity/Entity";
-import { IQOperableField, QOperableField } from "./OperableField";
-import { JSONClauseField } from "./Appliable";
+import { IQOperableField, QOperableField, IQFunction } from "./OperableField";
+import { JSONClauseObjectType, JSONClauseField } from "./Appliable";
 import { PHRawFieldSQLQuery } from "../../query/sql/query/ph/PHFieldSQLQuery";
 import { FieldColumnAliases } from "../entity/Aliases";
 /**
@@ -10,12 +10,14 @@ import { FieldColumnAliases } from "../entity/Aliases";
 export interface IQBooleanField extends IQOperableField<boolean, JSONRawBooleanOperation, IBooleanOperation, IQBooleanField> {
 }
 export declare class QBooleanField extends QOperableField<boolean, JSONRawBooleanOperation, IBooleanOperation, IQBooleanField> implements IQBooleanField {
-    constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string);
+    constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string, objectType?: JSONClauseObjectType);
     getInstance(qEntity?: IQEntity): QBooleanField;
 }
-export declare class QBooleanFunction extends QBooleanField {
-    private value;
-    constructor(value: boolean | PHRawFieldSQLQuery<QBooleanField>);
+export declare class QBooleanFunction extends QBooleanField implements IQFunction<boolean | PHRawFieldSQLQuery<any>> {
+    value: boolean | PHRawFieldSQLQuery<QBooleanField>;
+    private isQueryParameter;
+    parameterAlias: string;
+    constructor(value: boolean | PHRawFieldSQLQuery<QBooleanField>, isQueryParameter?: boolean);
     getInstance(): QBooleanFunction;
     toJSON(columnAliases: FieldColumnAliases, forSelectClause: boolean): JSONClauseField;
 }

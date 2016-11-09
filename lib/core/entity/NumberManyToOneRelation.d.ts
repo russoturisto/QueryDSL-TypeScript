@@ -1,25 +1,22 @@
 import { QNumberField, IQNumberField } from "../field/NumberField";
-import { IQEntity } from "./Entity";
+import { IQEntity, IEntityRelationFrom } from "./Entity";
 import { IQRelation, EntityRelationType } from "./Relation";
-import { JSONClauseField } from "../field/Appliable";
-import { FieldColumnAliases } from "./Aliases";
 /**
  * Created by Papa on 10/23/2016.
  */
-export interface IQNumberManyToOneRelation<IQR extends IQEntity, R> extends IQRelation<IQR, R>, IQNumberField {
+export interface IQNumberManyToOneRelation<IQR extends IQEntity, R> extends IQRelation, IQNumberField {
 }
-export declare class QNumberManyToOneRelation<IQR extends IQEntity, R extends IQEntity> extends QNumberField implements IQRelation<IQR, R> {
-    q: IQR;
-    qConstructor: new () => IQR;
+export declare class QNumberManyToOneRelation<IERF extends IEntityRelationFrom, R extends IQEntity> extends QNumberField implements IQRelation {
+    q: IQEntity;
+    qConstructor: new () => IQEntity;
     entityName: string;
     fieldName: string;
     relationEntityConstructor: new () => R;
-    relationQEntityConstructor: new (...args: any[]) => IQR;
+    relationQEntityConstructor: new (...args: any[]) => IQEntity;
     relationType: EntityRelationType;
-    constructor(q: IQR, qConstructor: new () => IQR, entityName: string, fieldName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQR);
-    getInstance(qEntity?: IQR): QNumberManyToOneRelation<IQR, R>;
-    innerJoin(): IQR;
-    leftJoin(): IQR;
+    constructor(q: IQEntity, qConstructor: new () => IQEntity, entityName: string, fieldName: string, relationEntityConstructor: new () => R, relationQEntityConstructor: new (...args: any[]) => IQEntity);
+    getInstance(qEntity?: IQEntity): QNumberManyToOneRelation<IERF, R>;
+    innerJoin(): IERF;
+    leftJoin(): IERF;
     private getNewQEntity(joinType);
-    toJSON(columnAliases: FieldColumnAliases, forSelectClause: boolean): JSONClauseField;
 }

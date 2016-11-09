@@ -11,8 +11,10 @@ export interface IOrderByParser {
         [alias: string]: IQEntity;
     }): string;
 }
+export interface INonEntityOrderByParser {
+    getOrderByFragment(rootSelectClauseFragment: any, originalOrderBy: JSONFieldInOrderBy[]): string;
+}
 export declare abstract class AbstractOrderByParser {
-    protected rootQEntity: IQEntity;
     protected rootSelectClauseFragment: any;
     protected qEntityMapByName: {
         [alias: string]: IQEntity;
@@ -28,7 +30,7 @@ export declare abstract class AbstractOrderByParser {
         };
     };
     protected orderBy: JSONFieldInOrderBy[];
-    constructor(rootQEntity: IQEntity, rootSelectClauseFragment: any, qEntityMapByName: {
+    constructor(rootSelectClauseFragment: any, qEntityMapByName: {
         [alias: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {

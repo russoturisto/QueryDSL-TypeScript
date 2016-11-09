@@ -63,17 +63,17 @@ import {FieldColumnAliases} from "./core/entity/Aliases";
 import {JoinTreeNode} from "./core/entity/JoinTreeNode";
 import {FlatSQLStringQuery} from "./query/sql/query/string/FlatSQLStringQuery";
 import {ExactOrderByParser} from "./query/sql/query/orderBy/ExactOrderByParser";
-import {ForcedOrderByParser} from "./query/sql/query/orderBy/ForcedOrderByParser";
-import {IOrderByParser, AbstractOrderByParser} from "./query/sql/query/orderBy/IOrderByParser";
-import {ManyToOneStubReference, BridgedMtoMapper} from "./query/sql/query/result/BridgedMtoMapper";
-import {BridgedOtmMapper, OneToManyStubReference} from "./query/sql/query/result/BridgedOtmMapper";
-import {BridgedResultParser} from "./query/sql/query/result/BridgedResultParser";
+import {EntityOrderByParser} from "./query/sql/query/orderBy/EntityOrderByParser";
+import {IEntityOrderByParser, AbstractEntityOrderByParser} from "./query/sql/query/orderBy/IEntityOrderByParser";
+import {ManyToOneStubReference, BridgedMtoMapper} from "./query/sql/query/result/entity/BridgedMtoMapper";
+import {BridgedOtmMapper, OneToManyStubReference} from "./query/sql/query/result/entity/BridgedOtmMapper";
+import {BridgedResultParser} from "./query/sql/query/result/entity/BridgedResultParser";
 import {HierarchicalResultParser} from "./query/sql/query/result/HierarchicalResultParser";
 import {JSONFieldInOrderBy, SortOrder, IFieldInOrderBy, FieldInOrderBy} from "./core/field/FieldInOrderBy";
 import {
 	BridgedQueryConfiguration, IEntityResultParser,
 	getObjectResultParser, AbstractObjectResultParser
-} from "./query/sql/query/result/IEntityResultParser";
+} from "./query/sql/query/result/entity/IEntityResultParser";
 import {PlainResultParser} from "./query/sql/query/result/PlainResultParser";
 import {FlattenedResultParser} from "./query/sql/query/result/FlattenedResultParser";
 import {EntitySQLStringQuery} from "./query/sql/query/string/EntitySQLStringQuery";
@@ -85,9 +85,9 @@ export {
 	FieldInOrderBy,
 	Orderable,
 	ExactOrderByParser,
-	ForcedOrderByParser,
-	IOrderByParser,
-	AbstractOrderByParser,
+	EntityOrderByParser,
+	IEntityOrderByParser,
+	AbstractEntityOrderByParser,
 	FlatSQLStringQuery,
 	ManyToOneStubReference,
 	BridgedMtoMapper,

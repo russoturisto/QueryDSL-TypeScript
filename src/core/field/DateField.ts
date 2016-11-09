@@ -1,10 +1,8 @@
 import {IQEntity} from "../entity/Entity";
-import {FieldType} from "./Field";
 import {DateOperation, JSONRawDateOperation, IDateOperation} from "../operation/DateOperation";
-import {JSONSqlFunctionCall} from "./Functions";
-import {JSONClauseField, JSONClauseObjectType} from "./Appliable";
+import {JSONClauseField, JSONClauseObjectType, SQLDataType} from "./Appliable";
 import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
-import {IQOperableField, QOperableField} from "./OperableField";
+import {IQOperableField, QOperableField, IQFunction} from "./OperableField";
 import {FieldColumnAliases} from "../entity/Aliases";
 /**
  * Created by Papa on 8/11/2016.
@@ -19,9 +17,10 @@ export class QDateField extends QOperableField<Date, JSONRawDateOperation, IDate
 		q: IQEntity,
 		qConstructor: new() => IQEntity,
 		entityName: string,
-		fieldName: string
+		fieldName: string,
+		objectType:JSONClauseObjectType = JSONClauseObjectType.FIELD
 	) {
-		super(q, qConstructor, entityName, fieldName, FieldType.DATE, new DateOperation());
+		super(q, qConstructor, entityName, fieldName, objectType, SQLDataType.DATE, new DateOperation());
 	}
 
 	getInstance( qEntity: IQEntity = this.q ): QDateField {
@@ -30,11 +29,15 @@ export class QDateField extends QOperableField<Date, JSONRawDateOperation, IDate
 
 }
 
-export class QDateFunction extends QDateField {
+export class QDateFunction extends QDateField implements IQFunction<Date | PHRawFieldSQLQuery<any>> {
+
+	parameterAlias: string;
+
 	constructor(
-		private value?: Date | PHRawFieldSQLQuery<QDateField>
+		public value: Date | PHRawFieldSQLQuery<QDateField>,
+		private isQueryParameter: boolean = false
 	) {
-		super(null, null, null, null);
+		super(null, null, null, null, JSONClauseObjectType.FIELD_FUNCTION);
 	}
 
 	getInstance(): QDateFunction {
@@ -45,6 +48,12 @@ export class QDateFunction extends QDateField {
 		columnAliases: FieldColumnAliases,
 		forSelectClause: boolean
 	): JSONClauseField {
-		return this.operableFunctionToJson(JSONClauseObjectType.DATE_FIELD_FUNCTION, this.value, columnAliases, forSelectClause);
+		let json = this.operableFunctionToJson(this, columnAliases, forSelectClause);
+
+		if (this.isQueryParameter) {
+			this.parameterAlias = <string>json.value;
+		}
+
+		return json;
 	}
 }

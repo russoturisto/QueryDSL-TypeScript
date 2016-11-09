@@ -1,7 +1,7 @@
 import {ISQLAdaptor, ISQLFunctionAdaptor, SqlValueProvider, AbstractFunctionAdaptor} from "./SQLAdaptor";
-import {SQLDataType} from "../SQLStringQuery";
 import {JSONSqlFunctionCall, SqlFunction} from "../../../core/field/Functions";
 import {IQEntity} from "../../../core/entity/Entity";
+import {SQLDataType} from "../../../core/field/Appliable";
 
 /**
  * Created by Papa on 8/27/2016.
@@ -16,7 +16,10 @@ export class SqLiteAdaptor implements ISQLAdaptor {
 		this.functionAdaptor = new SqlLiteFunctionAdaptor(sqlValueProvider);
 	}
 
-	getParameterSymbol(): string {
+	getParameterReference(
+		parameterReferences: string[],
+		newReference: string
+	): string {
 		return '?';
 	}
 
@@ -46,12 +49,16 @@ export class SqLiteAdaptor implements ISQLAdaptor {
 		return this.functionAdaptor;
 	}
 
-	applyFunction(
-		value: string,
-		functionCall: JSONSqlFunctionCall,
-		isField: boolean
-	): string {
-		throw `Not implemented applyFunction`;
+	getOffsetFragment( offset: number ): string {
+		return `
+OFFSET
+	${offset}`;
+	}
+
+	getLimitFragment( limit: number ): string {
+		return `
+LIMIT
+	${limit}`;
 	}
 
 }
@@ -67,9 +74,7 @@ export class SqlLiteFunctionAdaptor extends AbstractFunctionAdaptor {
 	getFunctionCall(
 		jsonFunctionCall: JSONSqlFunctionCall,
 		value: string,
-		qEntityMapByAlias: {[entityName: string]: IQEntity},
-		embedParameters: boolean = true,
-		parameters: any[] = null
+		qEntityMapByAlias: {[entityName: string]: IQEntity}
 	): string {
 		switch (jsonFunctionCall.functionType) {
 			case SqlFunction.ABS:

@@ -4,7 +4,7 @@ import {IFrom} from "../../../../core/entity/Entity";
 import {IQOperableField} from "../../../../core/field/OperableField";
 import {QDistinctFunction} from "../../../../core/field/Functions";
 import {PHAbstractSQLQuery} from "./PHAbstractSQLQuery";
-import {JSONFieldInGroupBy} from "../../../../core/field/FieldInOrderBy";
+import {JSONFieldInGroupBy, JSONFieldInOrderBy} from "../../../../core/field/FieldInOrderBy";
 /**
  * Created by Papa on 10/24/2016.
  */
@@ -15,7 +15,6 @@ export interface PHJsonGroupedSQLQuery {
 }
 
 export interface PHJsonNonEntitySqlQuery extends PHJsonCommonSQLQuery, PHJsonGroupedSQLQuery, PHJsonLimitedSQLQuery {
-
 }
 
 export interface PHRawNonEntitySQLQuery extends PHRawSQLQuery {
@@ -38,7 +37,7 @@ export abstract class PHDistinguishableSQLQuery extends PHAbstractSQLQuery {
 				throw `Distinct cannot be used in SELECT of Hierarchical/Bridged Entity queries.`;
 			}
 			let rawInnerSelect = rawSelect.getSelectClause();
-			let innerSelect = this.nonDistinctSelectClauseToJSON(rawSelect);
+			let innerSelect = this.nonDistinctSelectClauseToJSON(rawInnerSelect);
 			return rawSelect.toJSON(innerSelect);
 		} else {
 			return this.nonDistinctSelectClauseToJSON(rawSelect);

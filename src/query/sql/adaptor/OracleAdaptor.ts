@@ -1,5 +1,5 @@
-import {SQLDataType} from "../SQLStringQuery";
 import {ISQLAdaptor, ISQLFunctionAdaptor, SqlValueProvider} from "./SQLAdaptor";
+import {SQLDataType} from "../../../core/field/Appliable";
 /**
  * Created by Papa on 8/27/2016.
  */
@@ -11,7 +11,10 @@ export class OracleAdaptor implements ISQLAdaptor {
 	) {
 	}
 
-	getParameterSymbol(): string {
+	getParameterReference(
+		parameterReferences: string[],
+		newReference: string
+	): string {
 		throw `Not implemented`;
 	}
 
@@ -40,4 +43,13 @@ export class OracleAdaptor implements ISQLAdaptor {
 	getFunctionAdaptor(): ISQLFunctionAdaptor {
 		throw `Not implemented getFunctionAdaptor`;
 	}
+
+	getOffsetFragment( offset: number ): string {
+		throw `Not implemented`;
+	}
+
+	getLimitFragment( limit: number ): string {
+		throw `Not implemented`;
+	}
+
 }

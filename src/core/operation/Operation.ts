@@ -21,74 +21,74 @@ export interface JSONFunctionOperation extends JSONBaseOperation {
 
 export interface JSONValueOperation extends JSONBaseOperation {
 	lValue: JSONClauseField;
-	rValue?: boolean | boolean[] | Date | Date[] | number | number[] | string | string[] | JSONClauseField | JSONClauseField[] | PHJsonFieldQSLQuery;
+	rValue?: JSONClauseField | JSONClauseField[] | PHJsonFieldQSLQuery;
 }
 
 export interface JSONBaseOperation {
 	category: OperationCategory;
-	operation: string;
+	operator: string;
 }
 
-export interface JSONRawValueOperation<T, IQF extends IQOperableField<any, any, any, any>> extends JSONBaseOperation {
-	lValue?: T | IQF;
-	rValue?: T | T[] | IQF | IQF[] | PHRawFieldSQLQuery<IQF> | PHRawFieldSQLQuery<IQF>[];
+export interface JSONRawValueOperation<IQF extends IQOperableField<any, any, any, any>> extends JSONBaseOperation {
+	lValue?: IQF;
+	rValue?: IQF | IQF[] | PHRawFieldSQLQuery<IQF> | PHRawFieldSQLQuery<IQF>[];
 }
 
-export interface IOperation<T, JO extends JSONBaseOperation> {
+export interface IOperation {
 }
 
-export interface IValueOperation<T, JRO extends JSONBaseOperation, IQF extends IQOperableField<T, JRO, any, any>> extends IOperation<T, JRO> {
+export interface IValueOperation<JRO extends JSONBaseOperation, IQF extends IQOperableField<any, JRO, any, any>> extends IOperation {
 
 	category: OperationCategory;
 
 	equals(
-		lValue: T | IQF,
-		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: IQF,
+		rValue: IQF | PHRawFieldSQLQuery<IQF>
 	): JRO;
 
 	greaterThan(
-		lValue: T | IQF,
-		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: IQF,
+		rValue: IQF | PHRawFieldSQLQuery<IQF>
 	): JRO;
 
 	greaterThanOrEquals(
-		lValue: T | IQF,
-		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: IQF,
+		rValue: IQF | PHRawFieldSQLQuery<IQF>
 	): JRO;
 
 	isIn(
-		lValue: T | IQF,
-		rValue: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
+		lValue: IQF,
+		rValue: (IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JRO;
 
 	lessThan(
-		lValue: T | IQF,
-		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: IQF,
+		rValue: IQF | PHRawFieldSQLQuery<IQF>
 	): JRO;
 
 	lessThanOrEquals(
-		lValue: T | IQF,
-		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: IQF,
+		rValue: IQF | PHRawFieldSQLQuery<IQF>
 	): JRO;
 
-	isNotNull( lValue: T | IQF ): JRO;
+	isNotNull( lValue: IQF ): JRO;
 
-	isNull( lValue: T | IQF ): JRO;
+	isNull( lValue: IQF ): JRO;
 
 	notEquals(
-		lValue: T | IQF,
-		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: IQF,
+		rValue: IQF | PHRawFieldSQLQuery<IQF>
 	): JRO;
 
 	notIn(
-		lValue: T | IQF,
-		rValue: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
+		lValue: IQF,
+		rValue: (IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JRO;
 
 
 }
 
-export abstract class Operation<T, JRO extends JSONBaseOperation> implements IOperation<T, JRO> {
+export abstract class Operation implements IOperation {
 
 	constructor(
 		public category: OperationCategory
@@ -97,7 +97,7 @@ export abstract class Operation<T, JRO extends JSONBaseOperation> implements IOp
 
 }
 
-export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF>, IQF extends IQOperableField<T, JRO, any, any>> extends Operation<T, JRO> implements IValueOperation<T, JRO, IQF> {
+export abstract class ValueOperation<JRO extends JSONRawValueOperation<IQF>, IQF extends IQOperableField<any, JRO, any, any>> extends Operation implements IValueOperation<JRO, IQF> {
 
 	constructor(
 		public category: OperationCategory
@@ -106,8 +106,8 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF
 	}
 
 	equals(
-		lValue: T | IQF,
-		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: IQF,
+		rValue: IQF | PHRawFieldSQLQuery<IQF>
 	): JRO {
 		return <any>{
 			category: this.category,
@@ -118,8 +118,8 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF
 	}
 
 	greaterThan(
-		lValue: T | IQF,
-		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: IQF,
+		rValue: IQF | PHRawFieldSQLQuery<IQF>
 	): JRO {
 		return <any>{
 			category: this.category,
@@ -130,8 +130,8 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF
 	}
 
 	greaterThanOrEquals(
-		lValue: T | IQF,
-		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: IQF,
+		rValue: IQF | PHRawFieldSQLQuery<IQF>
 	): JRO {
 		return <any>{
 			category: this.category,
@@ -141,7 +141,7 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF
 		};
 	}
 
-	isNotNull(lValue: T | IQF): JRO {
+	isNotNull( lValue: IQF ): JRO {
 		return <any>{
 			category: this.category,
 			lValue: lValue,
@@ -150,7 +150,7 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF
 	}
 
 	isNull(
-		lValue: T | IQF
+		lValue: IQF
 	): JRO {
 		return <any>{
 			category: this.category,
@@ -160,8 +160,8 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF
 	}
 
 	isIn(
-		lValue: T | IQF,
-		rValue: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
+		lValue: IQF,
+		rValue: (IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JRO {
 		return <any>{
 			category: this.category,
@@ -172,9 +172,9 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF
 	}
 
 	lessThan(
-		lValue: T | IQF,
-		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
-	): JRO{
+		lValue: IQF,
+		rValue: IQF | PHRawFieldSQLQuery<IQF>
+	): JRO {
 		return <any>{
 			category: this.category,
 			lValue: lValue,
@@ -184,8 +184,8 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF
 	}
 
 	lessThanOrEquals(
-		lValue: T | IQF,
-		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: IQF,
+		rValue: IQF | PHRawFieldSQLQuery<IQF>
 	): JRO {
 		return <any>{
 			category: this.category,
@@ -196,8 +196,8 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF
 	}
 
 	notEquals(
-		lValue: T | IQF,
-		rValue: T | IQF | PHRawFieldSQLQuery<IQF>
+		lValue: IQF,
+		rValue: IQF | PHRawFieldSQLQuery<IQF>
 	): JRO {
 		return <any>{
 			category: this.category,
@@ -208,8 +208,8 @@ export abstract class ValueOperation<T, JRO extends JSONRawValueOperation<T, IQF
 	}
 
 	notIn(
-		lValue: T | IQF,
-		rValue: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
+		lValue: IQF,
+		rValue: (IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JRO {
 		return <any>{
 			category: this.category,

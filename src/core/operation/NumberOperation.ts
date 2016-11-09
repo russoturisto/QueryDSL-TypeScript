@@ -10,19 +10,19 @@ import {PHRawFieldSQLQuery} from "../../query/sql/query/ph/PHFieldSQLQuery";
  */
 
 
-export interface JSONRawNumberOperation extends JSONRawValueOperation<number, IQNumberField> {
-	operation: "$eq" | "$exists" | "$in" | "$ne" | "$nin" | "$gt" | "$gte" | "$lt" | "$lte";
+export interface JSONRawNumberOperation extends JSONRawValueOperation<IQNumberField> {
+	operator: "$eq" | "$exists" | "$in" | "$ne" | "$nin" | "$gt" | "$gte" | "$lt" | "$lte";
 	lValue: IQNumberField;
-	rValue: number | number[] | IQNumberField | IQNumberField[] | PHRawFieldSQLQuery<IQNumberField> | PHRawFieldSQLQuery<IQNumberField>[];
+	rValue: IQNumberField | IQNumberField[] | PHRawFieldSQLQuery<IQNumberField> | PHRawFieldSQLQuery<IQNumberField>[];
 }
 
 export interface INumberOperation
-extends IValueOperation<number, JSONRawNumberOperation, IQNumberField> {
+extends IValueOperation<JSONRawNumberOperation, IQNumberField> {
 
 }
 
 export class NumberOperation<IQ extends IQEntity>
-extends ValueOperation<number, JSONRawNumberOperation, IQNumberField> implements INumberOperation {
+extends ValueOperation<JSONRawNumberOperation, IQNumberField> implements INumberOperation {
 
 	constructor() {
 		super(OperationCategory.NUMBER);

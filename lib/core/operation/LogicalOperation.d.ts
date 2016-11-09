@@ -6,16 +6,16 @@ export declare function and(...ops: JSONBaseOperation[]): JSONLogicalOperation;
 export declare function or(...ops: JSONBaseOperation[]): JSONLogicalOperation;
 export declare function not(op: JSONBaseOperation): JSONLogicalOperation;
 export interface JSONLogicalOperation extends JSONBaseOperation {
-    operation: "$and" | "$not" | "$or";
+    operator: "$and" | "$not" | "$or";
     value: JSONBaseOperation | JSONBaseOperation[];
 }
-export interface ILogicalOperation extends IOperation<any, JSONLogicalOperation> {
+export interface ILogicalOperation extends IOperation {
     and(ops: JSONBaseOperation[]): JSONLogicalOperation;
     or(ops: JSONBaseOperation[]): JSONLogicalOperation;
     not(op: JSONBaseOperation): JSONLogicalOperation;
 }
-export declare class LogicalOperation extends Operation<any, JSONLogicalOperation> implements ILogicalOperation {
-    static verifyChildOps(ops: IOperation<any, JSONLogicalOperation>[]): void;
+export declare class LogicalOperation extends Operation implements ILogicalOperation {
+    static verifyChildOps(ops: IOperation[]): void;
     constructor();
     and(ops: JSONBaseOperation[]): JSONLogicalOperation;
     or(ops: JSONBaseOperation[]): JSONLogicalOperation;

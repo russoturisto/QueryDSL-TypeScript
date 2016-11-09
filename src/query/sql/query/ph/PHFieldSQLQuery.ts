@@ -3,17 +3,22 @@ import {
 	PHJsonNonEntitySqlQuery
 } from "./PHNonEntitySQLQuery";
 import {PHSQLQuery} from "../../PHSQLQuery";
-import {JSONClauseField, JSONClauseObjectType} from "../../../../core/field/Appliable";
+import {JSONClauseField, JSONClauseObjectType, SQLDataType} from "../../../../core/field/Appliable";
 import {QField, IQField} from "../../../../core/field/Field";
-import {IQDistinctFunction} from "../../../../core/field/Functions";
+import {IQDistinctFunction, QDistinctFunction} from "../../../../core/field/Functions";
 import {EntityAliases} from "../../../../core/entity/Aliases";
+import {QBooleanField} from "../../../../core/field/BooleanField";
+import {QDateField} from "../../../../core/field/DateField";
+import {QNumberField} from "../../../../core/field/NumberField";
+import {QStringField} from "../../../../core/field/StringField";
 /**
  * Created by Papa on 10/24/2016.
  */
 
 export interface PHJsonFieldQSLQuery extends PHJsonNonEntitySqlQuery {
 	select: JSONClauseField;
-	type: JSONClauseObjectType;
+	objectType: JSONClauseObjectType;
+	dataType: SQLDataType;
 }
 
 export interface PHRawFieldSQLQuery<IQF extends IQField<IQF>>
@@ -46,10 +51,29 @@ export class PHFieldSQLQuery<IQF extends IQField<IQF>> extends PHDistinguishable
 
 		let jsonFieldQuery: PHJsonFieldQSLQuery = {
 			select: select,
-			type: JSONClauseObjectType.FIELD_QUERY
+			objectType: JSONClauseObjectType.FIELD_QUERY,
+			dataType: this.getClauseDataType()
 		};
 
 		return <PHJsonFieldQSLQuery>this.getNonEntitySqlQuery(this.phRawQuery, jsonFieldQuery);
+	}
+
+	getClauseDataType():SQLDataType {
+		let selectField = this.phRawQuery.select;
+		if(selectField instanceof QDistinctFunction) {
+			selectField = selectField.getSelectClause();
+		}
+		if(selectField instanceof QBooleanField) {
+			return SQLDataType.BOOLEAN;
+		} else if (selectField instanceof QDateField) {
+			return SQLDataType.DATE;
+		} else if (selectField instanceof QNumberField) {
+			return SQLDataType.NUMBER;
+		} else if (selectField instanceof QStringField) {
+			return SQLDataType.STRING;
+		} else {
+			throw `Unsupported type of select field in Field Query`;
+		}
 	}
 
 }

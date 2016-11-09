@@ -10,8 +10,12 @@ export interface JSONFieldInGroupBy {
 }
 
 export interface JSONFieldInOrderBy extends JSONFieldInGroupBy {
-	fieldAlias: string;
 	sortOrder: SortOrder;
+}
+
+export interface JSONEntityFieldInOrderBy extends JSONFieldInOrderBy {
+	entityName: string,
+	propertyName: string
 }
 
 export enum SortOrder {
@@ -32,7 +36,7 @@ implements IFieldInOrderBy<IQF> {
 	}
 
 	toJSON( columnAliases: FieldColumnAliases ): JSONFieldInOrderBy {
-		if(!columnAliases.hasAliasFor(this.field)) {
+		if (!columnAliases.hasAliasFor(this.field)) {
 			throw `Field used in order by clause is not present in select clause`;
 		}
 		return {
@@ -41,10 +45,12 @@ implements IFieldInOrderBy<IQF> {
 		};
 	}
 
-	toEntityJSON(): JSONFieldInOrderBy {
+	toEntityJSON(): JSONEntityFieldInOrderBy {
 		let qField = <QField<IQF>>this.field;
 		return {
-			fieldAlias: `${qField.entityName}.${qField.fieldName}`,
+			fieldAlias: undefined,
+			propertyName: qField.fieldName,
+			entityName: qField.entityName,
 			sortOrder: this.sortOrder
 		};
 	}

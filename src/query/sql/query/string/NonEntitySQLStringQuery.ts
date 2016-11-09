@@ -3,15 +3,11 @@ import {
 	JSONJoinRelation, JSONViewJoinRelation
 } from "../../../../core/entity/Relation";
 import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
-import {PHJsonMappedQSLQuery} from "../ph/PHMappedSQLQuery";
-import {SQLStringQuery, QueryResultType} from "../../SQLStringQuery";
+import {SQLStringQuery} from "../../SQLStringQuery";
 import {PHJsonNonEntitySqlQuery} from "../ph/PHNonEntitySQLQuery";
-import {JSONClauseField, JSONClauseObjectType} from "../../../../core/field/Appliable";
+import {JSONClauseField, JSONClauseObjectType, SQLDataType} from "../../../../core/field/Appliable";
 import {PHJsonFieldQSLQuery} from "../ph/PHFieldSQLQuery";
-import {FieldSQLStringQuery} from "./FieldSQLStringQuery";
-import {FieldColumnAliases} from "../../../../core/entity/Aliases";
 import {JoinType} from "../../../../core/entity/Joins";
-import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
 import {QView} from "../../../../core/entity/Entity";
 import {QBooleanField} from "../../../../core/field/BooleanField";
 import {QDateField} from "../../../../core/field/DateField";
@@ -19,6 +15,9 @@ import {QNumberField} from "../../../../core/field/NumberField";
 import {QStringField} from "../../../../core/field/StringField";
 import {QField} from "../../../../core/field/Field";
 import {MappedSQLStringQuery} from "./MappedSQLStringQuery";
+import {JSONFieldInOrderBy, JSONFieldInGroupBy, SortOrder} from "../../../../core/field/FieldInOrderBy";
+import {INonEntityOrderByParser} from "../orderBy/IEntityOrderByParser";
+import {ClauseType} from "../../SQLStringWhereBase";
 /**
  * Created by Papa on 10/28/2016.
  */
@@ -27,6 +26,7 @@ import {MappedSQLStringQuery} from "./MappedSQLStringQuery";
 export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQuery> extends SQLStringQuery<PHJQ> {
 
 	protected joinTrees: JoinTreeNode[];
+	protected orderByParser: INonEntityOrderByParser;
 
 	/**
 	 * Used in remote execution to parse the result set and to validate a join.
@@ -34,12 +34,79 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 	buildJoinTree(): void {
 		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
 		this.joinTrees = this.buildFromJoinTree(this.phJsonQuery.from, joinNodeMap);
-		this.getSELECTFragment(null, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults);
+		this.getSELECTFragment(null, this.phJsonQuery.select);
 	}
 
 	addQEntityMapByAlias( sourceMap ) {
 		for (let alias in sourceMap) {
 			this.qEntityMapByAlias[alias] = sourceMap[alias];
+		}
+	}
+
+	toSQL(): string {
+		let jsonQuery = <PHJsonNonEntitySqlQuery>this.phJsonQuery;
+		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
+		this.joinTrees = this.buildFromJoinTree(jsonQuery.from, joinNodeMap);
+		let selectFragment = this.getSELECTFragment(null, jsonQuery.select);
+		let fromFragment = this.getFROMFragments(this.joinTrees);
+		let whereFragment = '';
+		if (jsonQuery.where) {
+			whereFragment = `
+WHERE
+${this.getWHEREFragment(jsonQuery.where, '')}`;
+		}
+		let groupByFragment = '';
+		if (jsonQuery.groupBy && jsonQuery.groupBy.length) {
+			groupByFragment = `
+GROUP BY
+${this.getGroupByFragment(jsonQuery.groupBy)}`;
+		}
+		let havingFragment = '';
+		if (jsonQuery.having) {
+			havingFragment = `
+HAVING
+${this.getWHEREFragment(jsonQuery.having, '')}`;
+		}
+		let orderByFragment = '';
+		if (jsonQuery.orderBy && jsonQuery.orderBy.length) {
+			orderByFragment = `
+ORDER BY
+${this.orderByParser.getOrderByFragment(jsonQuery.select, jsonQuery.orderBy)}`;
+		}
+		let offsetFragment = '';
+		if (jsonQuery.offset) {
+			offsetFragment = this.sqlAdaptor.getOffsetFragment(jsonQuery.offset);
+		}
+		let limitFragment = '';
+		if (jsonQuery.limit) {
+			offsetFragment = this.sqlAdaptor.getLimitFragment(jsonQuery.limit);
+		}
+
+		return `SELECT
+${selectFragment}
+FROM
+${fromFragment}${whereFragment}${groupByFragment}${havingFragment}${orderByFragment}${offsetFragment}${limitFragment}`;
+	}
+
+	protected abstract getSELECTFragment(
+		selectSqlFragment: string,
+		selectClauseFragment: any
+	): string;
+
+	protected getFieldSelectFragment(
+		value:JSONClauseField,
+	  clauseType:ClauseType,
+	  nestedObjectCallBack:{():string},
+		selectSqlFragment:string
+	) {
+		let columnSelectSqlFragment = this.getFieldValue(value, clauseType,
+			// Nested object processing
+			nestedObjectCallBack);
+		columnSelectSqlFragment += ` as ${value.fieldAlias}\n`;
+		if (selectSqlFragment) {
+			return `\t, ${columnSelectSqlFragment}`;
+		} else {
+			return `\t${columnSelectSqlFragment}`;
 		}
 	}
 
@@ -169,7 +236,7 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 			let alias = `${fieldPrefix}${++fieldIndex}`;
 			let fieldJson: JSONClauseField = select[fieldName];
 			// If its a nested select
-			if (!fieldJson.type) {
+			if (!fieldJson.objectType) {
 				this.addFieldsToViewForSelect(view, viewAlias, fieldJson, `${alias}_`);
 			} else {
 				let aliasToSet = forFieldQueryAlias ? forFieldQueryAlias : alias;
@@ -195,13 +262,22 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 		forFieldQueryAlias: string = null
 	): boolean {
 		let hasDistinctClause = false;
-		switch (fieldJson.type) {
-			case JSONClauseObjectType.BOOLEAN_FIELD_FUNCTION:
-				view[alias] = new QBooleanField(view, <any>QView, viewAlias, alias);
-				break;
-			case JSONClauseObjectType.DATE_FIELD_FUNCTION:
-				view[alias] = new QDateField(view, <any>QView, viewAlias, alias);
-				break;
+		switch (fieldJson.objectType) {
+			case JSONClauseObjectType.FIELD_FUNCTION:
+				switch (fieldJson.dataType) {
+					case SQLDataType.BOOLEAN:
+						view[alias] = new QBooleanField(view, <any>QView, viewAlias, alias);
+						break;
+					case SQLDataType.DATE:
+						view[alias] = new QDateField(view, <any>QView, viewAlias, alias);
+						break;
+					case SQLDataType.NUMBER:
+						view[alias] = new QNumberField(view, <any>QView, viewAlias, alias);
+						break;
+					case SQLDataType.STRING:
+						view[alias] = new QStringField(view, <any>QView, viewAlias, alias);
+						break;
+				}
 			case JSONClauseObjectType.EXISTS_FUNCTION:
 				throw `Exists function cannot be used in SELECT clause.`;
 			case JSONClauseObjectType.FIELD:
@@ -220,12 +296,6 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 				let relation = <QField<any>><any>this.qEntityMapByName[fieldJson.entityName].__entityRelationMap__[fieldJson.propertyName];
 				view[alias] = relation.getInstance(view);
 				break;
-			case JSONClauseObjectType.NUMBER_FIELD_FUNCTION:
-				view[alias] = new QNumberField(view, <any>QView, viewAlias, alias);
-				break;
-			case JSONClauseObjectType.STRING_FIELD_FUNCTION:
-				view[alias] = new QStringField(view, <any>QView, viewAlias, alias);
-				break;
 			default:
 				throw `Missing type property on JSONClauseField`;
 		}
@@ -233,11 +303,16 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 		return hasDistinctClause;
 	}
 
+	private getFROMFragments(
+		joinTrees: JoinTreeNode[]
+	): string {
+		return joinTrees.map(
+			joinTree => this.getFROMFragment(null, joinTree)).join('\n');
+	}
+
 	private getFROMFragment(
 		parentTree: JoinTreeNode,
-		currentTree: JoinTreeNode,
-		embedParameters: boolean = true,
-		parameters: any[] = null
+		currentTree: JoinTreeNode
 	): string {
 		let fromFragment = '\t';
 		let currentRelation = currentTree.jsonRelation;
@@ -308,9 +383,33 @@ export abstract class NonEntitySQLStringQuery<PHJQ extends PHJsonNonEntitySqlQue
 		}
 		for (let i = 0; i < currentTree.childNodes.length; i++) {
 			let childTreeNode = currentTree.childNodes[i];
-			fromFragment += this.getFROMFragment(currentTree, childTreeNode, embedParameters, parameters);
+			fromFragment += this.getFROMFragment(currentTree, childTreeNode);
 		}
 
 		return fromFragment;
 	}
+
+	protected getGroupByFragment(
+		groupBy?: JSONFieldInGroupBy[]
+	): string {
+		return groupBy.map(
+			( groupByField ) => {
+				this.validator.validateAliasedFieldAccess(groupByField.fieldAlias);
+				return `${groupByField.fieldAlias}`;
+			}).join(', ');
+	}
+
+	protected getOrderByFragment( orderBy: JSONFieldInOrderBy[] ): string {
+		return orderBy.map(
+			( orderByField ) => {
+				this.validator.validateAliasedFieldAccess(orderByField.fieldAlias);
+				switch (orderByField.sortOrder) {
+					case SortOrder.ASCENDING:
+						return `${orderByField.fieldAlias} ASC`;
+					case SortOrder.DESCENDING:
+						return `${orderByField.fieldAlias} DESC`;
+				}
+			}).join(', ');
+	}
+
 }

@@ -1,15 +1,17 @@
-import { IEntity, IFrom } from "../../../../core/entity/Entity";
+import { IEntity, IEntityRelationFrom } from "../../../../core/entity/Entity";
 import { PHRawSQLQuery, PHSQLQuery, PHJsonCommonSQLQuery, PHJsonLimitedSQLQuery } from "../../PHSQLQuery";
 import { PHMappableSQLQuery } from "./PHMappedSQLQuery";
 import { IFieldInOrderBy, JSONFieldInOrderBy } from "../../../../core/field/FieldInOrderBy";
+import { JSONEntityRelation } from "../../../../core/entity/Relation";
 /**
  * Created by Papa on 10/24/2016.
  */
 export interface PHJsonEntitySQLQuery<IE extends IEntity> extends PHJsonCommonSQLQuery {
+    from?: JSONEntityRelation[];
     select: IE;
 }
 export interface PHRawEntitySQLQuery<IE extends IEntity> extends PHRawSQLQuery {
-    from?: IFrom[];
+    from?: IEntityRelationFrom[];
     select: IE;
 }
 export declare class PHEntitySQLQuery<IE extends IEntity> extends PHMappableSQLQuery implements PHSQLQuery {

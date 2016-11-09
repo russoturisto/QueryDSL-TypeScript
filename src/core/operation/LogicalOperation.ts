@@ -22,11 +22,11 @@ export function not(
 }
 
 export interface JSONLogicalOperation extends JSONBaseOperation {
-	operation: "$and" | "$not" | "$or";
+	operator: "$and" | "$not" | "$or";
 	value: JSONBaseOperation | JSONBaseOperation[];
 }
 
-export interface ILogicalOperation extends IOperation<any, JSONLogicalOperation> {
+export interface ILogicalOperation extends IOperation {
 
 	and(
 		ops: JSONBaseOperation[]
@@ -42,10 +42,10 @@ export interface ILogicalOperation extends IOperation<any, JSONLogicalOperation>
 
 }
 
-export class LogicalOperation extends Operation<any, JSONLogicalOperation> implements ILogicalOperation {
+export class LogicalOperation extends Operation implements ILogicalOperation {
 
 	static verifyChildOps(
-		ops: IOperation<any, JSONLogicalOperation>[]
+		ops: IOperation[]
 	): void {
 		if (!ops || !ops.length) {
 			throw `No child operations provided`;
@@ -61,7 +61,7 @@ export class LogicalOperation extends Operation<any, JSONLogicalOperation> imple
 	): JSONLogicalOperation {
 		return {
 			category: OperationCategory.LOGICAL,
-			operation: '$and',
+			operator: '$and',
 			value: ops
 		};
 	}
@@ -71,7 +71,7 @@ export class LogicalOperation extends Operation<any, JSONLogicalOperation> imple
 	): JSONLogicalOperation {
 		return {
 			category: OperationCategory.LOGICAL,
-			operation: '$or',
+			operator: '$or',
 			value: ops
 		};
 	}
@@ -81,7 +81,7 @@ export class LogicalOperation extends Operation<any, JSONLogicalOperation> imple
 	): JSONLogicalOperation {
 		return {
 			category: OperationCategory.LOGICAL,
-			operation: '$not',
+			operator: '$not',
 			value: op
 		};
 	}

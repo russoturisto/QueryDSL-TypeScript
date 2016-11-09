@@ -4,28 +4,35 @@
 import {
 	QRelation, EntityRelationRecord, JSONEntityRelation, JSONRelationType
 } from "../../../../core/entity/Relation";
-import {EntityDefaults, SQLStringQuery, SQLDataType, QueryResultType, SQLDialect} from "../../SQLStringQuery";
+import {EntityDefaults, SQLStringQuery, QueryResultType, SQLDialect} from "../../SQLStringQuery";
 import {IEntity, IQEntity} from "../../../../core/entity/Entity";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
-import {getObjectResultParser, BridgedQueryConfiguration, IEntityResultParser} from "../result/IEntityResultParser";
+import {
+	getObjectResultParser,
+	BridgedQueryConfiguration,
+	IEntityResultParser
+} from "../result/entity/IEntityResultParser";
 import {QBooleanField} from "../../../../core/field/BooleanField";
 import {QDateField} from "../../../../core/field/DateField";
 import {QNumberField} from "../../../../core/field/NumberField";
 import {QStringField} from "../../../../core/field/StringField";
 import {EntityUtils} from "../../../../core/utils/EntityUtils";
-import {JSONFieldInOrderBy} from "../../../../core/field/FieldInOrderBy";
 import {JoinTreeNode} from "../../../../core/entity/JoinTreeNode";
 import {PHJsonEntitySQLQuery} from "../ph/PHEntitySQLQuery";
-import {AliasCache} from "../../../../core/entity/Aliases";
 import {JoinType} from "../../../../core/entity/Joins";
+import {IEntityOrderByParser} from "../orderBy/IEntityOrderByParser";
+import {EntityOrderByParser} from "../orderBy/EntityOrderByParser";
+import {SQLDataType} from "../../../../core/field/Appliable";
+import {AliasCache} from "../../../../core/entity/Aliases";
 /**
  * Represents SQL String query with Entity tree Select clause.
  */
 export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJsonEntitySQLQuery<IE>> {
 
-	private columnAliases = new AliasCache('ec_');
 	private queryParser: IEntityResultParser;
-
+	protected joinTree: JoinTreeNode;
+	orderByParser: IEntityOrderByParser;
+	private columnAliases = new AliasCache();
 
 	constructor(
 		protected rootQEntity: IQEntity,
@@ -41,6 +48,34 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 		if (bridgedQueryConfiguration && this.bridgedQueryConfiguration.strict !== undefined) {
 			throw `"strict" configuration is not yet implemented for QueryResultType.BRIDGED`;
 		}
+		this.orderByParser = new EntityOrderByParser(phJsonQuery.select, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, phJsonQuery.orderBy);
+	}
+
+	toSQL(): string {
+		let entityName = this.rootQEntity.__entityName__;
+
+		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
+		this.joinTree = this.buildFromJoinTree(this.phJsonQuery.from, joinNodeMap, entityName);
+		let selectFragment = this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults);
+		let fromFragment = this.getFROMFragment(null, this.joinTree);
+		let whereFragment = '';
+		let jsonQuery = this.phJsonQuery;
+		if (jsonQuery.where) {
+			whereFragment = `
+WHERE
+${this.getWHEREFragment(jsonQuery.where, '')}`;
+		}
+		let orderByFragment = '';
+		if (jsonQuery.orderBy && jsonQuery.orderBy.length) {
+			orderByFragment = `
+ORDER BY
+${this.orderByParser.getOrderByFragment(this.joinTree, this.qEntityMapByAlias)}`;
+		}
+
+		return `SELECT
+${selectFragment}
+FROM
+${fromFragment}${whereFragment}${orderByFragment}`;
 	}
 
 	/**
@@ -50,7 +85,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 	buildJoinTree(): void {
 		let entityName = this.rootQEntity.__entityName__;
 		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
-		this.joinTree = this.buildFromJoinTree(<JSONEntityRelation[]>this.phJsonQuery.from, joinNodeMap, entityName);
+		this.joinTree = this.buildFromJoinTree(this.phJsonQuery.from, joinNodeMap, entityName);
 		this.getSELECTFragment(entityName, null, this.phJsonQuery.select, this.joinTree, this.entityDefaults, false, []);
 	}
 
@@ -274,12 +309,6 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 		return fromFragment;
 	}
 
-	protected getOrderByFragment(
-		orderBy?: JSONFieldInOrderBy[]
-	): string {
-		return this.orderByParser.getOrderByFragment(this.joinTree, this.qEntityMapByAlias);
-	}
-
 	/**
 	 * If bridging is not applied:
 	 *
@@ -370,7 +399,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 
 				if (childSelectClauseFragment === null) {
 					if (entityMetadata.manyToOneMap[propertyName]) {
-						let relationGenericQEntity = this.qEntityMapByName[relation.entityName];
+						let relationGenericQEntity = this.qEntityMapByName[(<any>relation).entityName];
 						let relationEntityMetadata: EntityMetadata = <EntityMetadata><any>relationGenericQEntity.__entityConstructor__;
 						let columnAlias = this.columnAliases.getFollowingAlias();
 						let relatedEntityId = this.sqlAdaptor.getResultCellValue(resultRow, columnAlias, nextFieldIndex[0], SQLDataType.NUMBER, null);

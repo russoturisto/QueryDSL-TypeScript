@@ -72,7 +72,7 @@ export interface IQExistsFunction extends JSONBaseOperation {
 export declare class QExistsFunction<IME extends IMappedEntity> extends StandAloneFunction implements IQExistsFunction, Appliable<JSONClauseObject, any> {
     private subQuery;
     __appliedFunctions__: JSONSqlFunctionCall[];
-    operation: string;
+    operator: string;
     category: OperationCategory;
     constructor(subQuery: PHRawMappedSQLQuery<IME>);
     applySqlFunction(sqlFunctionCall: JSONSqlFunctionCall): any;

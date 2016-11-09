@@ -2,8 +2,6 @@ import { EntityRelationRecord, JSONEntityRelation, JSONRelation } from "../../co
 import { IQEntity } from "../../core/entity/Entity";
 import { FieldMap } from "./FieldMap";
 import { SQLStringWhereBase } from "./SQLStringWhereBase";
-import { JSONFieldInOrderBy } from "../../core/field/FieldInOrderBy";
-import { IOrderByParser } from "./query/orderBy/IOrderByParser";
 import { JoinTreeNode } from "../../core/entity/JoinTreeNode";
 import { PHJsonCommonSQLQuery } from "./PHSQLQuery";
 /**
@@ -12,12 +10,6 @@ import { PHJsonCommonSQLQuery } from "./PHSQLQuery";
 export declare enum SQLDialect {
     SQLITE = 0,
     ORACLE = 1,
-}
-export declare enum SQLDataType {
-    BOOLEAN = 0,
-    DATE = 1,
-    NUMBER = 2,
-    STRING = 3,
 }
 export declare class EntityDefaults {
     map: {
@@ -41,12 +33,10 @@ export declare enum QueryResultType {
  * String based SQL query.
  */
 export declare abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> extends SQLStringWhereBase {
-    protected phJsonQuery: PHJsonCommonSQLQuery;
+    protected phJsonQuery: PHJQ;
     protected queryResultType: QueryResultType;
     protected entityDefaults: EntityDefaults;
-    protected joinTree: JoinTreeNode;
-    protected orderByParser: IOrderByParser;
-    constructor(phJsonQuery: PHJsonCommonSQLQuery, qEntityMapByName: {
+    constructor(phJsonQuery: PHJQ, qEntityMapByName: {
         [alias: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
         [entityName: string]: {
@@ -61,8 +51,6 @@ export declare abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> 
     protected abstract buildFromJoinTree<JR extends JSONRelation>(joinRelations: JR[], joinNodeMap: {
         [alias: string]: JoinTreeNode;
     }, entityName?: string): any;
-    toSQL(): string;
-    protected abstract getSELECTFragment(entityName: string, selectSqlFragment: string, selectClauseFragment: any, joinTree: JoinTreeNode, entityDefaults: EntityDefaults): string;
     /**
      * If bridging is not applied:
      *
@@ -76,6 +64,5 @@ export declare abstract class SQLStringQuery<PHJQ extends PHJsonCommonSQLQuery> 
      * @returns {any[]}
      */
     protected abstract parseQueryResults(results: any[], queryResultType: QueryResultType, bridgedQueryConfiguration?: any): any[];
-    protected abstract getOrderByFragment(orderBy?: JSONFieldInOrderBy[]): string;
     protected getEntitySchemaRelationFromJoin(leftEntity: IQEntity, rightEntity: IQEntity, entityRelation: JSONEntityRelation, parentRelation: JSONRelation, currentAlias: string, parentAlias: string, tableName: string, joinTypeString: string, errorPrefix: string): string;
 }

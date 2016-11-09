@@ -1,11 +1,12 @@
 import {IEntityResultParser, BridgedQueryConfiguration, AbstractObjectResultParser} from "./IEntityResultParser";
 import {BridgedOtmMapper, OneToManyStubReference} from "./BridgedOtmMapper";
 import {BridgedMtoMapper, ManyToOneStubReference} from "./BridgedMtoMapper";
-import {IQEntity} from "../../../../core/entity/Entity";
-import {SQLDataType} from "../../SQLStringQuery";
-import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
-import {EntityRelationType, EntityRelationRecord} from "../../../../core/entity/Relation";
-import {MappedEntityArray} from "../../../../core/MappedEntityArray";
+import {IQEntity} from "../../../../../core/entity/Entity";
+import {EntityMetadata} from "../../../../../core/entity/EntityMetadata";
+import {EntityRelationType, EntityRelationRecord} from "../../../../../core/entity/Relation";
+import {MappedEntityArray} from "../../../../../core/MappedEntityArray";
+import {SQLDataType} from "../../../../../core/field/Appliable";
+import {QOneToManyRelation} from "../../../../../core/entity/OneToManyRelation";
 /**
  * Created by Papa on 10/16/2016.
  */
@@ -100,7 +101,7 @@ export class BridgedResultParser extends AbstractObjectResultParser implements I
 	): void {
 		let otmEntityField;
 		for (let otmRelationProperty in relationGenericQEntity.__entityRelationMap__) {
-			let otmRelation = relationGenericQEntity.__entityRelationMap__[otmRelationProperty];
+			let otmRelation = <QOneToManyRelation<any, any>>relationGenericQEntity.__entityRelationMap__[otmRelationProperty];
 			if (otmRelation.relationType === EntityRelationType.ONE_TO_MANY) {
 				let otmElements = relationEntityMetadata.oneToManyMap[otmRelationProperty];
 				if (otmElements.mappedBy === propertyName) {

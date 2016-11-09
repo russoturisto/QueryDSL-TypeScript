@@ -18,4 +18,7 @@ export declare class FieldSQLStringQuery extends NonEntitySQLStringQuery<PHJsonF
             [propertyName: string]: boolean;
         };
     }, dialect: SQLDialect);
+    protected getSELECTFragment(selectSqlFragment: string, selectClauseFragment: any): string;
+    parseQueryResults(results: any[]): any[];
+    protected parseQueryResult(selectClauseFragment: any, resultRow: any, nextFieldIndex: number[]): any;
 }
