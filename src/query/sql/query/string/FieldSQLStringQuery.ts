@@ -5,6 +5,7 @@ import {EntityRelationRecord} from "../../../../core/entity/Relation";
 import {SQLDialect, QueryResultType} from "../../SQLStringQuery";
 import {JSONClauseField, JSONClauseObjectType} from "../../../../core/field/Appliable";
 import {ClauseType} from "../../SQLStringWhereBase";
+import {ExactOrderByParser} from "../orderBy/ExactOrderByParser";
 /**
  * Created by Papa on 10/29/2016.
  */
@@ -19,6 +20,7 @@ export class FieldSQLStringQuery extends NonEntitySQLStringQuery<PHJsonFieldQSLQ
 		dialect: SQLDialect
 	) {
 		super(phJsonQuery, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect, QueryResultType.FIELD);
+		this.orderByParser = new ExactOrderByParser(this.validator);
 	}
 
 	protected getSELECTFragment(

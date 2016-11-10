@@ -35,7 +35,7 @@ export class QStringField extends QOperableField<string, JSONRawStringOperation,
 	like(
 		value: string | IQStringField | PHRawFieldSQLQuery<IQStringField>
 	): JSONRawStringOperation {
-		return this.operation.like(<any>this, this.wrapPrimitive(value));
+		return this.operation.like(<any>this, QOperableField.wrapPrimitive(value));
 	}
 
 }

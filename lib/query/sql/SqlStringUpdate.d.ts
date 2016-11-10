@@ -21,6 +21,4 @@ export declare class SQLStringUpdate extends SQLStringNoJoinQuery {
     }, dialect: SQLDialect);
     toSQL(embedParameters?: boolean, parameters?: any[]): string;
     protected getSetFragment(updateAlias: string, entityName: string, setClauseFragment: IEntity, embedParameters?: boolean, parameters?: any[]): string;
-    protected getSetPropertyColumnName(qEntity: IQEntity, propertyName: string): string;
-    private getSetValueFragment<T>(value, entityName, propertyName, typeCheckFunction, conversionFunction?);
 }

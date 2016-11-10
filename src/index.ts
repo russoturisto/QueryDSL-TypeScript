@@ -16,7 +16,7 @@ import {
 	QDateField
 } from "./core/field/DateField";
 import {
-	FieldType, Orderable,
+	Orderable,
 } from "./core/field/Field";
 import {
 	IQNumberField,
@@ -30,7 +30,6 @@ import {
 	ILogicalOperation, LogicalOperation, JSONLogicalOperation, and, or, not
 } from "./core/operation/LogicalOperation";
 import {IOperation, Operation, JSONBaseOperation} from "./core/operation/Operation";
-import {OperationType} from "./core/operation/OperationType";
 import {
 	EntityRelationRecord, EntityRelationType, IQRelation, QRelation, JSONEntityRelation
 } from "./core/entity/Relation";
@@ -48,7 +47,7 @@ import {EntityMetadata} from "./core/entity/EntityMetadata";
 import {OracleAdaptor} from "./query/sql/adaptor/OracleAdaptor";
 import {SqLiteAdaptor} from "./query/sql/adaptor/SqLiteAdaptor";
 import {ISQLAdaptor, getSQLAdaptor} from "./query/sql/adaptor/SQLAdaptor";
-import {EntityDefaults, SQLDialect, SQLDataType, SQLStringQuery} from "./query/sql/SQLStringQuery";
+import {EntityDefaults, SQLDialect, SQLStringQuery} from "./query/sql/SQLStringQuery";
 import {PHRawSQLQuery, PHSQLQuery} from "./query/sql/PHSQLQuery";
 import {PHQuery, PHRawQuery} from "./query/PHQuery";
 import {FieldMap, EntityFieldMap, PropertyFieldEntry} from "./query/sql/FieldMap";
@@ -122,7 +121,6 @@ export {
 	SQLStringUpdate,
 	EntityDefaults,
 	SQLDialect,
-	SQLDataType,
 	getSQLAdaptor,
 	ISQLAdaptor,
 	SqLiteAdaptor,
@@ -151,7 +149,6 @@ export {
 	IQEntity,
 	IEntityQuery,
 	QEntity,
-	FieldType,
 	IQBooleanField,
 	QBooleanField,
 	JSONRawBooleanOperation,
@@ -181,7 +178,6 @@ export {
 	JSONBaseOperation,
 	IOperation,
 	Operation,
-	OperationType,
 	FieldColumnAliases,
 	JoinTreeNode,
 	JSONEntityRelation,

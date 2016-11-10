@@ -1,7 +1,10 @@
 import {IEntity, IFrom, IEntityRelationFrom} from "../../../../core/entity/Entity";
 import {PHRawSQLQuery, PHSQLQuery, PHJsonCommonSQLQuery, PHJsonLimitedSQLQuery} from "../../PHSQLQuery";
 import {PHMappableSQLQuery} from "./PHMappedSQLQuery";
-import {FieldInOrderBy, IFieldInOrderBy, JSONFieldInOrderBy} from "../../../../core/field/FieldInOrderBy";
+import {
+	FieldInOrderBy, IFieldInOrderBy, JSONFieldInOrderBy,
+	JSONEntityFieldInOrderBy
+} from "../../../../core/field/FieldInOrderBy";
 import {QField} from "../../../../core/field/Field";
 import {PHAbstractSQLQuery} from "./PHAbstractSQLQuery";
 import {JSONEntityRelation} from "../../../../core/entity/Relation";
@@ -11,6 +14,7 @@ import {JSONEntityRelation} from "../../../../core/entity/Relation";
 
 export interface PHJsonEntitySQLQuery<IE extends IEntity> extends PHJsonCommonSQLQuery {
 	from?: JSONEntityRelation[];
+	orderBy?: JSONEntityFieldInOrderBy[];
 	select: IE;
 }
 
@@ -50,7 +54,7 @@ export class PHEntitySQLQuery<IE extends IEntity> extends PHMappableSQLQuery imp
 		return rawSelect;
 	}
 
-	protected orderByClauseToJSON( orderBy: IFieldInOrderBy<any>[] ): JSONFieldInOrderBy[] {
+	protected orderByClauseToJSON( orderBy: IFieldInOrderBy<any>[] ): JSONEntityFieldInOrderBy[] {
 		if (!orderBy || !orderBy.length) {
 			return null;
 		}

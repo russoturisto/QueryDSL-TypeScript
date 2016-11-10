@@ -13,6 +13,11 @@ export interface IValidator {
 		entityName: string
 	): void;
 
+	validateUpdateProperty(
+		propertyName: string,
+		entityName: string
+	): void;
+
 	validateReadQEntityProperty(
 		propertyName: string,
 		qEntity: IQEntity,
@@ -38,6 +43,12 @@ export class QValidator {
 	}
 
 	validateReadProperty(
+		propertyName: string,
+		entityName: string
+	): void {
+	}
+
+	validateUpdateProperty(
 		propertyName: string,
 		entityName: string
 	): void {

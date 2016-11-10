@@ -19,5 +19,6 @@ export interface PHJsonSQLUpdate<IE extends IEntity> {
 export declare class PHSQLUpdate<IE extends IEntity, IQE extends IQEntity> extends PHAbstractSQLQuery implements PHUpdate<IE> {
     phRawQuery: PHRawSQLUpdate<IE, IQE>;
     constructor(phRawQuery: PHRawSQLUpdate<IE, IQE>);
-    toSQL(): PHJsonSQLUpdate<IE>;
+    toJSON(): PHJsonSQLUpdate<IE>;
+    setToJSON(set: any): any;
 }

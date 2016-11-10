@@ -1,41 +1,36 @@
 import {SQLStringWhereBase} from "./SQLStringWhereBase";
-import {IEntity} from "../../core/entity/Entity";
-import {JSONEntityRelation, QRelation} from "../../core/entity/Relation";
+import {IEntity, IQEntity} from "../../core/entity/Entity";
+import {JSONEntityRelation, QRelation, EntityRelationRecord} from "../../core/entity/Relation";
 import {JoinTreeNode} from "../../core/entity/JoinTreeNode";
+import {SQLDialect} from "./SQLStringQuery";
 /**
  * Created by Papa on 10/2/2016.
  */
 
 export abstract class SQLStringNoJoinQuery extends SQLStringWhereBase {
 
-	getJoinNodeMap(): {[alias: string]: JoinTreeNode} {
-		let rootRelation: JSONEntityRelation = {
-			fromClausePosition: [],
-			entityName: this.rootQEntity.__entityName__,
-			joinType: null,
-			relationPropertyName: null
-		};
-		let jsonRootNode = new JoinTreeNode(rootRelation, [], null);
-		let alias = QRelation.getAlias(rootRelation);
-		this.qEntityMapByAlias[alias] = this.rootQEntity;
-		let joinNodeMap: {[alias: string]: JoinTreeNode} = {};
-		joinNodeMap[alias] = jsonRootNode;
-
-		return joinNodeMap;
+	constructor(
+		protected qEntity: IQEntity,
+		qEntityMap: {[entityName: string]: IQEntity},
+		entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
+		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
+		dialect: SQLDialect
+	) {
+		super(qEntityMap, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
 	}
 
 	protected getTableFragment(
 		fromRelation: JSONEntityRelation
 	): string {
 		if (!fromRelation) {
-			throw `Expecting exactly one table in FROM clause`;
+			throw `Expecting exactly one table in UPDATE/DELETE clause`;
 		}
 		if (fromRelation.relationPropertyName || fromRelation.joinType) {
-			throw `First table in FROM clause cannot be joined`;
+			throw `Table in UPDATE/DELETE clause cannot be joined`;
 		}
 		let firstEntity = this.qEntityMapByAlias[QRelation.getAlias(fromRelation)];
-		if (firstEntity != this.rootQEntity) {
-			throw `Unexpected first table in FROM clause: ${fromRelation.entityName}, expecting: ${this.rootQEntity.__entityName__}`;
+		if (firstEntity != this.qEntity) {
+			throw `Unexpected table in UPDATE/DELETE clause: ${fromRelation.entityName}, expecting: ${this.qEntity.__entityName__}`;
 		}
 		let fromFragment = `\t${this.getTableName(firstEntity)}`;
 

@@ -1,6 +1,6 @@
 import {QueryResultType} from "../../SQLStringQuery";
 import {EntityOrderByParser} from "./EntityOrderByParser";
-import {JSONFieldInOrderBy, SortOrder} from "../../../../core/field/FieldInOrderBy";
+import {JSONFieldInOrderBy, SortOrder, JSONEntityFieldInOrderBy} from "../../../../core/field/FieldInOrderBy";
 import {IQEntity} from "../../../../core/entity/Entity";
 import {EntityRelationRecord} from "../../../../core/entity/Relation";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
@@ -36,8 +36,8 @@ export abstract class AbstractEntityOrderByParser {
 		protected qEntityMapByName: {[alias: string]: IQEntity},
 		protected entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 		protected entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
-	  protected validator:IValidator,
-		protected orderBy?: JSONFieldInOrderBy[]
+		protected validator: IValidator,
+		protected orderBy?: JSONEntityFieldInOrderBy[]
 	) {
 	}
 
@@ -46,23 +46,11 @@ export abstract class AbstractEntityOrderByParser {
 		orderByFields: JSONFieldInOrderBy[]
 	): string {
 		return orderByFields.map(( orderByField ) => {
-			let qEntity = qEntityMapByAlias[orderByField.alias];
-			let propertyName = orderByField.propertyName;
-			let entityMetadata: EntityMetadata = <EntityMetadata><any>qEntity.__entityConstructor__;
-
-			let columnName;
-			if (orderByField.isManyToOneReference) {
-				columnName = MetadataUtils.getJoinColumnName(propertyName, entityMetadata, orderByField.alias);
-			} else {
-				columnName = MetadataUtils.getPropertyColumnName(propertyName, entityMetadata, orderByField.alias);
-			}
-
-			let orderFieldClause = `${orderByField.alias}.${columnName} `;
 			switch (orderByField.sortOrder) {
 				case SortOrder.ASCENDING:
-					return `${orderFieldClause} ASC`;
+					return `${orderByField.fieldAlias} ASC`;
 				case SortOrder.DESCENDING:
-					return `${orderFieldClause} DESC`;
+					return `${orderByField.fieldAlias} DESC`;
 			}
 		}).join(', ');
 	}
@@ -75,12 +63,13 @@ export function getOrderByParser(
 	qEntityMapByName: {[entityName: string]: IQEntity},
 	entitiesRelationPropertyMap: {[entityName: string]: {[propertyName: string]: EntityRelationRecord}},
 	entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
-	orderBy?: JSONFieldInOrderBy[]
+	validator: IValidator,
+	orderBy?: JSONEntityFieldInOrderBy[]
 ): IEntityOrderByParser {
 	switch (queryResultType) {
 		case QueryResultType.ENTITY_BRIDGED:
 		case QueryResultType.ENTITY_HIERARCHICAL:
-			return new EntityOrderByParser(selectClauseFragment, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, orderBy);
+			return new EntityOrderByParser(selectClauseFragment, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, validator, orderBy);
 //		case QueryResultType.FLAT:
 //		case QueryResultType.FIELD:
 //			return new ExactOrderByParser(rootQEntity, selectClauseFragment, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, orderBy);

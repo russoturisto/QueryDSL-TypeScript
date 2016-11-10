@@ -1,13 +1,14 @@
 import { IEntity, IEntityRelationFrom } from "../../../../core/entity/Entity";
 import { PHRawSQLQuery, PHSQLQuery, PHJsonCommonSQLQuery, PHJsonLimitedSQLQuery } from "../../PHSQLQuery";
 import { PHMappableSQLQuery } from "./PHMappedSQLQuery";
-import { IFieldInOrderBy, JSONFieldInOrderBy } from "../../../../core/field/FieldInOrderBy";
+import { IFieldInOrderBy, JSONEntityFieldInOrderBy } from "../../../../core/field/FieldInOrderBy";
 import { JSONEntityRelation } from "../../../../core/entity/Relation";
 /**
  * Created by Papa on 10/24/2016.
  */
 export interface PHJsonEntitySQLQuery<IE extends IEntity> extends PHJsonCommonSQLQuery {
     from?: JSONEntityRelation[];
+    orderBy?: JSONEntityFieldInOrderBy[];
     select: IE;
 }
 export interface PHRawEntitySQLQuery<IE extends IEntity> extends PHRawSQLQuery {
@@ -19,7 +20,7 @@ export declare class PHEntitySQLQuery<IE extends IEntity> extends PHMappableSQLQ
     constructor(phRawQuery: PHRawEntitySQLQuery<IE>);
     toJSON(): PHJsonEntitySQLQuery<IE>;
     protected nonDistinctSelectClauseToJSON(rawSelect: any): any;
-    protected orderByClauseToJSON(orderBy: IFieldInOrderBy<any>[]): JSONFieldInOrderBy[];
+    protected orderByClauseToJSON(orderBy: IFieldInOrderBy<any>[]): JSONEntityFieldInOrderBy[];
 }
 export interface PHJsonLimitedEntitySQLQuery<IE extends IEntity> extends PHJsonEntitySQLQuery<IE>, PHJsonLimitedSQLQuery {
 }

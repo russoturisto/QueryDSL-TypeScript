@@ -17,22 +17,25 @@ export class SQLStringDelete extends SQLStringNoJoinQuery {
 		entitiesPropertyTypeMap: {[entityName: string]: {[propertyName: string]: boolean}},
 		dialect: SQLDialect
 	) {
-		super(qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
+		super(qEntity, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect);
 	}
 
 	toSQL(
 		embedParameters: boolean = true,
 		parameters: any[] = null
 	): string {
-		let joinNodeMap = this.getJoinNodeMap();
 		let fromFragment = this.getTableFragment(this.phJsonDelete.deleteFrom);
-		let whereFragment = this.getWHEREFragment(this.phJsonDelete.where, 0, joinNodeMap, embedParameters, parameters);
+		let whereFragment = '';
+		let jsonQuery = this.phJsonDelete;
+		if (jsonQuery.where) {
+			whereFragment = `
+WHERE
+${this.getWHEREFragment(jsonQuery.where, '')}`;
+		}
 
 		return `DELETE
 FROM
-${fromFragment}
-WHERE
-${whereFragment}`;
+${fromFragment}${whereFragment}`;
 	}
 
 }

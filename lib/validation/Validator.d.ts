@@ -6,6 +6,7 @@ import { IQEntity } from "../core/entity/Entity";
 export interface IValidator {
     validateReadFromEntity(relation: JSONRelation): void;
     validateReadProperty(propertyName: string, entityName: string): void;
+    validateUpdateProperty(propertyName: string, entityName: string): void;
     validateReadQEntityProperty(propertyName: string, qEntity: IQEntity, fieldAlias: string): void;
     validateReadQEntityManyToOneRelation(propertyName: string, qEntity: IQEntity, fieldAlias: string): void;
     addFunctionAlias(functionAlias: string): void;
@@ -15,6 +16,7 @@ export interface IValidator {
 export declare class QValidator {
     validateReadFromEntity(relation: JSONRelation): void;
     validateReadProperty(propertyName: string, entityName: string): void;
+    validateUpdateProperty(propertyName: string, entityName: string): void;
     validateReadQEntityProperty(propertyName: string, qEntity: IQEntity): void;
     validateReadQEntityManyToOneRelation(propertyName: string, qEntity: IQEntity): void;
     addFunctionAlias(functionAlias: string): void;

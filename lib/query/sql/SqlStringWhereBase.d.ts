@@ -53,11 +53,6 @@ export declare abstract class SQLStringWhereBase implements SqlValueProvider {
     private getLogicalWhereFragment(operation, nestingPrefix);
     protected getEntityPropertyColumnName(qEntity: IQEntity, propertyName: string, tableAlias: string): string;
     protected getTableName(qEntity: IQEntity): string;
-    protected sanitizeStringValue(value: string, embedParameters: boolean): string;
-    protected booleanTypeCheck(valueToCheck: any): boolean;
-    protected dateTypeCheck(valueToCheck: any): boolean;
-    protected numberTypeCheck(valueToCheck: any): boolean;
-    protected stringTypeCheck(valueToCheck: any): boolean;
     protected addField(entityName: string, tableName: string, propertyName: string, columnName: string): void;
     protected warn(warning: string): void;
     getFunctionCallValue(rawValue: any): string;

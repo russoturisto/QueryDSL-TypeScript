@@ -139,46 +139,6 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		return tableName;
 	}
 
-	protected sanitizeStringValue(
-		value: string,
-		embedParameters: boolean
-	): string {
-		// FIXME: sanitize the string to prevent SQL Injection attacks.
-
-		if (embedParameters) {
-			value = `'${value}'`;
-		}
-		return value;
-	}
-
-	protected booleanTypeCheck(
-		valueToCheck: any
-	): boolean {
-		return typeof valueToCheck === 'boolean';
-	}
-
-	protected dateTypeCheck(
-		valueToCheck: any
-	): boolean {
-		// TODO: see if there is a more appropriate way to check serialized Dates
-		if (typeof valueToCheck === 'number') {
-			valueToCheck = new Date(valueToCheck);
-		}
-		return valueToCheck instanceof Date;
-	}
-
-	protected numberTypeCheck(
-		valueToCheck: any
-	): boolean {
-		return typeof valueToCheck === 'number';
-	}
-
-	protected stringTypeCheck(
-		valueToCheck: any
-	): boolean {
-		return typeof valueToCheck === 'string';
-	}
-
 	protected addField(
 		entityName: string,
 		tableName: string,
@@ -275,7 +235,7 @@ export abstract class SQLStringWhereBase implements SqlValueProvider {
 		switch (typeof value) {
 			case "boolean":
 			case "number":
-				throw `Unexpected primitive isntance, expecting parameter alias.`;
+				throw `Unexpected primitive instance, expecting parameter alias.`;
 			case "string":
 				return true;
 		}

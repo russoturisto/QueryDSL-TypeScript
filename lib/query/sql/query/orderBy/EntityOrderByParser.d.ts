@@ -1,4 +1,4 @@
-import { JSONFieldInOrderBy } from "../../../../core/field/FieldInOrderBy";
+import { JSONEntityFieldInOrderBy } from "../../../../core/field/FieldInOrderBy";
 import { IEntityOrderByParser, AbstractEntityOrderByParser } from "./IEntityOrderByParser";
 import { IQEntity } from "../../../../core/entity/Entity";
 import { JoinTreeNode } from "../../../../core/entity/JoinTreeNode";
@@ -37,8 +37,8 @@ export declare class EntityOrderByParser extends AbstractEntityOrderByParser imp
     getOrderByFragment(joinTree: JoinTreeNode, qEntityMapByAlias: {
         [alias: string]: IQEntity;
     }): string;
-    buildOrderByFragmentForEntity(tableAlias: string, propertyNamesToSortBy: string[], manyToOneRelationNamesToSortBy: string[], idColumnToSortBy: string, currentEntityOrderBy: JSONFieldInOrderBy[], qEntityMapByAlias: {
+    buildOrderByFragmentForEntity(tableAlias: string, propertyNamesToSortBy: string[], manyToOneRelationNamesToSortBy: string[], idColumnToSortBy: string, currentEntityOrderBy: JSONEntityFieldInOrderBy[], qEntityMapByAlias: {
         [alias: string]: IQEntity;
     }): string;
-    isForParentNode(joinTreeNode: JoinTreeNode, orderByField: JSONFieldInOrderBy): boolean;
+    isForParentNode(joinTreeNode: JoinTreeNode, orderByField: JSONEntityFieldInOrderBy): boolean;
 }

@@ -9,7 +9,7 @@ import {JSONClauseObjectType, SQLDataType} from "./Appliable";
  */
 
 export interface IQFunction<V extends boolean | Date | number | string | PHRawFieldSQLQuery<any>> {
-	parameterAlias:string;
+	parameterAlias: string;
 	value: V;
 }
 
@@ -64,7 +64,7 @@ extends QField<IQF> implements IQOperableField<T, JO, IO, IQF> {
 		entityName: string,
 		fieldName: string,
 		objectType: JSONClauseObjectType,
-		dataType:SQLDataType,
+		dataType: SQLDataType,
 		public operation: IO
 	) {
 		super(q, qConstructor, entityName, fieldName, objectType, dataType);
@@ -76,19 +76,19 @@ extends QField<IQF> implements IQOperableField<T, JO, IO, IQF> {
 	equals(
 		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JO {
-		return this.operation.equals(<any>this, this.wrapPrimitive(value));
+		return this.operation.equals(<any>this, QOperableField.wrapPrimitive(value));
 	}
 
 	greaterThan(
 		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JO {
-		return this.operation.greaterThan(<any>this, this.wrapPrimitive(value));
+		return this.operation.greaterThan(<any>this, QOperableField.wrapPrimitive(value));
 	}
 
 	greaterThanOrEquals(
 		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JO {
-		return this.operation.greaterThanOrEquals(<any>this, this.wrapPrimitive(value));
+		return this.operation.greaterThanOrEquals(<any>this, QOperableField.wrapPrimitive(value));
 	}
 
 	isNotNull(): JO {
@@ -102,34 +102,36 @@ extends QField<IQF> implements IQOperableField<T, JO, IO, IQF> {
 	isIn(
 		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JO {
-		return this.operation.isIn(<any>this, this.wrapPrimitive(values));
+		return this.operation.isIn(<any>this, QOperableField.wrapPrimitive(values));
 	}
 
 	lessThan(
 		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JO {
-		return this.operation.lessThan(<any>this, this.wrapPrimitive(value));
+		return this.operation.lessThan(<any>this, QOperableField.wrapPrimitive(value));
 	}
 
 	lessThanOrEquals(
 		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JO {
-		return this.operation.lessThanOrEquals(<any>this, this.wrapPrimitive(value));
+		return this.operation.lessThanOrEquals(<any>this, QOperableField.wrapPrimitive(value));
 	}
 
 	notEquals(
 		value: T | IQF | PHRawFieldSQLQuery<IQF>
 	): JO {
-		return this.operation.notEquals(<any>this, this.wrapPrimitive(value));
+		return this.operation.notEquals(<any>this, QOperableField.wrapPrimitive(value));
 	}
 
 	notIn(
 		values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]
 	): JO {
-		return this.operation.notIn(<any>this, this.wrapPrimitive(values));
+		return this.operation.notIn(<any>this, QOperableField.wrapPrimitive(values));
 	}
 
-	protected wrapPrimitive( value: any ): any {
+	static wrapPrimitive(
+		value: any
+	): any {
 		switch (typeof value) {
 			case "boolean":
 				return bool(value);

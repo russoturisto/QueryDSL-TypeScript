@@ -35,5 +35,5 @@ export declare abstract class QOperableField<T, JO extends JSONRawValueOperation
     lessThanOrEquals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
     notEquals(value: T | IQF | PHRawFieldSQLQuery<IQF>): JO;
     notIn(values: (T | IQF | PHRawFieldSQLQuery<IQF>)[]): JO;
-    protected wrapPrimitive(value: any): any;
+    static wrapPrimitive(value: any): any;
 }

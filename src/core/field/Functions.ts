@@ -308,6 +308,7 @@ extends StandAloneFunction implements IQDistinctFunction<ISelect>, Appliable<JSO
 		];
 		return {
 			__appliedFunctions__: appliedFunctions,
+			dataType: null,
 			fieldAlias: null,
 			objectType: JSONClauseObjectType.DISTINCT_FUNCTION,
 			value: <any>parsedSelectClause
@@ -368,6 +369,7 @@ extends StandAloneFunction implements IQExistsFunction, Appliable<JSONClauseObje
 			category: this.category,
 			object: <JSONClauseObject>{
 				__appliedFunctions__: appliedFunctions,
+				dataType: null,
 				objectType: JSONClauseObjectType.EXISTS_FUNCTION,
 				value: <any>parsedQuery
 			},

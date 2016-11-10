@@ -48,7 +48,7 @@ export class EntitySQLStringQuery<IE extends IEntity> extends SQLStringQuery<PHJ
 		if (bridgedQueryConfiguration && this.bridgedQueryConfiguration.strict !== undefined) {
 			throw `"strict" configuration is not yet implemented for QueryResultType.BRIDGED`;
 		}
-		this.orderByParser = new EntityOrderByParser(phJsonQuery.select, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, phJsonQuery.orderBy);
+		this.orderByParser = new EntityOrderByParser(phJsonQuery.select, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, this.validator, phJsonQuery.orderBy);
 	}
 
 	toSQL(): string {

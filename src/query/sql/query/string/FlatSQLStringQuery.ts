@@ -9,6 +9,7 @@ import {PHJsonFlatQSLQuery} from "../ph/PHFlatSQLQuery";
 import {NonEntitySQLStringQuery} from "./NonEntitySQLStringQuery";
 import {JSONClauseField, JSONClauseObjectType} from "../../../../core/field/Appliable";
 import {ClauseType} from "../../SQLStringWhereBase";
+import {ExactOrderByParser} from "../orderBy/ExactOrderByParser";
 /**
  * Represents SQL String query with flat (aka traditional) Select clause.
  */
@@ -22,6 +23,7 @@ export class FlatSQLStringQuery extends NonEntitySQLStringQuery<PHJsonFlatQSLQue
 		dialect: SQLDialect
 	) {
 		super(phJsonQuery, qEntityMapByName, entitiesRelationPropertyMap, entitiesPropertyTypeMap, dialect, QueryResultType.FLAT);
+		this.orderByParser = new ExactOrderByParser(this.validator);
 	}
 
 	protected getSELECTFragment(

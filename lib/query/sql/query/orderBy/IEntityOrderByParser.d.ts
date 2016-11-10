@@ -1,5 +1,5 @@
 import { QueryResultType } from "../../SQLStringQuery";
-import { JSONFieldInOrderBy } from "../../../../core/field/FieldInOrderBy";
+import { JSONFieldInOrderBy, JSONEntityFieldInOrderBy } from "../../../../core/field/FieldInOrderBy";
 import { IQEntity } from "../../../../core/entity/Entity";
 import { EntityRelationRecord } from "../../../../core/entity/Relation";
 import { JoinTreeNode } from "../../../../core/entity/JoinTreeNode";
@@ -31,7 +31,7 @@ export declare abstract class AbstractEntityOrderByParser {
         };
     };
     protected validator: IValidator;
-    protected orderBy: JSONFieldInOrderBy[];
+    protected orderBy: JSONEntityFieldInOrderBy[];
     constructor(rootSelectClauseFragment: any, qEntityMapByName: {
         [alias: string]: IQEntity;
     }, entitiesRelationPropertyMap: {
@@ -42,7 +42,7 @@ export declare abstract class AbstractEntityOrderByParser {
         [entityName: string]: {
             [propertyName: string]: boolean;
         };
-    }, validator: IValidator, orderBy?: JSONFieldInOrderBy[]);
+    }, validator: IValidator, orderBy?: JSONEntityFieldInOrderBy[]);
     protected getCommonOrderByFragment(qEntityMapByAlias: {
         [alias: string]: IQEntity;
     }, orderByFields: JSONFieldInOrderBy[]): string;
@@ -57,4 +57,4 @@ export declare function getOrderByParser(queryResultType: QueryResultType, selec
     [entityName: string]: {
         [propertyName: string]: boolean;
     };
-}, orderBy?: JSONFieldInOrderBy[]): IEntityOrderByParser;
+}, validator: IValidator, orderBy?: JSONEntityFieldInOrderBy[]): IEntityOrderByParser;

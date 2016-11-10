@@ -1,4 +1,4 @@
-import {JSONFieldInOrderBy, SortOrder} from "../../../../core/field/FieldInOrderBy";
+import {JSONFieldInOrderBy, SortOrder, JSONEntityFieldInOrderBy} from "../../../../core/field/FieldInOrderBy";
 import {IEntityOrderByParser, AbstractEntityOrderByParser} from "./IEntityOrderByParser";
 import {IQEntity} from "../../../../core/entity/Entity";
 import {EntityMetadata} from "../../../../core/entity/EntityMetadata";
@@ -43,7 +43,7 @@ export class EntityOrderByParser extends AbstractEntityOrderByParser implements 
 		qEntityMapByAlias: {[alias: string]: IQEntity}
 	): string {
 		let orderByFragments: string[];
-		let orderBy: JSONFieldInOrderBy[] = [];
+		let orderBy: JSONEntityFieldInOrderBy[] = [];
 		if (this.orderBy) {
 			orderBy = this.orderBy.slice();
 		}
@@ -73,20 +73,15 @@ export class EntityOrderByParser extends AbstractEntityOrderByParser implements 
 				if (parentNodeFound) {
 					return true;
 				}
-				let fieldAliasFragments = orderByField.fieldAlias.split('.');
-				let orderByEntityName = fieldAliasFragments[0];
-				let orderByPropertyName = fieldAliasFragments[1];
 				if (this.isForParentNode(currentJoinNode, orderByField)) {
-					throw `Found out of order entry in Order By [${orderByEntityName}.${orderByPropertyName}].  Entries must be ordered hierarchically, in breadth-first order.`;
+					throw `Found out of order entry in Order By [${orderByField.entityName}.${orderByField.propertyName}].  Entries must be ordered hierarchically, in breadth-first order.`;
 				}
-				if (orderByEntityName !== entityName) {
+				if (orderByField.entityName !== entityName) {
 					return true;
 				}
-				this.validator.validateReadProperty(orderByPropertyName, orderByEntityName);
-				currentEntityOrderBy.push({
-					fieldAlias: `${tableAlias}.${orderByPropertyName}`,
-					sortOrder: orderByField.sortOrder
-				});
+				this.validator.validateReadProperty(orderByField.entityName, orderByField.propertyName);
+				orderByField.fieldAlias = `${tableAlias}.${orderByField.propertyName}`;
+				currentEntityOrderBy.push(orderByField);
 				return false;
 			});
 
@@ -130,7 +125,7 @@ export class EntityOrderByParser extends AbstractEntityOrderByParser implements 
 		propertyNamesToSortBy: string[],
 		manyToOneRelationNamesToSortBy: string[],
 		idColumnToSortBy: string,
-		currentEntityOrderBy: JSONFieldInOrderBy[],
+		currentEntityOrderBy: JSONEntityFieldInOrderBy[],
 		qEntityMapByAlias: {[alias: string]: IQEntity}
 	) {
 		let finalOrderByColumnsFragments: JSONFieldInOrderBy[] = [];
@@ -169,14 +164,14 @@ export class EntityOrderByParser extends AbstractEntityOrderByParser implements 
 
 	isForParentNode(
 		joinTreeNode: JoinTreeNode,
-		orderByField: JSONFieldInOrderBy
+		orderByField: JSONEntityFieldInOrderBy
 	): boolean {
 		do {
 			joinTreeNode = joinTreeNode.parentNode;
 			if (!joinTreeNode) {
 				return false;
 			}
-			if (orderByField.alias === QRelation.getAlias(joinTreeNode.jsonRelation)) {
+			if (orderByField.entityName === joinTreeNode.jsonRelation.entityName) {
 				return true;
 			}
 		} while (joinTreeNode.parentNode);
